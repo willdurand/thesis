@@ -31,7 +31,7 @@ for production systems in a Model-based Testing approach.}
 \newcommand{\thesisDate}{\today}
 \newcommand{\thesisVersion}{draft}
 
-\newcommand{\thesisFirstReviewer}{Jane Doe}
+\newcommand{\thesisFirstReviewer}{Jane git stDoe}
 \newcommand{\thesisFirstReviewerUniversity}{\protect{Clean Thesis Style University}}
 \newcommand{\thesisFirstReviewerDepartment}{Department of Clean Thesis Style}
 
@@ -99,14 +99,14 @@ des C\'ezeaux - 1 rue de la Chebarde}
 % --------------------------
 \pagenumbering{roman}			% roman page numbing (invisible for empty page style)
 \pagestyle{empty}				% no header or footers
-\input{content/titlepages}		% INCLUDE: all titlepages
+\input{src/titlepages}		% INCLUDE: all titlepages
 \cleardoublepage
 
 \pagestyle{plain}				% display just page numbers
-\input{content/abstract}		% INCLUDE: the abstracts (english and german)
+\input{src/abstract}		% INCLUDE: the abstracts (english and german)
 \cleardoublepage
 %
-\input{content/acknowledgement} % INCLUDE: acknowledgement
+\input{src/acknowledgement} % INCLUDE: acknowledgement
 \cleardoublepage
 %
 \setcounter{tocdepth}{2}		% define depth of toc
@@ -120,9 +120,9 @@ des C\'ezeaux - 1 rue de la Chebarde}
 \setcounter{page}{1}			% set page counter
 \pagestyle{maincontentstyle} 	% fancy header and footer
 
-\input{content/introduction/0_introduction}
-\input{content/related-work/0_related-work}
-\input{content/conclusion/0_conclusion}
+\input{src/introduction/0_introduction}
+\input{src/related-work/0_related-work}
+\input{src/conclusion/0_conclusion}
 
 \cleardoublepage
 
@@ -145,10 +145,10 @@ des C\'ezeaux - 1 rue de la Chebarde}
 \listoftables
 \cleardoublepage
 
-\input{content/colophon}
+\input{src/colophon}
 \cleardoublepage
 
-\input{content/declaration}
+\input{src/declaration}
 \clearpage
 \newpage
 \mbox{}
