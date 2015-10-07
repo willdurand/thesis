@@ -81,7 +81,33 @@ des C\'ezeaux - 1 rue de la Chebarde}
 	bookmarksopen=true			%
 }
 
+% My packages
 \usepackage{euscript}
+\usepackage{listings}
+\usepackage[lofdepth,lotdepth]{subfig}
+\usepackage[ruled,vlined,linesnumbered]{algorithm2e}
+\usepackage{mathtools}
+\usepackage{comment}
+\usepackage{verbatim}
+\usepackage{float}
+\usepackage{color}
+\usepackage{theorem}
+
+% My commands
+\newcommand{\R}{\mathbb{R}}
+\newtheorem{theorem}{Theorem}
+\newtheorem{definition}[theorem]{Definition}
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{remark}[theorem]{Remark}
+\newtheorem{theoremLem}{Theorem}
+\newtheorem{lemma}[theoremLem]{Lemma}
+
+\newcounter{example}[section]
+\def\theexample{\thesection.\arabic{example}}
+\newenvironment{example}[1][]
+{\refstepcounter{example}
+\medskip\noindent{\bfseries Example \theexample\ #1\,\,\,}}
+{\medskip}
 
 % **************************************************
 % Document CONTENT
@@ -101,17 +127,17 @@ des C\'ezeaux - 1 rue de la Chebarde}
 % --------------------------
 \pagenumbering{roman}			% roman page numbing (invisible for empty page style)
 \pagestyle{empty}				% no header or footers
-\input{src/titlepages}		% INCLUDE: all titlepages
+\input{src/titlepages}		    % INCLUDE: all titlepages
 \cleardoublepage
 
 \pagestyle{plain}				% display just page numbers
-\input{src/abstract}		% INCLUDE: the abstracts (english and german)
+\input{src/abstract}		    % INCLUDE: the abstracts (english and german)
 \cleardoublepage
 %
-\input{src/acknowledgement} % INCLUDE: acknowledgement
+\input{src/acknowledgement}     % INCLUDE: acknowledgement
 \cleardoublepage
 %
-\setcounter{tocdepth}{2}		% define depth of toc
+\setcounter{tocdepth}{3}		% define depth of toc
 \tableofcontents				% display table of contents
 \cleardoublepage
 

@@ -3,31 +3,32 @@
 
 Generally speaking, a model is a representation of a thing that
 allows for investigation of its properties. Most of the time, a
-model hides the complexity of the item it represents.
+model hides the complexity of the item it represents. In the
+software engineering field, models help describe software systems
+in order to: (i) ease the process of studying them, (ii) leverage
+them to build tools or generate documentation, (iii) reveal
+faults (validation or verification).
 
-In the software engineering field, models help describe software
-and systems in order to ease the process of studying them, or
-leverage them to build tools, generate documentation, reveal
-faults, etc. Such models usually describe the behaviours of the
-software being modelled, and can be also known as specifications.
-In the Industry, software models are often neglected:
-specifications are not up to date or even missing, models are
-neither accurate nor sound, and rarely formals.\\
-Indeed, writing complete documentation or formal models is often
-a tedious and error-prone task. That is why lightweight models
-are usually found in the Industry. This leads to several issues,
-e.g., the toughness of validating applications with a good test
-coverage or the difficulty to diagnose failures, and to maintain
-them since they are poorly documented.
+Such models usually describe the behaviors of the software being
+modeled, and can also be known as specifications. In the
+Industry, software models are often neglected: specifications are
+not up to date (or even missing), models are neither accurate nor
+sound, and also rarely formals.\\
+Such a situation can be comprehensible because writing complete
+documentation or formal models is often a tedious and error prone
+task. That is why lightweight models are usually found in the
+Industry. This leads to several issues, e.g., the toughness of
+validating applications with a good test coverage, or the
+difficulty to diagnose failures or to maintain them since they
+are poorly documented.
 
 A well-known solution to this problem is to infer models. Model
 inference is a research field that aims at (automatically)
-creating models, expressing functional behaviours of existing
-applications.  These models, that help understand how an
-application behaves, can be generated from execution traces
-(sequences of observed actions)
-\cite{Krka:2010:UDE:1810295.1810324}, documentation
-\cite{ZhongZXM11}, source code
+creating models, expressing functional behaviors of existing
+applications.  These models help understand how an application
+behaves. They can be generated from execution traces (sequences
+of observed actions) \cite{Krka:2010:UDE:1810295.1810324},
+documentation \cite{ZhongZXM11}, source code
 \cite{Salah05scenariographer,Pradel:2009}, and even network
 traces \cite{6079839} or WSDL description
 \cite{Bertolino:2009:ASB:1595696.1595719}. Although this area
@@ -35,28 +36,28 @@ sounds promising, it still exposes several open problems, which
 require further investigation. Among them, the model generation
 may lead to a state space explosion problem. Some works construct
 lightweight models to avoid this issue \cite{WPX13}, others yield
-extrapolated models by merging application's states which, of
-course, express more behaviours than those observed
-\cite{4023976}.
+extrapolated models by merging application's states which,
+unfortunately, express more or slightly different behaviors than
+those observed \cite{4023976}.
 
 Model inference is employed for different purposes. One can infer
 model from log files in order to retrieve important information
 to identify failure causes \cite{4700316}. It has also
 successfully been applied to intrusion detection \cite{debar00},
 searching for features in execution traces that allow to
-distinguish browsers from other programs, using automatically
-generated finite automata.
-But, from our point of view, the most proeminent uses of model
+distinguish browsers from other software systems, using
+automatically generated finite automata.
+But, from our point of view, the most prominent uses of model
 inference are Model-Based Testing (MBT) and verification, leading
 to numerous techniques to automate testing, e.g., with crawlers
 \cite{Amalfitano:2012:UGR:2351676.2351717,Joorabchi:2012:REI:2420240.2420457,MobiGUITARIEEESoftware2014}.
 One of the key elements of MBT is the model that describes the
-behaviour of the system under test (SUT). Such a model is
-supposed to provide an abstract view of the SUT, by focusing on
-specific aspects, e.g., the change of a system state at runtime.
+behavior of the system under test (SUT). Such a model is supposed
+to provide an abstract view of the SUT, by focusing on specific
+aspects, e.g., the change of a system state at runtime.
 
 In literature, we can find different techniques to infer models
-that can be organized in two main categories. A few techniques
+that can be organized in two main categories. Several techniques
 infer models from source code, i.e. in a white-box context, but
 many works focus on a black-box approach to infer models as it is
 a more realistic scenario in the Industry. Both categories assume
@@ -65,22 +66,16 @@ this principle as passive learning. The second category uses
 learning algorithms to infer models, enabling the possibility to
 actively learn models by interacting with the system.
 
-The paper is organized as follows: Active learning techniques are
-presented in subsection \ref{sec:related:modelinf:active}, introducing
-$\EuScript{L}^*$-based techniques in subsection
-\ref{sec:related:modelinf:active-letoile} and some other incremental learning
-techniques in subsection \ref{sec:related:modelinf:active-increment}, plus mentioning
-some other techniques in subsection \ref{sec:related:modelinf:active-others}.
-Passive learning techniques are described in subsection
+In the following subsection, we give an overview of prominent active learning
+techniques: introducing $\EuScript{L}^*$-based techniques in subsection
+\ref{sec:related:modelinf:active-letoile} and incremental learning techniques
+in subsection \ref{sec:related:modelinf:active-increment}. Passive learning
+techniques are extensively described in subsection
 \ref{sec:related:modelinf:passive}, covering Finite State Automaton (FSA)
 inference techniques in subsection \ref{sec:related:modelinf:passive-fsa},
-specification mining in subsection \ref{sec:related:modelinf:passive-spec}, crawling
-techniques in subsection \ref{sec:related:modelinf:passive-crawling}, white-box
-approaches in subsection \ref{sec:related:modelinf:passive-white}, and a few more
-techniques in subsection \ref{sec:related:modelinf:passive-others}.
-We discuss the current state of model inference and give
-perspectives in subsection \ref{sec:related:modelinf:perspectives}, and we conclude
-in subsection \ref{sec:related:modelinf:conclusion}.
+specification mining in subsection \ref{sec:related:modelinf:passive-spec},
+crawling techniques in subsection \ref{sec:related:modelinf:passive-crawling}, and
+white-box approaches in subsection \ref{sec:related:modelinf:passive-white}.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
@@ -94,9 +89,13 @@ queries) to an oracle, e.g., users or generated test cases. A
 learner can then use this feedback to improve a model. Moreover,
 by asking informative queries (e.g., close to the decision
 boundary), an active learner potentially requires much less
-examples than a passive learner that learns from data samples. In
-the paper, we focus on methods that ask queries to software
-systems.
+examples than a passive learner that learns from data samples as
+we will see in subsection \ref{sec:related:modelinf:passive}. In this paper, we focus
+on methods that ask queries to software systems.
+
+We start by introducing $\EuScript{L}^*$-based techniques in
+subsection \ref{sec:related:modelinf:active-letoile}, and then incremental learning
+algorithms in subsection \ref{sec:related:modelinf:active-increment}.
 
 \subsubsection{$\EuScript{L}^*$-based techniques and related}
 \label{sec:related:modelinf:active-letoile}
@@ -111,94 +110,178 @@ asking new queries and constructing an improbed conjecture, until
 we get an automaton that is equivalent to the black box. This
 method is interesting but requires a lot of iterations and heavy
 use of an expert oracle. It is designed for complete rather
-incremental learning.
+than incremental learning.
+
+The work described in \cite{Alur:2005:SIS:1047659.1040314}
+generates behavioral interface specifications for Java classes by
+means of predicate abstraction and active learning. This is a
+white-box approach inspired by
+\cite{Whaley:2002:AEO:566171.566212} (see subsection
+\ref{sec:related:modelinf:passive-white}) that, first, uses \textit{predicate
+abstraction} to generate an abstract version of the considered
+class. Afterwards, a minimal version (interface) of this
+abstraction is constructed by leveraging the $\EuScript{L}^*$
+algorithm. The tool \textit{Java Interface Synthesis Tool} (JIST)
+is the resulting implementation of such a technique.
 
 Raffelt et al. introduced \textit{LearnLib}
 \cite{Raffelt:2005:LLA:1081180.1081189}, a library for learning
-deterministic finite-state automata. It implements the
+deterministic finite state automata. It implements the
 $\EuScript{L}^*$ \cite{Angluin198787} learning algorithm for
 inferring Deterministic Finite Automata (DFA) and some slight
-variants for deriving Mealy machines. Filters can exploit domain
-specific properties and, thus, actively reduce the number of
-queries that a teacher is asked during a learning phase.
+variants for deriving Mealy machines \cite{6771467}, which has
+been formally proposed by Niese in \cite{DBLP:phd/de/Niese2003}.
+Raffelt et al. added a feature called \textit{filters}, which can
+exploit domain specific properties to actively reduce the number
+of queries that a teacher is asked during a learning phase.
 Additionally, statistical data acquisition can be employed to
 evaluate the learning procedure. These features make
 \textit{LearnLib} a powerful tool if a teacher is available and
-DFA are the target model of choice.
-Merten et al. revisited \textit{LearnLib} in a tool called
-\textit{Next Generation LearnLib} (NGLL) \cite{ngll11}, a
-framework providing infrastructure for practical application.
+DFA are the target model of choice.  Merten et al. revisited
+\textit{LearnLib} in a tool called \textit{Next Generation
+LearnLib} (NGLL) \cite{ngll11}, a machine learning framework
+providing infrastructure for practical application, including the
+tool \textit{LearnLib Studio}, a graphical interface for
+designing and executing learning and experimentation setups, plus
+a set of Java libraries. Howar et al. inferred \textit{semantic
+interfaces} of data structures on the basis of systematic testing
+in \cite{howar2012}. Semantic interfaces transparently reflect
+the behavioral influence of parameters at the interface level.
+They defined \textit{Register Mealy Machines} (RMMs) to express
+the data structures behavior concisely, but also because RMMs can
+be learnt much more efficiently than both \textit{Register
+Automata} and plain Mealy machines at a given level of
+abstraction. Register automata, also known as \textit{Finite
+Memory Automata} \cite{Kaminski1994329}, are models which are
+capable of expressing the influence of data on control flow.
+Howar et al. proposed a technique and an implementation on top of
+\textit{LearnLib} to actively learn register automata in
+\cite{howarRA2012}. For further information, active learning of
+Mealy machines has extensively been covered in \cite{steffen11}.
 
-Walkinshaw et al. presented the \textit{QSM} algorithm in
-\cite{Walkinshaw07reverseengineering}, an interactive grammar
-inference technique to infer the underlying state machine
+Walkinshaw et al. presented the \textit{Query-driven State
+Merging} (QSM) algorithm in
+\cite{Walkinshaw07reverseengineering}, an \textit{interactive}
+grammar inference technique to infer the underlying state machine
 representation of an existing software system. The approach is
-interactive because it generates queries to the user as it
+said interactive because it generates queries to the user as it
 constructs a hypothesis machine, which can be interpreted as
-system tests. It is similar to the work done by Hungar in
-\cite{hungar}, who uses the $\EuScript{L}^*$ algorithm, but the
-\textit{QSM} algorithm presumes that the input sequences offer
-some basic coverage of the essential functionality of the system,
-in which case the machine can be inferred relatively cheaply by a
-process of state merging, compared to the $\EuScript{L}^*$
-technique, which systematically and comprehensively explore the
-state space of the target machine. It is worth mentioning that
-\textit{QSM} does not aim to learn the complete automaton but,
-rather, to generalise the supplied traces. It can be supplied a
-subset of traces with interesting behaviours, and it will
-generalise from these using queries. Tools such as
-\textit{Synapse} \cite{LamelaSeijas:2014:SAB:2633448.2633457}
-implement the \textit{QSM} algorithm to perform automatic
-behaviour inference and implementation comparison for the
-programming language Erlang.
+tests. It is similar to the work done by Hungar in \cite{hungar},
+who used the $\EuScript{L}^*$ algorithm, but the QSM
+algorithm presumes that the input sequences offer some basic
+coverage of the essential functionality of the system, in which
+case the machine can be inferred relatively cheaply by a process
+of state merging, compared to the $\EuScript{L}^*$ technique,
+which systematically and comprehensively explore the state space
+of the target machine. It is worth mentioning that QSM does not
+aim at learning the complete automaton but, rather, to generalise
+the supplied traces. It can be supplied a subset of traces with
+interesting behaviors, and it will generalise from these using
+queries. Some tools such as \textit{Synapse}
+\cite{LamelaSeijas:2014:SAB:2633448.2633457} implement the QSM
+algorithm to perform automatic behavior inference and
+implementation comparison for the p rogramming language Erlang.
+
+Berg et al. also revisited the $\EuScript{L}^*$ algorithm in
+\cite{regularinfBerg06}, by generalizing it so that it can infer
+a partially defined automaton, and by defining a mechanism for
+inferring guards of a parameterized system from the symbols in an
+underlying partially defined automaton (by replacing the
+representative symbols by guards that characterize the
+transitions represented by each symbol). This new algorithm is
+intended to infer parameterized systems where guards of
+transitions use only a small subset of all parameters of a
+particular action type. Such a work has been used later to infer
+state machines for systems with parameterized inputs
+\cite{regularinfBerg08}. Here, authors inferred a behavioral
+model (finite-state Mealy machine) for a finite data domain, and
+then, abstracted this model to a symbolic Mealy machine, encoding
+extrapolated invariants on data parameters as guarded
+transitions.
 
 More recently, Choi et al. relied on the $\EuScript{L}^*$
 algorithm to generate finite state machines \cite{Choi2013}, in
-conjunction with a testing approach. They also leverage the
+conjunction with a testing approach. They also leveraged the
 $\EuScript{L}^*$ algorithm to guide the generation of user input
-sequences based on the models. The testing engine aims at
+sequences based on the models. Their testing engine aims at
 interacting with the application under test to discover new
 application states, and to build a model accordingly. If an input
-sequence contradicts the learned model, the learning algorithm
+sequence contradicts the learnt model, the learning algorithm
 rebuilds a new model that meets all the previous scenarios.
 However, $\EuScript{L}^*$-based testing requires a lot of
 expensive restarts and it spends a lot of time in re-exploring
 the same execution prefixes. That is why they also proposed a
-novel learning-based testing algorithm that avoids restarts and
-aggressively merges states in order to quickly prune the state
-space.
+novel \textit{Learning-Based Testing} (LBT) algorithm that avoids
+restarts and aggressively merges states in order to quickly prune
+the state space.
 
+This problem of time wasted in re-exploring and expensive
+restarts is common to most of the algorithms presented above, and
+that is why many works proposed \textit{incremental} versions of
+them.
 
-\subsubsection{Other incremental learning algorithms}
+\subsubsection{Incremental learning algorithms}
 \label{sec:related:modelinf:active-increment}
 
-% TODO:
-% - RPNII Dupont
-% - IID Parekh (Moore)
-% - CGE Meinke (Mealy)
+Incremental learning algorithms play an important role in
+situations where all the training examples are not available to
+the learner at the start. For instance, Dupont proposed an
+incremental extension of the Regular Positive and Negative
+Inference (RPNI) algorithm known as the \textit{Regular Positive
+and Negative Incremental Inference} (RPNI2 or RPNII) algorithm in
+\cite{Dupont96incrementalregular}. Initially, the inference
+process of the RPNI algorithm had to be restarted from scratch
+when new learning data were available. The RPNII algorithm
+overcomes this limitation by dealing with sequential
+presentation, i.e. the learning data are presented one at a time
+in a random order.
 
-Meinke and Sindhu \cite{tap2011} introduced an incremental
-learning algorithm named \textit{IKL} (Incremental Kripke
-Learning) for Kripke structures modelling reactive systems.
+Similarly, Parekh et al. \cite{parekh98} proposed an incremental
+extension of Angluin's \textit{ID} algorithm \cite{ANGLUIN198176}
+for learning DFA from labeled examples and membership queries
+known as \textit{Incremental ID} (IID). The ID algorithm is not
+incremental, since only a single hypothesis automaton is ever
+produced. IID is guaranteed to converge to the target DFA and has
+polynomial time and space complexities. Sindhu et al. also
+enhanced the ID algorithm by proposition another incremental
+version of it, called \textit{Incremental Distinguishing
+Sequences} (IDS) \cite{journals/corr/abs-1206-2691}, which uses
+the distinguishing sequence technique for incremental learning of
+DFA. In contrast with IID, the IDS algorithm, and its proof of
+correctness are much simpler.
 
+Meinke introduced an algorithm for sequential learning of Mealy
+automata by \textit{Congruence Generator Extension} (CGE) in
+\cite{meinkeCGE}. The term \textit{sequential} indicates that
+this algorithm can produce a sequence of hypothesis automata
+$\EuScript{A}_0, ..., \EuScript{A}_n$ which are approximations to
+an unknown automata $\EuScript{A}$, based on sequence of
+information (queries and results) about $\EuScript{A}$. A
+sequential algorithm is said \textit{incremental} if computation
+of successive approximations can reuse previous results (more
+information can be found in \cite{Parekh00grammarinference}).
+Using finitely generated congruences here increases the
+efficiency of hypothesis automaton representation. The CGE
+algorithm has some features in common with the RPNII algorithm
+mentioned previously: both RPNII and CGE perform a recursive
+depth first search of a lexicographically ordered state set with
+backtracking. However, RPNII is designed for Moore machines with
+binary outputs (positive/negative), while CGE is coded for Mealy
+machines.
 
-\subsubsection{Other techniques}
-\label{sec:related:modelinf:active-others}
+Some incremental learning algorithms, such as those which are
+both sequential and incremental, can be specifically chosen to
+make testing more effective and scalable. That is the case of
+several works on Learning-Based Testing. For example, Meinke and
+Sindhu \cite{tap2011} introduced an incremental learning
+algorithm named \textit{Incremental Kripke Learning} (IKL) for
+Kripke structures modeling reactive systems.  Kripke structures
+are a variation of transition systems used in model checking.
 
-Bertolino et al. presented the \textit{StrawBerry} method in
-\cite{Bertolino:2009:ASB:1595696.1595719}, a method that infers a
-\textit{Behavior Protocol} automaton from a WSDL description.
-WSDL is a format for documenting a variety of Web Services,
-containing information about the inputs/outputs and available
-operations. \textit{StrawBerry} automatically derives a partial
-ordering relation among the invocations of the different WSDL
-operations, that is represented as an automaton called
-\textit{Behavior Protocol} automaton. This automaton models the
-interaction protocol that a client has to follow in order to
-correctly interact with the WS. The states of the behavior
-protocol automaton are WS execution states and the transitions,
-labeled with operation names and input/ouput data, model
-possible operation invocations from the client of the WS.
+In the following subsection, we present our second category of model
+inference techniques, which does not interact with the software
+system to learn models but rather, infer models from execution
+traces.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
@@ -206,7 +289,17 @@ possible operation invocations from the client of the WS.
 \label{sec:related:modelinf:passive}
 
 For passive learning techniques, a model is inferred from a
-provided set of traces.
+provided set of traces, and the algorithms are designed to
+construct models based on this fixed set of positive (and
+negative) examples only.
+
+We cover Finite State Automaton inference in subsection
+\ref{sec:related:modelinf:passive-fsa} since these works are prominent in passive
+learning model inference. We then present specification mining
+works in subsection \ref{sec:related:modelinf:passive-spec} and in subsection
+\ref{sec:related:modelinf:passive-crawling}, which gathers some crawling
+techniques. Finally, some  white-box techniques used to infer
+models are presented in subsection \ref{sec:related:modelinf:passive-white}.
 
 \subsubsection{FSA inference techniques}
 \label{sec:related:modelinf:passive-fsa}
@@ -217,7 +310,7 @@ inference are based on the \textit{kTail} algorithm
 traces in two steps.  First, it builds a Prefix Tree Acceptor
 (PTA), which is a tree where edges are labeled with event names.
 The language accepted by the PTA exactly consists of the set of
-event sequences recorded in the traces. Then, \textit{kTail}
+event sequences recorded in the traces. Then, kTail
 transforms the PTA into a FSA by merging two states if they share
 the same future of length $k$. The future of length $k$ of a
 state is defined as the set of the event sequences of maximum
@@ -226,70 +319,69 @@ automaton is obtained by merging every pair of states with the
 same future of length $k$.
 
 However, FSA inference for complex software systems can produce
-imprecise, overgeneralized models containing undesirable
-behaviours \cite{4023976}. Lo et al. enhanced the \textit{kTail}
-algorithm by introducing a technique that generates precise FSA
-using temporal properties inferred from traces to steer the
-generation of FSA \cite{Lo:2009:ASB:1595696.1595761}. However,
-this approach only considers the observed execution sequences and
-does not consider internal state information.
+imprecise and overgeneralized models containing undesirable
+behaviors \cite{4023976}. Reiss and Renieris improved the kTail
+algorithm by proposing a new algorithm which merges two states if
+they share at least one \textit{k-future} \cite{919096}. By using
+a merging criterion that is weaker than the kTail, their variant
+merges more states than kTail.
 
-Reiss and Renieris also improved the \textit{kTail} algorithm by
-proposing a new algorithm which merges two states if they share
-at least one \textit{k-future} \cite{919096}. By using a merging
-criterion that is weaker than the \textit{kTail}, their variant
-merges more states than \textit{kTail}.
 Lo et al. \cite{Lo:2009:ASB:1595696.1595761} also enhanced the
-\textit{kTail} algorithm by incorporating state information. They
-proposed first inferring temporal properties that generally hold
-for the dynamic traces, and then merging states, while ensuring
-that the merge does not violate the inferred properties. However,
-this approach only considers the observed execution sequences and
-does not consider internal state information.
+kTail algorithm by incorporating state information. They
+proposed to, first, inferring temporal properties that generally
+hold for the dynamic traces, and then, merging states, while
+ensuring that the merge does not violate the inferred properties.
+However, this approach only considers the observed execution
+sequences and does not consider internal state information.
 
 That is why, in \cite{Krka:2010:UDE:1810295.1810324}, Krka et al.
-infer object-level behavioral models from dynamically observed
+inferred object level behavioral models from dynamically observed
 executions, by using not only execution traces but also
-dynamically inferred program invariants. An invariant is a
-property that holds at a certain point or points in a program.
-These are often used in assert statements, documentation, and
-formal specifications.
+dynamically inferred invariants. An invariant is a property that
+holds at a certain point or points in a software.  These are
+often used in assert statements, documentation, and formal
+specifications.
 
 Mariani et al. introduced the \textit{kBehavior} algorithm
 \cite{mariani2007dynamic} that incrementally generates a FSA from
-a set of traces. When a new trace is submitted to
-\textit{kBehavior}, this algorithm first identifies sub-traces of
-the input trace that are accepted by sub-automata in the current
-automaton (the sub-traces must have a minimal length k, otherwise
-they are considered too short to be relevant). Then,
-\textit{kBehavior} extends the automaton with the addition of new
-branches that suitably connect the identified sub-automata,
-producing a new version of the automaton that accepts the entire
-input trace. They successfully applied this algorithm to
-automatically analyze log files and retrieve important
-information to identify failure causes \cite{4700316}, but also
-to automatically analyze logs obtained from workloads to retrieve
-important information that can relate the failure to its cause
-\cite{cotroneo2007investigation}.
-Both works describe the \textit{kLFA} technique that generates an
-FSA from a set of traces that incorporate information about both
-the event sequences and the values of the attributes associated
-with events. The generated FSA has special transition labels that
-include data-flow symbols.
+a set of traces. When a new trace is submitted to kBehavior, this
+algorithm first identifies sub-traces of the input trace that are
+accepted by sub-automata in the current automaton (the sub-traces
+must have a minimal length \textit{k}, otherwise they are
+considered too short to be relevant). Then, kBehavior extends the
+automaton with the addition of new branches that suitably connect
+the identified sub-automata, producing a new version of the
+automaton that accepts the entire input trace. They successfully
+applied this algorithm to automatically analyze log files and
+retrieved important information to identify failure causes
+\cite{4700316}. They also automatically analyzed logs obtained
+from workloads to highlight useful information that can relate
+the failure to its cause \cite{cotroneo2007investigation}.
+Both works describe the \textit{kLFA} technique that generates
+an FSA from a set of traces that incorporate information about
+both the event sequences and the values of the attributes
+associated with events. The generated FSA has special transition
+labels that include data flow symbols.
 
-Lorenzoli et al. also extended \textit{kTail} to produce FSAs
-with transitions annotated by algebraic constraints
+Lorenzoli et al. also extended kTail to produce FSAs with
+transitions annotated by algebraic constraints
 \cite{Lorenzoli2008}. Their technique, called \textit{gkTail},
 generates an EFSA from a set of traces that incorporate
 information about both the event sequences and the values of the
 parameters associated with event sequences.
 
-Lo et al. evaluated \textit{kTail}, \textit{kBehavior},
-\textit{gkTail}, and \textit{kLFA} with a set of 10 case studies
-extracted from real software systems in \cite{Lo20122063}. This
-empirical comparative study quantifies both the effect of adding
-data-flow information within automata and the effectiveness of
-the techniques when varying sparseness of traces.
+Lo et al. evaluated kTail, kBehavior, gkTail, and kLFA with a set
+of 10 case studies extracted from real software systems in
+\cite{Lo20122063}. This empirical comparative study quantifies
+both the effect of adding data flow information within automata
+and the effectiveness of the techniques when varying sparseness
+of traces.
+
+The techniques presented in this subsection are focused on building
+specifications modeled as Finite State Automata. While they are
+quite similar, we decided to separate those works from other
+techniques observing software system execution to infer models
+and labeled as \textit{specification mining}.
 
 
 \subsubsection{Specification mining}
@@ -298,135 +390,237 @@ the techniques when varying sparseness of traces.
 Ernst et al. proposed automatic deduction of formal
 specifications from execution traces
 \cite{Ernst:1999:DDL:302405.302467}. Their \textit{Daikon} tool
-works by learning likely invariants involving program variables
-from dynamic traces. Dynamic invariant detection runs a program,
-observes the values that the program computes, and then reports
-properties that were true over the observed executions. This is a
-machine learning technique that can be applied to arbitrary data.
-Daikon's output has been used for generating test cases,
-predicting incompatibilities in component integration, automating
-theorem proving, repairing inconsistent data structures, and
-checking the validity of data streams, among other tasks
-\cite{Ernst200735}.
+works by learning likely invariants involving software variables
+from dynamic traces. Dynamic invariant detection runs a software
+system, observes the values that the software computes, and then
+reports properties that were \textit{true} over the observed
+executions.  This is a machine learning technique that can be
+applied to arbitrary data.  Daikon's output has been used for
+generating test cases, predicting incompatibilities in component
+integration, automating theorem proving, repairing inconsistent
+data structures, and checking the validity of data streams, among
+other tasks \cite{Ernst200735}.
 
 Ammons et al. first introduced the term \textit{specification
 mining} \cite{Ammons:2002:MS:565816.503275} to describe a machine
 learning technique that infers a specification by observing
-program execution and concisely summarizing the frequent
+software system execution and concisely summarizing the frequent
 interaction patterns as state machines that capture both temporal
 and data dependences. These state machines can be examined by a
-programmer, to refine the specification and identify errors, and
-can be utilized by automatic verification tools, to find bugs.
+developer, to refine the specification and identify errors, and
+can be utilized by automatic verification tools to find bugs.
 
 Yang et al. \cite{Yang:2006:PMT:1134285.1134325} created
 \textit{Perracotta}, an inference engine for temporal API rules
-that is able to scale to large programs and work effectively with
-the imperfect traces typically available in industrial scenarios,
-using an approximate inference algorithm.
+that is able to scale to large software systems and work
+effectively with the imperfect traces typically available in
+industrial scenarios, using an approximate inference algorithm.
+
+In \cite{Ghezzi:2009:SIB:1555001.1555057}, Ghezzi et al.
+described an approach (\textit{SPY}) to recover the specification
+of a software component from the observation of its runtime
+behavior. They infer a formal specification of stateful black-box
+components that behave as data abstractions by first, building a
+Deterministic Finite Automaton (DFA) that models the partial
+behavior of instances of the data abstraction, and then, by
+generalizing it via graph transformation rules. The rules can
+generate a possibly infinite number of behavioral models though.
+
+Bertolino et al. presented \textit{StrawBerry} in
+\cite{Bertolino:2009:ASB:1595696.1595719}, a method that infers a
+\textit{Behavior Protocol} automaton from a Web Service
+Description Language (WSDL) document.  WSDL is a format for
+documenting a variety of Web Services, containing information
+about the inputs, outputs and available operations. StrawBerry
+automatically derives a partial ordering relation among the
+invocations of the different WSDL operations, that is represented
+as an automaton called Behavior Protocol automaton.  This
+automaton models the interaction protocol that a client has to
+follow in order to correctly interact with the Web Service.  The
+states of the behavior protocol automaton are Web Service
+execution states and the transitions, labeled with operation
+names and input/ouput data, model possible operation invocations
+from the client of the Web Service.
 
 Later, Zong et al. \cite{ZhongZXM11} proposed to infer
 specifications from API documentation to check whether
 implementations match it.  Such specifications do not reflect the
-implementation behaviour though. Furthermore, this method can be
-applied on condition to have these API documentations in a
+implementation behavior though. Furthermore, this method can be
+applied only if these API documentations are available in a
 readable format.
 
 Taking another direction by leveraging genetic algorithms,
 Tonella et al. \cite{TonellaNMLH13} applied a data-clustering
 algorithm to execution traces with concrete states in order to
 group concrete states into clusters. They then run invariant
-inference as in \cite{Ernst:1999:DDL:302405.302467,Ernst200735}
-on each cluster to infer a set of invariants for each cluster,
+inference on each cluster to infer a set of invariants for each
+cluster as in \cite{Ernst:1999:DDL:302405.302467,Ernst200735},
 and they iteratively improve the clustering, using a genetic
 algorithm, so as to optimize the quality attributes of the
-associated FSM model. Each distinct set of invariants produced
-for each cluster at the end of the optimization represents an
-abstract state and is used as the abstraction function that maps
-concrete states to abstract ones. By applying these abstraction
-functions to concrete input traces they are able to generate the
-output model.
+associated Finite State Machine (FSM) model. Each distinct set of
+invariants produced for each cluster at the end of the
+optimization represents an abstract state and is used as the
+abstraction function that maps concrete states to abstract ones.
+By applying these abstraction functions to concrete input traces
+they are able to generate the output model.
 
+In \cite{DBLP:conf/soict/DurandS14}, we proposed a method
+combining model inference and expert systems to infer exact yet
+partial formal models for web applications from log files. This
+is not entirely new (see, e.g.,
+\cite{Andrews00broad-spectrumstudies,4700316}) but, to the best of
+our knowledge, none of the existing works focused on speed and
+exactness for generating models. We relied on Input Output
+Symbolic Transition Systems (IOSTS) \cite{FTW05} to model the
+behaviors of an application thanks to a framework combining
+expert systems and model inference. Our work has been enhanced
+in \cite{DBLP:conf/debs/SalvaD15} to target large production
+systems of a worldwide tire manufacturer. While our work is
+similar to some of the works cited in this paper, it differs by
+quickly inferring both exact, rather small, and formal models of
+complex systems that can be used in practice. In
+\cite{DBLP:conf/debs/SalvaD15}, a framework called
+\textit{Autofunk} can infer both formal and exact models from
+millions of traces of a production system in a few minutes. This
+framework leverages different techniques such as machine
+learning, data mining, and expert systems. Experiment results
+proved both speed and effectiveness of this solution.
 
-\subsubsection{Crawling techniques through GUIs}
+These works assume a set of traces available for learning.
+However, not all of them explain how to gather such traces when
+they are not application logs or well-identified application
+traces. Some works have combined model inference with a technique
+that stimulates the application so that it yields traces. We
+introduce them in the next subsection.
+
+\subsubsection{Crawling techniques through Graphical User
+Interfaces}
 \label{sec:related:modelinf:passive-crawling}
 
-A lot of works, which originate from automatic black-box testing,
-retrieve specifications of event-driven applications (desktop
-\cite{Memon:2003}, web \cite{webmate12}, or mobile
-\cite{Amalfitano:2012:UGR:2351676.2351717,Joorabchi:2012:REI:2420240.2420457,WPX13,MobiGUITARIEEESoftware2014})
-by exploring them (a.k.a. crawling). Memon et al. initially
-presented GUITAR \cite{Memon:2003}, a tool for scanning desktop
-applications which produces event flow graphs and trees showing
-the GUI execution behaviours. The generated models are quite
-simple and many false event sequences have to be weeded out
+A lot of different works, which originate from automatic
+black-box testing, retrieve specifications of event-driven
+applications (either desktop, web, or mobile) by exploring them
+(in other words, crawling them). Learning is achieved by
+stimulating the application and gathering all the events in a
+model. Such works can be linked to the previous subsection since
+they mine specifications, but they deserve a dedicated subsection as
+they take a completely different approach by exercising
+applications.
+
+Memon et al. initially presented \textit{GUITAR} in
+\cite{Memon:2003}, a tool for scanning desktop applications which
+produces event flow graphs and trees showing the Graphical User
+Interface (GUI) execution behaviors. The generated models are
+quite simple and many false event sequences have to be weeded out
 later.
 
-Mesbah et al. proposed the tool Crawljax \cite{crawljax:tweb12},
-specialised in Ajax applications. It produces a state machine
-model to capture the changes of the DOM structures of HTML
-documents obtained after triggering events (click, mouseover,
-etc.). An interesting feature of Crawljax is the concatenation of
-identical states in the model under construction, by comparison
-based on the DOM structure. In practice, the model encompasses
-all the actions performed by the implementation. To avoid a state
+Mesbah et al. proposed the tool \textit{Crawljax}
+\cite{crawljax:tweb12}, specialised in AJAX applications, i.e.
+dynamic web applications.  It produces a state machine model to
+capture the changes of the DOM structures of HTML documents
+obtained after triggering events (click, mouseover, etc.). An
+interesting feature of Crawljax is the concatenation of identical
+states in the model under construction, by comparison based on
+the DOM structure. In practice, the model encompasses all the
+actions performed by the implementation. To avoid a state
 explosion problem, state abstractions should be manually given.
-WebMate \cite{webmate12} is another, more recent, model extractor
-for web applications.
+\textit{WebMate} \cite{webmate12} is another, more recent, model
+extractor for web applications. This tools learns a \textit{usage
+model} that captures how a user can interact with the web
+application, modeling all the interactions as a graph where
+nodes correspond to different states of the application, and
+edges represent user interactions.
 
 Crawlers for mobile applications were proposed in
 \cite{Amalfitano:2012:UGR:2351676.2351717,Joorabchi:2012:REI:2420240.2420457,MobiGUITARIEEESoftware2014}.
 These provide simple trees, depicting the observed GUI. In
-\cite{Amalfitano:2012:UGR:2351676.2351717}, paths of the tree not
-terminated by a crash detection, are used to re-generate
-regression test cases. Amalfitano et al. created
-\textit{MobiGUITAR}, an adaptation of the \textit{GUITAR} tool
-for automated GUI-driven testing of Android applications.
+\cite{Amalfitano:2012:UGR:2351676.2351717}, Amalfitano et al. use
+ripping to automatically and systematically traverse the
+application's user interface, generating and executing test cases
+as new events are encountered. Their technique relies on a state
+machine model of the GUI, called a GUI tree, containing the set
+of GUI states and state transitions encountered during the
+ripping process.  Later, Amalfitano et al. also created
+\textit{MobiGUITAR} \cite{MobiGUITARIEEESoftware2014}, an
+adaptation of the GUITAR tool for automated GUI-driven testing of
+Android applications. Here, the abstraction is a scalable
+state-machine model that represents the application's GUI as in
+\cite{Amalfitano:2012:UGR:2351676.2351717}. In a similar manner,
+Joorabchi et al. presented a reverse engineering technique that
+creates state flow graphs of iOS applications in
+\cite{Joorabchi:2012:REI:2420240.2420457}.
 
 Yang et al. \cite{WPX13} presented a grey-box testing method for
 Android applications whose originality lies in the static
-analysis of the code to only infer the events that can be applied
+analyzis of the code to only infer the events that can be applied
 to the GUI. Then, a classical crawling technique is employed to
 derive a lightweight models (simple trees). The exploration can
 be directed either in breadth-first order or in depth-first
 order.
 
+The works presented in this subsection are either grey- or black-box
+techniques. Next subsection introduces some model inference
+techniques that use a white-box approach.
+
 
 \subsubsection{White-box techniques}
 \label{sec:related:modelinf:passive-white}
 
-A few works tried to infer models from source code. For instance,
+Several works dealt with model inference from source code. For
+instance, Whaley et al. proposed using multiple FSM submodels to
+model the interface of a class in
+\cite{Whaley:2002:AEO:566171.566212}. Two techniques are given to
+automatically construct such models: a dynamic instrumentation
+technique, and a static analyzis that infers pairs of methods
+that cannot be called consecutively, leading to a DFA with one
+state per method. A more general and formal solution to interface
+synthesis is given in \cite{Alur:2005:SIS:1047659.1040314} (and
+covered in subsection \ref{sec:related:modelinf:active-letoile}).
+
 Salah et al. proposed \textit{Scenariographer}
 \cite{Salah05scenariographer}, an algorithm and a tool to
 estimate the usage scenarios of a class from its execution
 profile. The estimation process produces canonical groups, where
 each group comprises a set of similar method invocation sequences
 that represent a usage scenario.
-In \cite{Pradel:2009}, Pradel and Gross present a scalable
-dynamic analysis that infers extremely detailed specifications of
-correct method call sequences on multiple related objects.
+
+Later, Shoham et al. introduced an approach to mine temporal API
+specifications based on static analyzis in
+\cite{Shoham:2007:SSM:1273463.1273487}. They proposed a two-step
+approach: (i) an abstract-trace collection to collect sets of
+possible behaviors in client software, and (ii) a summarization
+phase to filter out noise. Mined specifications are often too
+detailed here, and their solution does not scale well.
+
+In \cite{Pradel:2009}, Pradel and Gross presented a scalable
+dynamic analyzis that infers extremely detailed specifications of
+correct method call sequences on multiple related objects. Their
+approach preprocesses method traces to identify small sets of
+related objects (object collaborations) and method calls which
+can be analyzed separately. Then, they derive temporal
+specifications. This work has been extended in
+\cite{Dallmeier_generatingtest} by means of active testing.
+
+In \cite{Wasylkowski07detectingobject}, Wasylkowski et al.
+proposed \textit{JADET}, a Java code analyzer to infer sequences
+of method calls. These sequences are then used to produce object
+usage patterns that serve to detect object usage violations in
+the code. This is similar to
+\cite{Wasylkowski_miningoperational}, which introduced
+\textit{OP-Miner}, a tool that learns and checks operational
+preconditions of methods by static software analyzis.
 
 The methods described in \cite{concolicandroid12,5416728} rely
 upon concolic testing to explore symbolic execution paths of the
-application and to detect bugs. These white-box approaches
-theoretically offer a better code coverage than black-box
-automatic testing. However, the number of paths being explored
-concretely limits to short paths only, and the constraints have
-not to be too complex for being solved.
-
-
-\subsubsection{Other techniques}
-\label{sec:related:modelinf:passive-others}
-
-In \cite{DBLP:conf/soict/DurandS14}, Durand and Salva proposed a
-method combining model inference and expert systems to infer
-exact yet partial formal models for web applications from log
-files, which is not entirely new
-\cite{Andrews00broad-spectrumstudies}, except that, to the best
-of our knowledge, none of works focused on speed and exactness
-for generating models.
-Their work has been enhanced in \cite{DBLP:conf/debs/SalvaD15} to
-target large production systems of a worldwide tire manufacturer.
-While their work is similar to some of the cited works in the
-paper, it differs by quickly inferring both exact, rather small,
-and formal models of complex systems that can be used in
-practice.
+application and to detect bugs. In \cite{concolicandroid12},
+Anand et al. presented an algorithm for generating input events
+to exercise smartphone applications, symbolically tracking events
+from the point where they originate to the point where they are
+ultimately handled. In \cite{5416728}, Artzi et al. proposed a
+technique to generate tests for web applications, relying on both
+combined concrete and symbolic execution and explicit state model
+checking. These white-box approaches theoretically offer a better
+code coverage than black-box automatic testing. However, the
+number of paths being explored concretely limits to short paths
+only, and the constraints have not to be too complex for being
+solved.
