@@ -1,26 +1,19 @@
+% !TEX root = ../../thesis.tex
+%
 \chapter{Model inference for web applications}
 \label{sec:modelinf:webapps}
 
-Models are essential while working on the design of complex
-systems to build reliable implementations. But, they are also
-particularly useful when systems reach maintenance cycle, easing
-comprehension of the overall design and describing how these
-systems work under the hood. This is important because people who
-are responsible for maintaining or improving systems are most
-likely not the same who designed and built them. It is nearly
-impossible for one person to know all the details related to a
-particular system, hence the need for creating and maintaining
-models.
-
 Before tackling the model inference of production systems, we
-chose to validate our first ideas and concepts by applying them
-on web applications.
+chose to validate our initial ideas and concepts by applying them
+on web applications. Such applications are often smaller and
+easier to understand, especially given our background on web
+development.
 
 \TODO{Add more stuff on web apps}
 
 We proposed a new approach to infer models of web applications.
 Such an approach is divided into several modules as depicted in
-Figure \ref{fig:framework}. The \emph{Models generator} is the
+Figure \ref{fig:soict-framework}. The \emph{Models generator} is the
 centrepiece of this framework. It takes traces as inputs, which
 can be sent by a \emph{Monitor} collecting them on the fly. But
 it is worth mentioning that the traces can also be sent by any
@@ -29,20 +22,21 @@ format. The Models generator is based upon an expert system,
 which is an artificial intelligence engine emulating acts of a
 human expert by inferring a set of rules representing his
 knowledge. Such knowledge is organised into a hierarchy of
-several layers. Each one gathers a set of inference rules written
-with a first order logic. Typically, each layer creates an IOSTS,
-and the higher the layer is, the more abstract the IOSTS becomes.
-Models are then stored and can be later analysed by experts,
-verification tools, etc. The number of layers is not strictly
-bounded even though it is manifest that it has to be finite.
+several layers. Each layer gathers a set of inference rules
+written with a first-order logic. Typically, each layer creates
+an IOSTS, and the higher the layer is, the more abstract the
+IOSTS becomes. Models are then stored and can be later analysed
+by experts, verification tools, etc. The number of layers is not
+strictly bounded even though it is manifest that it has to be
+finite.
 
 \begin{figure}[ht]
     \begin{center}
-        \includegraphics[width=1.0\linewidth]{figures/soict-framework.png}
+        \includegraphics[width=0.8\linewidth]{figures/soict-framework.png}
     \end{center}
+    \caption{Model generation framework for web applications}
 
-    \caption{Model generation framework}
-    \label{fig:framework}
+    \label{fig:soict-framework}
 \end{figure}
 
 The Models generator relies upon traces to construct IOSTSs, but
@@ -52,14 +46,15 @@ the application being analysed is an event-driven application.
 Such traces can be produced by stimulating and exploring the
 application with automatic testing. In our approach, this
 exploration is achieved by the \emph{Robot explorer}. In contrast
-with most of the existing crawling techniques
-\cite{Memon:2003,concolicandroid12,crawljax:tweb12,Amalfitano:2012:UGR:2351676.2351717,WPX13},
-our robot does not cover the application in blind mode or with a
-static traversal strategy. Instead, it is cleverly guided by the
-Models generator which applies an exploration strategy carried
-out by rules. This involves the capture of new traces by the
-Monitor or by the Robot explorer which returns them to the Models
-generator. The advantages of this approach are manifold:
+with most of the existing crawling techniques, which are detailed
+in Chapter \ref{sec:related} Section
+\ref{sec:related:modelinf:crawling}, our robot does not cover the
+application in blind mode or with a static traversal strategy.
+Instead, it is cleverly guided by the Models generator which
+applies an exploration strategy carried out by inference rules.
+This involves the capture of new traces by the Monitor or by the
+Robot explorer which returns them to the Models generator. The
+advantages of this approach are manifold:
 
 \begin{itemize}
 \item it takes a predefined set of traces collected from any kind
@@ -94,30 +89,36 @@ functional test cases, etc.
 We describe our work in the next section, then we present our
 results in Section \ref{sec:modelinf:webapps:exp}, and we
 conclude on this work in Section
-\ref{sec:modelinf:webapps:conclusion}. This work has been
-published in \cite{DBLP:conf/soict/DurandS14}.
+\ref{sec:modelinf:webapps:conclusion}.
+
+\textbf{Publication.} This work has been published in the
+Proceedings of the Fifth Symposium on Information and
+Communication Technology (SoICT'14)
+\cite{DBLP:conf/soict/DurandS14}.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\section{Contribution}
+\section{Inferring models with rule-based expert systems}
 \label{sec:modelinf:webapps:contrib}
 
 \begin{figure}[ht]
     \begin{center}
-        \includegraphics[width=1.0\linewidth]{figures/se.png}
+        \includegraphics[width=1.0\linewidth]{figures/soict_se.png}
     \end{center}
     \caption {Models generator}
+
     \label{fig:se}
 \end{figure}
 
 The Models generator is mainly composed of a rule-based expert
 system, adopting a forward chaining. Such a system separates the
 knowledge base from the reasoning: the former is expressed with
-data a.k.a. facts and the latter is realised with inference rules
-that are applied on the facts. Our Models generator initially
-takes traces as an initial knowledge base and owns inference
-rules organised into layers for trying to fit the human expert
-behaviour. These layers are depicted in Figure \ref{fig:se}.
+data also known as facts and the latter is realised with
+inference rules that are applied on the facts. Our Models
+generator initially takes traces as an initial knowledge base and
+owns inference rules organised into layers for trying to fit the
+human expert behaviour. These layers are depicted in Figure
+\ref{fig:se}.
 
 Usually, when a human expert has to read traces of an
 application, he often filters them out to only keep those which
@@ -152,29 +153,32 @@ specific application.
 
 For readability purpose, we chose to represent inference rules
 with this format: \emph{When conditions on facts Then actions on
-facts} (format taken by the Drools inference engine
-\footnote{http://www.jboss.org/drools/}). Independently on the
-application's type, Layers 2 to N handle the following fact
-types: \emph{Location} which represents an IOSTS location, and
-\emph{Transition}, which represents an IOSTS transition, composed
-of two Locations Linit, Lfinal, and two data collections Guard
-and Assign. Now, it is manifest that the inference of models has
-to be done in a finite time and in a deterministic way. To reach
-that purpose, we formulate the following hypotheses on the
-inference rules:
+facts}. This format has been borrowed to the Drools inference
+engine \footnote{http://www.jboss.org/drools/}). Independently
+on the application's type, Layers 2 to N handle the following
+fact types: \emph{Location} which represents an IOSTS location,
+and \emph{Transition}, which represents an IOSTS transition,
+composed of two Locations Linit, Lfinal, and two data collections
+Guard and Assign. Now, it is manifest that the inference of
+models has to be done in a finite time and in a deterministic
+way. To reach that purpose, we formulate the following hypotheses
+on the inference rules:
 
 \begin{enumerate}
 \item (finite complexity): a rule can only be applied a limited number of times on the same knowledge base,
+
 \item (soundness): the inference rules are Modus Ponens (simple
 implications that lead to sound facts if the original facts are
 true: If P, then Q. P. Therefore, Q.),
-\item (no implicit knowledge elimination): after the application of a rule $r$ expressed by the relation $r: T_i \rightarrow
-T_{i+1} (i\geq 2)$, with $T_i$ a Transition base, for all transition $t=(l_n,l_m,a(p),G,A)$ extracted from
-$T_{i+1}$, $l_n$ is reachable from $l_0$.
+
+\item (no implicit knowledge elimination): after the application
+of a rule $r$ expressed by the relation $r: T_i \rightarrow
+T_{i+1} (i\geq 2)$, with $T_i$ a Transition base, for all
+transition $t=(l_n,l_m,a(p),G,A)$ extracted from $T_{i+1}$, $l_n$
+is reachable from $l_0$.
 \end{enumerate}
 
-In the following, we detail these layers in the context of Web
-applications while giving some rule examples.
+In the following, we illustrate each layer with examples.
 
 \subsection{Layer 1: Trace filtering}
 \label{sec:modelinf:webapps:L1}
@@ -186,24 +190,19 @@ only one HTTP response. Consequently, the traces, given to Layer
 layer begins formatting these couples so that these can be
 analysed in a more convenient way.
 
-\begin{comment}
 In short, an HTTP request is a textual message containing an HTTP
-verb, followed by a Unique Resource Identifier (URI). It may also
-contain header sections such as Host, Connection, or Accept. The
-corresponding HTTP response is also a textual message containing
-at least a status code. It may encompass headers (e.g,.
-Content-Type, Content-Length) and a content. All these notions
-can be easily identified.
-\end{comment}
-
-\begin{comment}
-For instance, Figure \ref{httpexample} lists an HTTP request
+verb (also called method), followed by a Unique Resource
+Identifier (URI). It may also contain header sections such as
+Host, Connection, or Accept. The corresponding HTTP response is
+also a textual message containing at least a status code. It may
+encompass headers (e.g,.  Content-Type, Content-Length) and a
+content. All these notions can be easily identified. For
+instance, Figure \ref{fig:httpexample} depicts an HTTP request
 followed by its response. This is a $GET$ HTTP request, meaning a
 client wants to read the content of the $/hello$ resource, which
 is, in this case, a web page in HTML.
 
 \begin{figure}[ht]
-\begin{center}
 \begin{verbatim}
 GET /hello HTTP/1.1
 Host: example.org
@@ -217,98 +216,83 @@ Content-Type: text/html
 Content-Length: 13
 Hello, World!
 \end{verbatim}
-\end{center}
-\caption{HTTP request / response example}
-\label{httpexample}
-\end{figure}
-\end{comment}
 
-For a couple  (HTTP request, HTTP response), we extract the
-following information: the HTTP verb, the target URI, the request
-content which is a collection of data (headers, content) and the
-response content which is the collection (HTTP status, headers,
-response content). A header may also be a collection of data or
-may be null. Contents are texts e.g., HTML texts. Since we wish
-translating such traces into IOSTSs, we turn these textual items
-into a structured valued action $(a(p),\theta)$ with $a$ the HTTP
-verb and $\theta$ a valuation over the variable set
-$p=\{URI,request,response\}$. This is captured by the following
-proposition:
+\caption{HTTP request/response example}
+\label{fig:httpexample}
+\end{figure}
+
+For a couple \textit{(HTTP request, HTTP response)}, we extract
+the following information: the HTTP verb, the target URI, the
+request content which is a collection of data (headers, content)
+and the response content which is the collection (HTTP status,
+headers, response content). A header may also be a collection of
+data or may be null. Contents are textual, e.g. HTML. Since
+we wish to translate such traces into IOSTSs, we turn these
+textual items into a structured valued action $(a(p),\theta)$
+with $a$ the HTTP verb and $\theta$ a valuation over the variable
+set $p=\{URI,request,response\}$. This is captured by the
+following proposition:
 
 \begin{definition}[Structured HTTP Traces] Let $t=
-req_1,resp_1$, ..., $req_n,$ $resp_n$ be a raw HTTP trace
+req_1,resp_1$, \dots, $req_n,$ $resp_n$ be a raw HTTP trace
 composed of an alternate sequence of HTTP request $req_i$ and
 HTTP response $resp_i$. The structured HTTP trace $\sigma$ of $t$
-is the sequence $(a_1(p),\theta_1)...(a_n(p),\theta_n)$ where:
-\begin{itemize} \item $a_i$ is the HTTP verb used to make the
-request in $req_i$, \item $p$ is the parameter set $\{URI,
-request, response\}$, \item $\theta_i$ is a valuation $p
-\rightarrow D_p$ which assigns a value to each variables of $p$.
-$\theta$ is deduced from the values extracted from $req_i$ and
-$resp_i$.
+is the sequence $(a_1(p),\theta_1) \dots (a_n(p),\theta_n)$ where:
 
+\begin{itemize}
+\item $a_i$ is the HTTP verb used to make the request in $req_i$,
+
+\item $p$ is the parameter set $\{URI, request, response\}$,
+
+\item $\theta_i$ is a valuation $p \rightarrow D_p$ that assigns
+a value to each variables of $p$.  $\theta$ is deduced from the
+values extracted from $req_i$ and $resp_i$.
 \end{itemize}
-The resulting trace set derived from raw HTTP traces is denoted
-$ST$.
+
+The resulting structured HTTP trace set derived from the raw HTTP
+traces is denoted $ST$.
 \end{definition}
 
-\begin{comment}
-If we take back the HTTP messages of Figure \ref{httpexample}, we
-obtain the structured trace $(Get(p), \theta)$ with $\theta$
-composed of {URI="/hello", request={headers=[ Host=
-"example.org", Connection = "keep-alive", Accept = "text/html"
-]}, response={statusCode=200, headers=[ Content-Type =
-"text/html", Content-Length = 13], content= "Hello, World!"} }.
-\end{comment}
+If we take back the HTTP messages given in Figure
+\ref{fig:httpexample}, we obtain the structured HTTP trace
+$(Get(p), \theta)$ with $\theta = \{URI="/hello",
+request=\{headers=[ Host= "example.org", Connection =
+"keep-alive", Accept = "text/html" ]\},
+response=\{statusCode=200, headers=[ Content-Type = "text/html",
+Content-Length = 13], content= "Hello, World!"\}\}$.
 
-Now, structured traces can be filtered. For a main request
-performed by a user, many other sub-requests are also launched by
-a browser in order to fetch images, CSS and JavaScript files.
-Generally speaking, these do not enlighten a peculiar functional
-behaviour of the application. This is why we propose to add rules
-in Layer 1 to filter these sub-requests out from the traces. Such
-sub-requests can be identified by different ways, e.g., by
-focussing on the file extension found at the end of the URI, or
-on the Content-type value of the request headers. Consequently,
-we created a set of rules, constituted of conditions on the HTTP
-content found in an action, that remove valued actions when the
-condition is met. A straightforward rule example, which removes
-the actions relative to the retrieval of PNG images, is given in
-Figure \ref{fig:layer1:filter}.
-
-\begin{comment}
-\begin{scriptsize}
-\begin{verbatim}[frame=single]
-rule "Filter"
-when
-    $t: HttpVerb(condition on the  content)
-then
-    retract($t);
-end
-\end{verbatim}
-\end{scriptsize}
-\end{comment}
+For a main request performed by a user, many other sub-requests
+are also launched by a browser in order to fetch images, CSS and
+JavaScript files.  Generally speaking, these do not enlighten a
+peculiar functional behaviour of the application. This is why we
+propose to add rules in Layer 1 to filter these sub-requests out
+from the traces. Such sub-requests can be identified by different
+ways, e.g. by focusing on the file extension found at the end of
+the URI or on the content-type value of the request headers.
+Consequently, we created a set of rules, constituted of
+conditions on the HTTP content found in an action, that remove
+valued actions when the condition is met. A straightforward rule
+example that removes the actions relative to the retrieval of PNG
+images, is given in Figure \ref{fig:layer1:filter}.\\
 
 \begin{figure}[ht]
-    \begin{center}
-    \begin{verbatim}
-    rule "Filter PNG images"
-    when
-        \$va: Get(request.mime_type = 'png' or
-        request.file_extension = 'png')
-    then
-        retract(\$va);
-    end
-    \end{verbatim}
-    \end{center}
+\begin{verbatim}
+rule "Filter PNG images"
+when
+  $va: Get(request.mime_type = 'png' or request.file_extension = 'png')
+then
+  retract($va);
+end
+\end{verbatim}
 
-    \caption{Filtering rule example}
-    \label{fig:layer1:filter}
+\caption{Filtering rule example that retracts the valued actions
+related to PNG images}
+\label{fig:layer1:filter}
 \end{figure}
 
 After the instantiation of the Layer 1 rules, we obtain a
 formatted and filtered trace set $ST$ composed of valued actions.
-Now, we are ready to extract the first IOSTS.
+At this point, we are ready to extract the first IOSTS.
 
 \textit{Completeness, soundness, and complexity.} HTTP traces are
 sequences of valued actions modelled with positive facts.
@@ -322,17 +306,16 @@ the rule number. (at worst, every action is covered $k+1$ times).
 \subsection{Layer 2: IOSTS transformation}
 \label{sec:modelinf:webapps:L2}
 
-Intuitively, the IOSTS transformation relies upon the IOLTS
-semantics transformation that is achieved in a backward manner.
-In order to generate the first IOSTS denoted $\EuScript{S}_1$,
-the associated runs are first computed from the structured traces
-by injecting states between valued actions.
+The IOSTS transformation relies upon the IOLTS semantics
+transformation that is achieved in a backward manner.  In order
+to generate the first IOSTS denoted $\EuScript{S}_1$, the
+associated runs are first computed from the structured traces by
+injecting states between valued actions. These steps are detailed
+in the following.
 
-These steps are detailed below:
+\subsubsection{Traces to runs}
 
-\paragraph{Traces to runs}
-
-Given a trace $\sigma$, a run $r$ is firstly derived  by
+Given a trace $\sigma$, a run $r$ is first derived by
 constructing and injecting states on the right and left sides of
 each valued action of $\sigma$. Keeping in mind the IOLTS
 semantics definition, a state shall be modelled by the couple
@@ -341,24 +324,22 @@ $(URI,k)$ is a couple composed of a URI and of an integer $(k
 \geq 0)$. Typically, a couple $(URI,k)$ shall be a location of
 the future IOSTS. All the runs $r$ of $SR$ start with the same
 state $(l0,v_\emptyset)$. Then, a run is constructed by
-incrementally covering one trace: for an action actions
-$(a_i,\theta_i)$ found in a trace, we extract the valuation
-$URI=val$ from $\theta_i$ giving the URI value of the next
-resource reached after the action $a_i$.And we complete the
-current run $r$ with $(a_i,\theta_i)$ followed by the state
-$((val,k),v_\emptyset)$. Since we wish to preserve the sequential
-order of the actions found in the traces, when a URI previously
-encountered is once more detected, the resulting state is
-composed of the URI accompanied with an integer $k$, which is
-incremented to yield a new and unique state. Due to lack of room,
-the algorithm translating the structured traces into a run set is
-not provided in this paper but can be found in \cite{RR14}.
+incrementally covering one trace: for an action $(a_i,\theta_i)$
+found in a trace, we extract the valuation $URI=val$ from
+$\theta_i$ giving the URI value of the next resource reached
+after the action $a_i$, and we complete the current run $r$ with
+$(a_i,\theta_i)$ followed by the state $((val,k),v_\emptyset)$.
+Since we wish to preserve the sequential order of the actions
+found in the traces, when a URI previously encountered is once
+more detected, the resulting state is composed of the URI
+accompanied with an integer $k$, which is incremented to yield a
+new and unique state.
 
 The translation of the structured traces into a run set is
-performed by Algorithm \ref{traces_to_runs} which takes the trace
-set $ST$ and returns the run set $SR$. It handles a set $States$
-storing the constructed states. All the runs $r$ of $SR$ start
-with the same state $(l0,v_\emptyset)$. Algorithm
+performed by the Algorithm \ref{traces_to_runs}, which takes a
+trace set $ST$ as input and returns a run set $SR$. It owns a
+set $States$ storing the constructed states. All the runs $r$ of
+$SR$ start with the same state $(l0,v_\emptyset)$. Algorithm
 \ref{traces_to_runs} covers the actions $(a_i,\theta_i)$ of a
 trace $\sigma$ in order to construct the next state $s$. It
 extracts the valuation $URI=val$ (line 7) from $\theta_i$ giving
@@ -408,37 +389,39 @@ $SR:=SR \cup \{r\}$
 
 END\;
 
-    \caption{Traces to Runs algorithm}
+    \caption{Traces to Runs Algorithm}
     \label{traces_to_runs}
 \end{algorithm}
 
-\TODO{review algorithm}
-
 \begin{proposition}
-Foe each trace $\sigma \in ST$, Algorithm \ref{traces_to_runs}
-constructs a run $r=s_0(a_0,\theta_0)s_1 \dots\\s_n(a_n,\theta_n)s_{n+1} \in SR$ such that $\forall (a_i,\theta_i)
-( 0<i\leq n), \exists ! s_i(a_i,\theta_i)s_{i+1}$ in $r$.
+For each trace $\sigma \in ST$, Algorithm \ref{traces_to_runs}
+constructs a run $r=s_0(a_0,\theta_0)s_1 \dots
+\\s_n(a_n,\theta_n)s_{n+1} \in SR$ such that $\forall
+(a_i,\theta_i) ( 0<i\leq n), \exists ! s_i(a_i,\theta_i)s_{i+1}$
+in $r$.
 \end{proposition}
 
-\paragraph{IOSTS generation}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\subsubsection{IOSTS generation}
 \label{sec:iosts-gen}
 
 The first IOSTS $\EuScript{S}_1$ is derived from the run set $SR$
 in which runs are disjoint except for the initial state
-$(l0,v_\emptyset)$. Intuitively, traces are translated into IOSTS
-paths that are assembled together (IOSTS disjoint union). The
-IOSTS forms a tree composed of paths, each expressing one trace,
-starting from the same initial location.
+$(l0,v_\emptyset)$. Traces are translated into IOSTS paths that
+are assembled together (IOSTS disjoint union). The IOSTS forms a
+tree composed of paths, each expressing one trace, starting from
+the same initial location.
 
-\begin{definition}%State(Runs)
+\begin{definition}
 \label{IOSTS_tree}
-
 Given a run set $SR$, the IOSTS $\EuScript{S}_1$ is called the
 IOSTS tree of $SR$ and corresponds to the tuple
 $<L_{\EuScript{S}_1}, l0_{\EuScript{S}_1},V_{\EuScript{S}_1},
 V0_{\EuScript{S}_1}, I_{\EuScript{S}_1},
 \Lambda_{\EuScript{S}_1},\rightarrow_{\EuScript{S}_1}>$ such
 that:
+
 \begin{itemize}
 
 \item $L_{\EuScript{S}_1}= \{l_i \mid \exists r\in SR, (li,v_\emptyset)$ is
@@ -454,33 +437,27 @@ SR$, $r$ starts with $(l0_{\EuScript{S}_1},v_\emptyset)$,
 
 \item $\rightarrow_{\EuScript{S}_1}$ is defined by the following inference
 rule applied on every element $r\in SR$:
-\end{itemize}
-\noindent\fbox{%
-\begin{minipage}{0.98\textwidth}
-\begin{center}
+
 \begin{tabular}{l}
 $s_i (a_i(p),\theta_i) s_{i+1} \text{ is a term
-of } r, s_i=(l_i,v_\emptyset),$\\
+of } r, s_i=(l_i,v_\emptyset),$
 $s_{i+1}=(l_{i+1},v_\emptyset), G_i=\displaystyle \bigwedge_{(x_i=vi)\in \theta_i} x_i==vi$\\
-$\vdash$
-$l_i \xrightarrow{a_i(p),G_i,(x:=x)_{x\in V}}_{\EuScript{S}_1} l_{i+1}$\\
+$\vdash$ $l_i \xrightarrow{a_i(p),G_i,(x:=x)_{x\in V}}_{\EuScript{S}_1} l_{i+1}$
 \end{tabular}
 
-\end{center}
-\end{minipage}%
-}
+\end{itemize}
 \end{definition}
 
 Here, locations could be merged to reduce the IOSTS size with the
 classical learning algorithms based upon $\EuScript{L}^*$
-\cite{Angluin198787,lambeau08}. Nonetheless, these
-would create an extrapolation of this IOSTS. We prefer rejecting
-such a solution to preserve the trace equivalence of the IOSTS
+\cite{Angluin198787,lambeau08}. Nonetheless, these would create
+an extrapolation of this IOSTS. We prefer rejecting such a
+solution to preserve the trace equivalence of the IOSTS
 $\EuScript{S}_1$ against the structured trace set $ST$ before
 applying inference rules. Instead, we propose to use a
 minimisation technique.
 
-\paragraph{IOSTS minimisation}
+\subsubsection{IOSTS minimisation}
 
 This IOSTS tree can be reduced in term of location size by
 applying a bisimulation minimisation technique which still
@@ -496,7 +473,7 @@ When receiving new traces from the Monitor, the model yield by
 this layer is not fully regenerated, but rather completed on the
 fly. New traces are translated into IOSTS paths that are disjoint
 from $\EuScript{S}_1$ except from the initial location. We
-perform an union between $\EuScript{S}_1$ and IOSTS paths. Then,
+perform a union between $\EuScript{S}_1$ and IOSTS paths. Then,
 the resulting IOSTS is minimised.
 
 \textit{Completeness, soundness, complexity.} Layer 2 takes any
@@ -516,10 +493,6 @@ structured trace set $ST$. As defined, the behaviours encoded in
 $ST$ and $\EuScript{S}_1$ are equivalent since ordered runs are
 transformed into ordered IOSTS sequences.
 
-For sake of readability, we do not provide here the rules of
-Layer 2, which match the above definitions and algorithms.
-Instead, we illustrate an IOSTS generation example below:
-
 \begin{example}
 We take as example a trace obtained from the GitHub website
 \footnote{https://github.com/} after having executed the
@@ -531,33 +504,30 @@ GitHub page. The trace filtering from this example returns the
 following structured traces where the request and response parts
 are concealed for readability purpose:
 
-\begin{lstlisting}
-GET(https://github.com/)
-GET(https://github.com/login)
-POST(https://github.com/session)
-GET(https://github.com/)
-GET(https://github.com/willdurand)
-GET(https://github.com/willdurand/Geocoder)
-POST(https://github.com/logout)
-GET(https://github.com/)
-\end{lstlisting}
+\begin{figure}[ht]
+\begin{verbatim}
+Get(https://github.com/)
+Get(https://github.com/login)
+Post(https://github.com/session)
+Get(https://github.com/)
+Get(https://github.com/willdurand)
+Get(https://github.com/willdurand/Geocoder)
+Post(https://github.com/logout)
+Get(https://github.com/)
+\end{verbatim}
+\end{figure}
 
 After the application of Layer 2, we obtain the IOSTS of Figure
 \ref{fig:github:iosts:1}. Locations are labelled by the URI found
 in the request and by an integer to keep the tree structure of
-the initial traces. Actions are composed of the HTTP verb enriched
-with the variables URI, request, and response. This IOSTS exactly
-reflects the trace behaviour but is still difficult to interpret.
-More abstract actions shall be deduced by the next layers.
+the initial traces. Actions are composed of the HTTP verb
+enriched with the variables URI, request, and response. This
+IOSTS exactly reflects the trace behaviour but is still difficult
+to interpret. More abstract actions shall be deduced by the next
+layers.
 \end{example}
 
-\begin{figure}[ht]
-    \begin{center}
-        \includegraphics[width=1.0\linewidth]{figures/gh-iosts-1.png}
-    \end{center}
-    \caption{IOSTS $\EuScript{S}_1$}
-    \label{fig:github:iosts:1}
-\end{figure}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \subsection{Layers 3-N: IOSTS abstraction}
 \label{sec:modelinf:webapps:L4}
@@ -566,11 +536,16 @@ As stated earlier, the rules of the upper layers analyse the
 transitions of the current IOSTS for trying to enrich its
 semantics while reducing its size. Given an IOSTS
 $\EuScript{S}_1$, every next layer carries out the following
-steps:\\
-1. apply the rules of the layer and infer a new knowledge base
-(new IOSTS $\EuScript{S}_i$, $i\geq 2$),\\
-2. apply a bisimulation minimisation,\\
-3. store the resulting IOSTS.
+steps:
+
+\begin{enumerate}
+\item apply the rules of the layer and infer a new knowledge base
+(new IOSTS $\EuScript{S}_i$, $i\geq 2$),
+
+\item apply a bisimulation minimisation,
+
+\item store the resulting IOSTS.
+\end{enumerate}
 
 Without loss of generality, we now restrict the rule structure to
 keep a link between the generated IOSTSs. Thereby, every rule of
@@ -580,12 +555,11 @@ into one unique new transition to make the resulting IOSTS more
 abstract. It results in an IOSTS $\EuScript{S}_i$ exclusively
 composed of some locations of the first IOSTS $\EuScript{S}_1$.
 Consequently, for a transition or path of $\EuScript{S}_i$, we
-can still retrieve the concrete path of $\EuScript{S}_1$. This
-is captured by the following proposition:
+can still retrieve the concrete path of $\EuScript{S}_1$. This is
+captured by the following proposition:
 
 \begin{proposition}
 \label{prop:loc:inclu}
-
 Let $\EuScript{S}_1$ be the first IOSTS generated from the
 structured trace set $ST$. The IOSTS $\EuScript{S}_i (i>1)$
 produced by Layer $i$ has a location set $L_{\EuScript{S}_i}$
@@ -602,236 +576,233 @@ to the (no implicit knowledge elimination) hypothesis and to
 Proposition \ref{prop:loc:inclu}, the transitions of
 $\EuScript{S}_i$ are either unchanged, enriched or combined
 together into a new transition. The application of these layers
-ends in a finite time ((finite complexity) hypothesis) and the
+ends in a finite time (finite complexity hypothesis) and the
 complexity of each is proportional to $\EuScript{O}m(k)$ with $m$
 the transition number and $k$ the rule number.
 
+\begin{figure}[H]
+\begin{minipage}{.5\textwidth}
+    \includegraphics[width=0.8\linewidth]{figures/gh-iosts-1.png}
 
-\paragraph{Layer 3}
+    \caption{IOSTS $\EuScript{S}_1$}
+    \label{fig:github:iosts:1}
+\end{minipage}
+\begin{minipage}{.5\textwidth}
+    \includegraphics[width=1.0\linewidth]{figures/gh-iosts-2.png}
+
+    \caption{IOSTS $\EuScript{S}_2$}
+    \label{fig:github:iosts:2}
+\end{minipage}
+\end{figure}
+
+
+\subsubsection{Layer 3}
+
 It should correspond to a set of generic rules that can be
 applied on a large set of applications belonging to the same
 category. This layer has two roles:
 
 \begin{itemize}
-\item the enrichment of the meaning captured in transitions. In
-this step, we have chosen to mark the transitions with new
-internal variables. These shall help deduce more abstract actions
-in the upper layers. For example, the rules depicted in Figure
-\ref{fig:rule:login} aims at recognising the receipt of a login
-or logout page. The first rule means that if the response
-content, which is received after a request sent with the $GET$
-method,  contains a login form, then this transition is marked as
-a "login page" with the assignment on the variable isLoginPage,
+\item the \textbf{enrichment of the meaning captured in
+transitions}. In this step, we chose to mark the transitions with
+new internal variables. These shall help deduce more abstract
+actions in the upper layers. These rules are of the form:
 
-\begin{comment}
-These rules are of the form:
-\begin{scriptsize}
-\begin{verbatim}[frame=single]
+\begin{verbatim}
 rule "Layer 3 rule"
 when
-    $t: Transition(conditions on action,Guard,
-      Assign)
+  $t: Transition(conditions on action, Guard, Assign)
 then
-    modify ($t) (Add Assign (new assignment
-    over internal variables));
+  modify ($t) {
+    Assign.Add(new assignment over internal variables)
+  };
 end
 \end{verbatim}
-\end{scriptsize}
-\end{comment}
 
-\item the generic aggregation of some successive transitions.
-Here, some transitions (two or more) are analysed in the
-conditional part of the rule. When the rule condition is met then
-the successive transitions are replaced by one transition
-carrying a new action. The rule of Figure \ref{fig:rule:redirect}
-corresponds to a simple transition aggregation. It aims at
-recognising the successive sending of information with a POST
-request followed by a redirection to another Web page.  If a
-request sent with the $POST$ method has a response identified as
-a redirection, (identified by the status code 301 or 302), and  a
-$GET$ request comes after, both transitions are reduced into a
-single one carrying the new action $PostRedirection$.
+For example, the rules depicted in Figure \ref{fig:rule:login}
+aims at recognising the receipt of a login or logout page. The
+first rule means that if the response content, which is received
+after a request sent with the $GET$ method, contains a login
+form, then this transition is marked as a "login page" with the
+assignment on the variable $isLoginPage$,
 
-\begin{comment}
-The associated rules have the form given below.
-\begin{scriptsize}
-\begin{verbatim}[frame=single]
+\item the \textbf{generic aggregation of some successive
+transitions}. Here, some transitions (two or more) are analysed
+in the conditional part of the rule. When the rule condition is
+met then the successive transitions are replaced by one
+transition carrying a new action. These rules have the following
+form:
+
+\begin{verbatim}
 rule "Simple aggregation"
 when
-    $t1: Transition(conditions on action, Guard,
-       etc., $lfinal:=Lfinal)
-    $t2: Transition(Linit == $lfinal, conditions)
+  $t1: Transition(
+    conditions on action, Guard, ..., $lfinal := Lfinal
+  )
+  $t2: Transition(Linit == $lfinal, conditions)
 then
-    insert(new Transition(new Action, Guard(
-       $t1.Guard, t2.Guard), Assign($t1.Assign,
-       $t2.Assignment),Linit == $t1.Linit, Lfinal
-       == $t2.Lfinal);
-    retract($t1);
-    retract($t2);
+  insert(new Transition(
+    new Action,
+    Guard($t1.Guard, t2.Guard),
+    Assign($t1.Assign, $t2.Assignment),
+    Linit == $t1.Linit,
+    Lfinal == $t2.Lfinal
+  ));
+  retract($t1);
+  retract($t2);
 end
 \end{verbatim}
-\end{scriptsize}
-\end{comment}
 
+The rule given in Figure \ref{fig:rule:redirect} corresponds to a
+simple transition aggregation. It aims at recognising the
+successive sending of information with a POST request followed by
+a redirection to another Web page.  If a request sent with the
+$POST$ method has a response identified as a redirection,
+(identified by the status code 301 or 302), and  a $GET$ request
+comes after, both transitions are reduced into a single one
+carrying the new action $PostRedirection$.\\
 \end{itemize}
 
-\begin{figure}[ht]
-\begin{center}
-\begin{scriptsize}
-\begin{verbatim}[frame=single]
-rule "Identify Login Page"
+\begin{figure}[hp]
+\begin{verbatim}
+rule "Identify Login page"
 when
-    $t: Transition(Action == GET, Guard.
-      response.content contains('login-form'))
+  $t: Transition(
+    Action == GET,
+    Guard.response.content contains('login-form')
+  )
 then
-    modify ($t) { Assign.add("isLoginPage:=true") }
+  modify ($t) { Assign.add("isLoginPage := true") }
 end
 
-rule "Identify Logout Request"
+rule "Identify Logout action"
 when
-    $t: Transition(Action == GET, Guard.
-      uri matches("/logout"))
+  $t: Transition(
+    Action == GET,
+    Guard.uri matches("/logout")
+  )
 then
-    modify ($t1) { Assign.add("isLogout:=true") }
+  modify ($t1) { Assign.add("isLogout := true") }
 end
-
 \end{verbatim}
-\end{scriptsize}
-\end{center}
 
-\caption {Login and Logout page recognition rules}
+\caption {Login page and logout action recognition rules}
 \label{fig:rule:login}
 \end{figure}
 
-\begin{comment}
-\begin{figure}[ht]
-\begin{center}
-\begin{scriptsize}
-\begin{verbatim}[frame=single]
-rule "Identify Logout Request"
+\begin{figure}
+\begin{verbatim}
+rule "Identify Redirection after a POST"
 when
-    $t: Transition(Action == GET, Guard.
-      uri matches("/logout"))
+  $t1: Transition(
+    Action == POST,
+    (Guard.response.status = 301 or Guard.response.status = 302),
+    $l1final := Lfinal
+  )
+  $t2: Transition(Action == GET, linit == $l1final, $l2linit := Linit)
+  not (Transition(Linit == $l2linit))
 then
-    modify ($t1) { Assign.add("isLogout:=true") }
+  insert(new Transition(
+    "PostRedirection",
+    Guard($t1.Guard, $t2.Guard),
+    Assign($t1.Assign, $t2.Assign),
+    $t1.Linit,
+    $t2.Lfinal
+  );
+  retract($t1);
+  retract($t2);
 end
 \end{verbatim}
-\end{scriptsize}
-\caption {Logout page recognition rule}
-\label{fig:rule:logout}
-\end{center}
-\end{figure}
-\end{comment}
 
-\begin{figure}[ht]
-\begin{center}
-\begin{scriptsize}
-\begin{verbatim}[frame=single]
-rule "Identify Redirection after a Post"
-when
-    $t1: Transition(Action == POST and
-       (Guard.response.status = 301 or Guard.response.
-       status = 302) and $l1final := Lfinal)
-    $t2: Transition(Action == GET, linit == $l1final,
-       $l2linit:=Linit)
-    not (Transition (Linit == $l2linit))
-then
-    insert(new Transition("PostRedirection", Guard(
-       $t1.Guard, $t2.Guard), Assign($t1.Assign,
-       $t2.Assign), $t1.Linit, $t2.Lfinal );
-    retract($t1);
-    retract($t2);
-end
-\end{verbatim}
-\end{scriptsize}
-
-\caption {Simple aggregation} \label{fig:rule:redirect}
-\end{center}
+\caption{Simple aggregation to identify a redirection after a
+POST request}
+\label{fig:rule:redirect}
 \end{figure}
 
-\begin{example} When we apply these rules on the IOSTS example of
-Figure \ref{fig:github:iosts:1}, we obtain a new IOSTS
-illustrated in Figure \ref{fig:github:iosts:2}. Its size is
-reduced since it has 6 transitions instead of 8 previously.
-However, this new IOSTS does not clearly reflect the initial
-scenario yet. Rules deducing more abstract actions are required.
-These are found in the next layer.\end{example}
+\begin{example}
+When we apply these rules on the IOSTS example given in Figure
+\ref{fig:github:iosts:1}, we obtain a new IOSTS illustrated in
+Figure \ref{fig:github:iosts:2}. Its size is reduced since it has
+6 transitions instead of 8 previously.  However, this new IOSTS
+does not clearly reflect the initial scenario yet. Rules deducing
+more abstract actions are required. These are found in the next
+layer.
+\end{example}
 
-\begin{figure}[ht]
-\begin{center}
-\includegraphics[width=0.6\linewidth]{figures/gh-iosts-2.png}
-\caption {IOSTS $\EuScript{S}_2$} \label{fig:github:iosts:2}
-\end{center}
-\end{figure}
+\subsubsection{Layer 4}
 
-\paragraph{Layer 4}
-
-This layer aims to infer a more abstract model composed of more
-expressive actions and whose size should be reduced. Its rules
-may have different forms:
+This layer aims at inferring a more abstract model composed of
+more expressive actions and whose size should be reduced. Its
+rules may have different forms:
 
 \begin{itemize}
-\item they can be applied on one transition only. In this case,
-the rule replaces the transition action to add more sense to the
-action. The rule of Figure \ref{fig:rule:deauth} is an example
-which recognises a user de-authentication and adds a new action
-"Deauthentication". This rule means that if a $PostRedirection$
-action is triggered against a "Logout" endpoint (given by the
-variable \emph{isLogout} added by Layer 3), then this is a
-deauthentication,
+\item they can be applied on a single transition only. In this
+case, the rule replaces the transition action to add more sense
+to the action. The rule given in Figure \ref{fig:rule:deauth} is
+an example which recognises a user de-authentication and adds a
+new action "Deauthentication". This rule means that if a
+$PostRedirection$ action is triggered against a "Logout" endpoint
+(given by the variable \emph{isLogout} added by Layer 3), then
+this is a deauthentication,
 
 \item the rules can also aggregate several successive transitions
 up to complete paths into one transition labelled by a more
 abstract action. For instance, the rule illustrated in Figure
 \ref{fig:rule:auth} recognises a user authentication thanks to
-the variable "isLoginPage" added by Layer 3. This rule means that
+the variable $isLoginPage$ added by Layer 3. This rule means that
 if a "Login" page is displayed, followed by a redirection
 triggered by a $POST$ request, then this is an authentication
 step, and the two transitions are reduced into a single one
 composed of the action "Authentication".
-
 \end{itemize}
-\begin{figure}[ht]
-\begin{center}
-\begin{scriptsize}
-\begin{verbatim}[frame=single]
+
+\begin{figure}
+\begin{verbatim}
 rule "Identify Deauthentication"
 when
-    $t: Transition(action == PostRedirection,
-       Assign contains "isLogout:=true")
+  $t: Transition(
+    action == PostRedirection,
+    Assign contains "isLogout:=true"
+  )
 then
-    modify ($t) (setAction "Deauthentication"));
+  modify ($t) { $t.setAction("Deauthentication") };
 end
 \end{verbatim}
-\end{scriptsize}
-\end{center}
-\caption {Deauthentication recognition rule} \label{fig:rule:deauth}
+
+\caption{Deauthentication recognition rule}
+\label{fig:rule:deauth}
 \end{figure}
 
-
-\begin{figure}[ht]
-\begin{center}
-\begin{scriptsize}
-\begin{verbatim}[frame=single]
+\begin{figure}[H]
+\begin{verbatim}
 rule "Identify Authentication"
 when
-    $t1: Transition(Action == GET,
-       Assign contains "isLoginPage:= true",
-    $t1final:=Lfinal)
-    $t2: Transition(Action == PostRedirection,
-       Linit == $t1lfinal, $t2linit:=Linit)
-    not (Transition (Linit == $t2linit))
+  $t1: Transition(
+    Action == GET,
+    Assign contains "isLoginPage:= true",
+    $t1final := Lfinal
+  )
+  $t2: Transition(
+    Action == PostRedirection,
+    Linit == $t1lfinal,
+    $t2linit := Linit
+  )
+  not (Transition (Linit == $t2linit))
 then
-    insert(new Transition("Authentication",
-       Guard($t1.Guard,$t2.Guard), Assign($t1.Assign,
-       $t2.Assign), $t1.Linit, $t2.Lfinal );
-    retract($t1);
-    retract($t2);
+  insert(new Transition(
+    "Authentication",
+    Guard($t1.Guard,$t2.Guard),
+    Assign($t1.Assign, $t2.Assign),
+    $t1.Linit,
+    $t2.Lfinal
+  );
+  retract($t1);
+  retract($t2);
 end
 \end{verbatim}
-\end{scriptsize}
-\caption {Authentication recognition} \label{fig:rule:auth}
-\end{center}
+
+\caption{Authentication recognition}
+\label{fig:rule:auth}
 \end{figure}
 
 Other rules can also be application-specific, so that these bring
@@ -839,54 +810,54 @@ specific new knowledge to the model. For instance, the GitHub Web
 application has a dedicated URL grammar (a.k.a. routing system).
 GitHub users own a profile page that is available at:
 \emph{https://github.com/\{username\}} where \emph{\{username\}}
-is the nickname of the user. However, some items are reserved
-e.g., \textit{edu} and \textit{explore}. The rule given in Figure
+is the nickname of the user. However, some items are reserved,
+e.g. \textit{edu} and \textit{explore}. The rule given in Figure
 \ref{fig:rule:gh-profile} is based upon this structure and
-produces a new action "Showprofile" offering more sense.
+produces a new action $ShowProfile$ offering more sense.
 Similarly, a GitHub page describing a project has a URL that
 always matches the pattern:
-\emph{https://github.com/\{username\}/\{proj}\\
-\emph{ect\_name\}}. The rule of Figure \ref{fig:rule:gh-project}
-captures this pattern and derives a new action named "ShowProject".
+\emph{https://github.com/\{username\}/\{project\_name\}}. The
+rule given in Figure \ref{fig:rule:gh-project} captures this
+pattern and derives a new action named $ShowProject$.
 
-\begin{figure}[ht]
-\begin{center}
-\begin{scriptsize}
-\begin{verbatim}[frame=single]
+\begin{figure}
+\begin{verbatim}
 rule "GitHub profile pages"
 when
-    $t: Transition(action == GET, (
-       Guard.uri matches "/[a-zA-Z0-9]+$",
-       Guard.uri not in [ "/edu", "/explore" ]))
+  $t: Transition(
+    action == GET,
+    (Guard.uri matches "/[a-zA-Z0-9]+$",
+     Guard.uri not in [ "/edu", "/explore" ])
+  )
 then
-    modify ($t) (SetAction("Showprofile"));
+  modify ($t) { $t.setAction("ShowProfile") };
 end
 \end{verbatim}
-\end{scriptsize}
-\end{center}
 
-\caption {User profile recognition} \label{fig:rule:gh-profile}
+\caption{User profile recognition}
+\label{fig:rule:gh-profile}
 \end{figure}
 
-
-\begin{figure}[ht]
-\begin{center}
-\begin{scriptsize}
-\begin{verbatim}[frame=single]
+\begin{figure}
+\begin{verbatim}
 rule "GitHub project pages"
 when
-    $t: Transition(action == GET,
-       Guard.uri matches "/[a-zA-Z0-9]+/.+$" $uri:=Guard.uri)
+  $t: Transition(
+    action == GET,
+    Guard.uri matches "/[a-zA-Z0-9]+/.+$",
+    $uri := Guard.uri
+  )
 then
-    String s=ParseProjectName($uri);
-    modify ($t) (SetAction("Showproject")
-      Assign.add("ProjectName:="+s) );
+  String s = ParseProjectName($uri);
+  modify ($t) {
+    $t.setAction("ShowProject");
+    Assign.add("ProjectName := " + s);
+  }
 end
 \end{verbatim}
-\end{scriptsize}
-\end{center}
 
-\caption {Project choice recognition} \label{fig:rule:gh-project}
+\caption{Project choice recognition}
+\label{fig:rule:gh-project}
 \end{figure}
 
 \begin{example}
@@ -994,10 +965,8 @@ tremendously vast since it depends on the number of recognised
 actions and on their relevance.
 \end{itemize}
 
-\begin{figure}[ht]
-\begin{center}
-\begin{scriptsize}
-\begin{verbatim}[frame=single]
+\begin{figure}
+\begin{verbatim}
 rule "BFS"
 when
   $l:  Location (name == l0, explored == false)
@@ -1007,42 +976,41 @@ end
 
 rule "BFS2"
 when
-    $Loc : ArrayList<Location> () from accumulate(
-    $t : Transition ( Guard.response.status >199 &&
-       Guard.response.status <400 && Linit.explored==
-       true && Lfinal.explore==false  ),
-     init( ArrayList<Transition> Loc=new ArrayList<
-       Transition>(); ),
-     action( Loc.add( $t.Lfinal ); ),
-     result( Loc ) );
+  $Loc: ArrayList<Location>() from accumulate(
+    $t: Transition(Guard.response.status > 199
+      && Guard.response.status < 400
+      && Linit.explored == true
+      && Lfinal.explore==false
+    ),
+    init(ArrayList<Transition> Loc = new ArrayList<Transition>()),
+    action(Loc.add($t.Lfinal)),
+    result(Loc)
+  )
 then
-    Loc.SetExplored();
+  Loc.SetExplored();
 end
 \end{verbatim}
-\end{scriptsize}
-\end{center}
 
-\caption {BFS strategy} \label{fig:rule:bfs}
+\caption{BFS strategy}
+\label{fig:rule:bfs}
 \end{figure}
 
-\begin{figure}[ht]
-\begin{center}
-\begin{scriptsize}
-\begin{verbatim}[frame=single]
+\begin{figure}
+\begin{verbatim}
 rule "semantic-driven strategy"
 when
-    $t: Transition (Assign contains
-    "isLogin:=true" || Guard.response matches "*buy*")
+  $t: Transition (
+    Assign contains "isLogin:=true" || Guard.response matches "*buy*"
+  )
 then
-    ArrayList Loc = new ArrayList();
-    Loc.add($t.Linit, $t.Lfinal );
-    Loc.SetExplored();
+  ArrayList Loc = new ArrayList();
+  Loc.add($t.Linit, $t.Lfinal);
+  Loc.SetExplored();
 end
 \end{verbatim}
-\end{scriptsize}
-\end{center}
 
-\caption {Semantic-driven strategy} \label{fig:rule:semdriven}
+\caption{Semantic-driven strategy}
+\label{fig:rule:semdriven}
 \end{figure}
 
 \TODO{transition}

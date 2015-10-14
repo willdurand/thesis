@@ -1,4 +1,6 @@
-\chapter{Inferring models for production systems}
+% !TEX root = ../../thesis.tex
+%
+\chapter{Model inference for production systems}
 \label{sec:modelinf:prodsystems}
 
 In the industry, building models for production systems, i.e.
@@ -11,23 +13,20 @@ Language (UML) or even more formal languages. Usually, these
 models are designed when brand-new systems are built. It has been
 pointed out by our industrial partner that production systems
 have a life span of many years, up to 20 years, and are often
-incrementally updated, but not their corresponding models. This
-leads to a major issue which is to keep these models up to date
-and synchronised with the respective systems. This is a common
-problem with documentation in general, and it often implies
-rather under-specified or not documented systems that no one
-wants to maintain because of lack of understanding.
+incrementally updated, but their corresponding models are not.
+This leads to a major issue which is to keep these models up to
+date and synchronised with the respective systems. This is a
+common problem with documentation in general, and it often
+implies rather under-specified or not documented systems that no
+one wants to maintain because of lack of understanding.
 
 In this chapter, we focus on this problem for production systems
-that exchange thousands of events a day. Model inference, a.k.a.
-model learning or model reverse-engineering, is a recent research
-field that addresses this issue.  Models are built from
-documentation or execution traces (sequences of observed events).
-Several approaches have been proposed for different types of
-systems, usually for GUI applications, e.g. desktop or mobile
-applications. However, we noticed that these approaches are not
-tailored to support production systems.  From the literature, we
-deduced the following key observations:
+that exchange thousands of events a day. Several approaches have
+already been proposed for different types of systems, usually for
+GUI applications, e.g. desktop or mobile applications. However,
+we noticed that these approaches are not tailored to support
+production systems. From the literature (given in Section
+\ref{sec:related}), we deduced the following key observations:
 
 \begin{itemize}
     \item model inference approaches give approximate models
@@ -47,7 +46,7 @@ deduced the following key observations:
 Based on these observations, we propose a pragmatic model
 inference approach that aims at building formal models describing
 functional behaviours of a system. Our goal is to quickly build
-exact models from large amounts of production events.  Execution
+exact models from large amounts of production events. Execution
 speed takes an important place for building up to date models.
 Such models could also be used for diagnosis every time an issue
 would be experienced in production. The strong originality of our
@@ -56,20 +55,22 @@ inference: model-driven engineering and expert systems. We
 consider formal models and their definitions to infer models by
 means of different transformations. But we also take into
 consideration the knowledge of human experts captured by expert
-systems.  Intuitively, our proposal emerges from the following
+systems. Intuitively, our proposal emerges from the following
 idea: a human expert, who is able to conceive specifications, is
 also able to diagnose the behaviours of the corresponding
 implementation by reading and interpreting its events. His
 knowledge could then be formalised and exploited to automatically
-infer models.  A part of our approach is based upon this notion
-of knowledge implemented with inference rules.
+infer models. A part of our approach is based upon this notion of
+knowledge implemented with inference rules.
+
+In the following section, we recall the context that
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \section{Context and assumptions}
 \label{sec:modelinf:prodsystems:context}
 
-Michelin is a worldwide tire manufacturer and designs mos of its
+Michelin is a worldwide tire manufacturer and designs most of its
 factories, production systems, and software by itself.  Like
 many other industrial companies, Michelin follows the Computer
 Integrated Manufacturing (CIM) approach, using computers and

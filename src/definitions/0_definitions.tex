@@ -1,0 +1,219 @@
+% !TEX root = ../../thesis.tex
+%
+\chapter{Definitions and notations}
+\label{sec:definitions}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\section{Symbolic Transition Systems)}
+\label{sec:definitions:sts}
+
+The Symbolic Transition System (STS) is known as a very general
+and powerful model for describing several aspects of event-based
+systems. The use of symbolic variables helps describe infinite
+state machines in a finite manner. This potentially infinite
+behaviour is represented by the semantics of a STS, given in
+terms of Labelled Transition System (LTS). STS operations and
+transformations are often given with inference rules.
+
+We briefly give some definitions related to the STS model below,
+but we refer to \cite{FTW05} for a more detailed description.
+
+\begin{definition}[Variable assignment]
+We assume that there exist a domain of values denoted $D$ and a
+variable set $X$ taking values in $D$. The assignment of
+variables in $Y \subseteq X$ to elements of $D$ is denoted with a
+mapping  $\alpha: Y \rightarrow D$.
+
+We denote $D_Y$ the assignment set over $Y$. We also denote
+$id_Y$ the identity assignment over $Y$, and $v_\emptyset$ the
+empty assignment.
+\end{definition}
+
+\begin{definition}[STS]
+    A Symbolic Transition System (STS) is a tuple
+    $<L,l_0,V,V_0,I,\Lambda,\rightarrow>$, where:
+
+	\begin{itemize}
+        \item STSs do not have states but locations and $L$ is
+        the finite location set, with $l_0$ being the initial
+        one,
+
+        \item $V$ is the finite set of internal variables, while
+        $I$ is the finite set of parameters. The internal
+        variables are initialised with the condition $V_0$ on
+        $V$,
+
+        \item $\Lambda$ is the finite set of symbolic events
+        $a(p)$, with $p=(p_1,...,p_k)$ a finite set of parameters
+        in $I^k (k \in \N)$,
+
+        \item $\rightarrow$ is the finite transition set. A
+        transition $(l_i,l_j,a(p),G,A)$, from the location $l_i
+        \in L$ to $l_j \in L$, also denoted $l_i
+        \xrightarrow{a(p),G,A} l_j$ is labelled by:
+
+		\begin{itemize}
+            \item an action $a(p) \in \Lambda$,
+
+            \item $G$ is a guard over $(p \cup V \cup T(p \cup
+            V))$ which restricts the firing of the transition.
+            $T(p \cup V)$ are boolean terms, a.k.a. predicates
+            over $p \cup V$,
+
+            \item internal variables are updated with the
+            assignment function $A$ of the form $(x:=A_x)_{x \in
+            V}$, $A_x$ is an expression over $V\cup p \cup
+            T(p\cup V)$.
+		\end{itemize}
+	\end{itemize}
+
+	\label{def:sts}
+\end{definition}
+
+For readability purpose, we also use the generalised transition
+relation $\Rightarrow$ to represent STS paths:\\ $l
+\xRightarrow{(a_1,G_1,A_1) \dots (a_n,G_n,A_n)} l' =_{def}
+\exists l_0 \dots l_n, l=l_0 \xrightarrow{a_1,G_1,A_1} l_1 \dots
+l_{n-1}\xrightarrow{a_n,G_n,A_n}l_n=l'$.
+
+A STS is associated with a Labelled Transition System (LTS) to
+formulate its semantics. Intuitively, a LTS semantics corresponds
+to a valued state machine, without symbolic variables, which is
+often infinite: the LTS states are labelled by internal variable
+assignments while transitions are labelled by actions combined
+with parameter assignments.
+
+\begin{definition}[LTS semantics]
+    The semantics of a STS $\EuScript{S}=<L,l_0,$ $V,$ $V_0,$
+    $I,\Lambda,\rightarrow>$ is the LTS
+    $||\EuScript{S}||=<Q,q_0,\sum,\rightarrow>$ where:
+
+	\begin{itemize}
+
+		\item $Q=L \times D_V$ is the set of states,
+
+        \item $q_0=(l_0,V_0)$ is the initial state,
+
+		\item $\sum=\{(a(p),\alpha)  \mid  a(p)\in\Lambda, \alpha \in
+		D_p\}$ is the set of valued events,
+
+        \item $\rightarrow$ is the transition relation $Q \times
+        \Sigma \times Q$ deduced by the following rule:\\
+	\end{itemize}
+	\begin{center}
+		\fbox{
+			\begin{minipage}{0.6\textwidth}
+				\begin{tabular}{l}
+					$\frac{l_1 \xrightarrow{a(p),G,A}l_2,\alpha \in D_p, v \in D_V, v'
+						\in D_V, v \cup \alpha \models G, v'=A(v \cup \alpha))}{(l_1,v)
+						\xrightarrow{a(p),\alpha} (l_2,v') }$
+				\end{tabular}
+				\newline
+			\end{minipage}
+		}
+	\end{center}
+
+	\label{def:semantics}
+\end{definition}
+
+This rule can be read as follows: for a STS transition $l_1
+\xrightarrow{a(p),G,A}l_2$, we obtain a LTS transition $(l_1,v)$
+$\xrightarrow{a(p),\alpha} (l_2,v')$ with $v$ a variable
+assignment over the internal variable set, if there exists an
+assignment $\alpha$ such that the guard $G$ evaluates to true
+with $v \cup \alpha$. Once the transition is executed, the
+internal variables are assigned with $v'$ derived from the
+assignment $A(v \cup \alpha)$.
+
+Finally, runs and traces, which represent executions and event
+sequences, can also be derived from LTS semantics:
+
+\begin{definition}[Runs and traces]
+    Given a STS $\EuScript{S}=$ $<L,l_0,V,V_0,I,\Lambda,
+	\rightarrow>$, interpreted by its LTS semantics
+	$||\EuScript{S}||=<Q,q_0,\sum,\rightarrow>$, a run $q_0
+	\alpha_0 \dots \alpha_{n-1} q_n$ is an alternate sequence of states
+    and valued actions. $Run(\EuScript{S})=Run(||\EuScript{S}||)$ is
+	the set of runs found in $||\EuScript{S}||$.
+
+    It follows that a trace of a run $r$ is defined as the projection
+    $proj_{\sum}(r)$ on the actions.
+
+	\label{def:Runs and traces}
+\end{definition}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\section{Input/Output Symbolic Transition Systems}
+\label{sec:definitions:iosts}
+
+We consider the input/output Symbolic Transition System (IOSTS)
+formalism \cite{FTW05} for describing the functional behaviour of
+systems or applications. An IOSTS is a kind of automata model
+which is extended with two sets of variables, internal variable
+to store data, and parameters to enrich the actions. Transitions
+carry actions, guards, and assignments over variables. The action
+set can be divided into two subsets: one containing inputs
+beginning by $?$ to express actions expected by the system, and
+another containing outputs beginning by $!$ to express actions
+produced by the system. An IOSTS does not have states but
+locations.
+
+\begin{definition}[IOSTS]
+An IOSTS $\EuScript{S}$ is a tuple $<
+L,l0,V,V0,I,\Lambda,\rightarrow>$, where:
+
+\begin{itemize}
+\item $L$ is the finite set of locations, $l0$ the initial
+location,
+
+\item $V$ is the finite set of internal variables, $I$ is the
+finite set of parameters. We denote $D_v$ the domain in which a
+variable $v$ takes values. The assignment of values of a set of
+variables $Y \subseteq V \cup I$ is denoted by valuations where a
+valuation is a function $v: Y \rightarrow D$. $v_\emptyset$
+denotes the empty valuation. $D_Y$ stands for the valuation set
+over the variable set $Y$. The internal variables are initialised
+with the assignment $V0$ on $V$, which is assumed to be unique,
+
+\item $\Lambda$ is a finite set of symbolic actions $a(p)$, with
+$p = (p_1,\dots,p_k)$ a finite list of parameters in $I^k(k \in
+\mathbb{N})$. $p$ is assumed unique. $\Lambda= \Lambda^I  \cup
+\Lambda^O \cup \{!\delta \}$: $\Lambda^I$ represents the set of
+input actions, $\Lambda^O$ the set of output actions, and
+$\delta$ the quiescence,
+
+\item $\rightarrow$ is the finite transition set. A transition
+$(l_i,l_j,a(p),G,A)$, from the location $l_i \in L$ to $l_j \in
+L$, denoted $l_i \xrightarrow{a(p),G,A} l_j$ is labelled by: an
+action $a(p) \in \Lambda$, a guard  $G$ over $(p \cup V \cup T(p
+\cup V))$ which restricts the firing of the transition. $T(p \cup
+V)$ is a set of functions that return boolean values only (a.k.a.
+predicates) over $p \cup V$, an assignment function $A$ which
+updates internal variables. $A$ is on of the form $(x:=A_x)_{x\in
+V}$, where $A_x$ is an expression over $V \cup p \cup T(p \cup
+V)$.
+\end{itemize}
+
+\end{definition}
+
+An IOSTS is also associated with an IOLTS (Input/Output Labelled
+Transition System) to formulate its semantics. Intuitively, IOLTS
+semantics correspond to valued automata without symbolic variable,
+which are often infinite: IOLTS states are labelled by internal
+variable valuations while transitions are labelled by actions and
+parameter valuations. The semantics of an IOSTS
+$\EuScript{S}=<L,l_0,V,V_0,I,\Lambda,\rightarrow>$ is the IOLTS
+$\llbracket \EuScript{S}\rrbracket = <Q,q_0,\Sigma,\rightarrow>$
+composed of valued states in $Q = L \times D_V$, $q_0=(l_0,V_0)$
+is the initial one, $\Sigma$ is the set of valued symbols and
+$\rightarrow$ is the transition relation. The IOLTS semantics
+definition can be found in \cite{FTW05}. In short, for an
+IOSTS transition $l_1 \xrightarrow{a(p),G,A}l_2$, we obtain an
+IOLTS transition $(l_1,v)$ $\xrightarrow{a(p),\theta} (l_2,v')$
+with $v$ a set of valuations over the internal variable set, if
+there exists a parameter valuation set $\theta$ such that the
+guard $G$ evaluates to true with $v \cup \theta$. Once the
+transition is executed, the internal variables are assigned with
+$v'$ derived from the assignment $A(v \cup \theta)$.
