@@ -3,32 +3,60 @@
 \chapter{Model inference for web applications}
 \label{sec:modelinf:webapps}
 
-Before tackling the model inference of production systems, we
-chose to validate our initial ideas and concepts by applying them
-on web applications. Such applications are often smaller and
-easier to understand, especially given our background on web
-development.
+Over the last years, we developed an evolutive technique to infer
+behavioral models of existing software systems. Our approach
+relies on different techniques that we combined together in order
+to build partial yet exact models of software systems.
+Nonetheless, our target has always been to be able to construct
+models of (legacy) production systems in an automated fashion.
+But, before tackling the model inference of production systems,
+we chose to validate our initial ideas and concepts by applying
+them on web applications. That is the purpose of this chapter.
 
-\TODO{Add more stuff on web apps}
+Web applications are often smaller and easier to understand than
+production systems. The design of web applications is
+well-established: we have a web server that runs the application,
+no matter its underlying programming language, and a client (a
+web browser most of the time) that connects to the web server so
+that it can talk to the application. \textit{HyperText Transfer
+Protocol} (HTTP) is the protocol that allows such a discussion by
+means of HTTP requests and HTTP responses. Usually, the client
+initiates a request, and the server responds to it. Requests
+embed HTTP verbs (or methods), \textit{Unique Resource
+Identifiers} (URIs also known as the "web links"), and sometimes
+parameters along with their values. When one submits a
+registration form on a web page, it is likely that the HTTP verb
+is $POST$, and that there are at least as many parameters and
+values as fields in the form. By clicking on the "submit" button
+(or "save", "register", etc.), the web browser crafts an HTTP
+request containing all the information, and sends it to the web
+server that delivers the request to the application. When the
+application sends back the appropriate response, it also goes
+through the web server. By hooking between the web brower and the
+web server, we are able to read both HTTP requests and responses
+as far as there is no \textit{Secure Socket Layer} (SSL) or
+\textit{Transport Layer Security} (TLS) involved, i.e. the
+communication channel should not be encrypted.
 
-We proposed a new approach to infer models of web applications.
-Such an approach is divided into several modules as depicted in
-Figure \ref{fig:soict-framework}. The \emph{Models generator} is the
+We proposed a new approach to infer models of web applications,
+which is divided into several modules as depicted in Figure
+\ref{fig:soict-framework}. The \emph{Models generator} is the
 centrepiece of this framework. It takes traces as inputs, which
-can be sent by a \emph{Monitor} collecting them on the fly. But
-it is worth mentioning that the traces can also be sent by any
-tool or even any user, as far as they comply to a chosen standard
-format. The Models generator is based upon an expert system,
-which is an artificial intelligence engine emulating acts of a
-human expert by inferring a set of rules representing his
-knowledge. Such knowledge is organised into a hierarchy of
-several layers. Each layer gathers a set of inference rules
-written with a first-order logic. Typically, each layer creates
-an IOSTS, and the higher the layer is, the more abstract the
-IOSTS becomes. Models are then stored and can be later analysed
-by experts, verification tools, etc. The number of layers is not
-strictly bounded even though it is manifest that it has to be
-finite.
+can be sent by a \emph{Monitor} collecting them on the fly. Such
+a monitor would be responsible for reading HTTP requests and
+responses in our case. However, it is worth mentioning that the
+traces can also be sent by any tool or even any user, as far as
+they comply to a chosen standard format. The Models generator is
+based upon an expert system, which is an artificial intelligence
+engine emulating acts of a human expert by inferring a set of
+rules representing his knowledge. Such knowledge is organised
+into a hierarchy of several layers. Each layer gathers a set of
+inference rules written with a first-order logic. Typically, each
+layer creates a model, and the higher the layer is, the more
+abstract the model becomes. Models are then stored and can be
+later analysed by experts, verification tools, etc. The number of
+layers is not strictly bounded even though it is manifest that it
+has to be finite.
 
 \begin{figure}[ht]
     \begin{center}
@@ -50,7 +78,7 @@ with most of the existing crawling techniques, which are detailed
 in Chapter \ref{sec:related} Section
 \ref{sec:related:modelinf:crawling}, our robot does not cover the
 application in blind mode or with a static traversal strategy.
-Instead, it is cleverly guided by the Models generator which
+Instead, it is cleverly guided by the Models generator, which
 applies an exploration strategy carried out by inference rules.
 This involves the capture of new traces by the Monitor or by the
 Robot explorer which returns them to the Models generator. The
@@ -165,7 +193,8 @@ way. To reach that purpose, we formulate the following hypotheses
 on the inference rules:
 
 \begin{enumerate}
-\item (finite complexity): a rule can only be applied a limited number of times on the same knowledge base,
+\item (finite complexity): a rule can only be applied a limited
+number of times on the same knowledge base,
 
 \item (soundness): the inference rules are Modus Ponens (simple
 implications that lead to sound facts if the original facts are
@@ -190,11 +219,11 @@ only one HTTP response. Consequently, the traces, given to Layer
 layer begins formatting these couples so that these can be
 analysed in a more convenient way.
 
-In short, an HTTP request is a textual message containing an HTTP
-verb (also called method), followed by a Unique Resource
-Identifier (URI). It may also contain header sections such as
-Host, Connection, or Accept. The corresponding HTTP response is
-also a textual message containing at least a status code. It may
+An HTTP request is a textual message containing an HTTP verb
+(also called method), followed by a Unique Resource Identifier
+(URI). It may also contain header sections such as Host,
+Connection, or Accept. The corresponding HTTP response is also a
+textual message containing at least a status code. It may
 encompass headers (e.g,.  Content-Type, Content-Length) and a
 content. All these notions can be easily identified. For
 instance, Figure \ref{fig:httpexample} depicts an HTTP request
@@ -203,19 +232,23 @@ client wants to read the content of the $/hello$ resource, which
 is, in this case, a web page in HTML.
 
 \begin{figure}[ht]
-\begin{verbatim}
+\begin{framed}
+\begin{BVerbatim}
 GET /hello HTTP/1.1
 Host: example.org
 Connection: keep-alive
 Accept: text/html
-\end{verbatim}
+\end{BVerbatim}
+\end{framed}
 
-\begin{verbatim}
+\begin{framed}
+\begin{BVerbatim}
 HTTP/1.1 200 OK
 Content-Type: text/html
 Content-Length: 13
 Hello, World!
-\end{verbatim}
+\end{BVerbatim}
+\end{framed}
 
 \caption{HTTP request/response example}
 \label{fig:httpexample}
@@ -276,14 +309,18 @@ example that removes the actions relative to the retrieval of PNG
 images, is given in Figure \ref{fig:layer1:filter}.\\
 
 \begin{figure}[ht]
-\begin{verbatim}
+\begin{framed}
+\begin{BVerbatim}
 rule "Filter PNG images"
 when
-  $va: Get(request.mime_type = 'png' or request.file_extension = 'png')
+  $va: Get(
+    request.mime_type = 'png' or request.file_extension = 'png'
+  )
 then
   retract($va);
 end
-\end{verbatim}
+\end{BVerbatim}
+\end{framed}
 
 \caption{Filtering rule example that retracts the valued actions
 related to PNG images}
@@ -441,7 +478,7 @@ rule applied on every element $r\in SR$:
 \begin{tabular}{l}
 $s_i (a_i(p),\theta_i) s_{i+1} \text{ is a term
 of } r, s_i=(l_i,v_\emptyset),$
-$s_{i+1}=(l_{i+1},v_\emptyset), G_i=\displaystyle \bigwedge_{(x_i=vi)\in \theta_i} x_i==vi$\\
+$s_{i+1}=(l_{i+1},v_\emptyset),$\\$ G_i=\displaystyle \bigwedge_{(x_i=vi)\in \theta_i} x_i==vi$
 $\vdash$ $l_i \xrightarrow{a_i(p),G_i,(x:=x)_{x\in V}}_{\EuScript{S}_1} l_{i+1}$
 \end{tabular}
 
@@ -505,7 +542,7 @@ following structured traces where the request and response parts
 are concealed for readability purpose:
 
 \begin{figure}[ht]
-\begin{verbatim}
+\begin{BVerbatim}
 Get(https://github.com/)
 Get(https://github.com/login)
 Post(https://github.com/session)
@@ -514,10 +551,10 @@ Get(https://github.com/willdurand)
 Get(https://github.com/willdurand/Geocoder)
 Post(https://github.com/logout)
 Get(https://github.com/)
-\end{verbatim}
+\end{BVerbatim}
 \end{figure}
 
-After the application of Layer 2, we obtain the IOSTS of Figure
+After the application of Layer 2, we obtain the IOSTS given in Figure
 \ref{fig:github:iosts:1}. Locations are labelled by the URI found
 in the request and by an integer to keep the tree structure of
 the initial traces. Actions are composed of the HTTP verb
@@ -608,7 +645,7 @@ transitions}. In this step, we chose to mark the transitions with
 new internal variables. These shall help deduce more abstract
 actions in the upper layers. These rules are of the form:
 
-\begin{verbatim}
+\begin{BVerbatim}
 rule "Layer 3 rule"
 when
   $t: Transition(conditions on action, Guard, Assign)
@@ -617,7 +654,7 @@ then
     Assign.Add(new assignment over internal variables)
   };
 end
-\end{verbatim}
+\end{BVerbatim}
 
 For example, the rules depicted in Figure \ref{fig:rule:login}
 aims at recognising the receipt of a login or logout page. The
@@ -660,11 +697,12 @@ a redirection to another Web page.  If a request sent with the
 $POST$ method has a response identified as a redirection,
 (identified by the status code 301 or 302), and  a $GET$ request
 comes after, both transitions are reduced into a single one
-carrying the new action $PostRedirection$.\\
+carrying the new action $PostRedirection$.
 \end{itemize}
 
-\begin{figure}[hp]
-\begin{verbatim}
+\begin{figure}[h]
+\begin{framed}
+\begin{BVerbatim}
 rule "Identify Login page"
 when
   $t: Transition(
@@ -674,7 +712,11 @@ when
 then
   modify ($t) { Assign.add("isLoginPage := true") }
 end
+\end{BVerbatim}
+\end{framed}
 
+\begin{framed}
+\begin{BVerbatim}
 rule "Identify Logout action"
 when
   $t: Transition(
@@ -684,14 +726,16 @@ when
 then
   modify ($t1) { Assign.add("isLogout := true") }
 end
-\end{verbatim}
+\end{BVerbatim}
+\end{framed}
 
 \caption {Login page and logout action recognition rules}
 \label{fig:rule:login}
 \end{figure}
 
-\begin{figure}
-\begin{verbatim}
+\begin{figure}[h]
+\begin{framed}
+\begin{BVerbatim}
 rule "Identify Redirection after a POST"
 when
   $t1: Transition(
@@ -699,7 +743,9 @@ when
     (Guard.response.status = 301 or Guard.response.status = 302),
     $l1final := Lfinal
   )
-  $t2: Transition(Action == GET, linit == $l1final, $l2linit := Linit)
+  $t2: Transition(
+    Action == GET, linit == $l1final, $l2linit := Linit
+  )
   not (Transition(Linit == $l2linit))
 then
   insert(new Transition(
@@ -712,10 +758,10 @@ then
   retract($t1);
   retract($t2);
 end
-\end{verbatim}
+\end{BVerbatim}
+\end{framed}
 
-\caption{Simple aggregation to identify a redirection after a
-POST request}
+\caption{Simple aggregation to identify a redirection after a POST request}
 \label{fig:rule:redirect}
 \end{figure}
 
@@ -756,8 +802,9 @@ step, and the two transitions are reduced into a single one
 composed of the action "Authentication".
 \end{itemize}
 
-\begin{figure}
-\begin{verbatim}
+\begin{figure}[h]
+\begin{framed}
+\begin{BVerbatim}
 rule "Identify Deauthentication"
 when
   $t: Transition(
@@ -767,14 +814,16 @@ when
 then
   modify ($t) { $t.setAction("Deauthentication") };
 end
-\end{verbatim}
+\end{BVerbatim}
+\end{framed}
 
 \caption{Deauthentication recognition rule}
 \label{fig:rule:deauth}
 \end{figure}
 
-\begin{figure}[H]
-\begin{verbatim}
+\begin{figure}
+\begin{framed}
+\begin{BVerbatim}
 rule "Identify Authentication"
 when
   $t1: Transition(
@@ -799,7 +848,8 @@ then
   retract($t1);
   retract($t2);
 end
-\end{verbatim}
+\end{BVerbatim}
+\end{framed}
 
 \caption{Authentication recognition}
 \label{fig:rule:auth}
@@ -821,7 +871,8 @@ rule given in Figure \ref{fig:rule:gh-project} captures this
 pattern and derives a new action named $ShowProject$.
 
 \begin{figure}
-\begin{verbatim}
+\begin{framed}
+\begin{BVerbatim}
 rule "GitHub profile pages"
 when
   $t: Transition(
@@ -832,14 +883,16 @@ when
 then
   modify ($t) { $t.setAction("ShowProfile") };
 end
-\end{verbatim}
+\end{BVerbatim}
+\end{framed}
 
 \caption{User profile recognition}
 \label{fig:rule:gh-profile}
 \end{figure}
 
 \begin{figure}
-\begin{verbatim}
+\begin{framed}
+\begin{BVerbatim}
 rule "GitHub project pages"
 when
   $t: Transition(
@@ -854,7 +907,8 @@ then
     Assign.add("ProjectName := " + s);
   }
 end
-\end{verbatim}
+\end{BVerbatim}
+\end{framed}
 
 \caption{Project choice recognition}
 \label{fig:rule:gh-project}
@@ -941,39 +995,44 @@ The rules of the Strategy layer can encode different strategies.
 We propose two examples below:
 \begin{itemize}
 
-\item classical traversal strategies can still be established.
-For example, Figure \ref{fig:rule:bfs} depicts two rules
-expressing the choice the next location to explore in a
+\item \textbf{classical traversal strategies} can still be
+established.  For example, Figure \ref{fig:rule:bfs} depicts two
+rules expressing the choice the next location to explore in a
 breadth-wise order first. First, the initial location $l0$ is
 chosen and marked as explored (rule BFS).  Then, the transitions
 having an initial location marked as explored and a final
 location not yet explored are collected by the rule BFS2, except
 for the transitions carrying an HTTP error (response status upper
 or equal to 400).  These locations are marked as explored in the
-IOSTS $\EuScript{S}_i$ with the method \emph{SetExplored} in the
+IOSTS $\EuScript{S}_i$ with the method $SetExplored$ in the
 "then" part of the rule,
 
-\item  a semantic-driven strategy could also be applied, when the
-meaning of some actions is recognisable. For instance, for
-e-commerce applications, the login step and the term "buy" are
-usually important. Thereby, a strategy targeting firstly the
+\item \textbf{semantic-driven strategies} could also be applied,
+when the meaning of some actions is recognisable. For instance,
+for e-commerce applications, the login step and the term "buy"
+are usually important. Thereby, a strategy targeting firstly the
 locations of transitions carrying theses actions can be defined
-by the rule\\"semantic-driven strategy" of Figure
+by the rule "semantic-driven strategy" given in Figure
 \ref{fig:rule:semdriven}.
 It is manifest that the semantic-driven strategy domain can be
 tremendously vast since it depends on the number of recognised
 actions and on their relevance.
 \end{itemize}
 
-\begin{figure}
-\begin{verbatim}
+\begin{figure}[h]
+\begin{framed}
+\begin{BVerbatim}
 rule "BFS"
 when
-  $l:  Location (name == l0, explored == false)
+  $l: Location(name == l0, explored == false)
 then
-    modify ($l) ( explored=true );
+  $l.SetExplored();
 end
+\end{BVerbatim}
+\end{framed}
 
+\begin{framed}
+\begin{BVerbatim}
 rule "BFS2"
 when
   $Loc: ArrayList<Location>() from accumulate(
@@ -989,31 +1048,39 @@ when
 then
   Loc.SetExplored();
 end
-\end{verbatim}
+\end{BVerbatim}
+\end{framed}
 
 \caption{BFS strategy}
 \label{fig:rule:bfs}
 \end{figure}
 
-\begin{figure}
-\begin{verbatim}
+\begin{figure}[h]
+\begin{framed}
+\begin{BVerbatim}
 rule "semantic-driven strategy"
 when
   $t: Transition (
-    Assign contains "isLogin:=true" || Guard.response matches "*buy*"
+    Assign contains "isLogin := true"
+    or Guard.response matches "*buy*"
   )
 then
   ArrayList Loc = new ArrayList();
   Loc.add($t.Linit, $t.Lfinal);
   Loc.SetExplored();
 end
-\end{verbatim}
+\end{BVerbatim}
+\end{framed}
 
 \caption{Semantic-driven strategy}
 \label{fig:rule:semdriven}
 \end{figure}
 
-\TODO{transition}
+Many other strategies could be defined in relation to the desired
+result in terms of model generation and application coverage.
+Other criteria, e.g. the number of UI elements per Graphical User
+Interface (GUI) or the number of observed crashes could also be
+taken into consideration.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
@@ -1042,16 +1109,14 @@ Autofunk on them with a Models generator composed of 5 layers
 gathering 18 rules whose 3 are specialised to GitHub. After
 having performed trace filtering (Layer 1), we obtained a first
 IOSTS tree composed of 28 transitions. The next 4 layers
-automatically infer a last IOSTS tree $\EuScript{S}_4$ composed
-of 12 transitions from which 9 have a clear and intelligible
-meaning.
+automatically inferred a last IOSTS tree $\EuScript{S}_4$, given
+in Figure \ref{fig:git:iosts}, that is composed of 12 transitions
+from which 9 have a clear and intelligible meaning.
 
 \begin{figure}[ht]
-    \begin{center}
-        \includegraphics[width=.2\textwidth]{figures/gh-2-4-bis.png}
-    \end{center}
+    \includegraphics[width=.45\textwidth]{figures/gh-2-4-bis.png}
 
-    \caption {IOSTS $\EuScript{S}_4$}
+    \caption {Final IOSTS $\EuScript{S}_4$}
     \label{fig:git:iosts}
 \end{figure}
 
@@ -1060,16 +1125,25 @@ meaning.
 \section{Conclusion}
 \label{sec:modelinf:webapps:conclusion}
 
-We presented an original approach combining model inference,
-expert systems and automatic testing to derive IOSTSs models. Our
-proposal yields several models, reflecting different levels of
-abstractions of the same application with the use of inference
-rules that capture the knowledge of an expert. The first
-contribution lies in the flexibility and scalability brought by
-the inference rules since they can be applied on several
-applications or on one application only when the rules are
-specific. The whole framework has not to be re-implemented for
-each application. Our approach can be applied on event-driven
-applications since our framework supports their exploration.
-Furthermore, it can also be applied on other application types on
-condition that these produce traces.
+In this chapter, we presented an original approach combining
+model inference, expert systems and automatic testing to derive
+IOSTSs models. Our proposal yields several models, reflecting
+different levels of abstractions of the same application with the
+use of inference rules that capture the knowledge of an expert.
+The first contribution lies in the flexibility and scalability
+brought by the inference rules since they can be applied on
+several applications or on a single application only when the
+rules are specific. The whole framework has not to be
+re-implemented for each application. Our approach can be applied
+on event-driven applications since our framework supports their
+exploration. Furthermore, it can also be applied on other kinds
+of application as far as they produce traces.
+
+While the idea of getting more and more abstract models was
+interesting to us, we chose to stop working on this part as our
+industrial partner was less interested in the part than on the
+others. On the contrary, the first results on model inference
+were very encouraging, so we decided to rework our architecture
+to build a better framework on top of this one in order to
+construct models of production systems. That is the purpose of
+the next chapter.
