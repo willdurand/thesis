@@ -3,6 +3,11 @@
 \chapter{Model inference for production systems}
 \label{sec:modelinf:prodsystems}
 
+In order to infer model of production systems, we reuse what
+worked well for web applications and enhance many parts of our
+framework to come up with a better version of our technique
+called \textit{Autofunk}.
+
 In the industry, building models for production systems, i.e.
 event-driven systems that run in production environments and are
 distributed over several devices and sensors, is frequent since
@@ -24,7 +29,7 @@ In this chapter, we focus on this problem for production systems
 that exchange thousands of events a day. Several approaches have
 already been proposed for different types of systems, usually for
 GUI applications, e.g. desktop or mobile applications. However,
-we noticed that these approaches are not tailored to support
+we noticed that these approaches were not tailored to support
 production systems. From the literature (given in Section
 \ref{sec:related}), we deduced the following key observations:
 
@@ -55,20 +60,8 @@ inference: model-driven engineering and expert systems. We
 consider formal models and their definitions to infer models by
 means of different transformations. But we also take into
 consideration the knowledge of human experts captured by expert
-systems. Intuitively, our proposal emerges from the following
-idea: a human expert, who is able to conceive specifications, is
-also able to diagnose the behaviours of the corresponding
-implementation by reading and interpreting its events. His
-knowledge could then be formalised and exploited to automatically
-infer models. A part of our approach is based upon this notion of
+systems. A part of our approach is based upon this notion of
 knowledge implemented with inference rules.
-
-In the following section, we recall the context that
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
-\section{Context and assumptions}
-\label{sec:modelinf:prodsystems:context}
 
 Michelin is a worldwide tire manufacturer and designs most of its
 factories, production systems, and software by itself.  Like
@@ -88,10 +81,6 @@ and disappear of the workshop frame in the meantime. Millions of
 devices of the same workshop every day, allowing some factories
 to build over 30,000 tires a day.
 
-%Until now, this huge amount of
-%data was not leveraged, however a quick analysis shew us that a
-%lot of really interesting information could be extracted.
-
 Although there is a finite number of applications, each has
 different versions deployed in factories all over the world,
 potentially highlighting even more different behaviours and
@@ -105,22 +94,22 @@ testing techniques, however most of the applications exchange
 events using dedicated custom internal protocols.
 
 Our industrial partner needs a safe way to infer up to date
-models, independent of the underlying technical details, and without
-having to rely on any existing documentation. Additionally,
-Michelin is interested in building regression test suites to
-decrease the time required to deploy or upgrade systems. We
-came up to the conclusion that, in order to target the largest
-part of all Michelin's Level 2 applications, taking advantage of
-the production events exchanged among all devices would be the
-best solution, as it would not be tied to any programming
-language or framework, and these events contain all information
-needed to understand how a whole industrial system behaves in
-production. All these events are collected synchronously through a
-(centralised) logging system. Such a system logs all events with
-respect to their order, and does not miss any event.  From these,
-we chose not to use extrapolation techniques to infer models,
-meaning our proposal generates exact models, exclusively
-describing what really happens in production.
+models, independent of the underlying technical details, and
+without having to rely on any existing documentation.
+Additionally, Michelin is interested in building regression test
+suites to decrease the time required to deploy or upgrade
+systems. We came up to the conclusion that, in order to target
+the largest part of all Michelin's Level 2 applications, taking
+advantage of the production events exchanged among all devices
+would be the best solution, as it would not be tied to any
+programming language or framework, and these events contain all
+information needed to understand how a whole industrial system
+behaves in production. All these events are collected
+synchronously through a (centralised) logging system. Such a
+system logs all events with respect to their order, and does not
+miss any event.  From these, we chose not to use extrapolation
+techniques to infer models, meaning our proposal generates exact
+models, exclusively describing what really happens in production.
 
 This context leads to some assumptions that have been considered
 to design our framework:
@@ -150,93 +139,207 @@ to design our framework:
     them into traces.
 \end{itemize}
 
-The following section presents an overview of the framework of
-our approach, called \textit{Autofunk}. This work has been
-conducted in the context of production systems for one of the
-world's leading tire manufacturer Michelin.  Therefore, we
-describe this context, its assumptions, and a case study.
+In the following section, we describe Autofunk for Michelin's
+production systems. Therefore, we describe this context, its
+assumptions, and a case study. We give our results in Section
+\ref{sec:modelinf:prodsystems:results}, and we conclude on this
+work in Section \ref{sec:modelinf:prodsystems:conclusion}.
+
+\textbf{Publication.} This work has been published in the
+Proceedings of Formal Methods 2015 (FM'15)
+\cite{DBLP:conf/fm/DurandS15}, and in the Proceedings of the 9th
+International Conference on Distributed Event-Based Systems
+(DEBS'15) \cite{DBLP:conf/debs/SalvaD15}.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\section{Contribution}
+\section{Autofunk's model generator revisited}
 \label{sec:modelinf:prodsystems}
+
+In this section, we introduce our framework Autofunk revisited,
+whose main architecture is depicted in Figure
+\ref{fig:prodsystems:autofunk-overview}. This new version also
+contains different modules (in grey in the figure): four modules
+are dedicated to build models, and an optional one can be used to
+derive more abstract and readable models.
+
+\begin{figure}[ht]
+\includegraphics[width=1.0\linewidth]{figures/autofunk.png}
+
+\caption{Overview of Autofunk revisited}
+\label{fig:prodsystems:autofunk-overview}
+\end{figure}
+
+We consider \textit{Symbolic Transition Systems} (STSs) as models
+for representing industrial system behaviours. As reminder, STSs
+are state machines incorporating actions (i.e. events in this
+context), labelled on transitions, that show what can be given to
+and observed on the system. In addition, actions are tied to an
+explicit notion of data. A more formal definition can be found
+in \crossref{sec:definitions}{sec:definitions:sts}.
+The innovation of this framework lies in
+the combination of the notion of expert systems with the STS
+formalism. Intuitively, the STS representation, operators and
+transformations, can be expressed with deduction rules. On the
+other hand, the knowledge of a human expert of a system can be
+transcribed with inference rules following the pattern:
+\textit{When condition, Then action(s)}. Autofunk combines both
+domains in such a way that each model modification can be
+expressed and implemented with a rule. As a consequence, the data
+collections handled by Autofunk are always expressed with
+knowledge bases (Events, Actions, Traces, STS, etc.) on which
+rules are applied to infer models. Given a system $Sua$ and a set
+of production events, Autofunk builds exact models, i.e. the
+traces of a model $\EuScript{S}$ are included in the traces of
+$Sua$.
+
+To explain how Autofunk works, we consider a case study based
+upon the example of Figure \ref{fig:rawdatum}. It depicts
+simplified production events similar to those extracted from
+Michelin's logging system. \textit{INFO}, \textit{7011} and
+\textit{17021} are labels that are accompanied with assignments
+of variables e.g. $nsys$, with indicates an industrial device
+number and $point$ which gives the product position. With real
+events, there are around 20 parameters. Such a format is specific
+to Michelin but other kinds of events could be considered by
+updating the first module of Autofunk.
+
+\begin{figure}[ht]
+\begin{framed}
+\begin{BVerbatim}
+17-Jun-2014 23:29:59.00|INFO|New File
+
+17-Jun-2014 23:29:59.50|17011|MSG_IN  [nsys: 1] \
+  [nsec:modelinf:prodsystems: 8] [point: 4] [pid: 1]
+
+17-Jun-2014 23:29:59.61|17021|MSG_OUT [nsys: 1] \
+  [nsec:modelinf:prodsystems: 8] [point: 4] [tpoint: 8] \
+  [pid: 1]
+
+17-Jun-2014 23:29:59.70|17011|MSG_IN  [nsys: 1] \
+  [nsec:modelinf:prodsystems: 8] [point: 4] [pid: 2]
+
+17-Jun-2014 23:29:59.92|17021|MSG_OUT [nsys: 1] \
+  [nsec:modelinf:prodsystems: 8] [point: 4] [tpoint: 8] \
+  [pid: 2]
+\end{BVerbatim}
+\end{framed}
+
+\caption{Production events}
+\label{fig:rawdatum}
+\end{figure}
 
 \subsection{Production events and traces}
 \label{part3:collecting}
 
-Production events are collected, filtered, and formatted into
-traces (Figure \ref{fig:autofunk}). To avoid disrupting the
-(running) system under analysis $Sua$, we do not instrument the
-industrial equipments composing the whole system. Everything is
-done offline with a logging system or with monitoring.
+Autofunk takes production events as input from a system under
+analysis $Sua$. To avoid disrupting the (running) system $Sua$,
+we do not instrument the industrial equipments composing the
+whole system. Everything is done offline with a logging system or
+with monitoring. We start by formatting these events to obtain a
+set of events of the form $a(\alpha)$ with $a$ a label, and
+$\alpha$ a parameter assignment. We call these formatted events,
+\textit{valued events}. Performing such a step allows to collect
+productions events from various sources and still be able to
+perform the next steps in a unique manner.
 
-As stated in the framework overview, production events are
-formatted into a base of valued events of the form $a(\alpha)$
-with $a$ a label and $\alpha$ a parameter assignment. Right
-after, the valued event base is filtered. These steps are
-performed with inference rules of the form: \textit{When
-$a(\alpha)$, condition on $a(\alpha)$, Then retract($a(\alpha)$)}.
+In this set, some of these valued events may be irrelevant.  For
+instance, some events may capture logging information and are not
+part of the functioning of the system. In Figure
+\ref{fig:rawdatum}, the event having the type \textit{INFO}
+belongs to this category and can be safely removed. Filtering is
+achieved by an expert system and inference rules. Here again, a
+human expert knows which events should be filtered out, and
+inference rules offer a natural way to express his knowledge. On
+top of that, expert systems also offer fast processing in this
+situation. We use inference rules of the form: \textit{when
+$a(\alpha)$, condition on $a(\alpha)$, then
+retract($a(\alpha)$)}.
+
+The remaining valued events are ordered to produce an initial set
+of traces denoted $Traces(Sua)$. Figure \ref{fig:tsua}
+illustrates this set obtained from the events of Figure
+\ref{fig:rawdatum}.
+
+\begin{figure}
+\begin{framed}
+    $Traces(Sua) = \{
+    (17011(nsys:=1,nsec:modelinf:prodsystems:=8,point:=4,pid:=1)\text{ }
+    17021(nsys:=1,nsec:modelinf:prodsystems:=8,point:=4,tpoint:=8,pid:=1))$,
+    $(17011(nsys:=1,nsec:modelinf:prodsystems:=8,point:=4,pid:=2)\text{ }
+    17021(nsys:=1,nsec:modelinf:prodsystems:=8,point:=4,tpoint:=8,pid:=2)) \}$
+\end{framed}
+
+\caption{Initial trace set $Traces(Sua)$}
+\label{fig:tsua}
+\end{figure}
 
 Figure \ref{fig:removalrules} shows two concrete rules applied on
 Michelin systems. These two rules are written with the
 \textit{Drools} \footnote{http://www.drools.org/} formalism.
-Drools is a rule-based expert system where knowledge bases are
-expressed with Java objects. The first rule removes valued events
-including the \textit{INFO} parameter which do not contain any
-business value. The second rule removes valued events extracted
-from very specific events, i.e. those whose $key$ matches a
-pattern and having a $inc$ value that is not equal to $1$. This
-rule, given by a Michelin expert, removes some duplicate events.
+The first rule removes valued events including the \textit{INFO}
+parameter which do not contain any business value. The second
+rule removes valued events extracted from very specific events,
+i.e. those whose $key$ matches a pattern and having a $inc$ value
+that is not equal to $1$. This rule, given by a Michelin expert,
+removes some duplicate events. In the context of Michelin, we
+use four inference rules to remove all irrelevant events.
 
-\begin{figure}[H]
-	\begin{lstlisting}
-	rule "Remove INFO events"
-	when:
-    $a: ValuedEvent(assignment.valueOf("type") == TYPE_INFO)
-	then
-    retract($a)
-	end
+\begin{figure}[ht]
+\begin{framed}
+\begin{BVerbatim}
+rule "Remove INFO events"
+when:
+  $a: ValuedEvent(assignment.valueOf("type") == TYPE_INFO)
+then
+  retract($a)
+end
+\end{BVerbatim}
+\end{framed}
 
-  rule "Remove events that are repeated"
-	when
-    $a: ValuedEvent(
-      assignment.valueOf("key") matches "KEY_NAME_[0-9]+",
-      assignment.valueOf("inc") != null,
-      assignment.valueOf("inc") != "1"
-    )
-	then
-    retract($a)
-	end
-	\end{lstlisting}
+\begin{framed}
+\begin{BVerbatim}
+rule "Remove events that are repeated"
+when
+  $a: ValuedEvent(
+    assignment.valueOf("key") matches "KEY_NAME_[0-9]+",
+    assignment.valueOf("inc") != null,
+    assignment.valueOf("inc") != "1"
+  )
+then
+  retract($a)
+end
+\end{BVerbatim}
+\end{framed}
 
-	\caption{Inference rules example for filtering}
-	\label{fig:removalrules}
+\caption{An example of inference rules used for filtering purpose}
+\label{fig:removalrules}
 \end{figure}
 
 From this filtered valued event base, we reconstruct the
 corresponding traces from the trace identifier $pid$, present in
 each valued event, and timestamps. We call the resulting trace
-set $Traces(Sua)$:\\
+set $Traces(Sua)$:
 
 \begin{definition}[$Traces(Sua)$]
     Given a system under analysis $Sua$, $Traces(Sua)$ denotes
-    its formatted trace set.\\$Traces(Sua)$ includes traces of the
-    form $(a_1,\alpha_1)....(a_n,\alpha_n)$ such that
+    its formatted trace set. $Traces(Sua)$ includes traces of the
+    form $(a_1,\alpha_1) \dots (a_n,\alpha_n)$ such that
     $(a_i,\alpha_i)_{(1 \leq i \leq n)}$ are (ordered) valued
     events having the same identifier assignment.
 
 	\label{def:structuredtrace}
 \end{definition}
 
-We can now state that a  STS model $\EuScript{S}$ is said exact
+We can now state that a STS model $\EuScript{S}$ is said exact
 iff. $Traces(\EuScript{S}) \subseteq Traces(Sua)$.
 
 \begin{algorithm}
 	\SetKwInOut{Input}{input}
 	\SetKwInOut{Output}{output}
 
-\Input{$Traces(Sua)$, optionally entry point number $N$ and/or exit point number $M$}
-\Output{$ST=\{ST_1,...,ST_n\}$}
+  \Input{$Traces(Sua)$, optionally entry point number $N$ and/or exit point number $M$}
+  \Output{$ST=\{ST_1,...,ST_n\}$}
 
 \BlankLine
 \emph{Step 1. $Traces(Sua)$ segmentation}
@@ -266,11 +369,26 @@ $ST:=\{ST_1,...,ST_N\}$\;
 
 	}
 
-    \caption{Trace segmentation algorithm}
-	\label{algo_traces}
+\caption{Trace segmentation algorithm}
+\label{algo_traces}
 \end{algorithm}
 
 \subsection{Trace segmentation and filtering}
+
+We define a \textit{complete trace} as a trace containing all
+events expressing the path taken by a product in a production
+system, from the beginning, i.e. one of its entry points, to the
+end, i.e. one of its exit points. In the trace set $Traces(Sua)$,
+we do not want to keep incomplete traces, i.e. traces related to
+products which did not pass through one of the known entry points
+or moved to the next step of the manufacturing process using one
+of the known exit points.
+
+We chose to split $Traces(Sua)$ constructed in the previous step
+into subsets $ST_i$, one for each entry point of the system under
+analysis $Sua$. Later, every trace set $ST_i$ shall give birth to
+one model, describing all possible behaviours starting from its
+corresponding entry point.
 
 This module performs two steps which are summarised in Algorithm
 \ref{algo_traces}. It starts by splitting $Traces(Sua)$ into
@@ -278,21 +396,24 @@ several trace sets $ST_i$, one for each entry point of the system
 $Sua$, and then removes incomplete traces. Since we want a
 framework as flexible as possible, we chose to perform a
 statistical analysis on $Traces(Sua)$ aiming at automatically
-detecting the entry and exit points. This analysis is performed
-on the assignments $(point:=val)$ found in the first and last
-valued events of the traces of $Traces(Sua)$ since $point$
-captures the product physical location and especially the entry
-and exit points of $Sua$. We obtain two ratios
-$Rinit(point:=val)$ and $Rfinal(point:=val)$.
-Based on these ratios, one can deduce the entry point set
-$POINT_{init}$ and the exit point set $POINT_{final}$ if
-$Traces(Sua)$ is large enough. Pragmatically, we observed that
-the traces collected during one or two days are not sufficient
-because they do not provide enough differences between the
-ratios. In this case, we assume that the number of entry and
-exit points, $N$ and $M$, are given and we keep the first $N$ and
-$M$ ratios only. On the other hand, a week seems to offer good
-results. We chose to set a fixed yet configurable
+detecting the entry and exit points.
+In Michelin systems, the parameter $point$ stores the product
+physical location and can be used to deduce the entry and exit
+points of the systems.
+This analysis is performed on the assignments $(point:=val)$
+found in the first and last valued events of the traces of
+$Traces(Sua)$ since $point$ captures the product physical
+location and especially the entry and exit points of $Sua$.
+We obtain two ratios $Rinit(point:=val)$ and
+$Rfinal(point:=val)$.  Based on these ratios, one can deduce the
+entry point set $POINT_{init}$ and the exit point set
+$POINT_{final}$ if $Traces(Sua)$ is large enough. Pragmatically,
+we observed that the traces collected during one or two days are
+not sufficient because they do not provide enough differences
+between the ratios. In this case, we assume that the number of
+entry and exit points, $N$ and $M$, are given and we keep the
+first $N$ and $M$ ratios only. On the other hand, a week seems to
+offer good results. We chose to set a fixed yet configurable
 minimum limit to 10\%. Assignements $(point:=val)$ having a ratio
 below this limit are not retained. Then, for each assignment
 $\alpha_i=(point:=val)$ in $POINT_{init}$, we construct a trace
@@ -302,7 +423,10 @@ including an assignment $(point:=val2)$ in $POINT_{final}$. We
 obtain the set $ST=\{ST_1,...,ST_N\}$ with $N$ the number of
 entry points of the system $Sua$.
 
-Thereafter, \textit{Autofunk} scans the traces in $ST$ and tries
+In our straightforward example, we obtain one trace set
+$ST_1=Traces(Sua)$.
+
+Thereafter, Autofunk scans the traces in $ST$ and tries
 to detect repetitive patterns $p,...,p$. If it finds a trace $t$
 having a repetitive pattern $p$ and another equivalent trace
 including this pattern $p$ once, then $t$ is removed since we
@@ -324,43 +448,46 @@ proposition:
 
 \begin{proposition}
 Let $ST=\bigcup_{1 \leq i \leq N} ST_i$ be the trace set
-obtained from $Sua$. We have $Traces(ST_i) \subseteq Traces(Sua)$.
+obtained from $Sua$.
+We have $Traces(ST_i) \subseteq Traces(Sua)$.
 \end{proposition}
 
 \subsection{STS generation}
 
-Given a trace set $ST_i\in ST$, the STS generation is
-incrementally done by transforming traces into runs, and runs
-into STSs. The translation of $ST_i$ into a run set denoted
-$Runs_i$ is done by completing traces with states. Each run
-starts by the same initial state $(l_0,v_\emptyset)$ with
-$v_\emptyset$ the empty assignment. Then, new states are injected
-after each event. $Runs_i$ is formally given by the following
-definition:
+One model is then built for each trace set $ST_i$ in $ST$. Given
+a set $ST_i$, a first STS, denoted $\EuScript{S}_i$, is built in
+a simple but quick manner. Each trace of $ST_i$ is completed to
+derive a set of runs. A run is an alternate sequence of states
+and events. Given a trace $t$ in $ST_i$, states, which are
+unique, are injected before and after each event of $t$. States
+must be unique to keep the ordering of the events in the runs,
+and to prevent merging different behaviours in the model.  The
+initial state is an exception though as it is shared by all the
+runs. The model $\EuScript{S}_i$ is obtained by transforming runs
+into sequences of transitions that are then joined together.
+
+The translation of $ST_i$ into a run set denoted $Runs_i$ is done
+by completing traces with states. Each run starts by the same
+initial state $(l_0,v_\emptyset)$ with $v_\emptyset$ the empty
+assignment. Then, new states are injected after each event.
+$Runs_i$ is formally given by the following definition:
 
 \begin{definition}[Structured Runs]
 	Let $ST_i$ be a trace set obtained from $Sua$. We denote
 	$Runs_i$ the set of runs derived from $ST_i$ with the
 	following inference rule:
-    \begin{center}
-		\fbox{%
-			\begin{minipage}{0.46\textwidth}
-				\begin{tabular}{l}
-					$\frac{\sigma_{k(1\leq k \leq n)}=(a_1,\alpha_1)...(a_n,\alpha_n) \in ST_i}
-					{(l_0,v_\emptyset) (a_1,\alpha_1) (l_{k1},v_\emptyset) ...(l_{kn-1},v_\emptyset) (a_n,\alpha_n) (l_{kn},v_\emptyset) \in Runs_i}$
-				\end{tabular}
-				\newline
-			\end{minipage}%
-		}
-	\end{center}
-
+  \begin{center}
+    $\frac{\sigma_{k(1\leq k \leq n)}=(a_1,\alpha_1)...(a_n,\alpha_n) \in ST_i}
+    {(l_0,v_\emptyset) (a_1,\alpha_1) (l_{k1},v_\emptyset) \dots (l_{kn-1},v_\emptyset) (a_n,\alpha_n) (l_{kn},v_\emptyset) \in Runs_i}$
+  \end{center}
 \end{definition}
 
 The above definition preserves trace inclusion between $Runs_i$
 and $Traces(Sua)$, and we can deduce the following proposition:
 
 \begin{proposition}
-Let $ST_i$ be a trace set obtained from $Sua$. We have $Traces(Runs_i) \subseteq Traces(Sua)$.
+Let $ST_i$ be a trace set obtained from $Sua$. We have
+$Traces(Runs_i) \subseteq Traces(Sua)$.
 \end{proposition}
 
 The runs of $Runs_i$ have states that are unique except for the
@@ -373,87 +500,125 @@ and guards are extracted from the assignments found in valued
 events:
 
 \begin{definition}
-	\label{IOSTS_tree}
-
-    Given a run set $Runs_i$,
-    $\EuScript{S}_i=<L_{\EuScript{S}_i},
-    l0_{\EuScript{S}_i},V_{\EuScript{S}_i},\\
-    V0_{\EuScript{S}_i}, I_{\EuScript{S}_i},
-    \Lambda_{\EuScript{S}_i},\rightarrow_{\EuScript{S}_i}>$ is
-    the STS expressing the behaviours found in $Runs_i$ such that:
+  Given a run set $Runs_i$, $\EuScript{S}_i=<L_{\EuScript{S}_i},
+  l0_{\EuScript{S}_i},V_{\EuScript{S}_i}, V0_{\EuScript{S}_i},
+  I_{\EuScript{S}_i},
+  \Lambda_{\EuScript{S}_i},\rightarrow_{\EuScript{S}_i}>$ is the
+  STS expressing the behaviours found in $Runs_i$ such that:
 
 	\begin{itemize}
-        \item $L_{\EuScript{S}_i}= \{l_i \mid \exists r\in Runs_i, (li,v_\emptyset)$ is
-		a state found in $r\}$,
+    \item $L_{\EuScript{S}_i}= \{l_i \mid \exists r\in Runs_i,
+      (li,v_\emptyset)$ is a state found in $r\}$,
 
-        \item $l0_{\EuScript{S}_i} = l_0$ is the initial location such that $\forall r \in
-        Runs_i$, $r$ starts with $(l_0,v_\emptyset)$,
+    \item $l0_{\EuScript{S}_i} = l_0$ is the initial location
+      such that $\forall r \in Runs_i$, $r$ starts with
+      $(l_0,v_\emptyset)$,
 
-		\item $V_{\EuScript{S}_i}=\emptyset$, $V0_{\EuScript{S}_i}=v_\emptyset$,
+    \item $V_{\EuScript{S}_i}=\emptyset$,
+      $V0_{\EuScript{S}_i}=v_\emptyset$,
 
-        \item $\rightarrow_{\EuScript{S}_i}$ and
-        $\Lambda_{\EuScript{S}_i}$ are defined by the following
-        inference rule applied on every element $r\in Runs_i$:
+    \item $\rightarrow_{\EuScript{S}_i}$ and
+      $\Lambda_{\EuScript{S}_i}$ are defined by the following
+      inference rule applied on every element $r\in Runs_i$:
 	\end{itemize}
 
-	\noindent\fbox{%
-		\begin{minipage}{0.47\textwidth}
-			\begin{center}
-				\begin{tabular}{l}
-					$\frac{(l_i,v_\emptyset) (a_i,\alpha_i) (l_{i+1},v_\emptyset) \in r, p=\{x \mid (x:=v)\in \alpha_i \}, G_i=\displaystyle \bigwedge_{(x:=v)\in \alpha_i}x==v}{l_i
-                        \xrightarrow{a_i(p),G_i,id_V}_{\EuScript{S}_i} l_{i+1}}$\\
-				\end{tabular}
-			\end{center}
-		\end{minipage}%
-	}
+  \begin{center}
+    $\frac{(l_i,v_\emptyset) (a_i,\alpha_i) (l_{i+1},v_\emptyset)
+    \in r, p=\{x \mid (x:=v)\in \alpha_i \}, G_i=\displaystyle
+  \bigwedge_{(x:=v)\in \alpha_i}x==v}{l_i \xrightarrow{a_i(p),G_i,id_V}_{\EuScript{S}_i} l_{i+1}}$
+  \end{center}
+
+
+  \label{IOSTS_tree}
 \end{definition}
 
-Now, we have a first STS that has a tree form, describing all
-behaviours of the system under analysis.
+We obtain a model having a tree structure and whose traces are
+equivalent to those of $ST_i$. At this point, production events
+are called actions in the STS.
 
-Figure \ref{fig:firstmodel} illustrates the STS $\EuScript{S}_1$
-obtained from the production events of Figure \ref{fig:rawdatum}.
-We have STS actions and each one owns a parameter list.
-Transitions are labelled with guards derived from parameter
-assignments. This STS expresses the behaviours found in
-$Traces(Sua)$ but in a slightly different manner. More generally,
-trace inclusion between an inferred STS and $Traces(Sua)$ is
-captured by the following proposition:
+Figure \ref{fig:firstmodel} depicts the model obtained from the
+traces given in Figure \ref{fig:tsua}. Every initial trace is now
+represented as a STS branch. Parameter assignments are modelled
+with constraints over transitions, called \textit{guards}.
+
+\begin{figure}[H]
+  \includegraphics[width=1.0\linewidth]{figures/STS1.png}
+
+  \caption{First generated model (STS)}
+  \label{fig:firstmodel}
+\end{figure}
+
+This STS expresses the behaviours found in $Traces(Sua)$ but in a
+slightly different manner. More generally, trace inclusion
+between an inferred STS and $Traces(Sua)$ is captured by the
+following proposition:
 
 \begin{proposition}
+  Let $Sua$ be a system under analysis and $Traces(Sua)$ be its
+  trace set. $\EuScript{S}_i$ is an inferred STS from
+  $Traces(Sua)$.
+  We have $Traces(\EuScript{S}_i) = Traces(ST_i) \subseteq Traces(Sua)$.
+
 	\label{def:equivtraces_IOSTS}
-    Let $Sua$ be a system under analysis and $Traces(Sua)$ be its trace set. $\EuScript{S}_i$ is an inferred STS from $Traces(Sua)$.
-    \\We have $Traces(\EuScript{S}_i) = Traces(ST_i) \subseteq Traces(Sua)$.
 \end{proposition}
 
-%Nevertheless, its size is likely too large to be used in an
-%efficient manner. That is why we worked on reducing it.
+Nevertheless, its size is likely too large to be used in an
+efficient manner. That is why we added a reduction step.
 
 \subsection{STS reduction}
 \label{part3:reduction}
-%Our first STS has a tree form where branches are directly
-%derived from traces.
 
-A STS $\EuScript{S}_i$ is most likely too large for being
-analysed in an efficient manner. Given that a production system
-has a finite number of elements and that there should only be
-deterministic decisions, the STS $\EuScript{S}_i$ should
-contain branches capturing the same sequences of events (without
-necessarily the same parameter assignments). Consequently, it
-sounds natural to try to reduce the STS obtained from the
-previous step.
+A model $\EuScript{S}_i$ constructed with the above steps is
+usually too large, and thus cannot be beneficial as is. Using
+such a model for testing purpose would lead to too many test
+cases for instance. That is why we use a reduction step, aiming
+at diminishing the first model into a second one, denoted
+$R(\EuScript{S}_i)$ that will be more usable. Most of the
+existing approaches propose two solutions. Models can directly be
+inferred with high levels of abstraction but these are also
+approximate, i.e. models express more behaviours than those
+concretely observed. This approach is not suitable since we do
+not want to infer extrapolated models. The second solution is to
+apply a minimisation technique, e.g. \cite{Abdulla06}, which
+guarantees trace equivalence. Nonetheless, after investigation,
+we concluded that minimisation is costly and highly time
+consuming on large models. Furthermore, we observed that the STSs
+may become extremely complex, especially when we have thousands
+of branches.
 
-Because our goal is to produce exact models quickly, we propose to
-apply a lightweight STS reduction method which also aims at
-gathering data in order to ease the data analysis later on.
-Our method merges complete branches that have the same action
-sequences whereas guards, which capture parameter assignments,
-are merged into matrices. More precisely, a sequence of
-successive guards found in a branch is stored into a matrix
-column. By doing this, we reduce the model size and we can still
-retrieve original behaviours and only these ones. We still
-preserve trace inclusion between the reduced STS and
-$Traces(Sua)$.
+
+Given that a production system has a finite number of elements
+and that there should only be deterministic decisions, the STS
+$\EuScript{S}_i$ should contain branches capturing the same
+sequences of events (without necessarily the same parameter
+assignments).  As a result, we chose to apply a simpler approach
+which consists in combining STS branches that have the same
+sequences of actions so that we still obtain a model having a
+tree structure. When branches are combined together, parameter
+assignments are wrapped into matrices in such a way that trace
+equivalence between the first model and the new one is preserved.
+More precisely, a sequence of successive guards found in a branch
+is stored into a matrix column. By doing this, we reduce the
+model size, we can still retrieve original behaviours and only
+these ones, and we still preserve trace inclusion between the
+reduced STS and $Traces(Sua)$.
+The use of matrices offers here another advantage: the parameter
+assignments are now packed into a structure that can be more
+easily analysed later. As described in Section
+\ref{sec:modelinf:prodsystems:results}, this straightforward
+approach gives good results in terms of STS reduction and
+requires low processing time, even with millions of transitions.
+
+Figure \ref{fig:reduced-model} depicts the reduced model obtained
+from the STS of Figure \ref{fig:firstmodel}. Now we have only one
+branch where guards are packed into one matrix $M_{[b]}$.
+
+\begin{figure}[H]
+  \includegraphics[width=0.5\linewidth]{figures/STS2.png}
+
+	\caption{Reduced model (STS)}
+	\label{fig:reduced-model}
+\end{figure}
 
 Given a STS $\EuScript{S}_i$, every STS branch is initially
 adapted to express sequences of guards in a vector form to ease
@@ -469,31 +634,26 @@ the definition of the STS operator $Mat$:
   $Mat(\EuScript{S}_i)$ the STS operator which consists in
   expressing guards of STS branches in a vector form.
 
-  $Mat(\EuScript{S}_i)=<L_{Mat(\EuScript{S}_i)},l0_{Mat(\EuScript{S}_i)},V_{Mat(\EuScript{S}_i)},V0_{Mat(\EuScript{S}_i)},I_{Mat(\EuScript{S}_i)}\\,\Lambda_{Mat(\EuScript{S}_i)},$
+  $Mat(\EuScript{S}_i)=<L_{Mat(\EuScript{S}_i)},l0_{Mat(\EuScript{S}_i)},V_{Mat(\EuScript{S}_i)},V0_{Mat(\EuScript{S}_i)},I_{Mat(\EuScript{S}_i)},\Lambda_{Mat(\EuScript{S}_i)},$
   $\rightarrow_{Mat(\EuScript{S}_i)}>$ where:
 
 	\begin{itemize}
-		\item $L_{Mat(\EuScript{S}_i)}=L_{\EuScript{S}_i}, l0_{Mat(\EuScript{S}_i)}=l0_{\EuScript{S}_i}, I_{Mat(\EuScript{S}_i)}=I_{\EuScript{S}_i},\\\Lambda_{Mat(\EuScript{S}_i)} = \Lambda_{\EuScript{S}_i}$,
+    \item $L_{Mat(\EuScript{S}_i)}=L_{\EuScript{S}_i}, l0_{Mat(\EuScript{S}_i)}=l0_{\EuScript{S}_i}, I_{Mat(\EuScript{S}_i)}=I_{\EuScript{S}_i},\Lambda_{Mat(\EuScript{S}_i)} = \Lambda_{\EuScript{S}_i}$,
 
-		\item $V_{Mat(\EuScript{S}_i)}$, $V0_{Mat(\EuScript{S}_i)}$ and $\rightarrow_{Mat(\EuScript{S}_i)}$ are given by the following rule:
-	\end{itemize}
+    \item $V_{Mat(\EuScript{S}_i)}$, $V0_{Mat(\EuScript{S}_i)}$
+      and $\rightarrow_{Mat(\EuScript{S}_i)}$ are given by the
+      following rule:
 
-	\fbox{%
-    \begin{minipage}{0.46\textwidth}
-			\begin{tabular}{c}
-				$\frac{b_i=l_0 \xRightarrow{(a_1(p_1),G_1,A_1)...(a_n(p_n),G_n,A_n)} l_n}{
-					\begin{matrix}
-					V0_{Mat(\EuScript{S}_i)}:=V0_{Mat(\EuScript{S}_i)} \wedge M_{i}=[G_1,...,G_n]\\
-          l0_{Mat(\EuScript{S}_i)} \xRightarrow{(a_1(p_1),M_i[1],id_V) ...(a_n(p_n),M_i[n],id_V) }_{\rightarrow_{Mat(\EuScript{S}_i)}} l_n\\
-					\end{matrix}
-				}$
-			\end{tabular}
-			\newline
-		\end{minipage}%
-	}
+    $\frac{b_i=l_0 \xRightarrow{(a_1(p_1),G_1,A_1)...(a_n(p_n),G_n,A_n)} l_n}{
+      \begin{matrix}
+        V0_{Mat(\EuScript{S}_i)}:=V0_{Mat(\EuScript{S}_i)} \wedge M_{i}=[G_1,...,G_n]\\
+        l0_{Mat(\EuScript{S}_i)} \xRightarrow{(a_1(p_1),M_i[1],id_V) ...(a_n(p_n),M_i[n],id_V) }_{\rightarrow_{Mat(\EuScript{S}_i)}} l_n\\
+      \end{matrix}
+    }$
+  \end{itemize}
 
-    Given a branch $b_i \in (\rightarrow_{Mat(\EuScript{S}_i)})^n$, we also denote
-    $Mat(b_i)=M$ the vector used with $b_i$.
+  Given a branch $b_i \in (\rightarrow_{Mat(\EuScript{S}_i)})^n$, we also denote
+  $Mat(b_i)=M$ the vector used with $b_i$.
 \end{definition}
 
 Now, we are ready to merge the STS branches that have the same
@@ -502,7 +662,16 @@ equivalence relation over STS branches from which we can derive
 equivalence classes:
 
 \begin{definition}[STS branch equivalence class]
-Let $\EuScript{S}_i\\=<L_{\EuScript{S}_i},l0_{\EuScript{S}_i},V_{\EuScript{S}_i},V0_{\EuScript{S}_i},I_{\EuScript{S}_i},\Lambda_{\EuScript{S}_i},$ $\rightarrow_{\EuScript{S}_i}>$ be a STS obtained from $Traces(Sua)$ (and having a tree structure). $[b]$ denotes the equivalence class of $\EuScript{S}_i$ branches such that:\\ $[b]=\{ b_j= l0_{\EuScript{S}_i} \xRightarrow{(a_1(p_1),G_{1j},A_{1j})...(a_n(p_n),G_{nj},A_{nj})} l_{nj}(j\geq 1) \mid b=l0_{\EuScript{S}_i} \xRightarrow{(a_1(p_1),G_{1},A_{1})...(a_n(p_n),G_{n},A_{n})} l_n\}$
+Let
+$\EuScript{S}_i=<L_{\EuScript{S}_i},l0_{\EuScript{S}_i},V_{\EuScript{S}_i},V0_{\EuScript{S}_i},I_{\EuScript{S}_i},\Lambda_{\EuScript{S}_i},$
+$\rightarrow_{\EuScript{S}_i}>$ be a STS obtained from
+$Traces(Sua)$ (and having a tree structure). $[b]$ denotes the
+equivalence class of $\EuScript{S}_i$ branches such that: $[b]=\{
+b_j= l0_{\EuScript{S}_i}\\
+\xRightarrow{(a_1(p_1),G_{1j},A_{1j})\dots(a_n(p_n),G_{nj},A_{nj})}
+l_{nj}(j\geq 1) \mid b=l0_{\EuScript{S}_i}
+\xRightarrow{(a_1(p_1),G_{1},A_{1})\dots(a_n(p_n),G_{n},A_{n})}
+l_n\}.$
 \end{definition}
 
 The reduced STS denoted $R(\EuScript{S}_i)$ of $\EuScript{S}_i$
@@ -519,26 +688,21 @@ defined as follow:
 
 	Let $\EuScript{S}_i=<L_{\EuScript{S}_i},l0_{\EuScript{S}_i},V_{\EuScript{S}_i},V0_{\EuScript{S}_i},I_{\EuScript{S}_i},\Lambda_{\EuScript{S}_i},$ $\rightarrow_{\EuScript{S}_i}>$ be
     a STS inferred from a structured trace set $Traces(Sua)$. The reduction of $\EuScript{S}_i$ is modelled by the STS
-	$R(\EuScript{S}_i)= <L_R,l0_R,\\ V_R,V0_R,I_R,\Lambda_R,$
+	$R(\EuScript{S}_i)= <L_R,l0_R,V_R,V0_R,I_R,\Lambda_R,$
 	$\rightarrow_R>$ where:
 
-	\fbox{%
-    \begin{minipage}{0.46\textwidth}
-			\begin{tabular}{c}
-				$\frac{\begin{matrix}
-					[b]=\{b_1,...,b_m\}\\
-					b=l0_{\EuScript{S}_i} \xRightarrow{(a_1(p_1),G_{1},A_{1})...(a_n(p_n),G_{n},A_{n})}_{Mat(\EuScript{S}_i)} l_{n}\\
-					\end{matrix}
-				}
-				{\begin{matrix}
-					V0_R:=V0_R \wedge M_{[b]}=[Mat(b_1),...,Mat(b_m)]\\ \wedge (1 \leq c_{[b]} \leq m),\\
-					l0_R \xRightarrow{(a_1(p_1),M_{[b]}[1,c_{[b]}],id_V)... (a_n(p_n),M_{[b]}[n,c_{[b]}],id_V)}_{\rightarrow_R}\\  (l_{n1}...l_{nm})
-					\end{matrix}
-				}$
-			\end{tabular}
-			\newline
-		\end{minipage}
-	}
+  \begin{center}
+  $\frac{\begin{matrix}
+      [b]=\{b_1,...,b_m\}\\
+      b=l0_{\EuScript{S}_i} \xRightarrow{(a_1(p_1),G_{1},A_{1})...(a_n(p_n),G_{n},A_{n})}_{Mat(\EuScript{S}_i)} l_{n}\\
+    \end{matrix}
+  }
+  {\begin{matrix}
+      V0_R:=V0_R \wedge M_{[b]}=[Mat(b_1),...,Mat(b_m)] \wedge (1 \leq c_{[b]} \leq m),\\
+      l0_R \xRightarrow{(a_1(p_1),M_{[b]}[1,c_{[b]}],id_V)... (a_n(p_n),M_{[b]}[n,c_{[b]}],id_V)}_{\rightarrow_R}\\  (l_{n1}...l_{nm})
+    \end{matrix}
+  }$
+  \end{center}
 \end{definition}
 
 The resulting model $R(\EuScript{S}_i)$ is a STS composed of
@@ -548,35 +712,36 @@ branch of the initial STS $\EuScript{S}_i$. The choice of the
 column in a matrix depends on a new variable $c_{[b]}$.
 
 Figure \ref{fig:firstmodel} has two branches that can be combined
-since they have the same action sequences. During the construction
-of the reduced STS depicted in Figure \ref{fig:finalmodel}, the
-guards are placed into two vectors $M1=[G1\text{ }G2]$ and $M2=[G3\text{ }G3]$.
-These are combined into the same matrix $M_{[b]}$. The variable
-$c_{[b]}$ is used to take either the guards of the first column or
-the guards of the second one.
+since they have the same action sequences. During the
+construction of the reduced STS depicted in Figure
+\ref{fig:finalmodel}, the guards are placed into two vectors
+$M1=[G1\text{ }G2]$ and $M2=[G3\text{ }G4]$.  These are combined
+into the same matrix $M_{[b]}$. The variable $c_{[b]}$ is used to
+take either the guards of the first column or the guards of the
+second one.
 
 The STS $R(\EuScript{S}_i)$ has less branches but still expresses
 the initial behaviours described by the STS $\EuScript{S}_i$.
 This is captured with the following proposition:
 
 \begin{proposition}
-    Let $Sua$ be a system under analysis and $Traces(Sua)$ be its traces
-    set. $R(\EuScript{S}_i)$ is a STS derived from $Traces(Sua)$.
-    We have $Traces(R(\EuScript{S}_i)) = Traces(ST_i) \subseteq Traces(Sua)$.
+  Let $Sua$ be a system under analysis and $Traces(Sua)$ be its traces
+  set. $R(\EuScript{S}_i)$ is a STS derived from $Traces(Sua)$.
+  We have $Traces(R(\EuScript{S}_i)) = Traces(ST_i) \subseteq Traces(Sua)$.
 \end{proposition}
 
 \subsection{STS abstraction}
 
-Given the trace set $ST_i \in ST$, the
-generated STS $R(\EuScript{S}_i)$ can be used for analysis
-purpose but is still difficult to manually interpret, even for experts.
-This \textit{Autofunk} module aims to analyse $R(\EuScript{S}_i)$
-to produce a new STS $\EuScript{S}_i^\uparrow$ whose level of
-abstraction is lifted by using more intelligible actions. This
-process is performed with inference rules, which encode the
-knowledge of the expert of the system. These are triggered on the
-transitions of $R(\EuScript{S}_i)$ to deduce new transitions. We
-consider two types of rules:
+Given the trace set $ST_i \in ST$, the generated STS
+$R(\EuScript{S}_i)$ can be used for analysis purpose but is still
+difficult to manually interpret, even for experts.  This Autofunk
+module aims to analyse $R(\EuScript{S}_i)$ to produce a new STS
+$\EuScript{S}_i^\uparrow$ whose level of abstraction is lifted by
+using more intelligible actions. This process is performed with
+inference rules, which encode the knowledge of the expert of the
+system. These are triggered on the transitions of
+$R(\EuScript{S}_i)$ to deduce new transitions. We consider two
+types of rules:
 
 \begin{itemize}
     \item the rules replacing some transitions by more
@@ -590,7 +755,7 @@ consider two types of rules:
     to a single transition compound of a more abstract action.
     These rules are of the form \textit{When Transition $l_1
     \xRightarrow{(a_1,G_1,A_1),...(a_n,G_n,A_n)} l_n$, condition
-    on\\$(a_1,G_1,A_1),...(a_n,G_n,A_n)$, Then add $l_1
+    on $(a_1,G_1,A_1),...(a_n,G_n,A_n)$, Then add $l_1
     \xrightarrow{a(p),G,A}_{\EuScript{S}_i^\uparrow} l_n $, and
     retract $l_1 \xRightarrow{(a_1,G_1,A_1),...(a_n,G_n,A_n)} l_n$}.
 \end{itemize}
@@ -602,6 +767,33 @@ behaves, especially when issues are experienced in production.
 However, it is manifest that the trace inclusion property is lost
 with the STSs constructed by this module since sequences are
 modified.
+
+\begin{figure}[ht]
+\begin{framed}
+\begin{BVerbatim}
+rule "Mark destination requests"
+when:
+  $t: Transition(name matches "17011")
+then
+  $t.changeAction("Destination Request")
+end
+\end{BVerbatim}
+\end{framed}
+
+\begin{framed}
+\begin{BVerbatim}
+rule "Mark destination responses"
+when:
+  $t: Transition(name matches "17021")
+then
+  $t.changeAction("Destination Response")
+end
+\end{BVerbatim}
+\end{framed}
+
+  \caption{Two rules adding value to existing transitions}
+  \label{rule:rename-tr}
+\end{figure}
 
 If we take back our example, the actions of the STS of Figure
 \ref{fig:reduced-model} are replaced with the rules of Figure
@@ -616,318 +808,39 @@ self-explanatory, we generate a simpler STS constituted of one
 transition, clearly expressing a part of the functioning of the
 system.
 
-\begin{figure}[H]
-\begin{lstlisting}
-rule "Mark destination requests"
-when:
-  $t: Transition(name matches "17011")
-then
-  $t.changeAction("Destination Request")
-end
-
-rule "Mark destination responses"
-when:
-  $t: Transition(name matches "17021")
-then
-  $t.changeAction("Destination Response")
-end
-\end{lstlisting}
-
-    \caption{Two rules adding value to existing transitions}
-    \label{rule:rename-tr}
-\end{figure}
-
-\begin{figure}[H]
-\begin{lstlisting}
+\begin{figure}[ht]
+\begin{framed}
+\begin{BVerbatim}
 rule "Aggregate destination requests/responses"
 when
-  $t1: Transition(action == "Destination Request", $lfinal := Lfinal)
-  $t2: Transition(action == "Destination Response" , Linit == $lfinal)
+  $t1: Transition(
+    action == "Destination Request", $lfinal := Lfinal
+  )
+  $t2: Transition(
+    action == "Destination Response" , Linit == $lfinal
+  )
 then
-  insert(new Transition("Product Advance", Guard( $t1.Guard, $t2.Guard), Assign($t1.Assign, $t2.Assign), $t1.Linit, $t2.Lfinal))
+  insert(
+    new Transition(
+      "Product Advance",
+      Guard( $t1.Guard, $t2.Guard),
+      Assign($t1.Assign, $t2.Assign),
+      $t1.Linit,
+      $t2.Lfinal
+    )
+  )
   retract($t1)
   retract($t2)
 end
-\end{lstlisting}
+\end{BVerbatim}
+\end{framed}
 
-    \caption{STS transition aggregation rule}
-    \label{rule:aggregate-tr}
+  \caption{STS transition aggregation rule}
+  \label{rule:aggregate-tr}
 \end{figure}
-
-
-
-\subsection{Framework overview}
-
-In this section, we introduce our framework called
-\textit{Autofunk} whose main architecture is depicted in Figure
-\ref{fig:autofunk}. This framework contains different modules (in
-grey in the figure): four modules are dedicated to build models,
-and an optional one can be used to derive more abstract and
-readable models.
-
-We consider Symbolic Transition Systems (STSs) as models for
-representing industrial system behaviours. STSs are state
-machines incorporating actions (i.e. events in this context),
-labelled on transitions, that show what can be given to and
-observed on the system. In addition, actions are tied to an
-explicit notion of data.  The innovation of this framework lies
-in the combination of the notion of expert systems with the STS
-formalism. Intuitively, the STS representation, operators and
-transformations, can be expressed with deduction rules. On the
-other hand, the knowledge of a human expert of a system can be
-transcribed with inference rules following the pattern:
-\textit{When condition, Then action(s)}. \textit{Autofunk}
-combines both domains in such a way that each model modification
-can be expressed and implemented with a rule. As a consequence,
-the data collections handled by \textit{Autofunk} are always
-expressed with knowledge bases (Events, Actions, Traces, STS,
-etc.) on which rules are applied to infer models. Given a system
-$Sua$ and a set of production events, \textit{Autofunk} builds
-exact models, i.e. the traces of a model $\EuScript{S}$ are
-included in the traces of $Sua$.
-
-\begin{figure}[ht]
-	\begin{center}
-    \includegraphics[width=1.0\linewidth]{figures/autofunk.png}
-	\end{center}
-
-    \caption{Overview of Autofunk}
-    \label{fig:autofunk}
-\end{figure}
-
-To explain how \textit{Autofunk} works, we consider a case study
-based upon the example of Figure \ref{fig:rawdatum}. It depicts
-simplified production events similar to those extracted from
-Michelin's logging system. \textit{INFO}, \textit{7011} and
-\textit{17021} are labels that are accompanied with assignments
-of variables e.g. $nsys$, with indicates an industrial device
-number and $point$ which gives the product position. With real
-events, there are around 20 parameters. Such a format is specific
-to Michelin but other kinds of events could be considered by
-updating the first module of \textit{Autofunk}.\\\\
-
-\begin{figure}
-\begin{lstlisting}
-17-Jun-2014 23:29:59.00|INFO|New File
-
-17-Jun-2014 23:29:59.50|17011|MSG_IN  [nsys: 1] [nsec:modelinf:prodsystems: 8] [point: 4] [pid: 1]
-
-17-Jun-2014 23:29:59.61|17021|MSG_OUT [nsys: 1] [nsec:modelinf:prodsystems: 8] [point: 4] [tpoint: 8] [pid: 1]
-
-17-Jun-2014 23:29:59.70|17011|MSG_IN  [nsys: 1] [nsec:modelinf:prodsystems: 8] [point: 4] [pid: 2]
-
-17-Jun-2014 23:29:59.92|17021|MSG_OUT [nsys: 1] [nsec:modelinf:prodsystems: 8] [point: 4] [tpoint: 8] [pid: 2]
-\end{lstlisting}
-
-    \caption{Production events}
-    \label{fig:rawdatum}
-\end{figure}
-
-\paragraph{Production events and traces}
-\label{part2:collecting}
-
-\textit{Autofunk} takes production events as input from a system
-under analysis $Sua$. These are formatted no matter their initial
-source, so that it is possible to use data from different
-providers. We obtain a set of events of the form $a(\alpha)$ with
-$a$ a label, and $\alpha$ a parameter assignment. In the rest of
-the paper, we call these formatted events, \textit{valued events}.
-
-Some of these valued events may be irrelevant. For instance, some
-events may capture logging information and are not part of
-the functioning of the system. In Figure \ref{fig:rawdatum}, the
-event having the type \textit{INFO} belongs to this category
-and can be removed. Filtering is achieved by an expert system
-and inference rules. Indeed, a human expert knows which events
-should be filtered out, and inference rules offer a natural way
-to express his knowledge. On top of that, expert systems also
-offer fast processing in this situation.
-
-The remaining valued events are ordered to produce an initial set
-of traces denoted $Traces(Sua)$. Figure \ref{fig:tsua}
-illustrates this set obtained from the events of Figure
-\ref{fig:rawdatum}.
-
-\begin{figure}
-    $Traces(Sua) = \{
-    (17011(nsys:=1,nsec:modelinf:prodsystems:=8,point:=4,pid:=1)\text{ }
-    17021(nsys:=1,nsec:modelinf:prodsystems:=8,point:=4,tpoint:=8,pid:=1))$,
-    $(17011(nsys:=1,nsec:modelinf:prodsystems:=8,point:=4,pid:=2)\text{ }
-    17021(nsys:=1,nsec:modelinf:prodsystems:=8,point:=4,tpoint:=8,pid:=2)) \}$
-
-    \caption{Initial trace set}
-    \label{fig:tsua}
-\end{figure}
-
-In the context of Michelin, we use four inference rules to remove
-all irrelevant events. Two of them are related to the logging
-system itself, the two others are used to remove events that have
-no business meaning, and have been given by Michelin experts.
-
-\paragraph{Traces segmentation}
-
-We define a complete trace as a trace containing all events
-expressing the path taken by a product in a production system,
-from the beginning, i.e. one of its entry points, to the end,
-i.e. one of its exit points. In the trace set $Traces(Sua)$, we
-do not want to keep incomplete traces, i.e. traces related to
-products which did not pass through one of the known entry points
-or moved to the next step of the manufacturing process using one
-of the known exit points.
-
-We chose to split $Traces(Sua)$ constructed in the previous step
-into subsets $ST_i$, one for each entry point of the system under
-analysis $Sua$. Later, every trace set $ST_i$ shall give birth to
-one model, describing all possible behaviours starting from its
-corresponding entry point.
-
-In Michelin systems, the parameter $point$ stores the product
-physical location and can be used to deduce the entry and exit
-points of the systems. We perform a statistical analysis
-on $Traces(Sua)$ and compute two ratios for each assignment
-($point:=val$) found in the first and last valued events of every
-trace. If $Traces(Sua)$ is sufficiently large (traces collected
-during more than a week at Michelin), these ratios directly show
-the entry and exit points, respectively stored into the sets
-$POINT_{init}$ and $POINT_{final}$. Otherwise, we assume that the
-number of entry and exit points, $N$ and $M$, are given and we
-keep only the first $N$ and $M$ points having the highest ratios.
-Then, for each entry point, we construct a trace set denoted
-$ST_i$ made of traces expressing behaviours starting at this
-entry point and ending at one of the exit points of
-$POINT_{final}$. The other traces are ignored. We obtain the
-set $ST=\{ST_1,...,ST_N\}$ with $N$ the number of entry points of
-the system $Sua$. Finally, these traces are scrutinised to detect
-repetitive valued event sequences in order to remove them.
-
-In our straightforward example, we obtain one trace set
-$ST_1=Traces(Sua)$.
-
-\paragraph{STS generation}
-
-One model is built for each trace set $ST_i$ in $ST$. Given a set
-$ST_i$, a first STS, denoted $\EuScript{S}_i$, is built in a
-simple but quick manner. Each trace of $ST_i$ is completed to
-derive a set of runs. A run is an alternate sequence of states
-and events. Given a trace $t$ in $ST_i$, states, which are
-unique, are injected before and after each event of $t$. States
-must be unique to keep the ordering of the events in the runs,
-and to prevent merging different behaviours in the model.
-The initial state is an exception though as it is shared by all
-the runs. The model $\EuScript{S}_i$ is obtained by transforming
-runs into sequences of transitions that are then joined together.
-We obtain a model having a tree structure and whose traces are
-equivalent to those of $ST_i$. At this point, production events
-are called actions in the STS.
-
-Figure \ref{fig:firstmodel} depicts the model obtained from the
-traces given in Figure \ref{fig:tsua}. Every initial trace is now
-represented as a STS branch. Parameter assignments are modelled
-with constraints over transitions, called \textit{guards}. The
-details about the STS models are given in subsection
-\ref{sec:modelinf:prodsystems:theory}.\\
 
 \begin{figure}[H]
-	\begin{center}
-        \includegraphics[width=1.0\linewidth]{figures/STS1.png}
-	\end{center}
-
-	\caption{First generated model (STS)}
-	\label{fig:firstmodel}
-\end{figure}
-
-
-\paragraph{STS reduction}
-\label{part2:reduction}
-
-A model $\EuScript{S}_i$ constructed with the above steps is
-usually too large, and thus cannot be beneficial as is. Using
-such a model for testing purpose would lead to too many test
-cases for instance. That is why our framework adds a reduction
-step, aiming at diminishing the first model into a second one,
-denoted $R(\EuScript{S}_i)$ that will be more usable.
-Most of the existing approaches propose two solutions. Models
-can directly be inferred with high levels of abstraction but
-these are also approximate, i.e. models express more behaviours
-than those concretely observed. This approach is not suitable
-since we do not want to infer extrapolated models. The second
-solution is to apply a minimisation technique \cite{Abdulla06}
-which guarantees trace equivalence. Nonetheless, after
-investigation, we concluded that minimisation is costly and
-highly time consuming on large models.
-
-%Furthermore, we observed that the STSs may
-%become extremely complex, especially when we have thousands of
-%branches.
-
-As a result, we chose to apply a simpler approach which consists
-in combining STS branches that have the same sequences of actions
-so that we still obtain a model having a tree structure. When
-branches are combined together, parameter assignments are wrapped
-into matrices in such a way that trace equivalence between the
-first model and the new one is preserved. The use of matrices
-offers here another advantage: the parameter assignments are now
-packed into a structure that can be more easily analysed later.
-As described in subsection \ref{sec:modelinf:prodsystems:impl-exp}, this
-straightforward approach gives good results in terms of STS reduction and
-requires low processing time, even with millions of transitions.
-
-Figure \ref{fig:reduced-model} depicts the reduced model obtained
-from the STS of Figure \ref{fig:firstmodel}. Now we have only one
-branch where guards are packed into one matrix $M_{[b]}$.
-
-\begin{figure}[H]
-	\begin{center}
-    \includegraphics[width=1.0\linewidth]{figures/STS2.png}
-	\end{center}
-
-	\caption{Reduced model (STS)}
-	\label{fig:reduced-model}
-\end{figure}
-
-\paragraph{Model generation for comprehension aid}
-
-For every trace set $ST_{i}$, we have built a model
-$R(\EuScript{S}_i)$ whose size has been drastically reduced. Such
-a model can be used for testing purpose, which is one of
-Michelin's goals, but it can also be lifted in abstraction to
-create more readable models. These could be used for diagnosis
-when issues are experienced in production.
-
-To infer more abstract models, we focus once again on the notion
-of expert knowledge. The reasoning that an expert can apply while
-reading events are formalised into inference rules. The latters
-aim at analysing the behaviours captured by a model
-$R(\EuScript{S}_i)$ to produce another model denoted
-$S_{i}^\uparrow$ having a higher level of abstraction. In this
-paper, we consider two kinds of inference rules:
-
-\begin{itemize}
-    \item the inference rules that are used to enrich the meaning
-    of the STS actions, e.g. by replacing some labels with more
-    comprehensive ones. These rules are initially applied on the
-    model $R(\EuScript{S}_i)$,
-
-    \item we consider a second set of inference rules to analyse
-    the meaning of sequences of transitions and to aggregate such
-    sequences into a single transition.
-\end{itemize}
-
-If we take back our example, we obtain a last model depicted in
-Figure \ref{fig:finalmodel}. The initial actions are replaced
-with more comprehensive ones (Figure \ref{fig:finalmodel}(a)) by
-means of two inference rules. Then, the two actions expressing a
-moving request of a product and a response are aggregated into
-the action labelled as \textit{Product Advance} (Figure
-\ref{fig:finalmodel}(b)). We obtain a STS made of a unique
-transition whereas we had 5 production events at the beginning.
-Such models are easier to read and understand, but also seem to
-be more convenient to diagnose issues.
-
-\begin{figure}[H]
-	\begin{center}
-    \includegraphics[width=1.0\linewidth]{figures/STSfinal.png}
-	\end{center}
+  \includegraphics[width=1.0\linewidth]{figures/STSfinal.png}
 
 	\caption{Final model (STS)}
 	\label{fig:finalmodel}
@@ -942,7 +855,7 @@ models, mimicking some of the existing Michelin specifications.
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \section{Implementation and experimentation}
-\label{sec:impl-exp}
+\label{sec:modelinf:prodsystems:results}
 
 In this section, we briefly describe the implementation of our
 model inference framework for Michelin. Then, we give an
@@ -951,31 +864,28 @@ evaluation on a real production system.
 \subsection{Implementation}
 \label{sec:impl-exp-collect}
 
-Our framework \textit{Autofunk} is developed in Java and mainly
-based on \textit{Drools} \footnote{http://www.drools.org/}, a
-Java rule-based expert system engine. Drools supports knowledge
-bases with facts given as Java objects. In our context, we have
-several bases of facts used throughout the different
-\textit{Autofunk} modules: Events, Trace sets $ST_i$, Runs,
-Transitions and STSs.
-We chose to target performance and simplicity while implementing
-\textit{Autofunk}. That is why most of the steps are implemented
-with parallel algorithms (except the production event parsing)
-which are based upon the inference rules given in section
-\ref{sec:theory}.
+Our framework Autofunk is developed in Java and mainly based on
+Drools, a Java rule-based expert system engine. Drools supports
+knowledge bases with facts given as Java objects. In our context,
+we have several bases of facts used throughout the different
+Autofunk modules: Events, Trace sets $ST_i$, Runs, Transitions
+and STSs.  We chose to target performance and simplicity while
+implementing Autofunk. That is why most of the steps are
+implemented with parallel algorithms (except the production event
+parsing).
 
-The input trace collection is constructed with a classical parser with returns
-$Event$ Java objects. By now, we are not able to parallelise
-this part because of an issue we faced with Michelin's logging
-system. The resulting drawback is that the time to parse traces
-is longer than expected and heavily depends on the size of data
-to parse. The $Event$ base is then filtered with Drools
-inference rules as presented in section \ref{part3:collecting}.
-Then, we call a straightforward algorithm for reconstructing
-traces: it iterates over the $Event$ base and creates a
-set for each assignment of the identifier $pid$. These sets
-are sorted to construct traces given as $Trace$ Java
-objects. These objects correspond to $Traces(Sua)$. The
+The input trace collection is constructed with a classical parser
+with returns $Event$ Java objects. By now, we are not able to
+parallelise this part because of an issue we faced with
+Michelin's logging system. The resulting drawback is that the
+time to parse traces is longer than expected and heavily depends
+on the size of data to parse. The $Event$ base is then filtered
+with Drools inference rules as presented in section
+\ref{part3:collecting}.  Then, we call a straightforward
+algorithm for reconstructing traces: it iterates over the $Event$
+base and creates a set for each assignment of the identifier
+$pid$. These sets are sorted to construct traces given as $Trace$
+Java objects. These objects correspond to $Traces(Sua)$. The
 generation of the trace subsets $ST= \{ST_1,...,ST_N\}$ and of
 the first STSs are done with Drools inference rules as described
 in section \ref{sec:theory}, but applied in parallel. The STS
@@ -992,23 +902,6 @@ establish branch equivalence classes (as described in section
 is constructed thanks to the inference rule given in section
 \ref{part3:reduction}.
 
-% TODO: ******STS higher level of abstraction******
-%
-%******complexité*****************
-%
-%Our algorithm has a time complexity in $O(n)$ where $n$ is the
-%number of actions. Then, each trace is sorted to retrieve the
-%initial sequence with actions in the right order. In our
-%implementation, we use the Java $Collection.sort()$ method for
-%sorting purpose. Its complexity is $O(n * log(n))$ according to
-%the Java documentation, $n$ being the number of actions in a
-%structured trace ($n << number of all actions$). To summurize,
-%the complexity for transforming the remaining actions of the
-%knowledge base into a structured trace set is $O(m * n * log(n))$
-%with $m$ the number of structured traces.
-%
-%*******
-
 \subsection{Evaluation}
 
 We conducted several experiments with real sets of production
@@ -1018,26 +911,25 @@ periods of time. We executed our implementation on a Linux
 64GB RAM.
 
 We present here the results of 6 experiments on the same
-production system with different event sets
-collected during 1, 8, 11, 20, and 23 days. These results are
-depicted in Figure \ref{fig:results}. For confidentiality
-reasons, we are not able to provide results related to the
-generation of more abstract models. The third column gives the
-number of production events recorded on the system. The next
-column shows the trace number obtained after the parsing step.
-$N$ and $M$ represent the entry and exit points automatically
-computed with the statistical analysis. The column Trace Subsets
-shows how $Traces(Sua)$ is segmented into subsets
-$\{ST_1,...,ST_N\}$ and the number of traces included in each
-subset. These numbers of traces also correspond to the numbers of
-branches generated in the STSs
+production system with different event sets collected during 1,
+8, 11, 20, and 23 days. These results are depicted in Figure
+\ref{fig:results}. For confidentiality reasons, we are not able
+to provide results related to the generation of more abstract
+models. The third column gives the number of production events
+recorded on the system. The next column shows the trace number
+obtained after the parsing step.  $N$ and $M$ represent the entry
+and exit points automatically computed with the statistical
+analysis. The column Trace Subsets shows how $Traces(Sua)$ is
+segmented into subsets $\{ST_1,...,ST_N\}$ and the number of
+traces included in each subset. These numbers of traces also
+correspond to the numbers of branches generated in the STSs
 $\EuScript{S}_1,...,\EuScript{S}_N$. The eighth column, \#
 $R(\EuScript{S}_i)$, represents the number of branches found in
 each reduced STSs $R(\EuScript{S}_1),...,R(\EuScript{S}_N)$.
 Finally, execution times are rounded and expressed in minutes in
 the last column.
 
-\begin{figure*}
+\begin{sidewaystable}
 \begin{center}
 \begin{tabular}{| c | c | c | c | c | c | c | c | c | c | c |}
 \hline
@@ -1067,15 +959,15 @@ $F_2$ &       &           &         &   &   & 43,536 & 1,585 &    \\
 \end{tabular}
 \end{center}
 
-    \caption{Results of 6 experiments on a Michelin industrial system}
-    \label{fig:results}
-\end{figure*}
+\caption{Results of 6 experiments on a Michelin industrial system}
+\label{fig:results}
+\end{sidewaystable}
 
 First, these results show that our framework can take millions
 of production events and still builds models quickly (less than
 half an hour). With sets collected during one day up to one
 week (experiments $A$, $B$, $C$, and $D$), models are inferred in
-less than 10 minutes. Hence, \textit{Autofunk} can be used to
+less than 10 minutes. Hence, Autofunk can be used to
 quickly infer models for analysis purpose or to help diagnose
 faults in a system. Experiment $F$ handled almost 10 million
 events in less
@@ -1084,7 +976,7 @@ branches. As mentioned in section \ref{sec:impl-exp-collect},
 the parsing process is not parallelized yet, and it took up to 20
 minutes to open and parse around 1,000 files (number of Michelin
 log files for this experiment). This is an issue we want to
-tackle in the next version of \textit{Autofunk}. The graph shown
+tackle in the next version of Autofunk. The graph shown
 in Figure \ref{fig:time-vs-messages} summarises the performances
 of our framework and how fast it is at transforming production
 events into models (experiments $B$, $C$ and $D$ run in about 9
@@ -1101,21 +993,19 @@ experiment $B$, we reduce the STSs by 91.88\% against the initial
 trace set $Traces(Sua)$. In other words, 91\% of the original
 behaviours are packed into matrices.
 
-\begin{figure}[H]
-    \begin{center}
-        \includegraphics[width=0.9\linewidth]{figures/proportions.png}
-    \end{center}
+\begin{figure}[ht]
+  \includegraphics[width=0.9\linewidth]{figures/proportions.png}
 
-    \caption{Proportions of complete traces}
-    \label{fig:proportions}
+  \caption{Proportions of complete traces}
+  \label{fig:proportions}
 \end{figure}
 
 We also extracted the values of columns 4 and 7 in Figure
 \ref{fig:results} to depict the stacked bar chart illustrated in
 Figure \ref{fig:proportions}. This chart shows, for each experiment, the
-proportion of complete traces kept by \textit{Autofunk} to build
+proportion of complete traces kept by Autofunk to build
 models, over the initial number of traces in $Traces(Sua)$.
-\textit{Autofunk} has kept only 37\% of the initial traces in
+Autofunk has kept only 37\% of the initial traces in
 Experiment $A$ because its initial trace set is too small and
 contains many incomplete behaviours. During a day, most of the
 recorded traces do not start or end at entry or exit points, but
@@ -1146,13 +1036,11 @@ traces in our experiments. 30\% of initial traces have been
 removed, which is close to the reality. However, this simple
 analysis could be improved in the future.
 
-\begin{figure}[H]
-    \begin{center}
-        \includegraphics[width=0.8\linewidth]{figures/memory-time.png}
-    \end{center}
+\begin{figure}[ht]
+  \includegraphics[width=0.8\linewidth]{figures/memory-time.png}
 
-    \caption{Memory consumption vs execution time}
-    \label{fig:memory-time}
+  \caption{Memory consumption vs execution time}
+  \label{fig:memory-time}
 \end{figure}
 
 Another potential issue with our parsing implementation is that
@@ -1166,27 +1054,29 @@ follow a logarithmic trend. In the next version of Autofunk, we
 plan to work on improving memory consumption even if it has been
 considered acceptable as is by Michelin.
 
-\begin{figure}[H]
-    \begin{center}
-        \includegraphics[width=0.9\linewidth]{figures/time-vs-messages.png}
-    \end{center}
+\begin{figure}[ht]
+  \includegraphics[width=0.9\linewidth]{figures/time-vs-messages.png}
 
-    \caption{Execution time vs events}
-    \label{fig:time-vs-messages}
+  \caption{Execution time vs events}
+  \label{fig:time-vs-messages}
 \end{figure}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \section{Conclusion}
-\label{ref:conclusion}
+\label{sec:modelinf:prodsystems:conclusion}
 
-This paper presents \textit{Autofunk}, a fast and scalable
-framework combining model inference and expert systems to
-generate models from production systems. Given a large set of
-production events, our framework infers exacts models whose
-traces are included in the initial trace set of a system under
-analysis. We chose to design \textit{Autofunk} for targeting high
-performance. Our evaluation shows that this approach is suitable
-in the context of production systems since we quickly obtain STS
-trees reduced by 90\% against the original trace sets of the
-system under analysis.
+In this chapter, we present our revisited framework Autofunk,
+combining model inference and expert systems to generate models
+from production systems. Given a large set of production events,
+our framework infers exacts models whose traces are included in
+the initial trace set of a system under analysis. We chose to
+design Autofunk for targeting high performance. Our evaluation
+shows that this approach is suitable in the context of production
+systems since we quickly obtain STS trees reduced by 90\% against
+the original trace sets of the system under analysis.
+
+While there is still room for improvement on how we generate
+exact models, we decided to go deeper and use such models for
+testing purpose. In the next chapter, we describe our testing
+technique that leverages the work presented in this chapter.

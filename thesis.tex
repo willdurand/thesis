@@ -97,6 +97,7 @@ des C\'ezeaux - 1 rue de la Chebarde}
 \usepackage{framed}   % for \begin{framed}
 \usepackage{fancyvrb} % for \begin{BVerbatim}
 \usepackage{hyperref} % for clickable refs
+\usepackage{rotating} % for \begin{sidewaystable}
 
 % My commands
 \newcommand{\R}{\mathbb{R}}
@@ -114,6 +115,9 @@ des C\'ezeaux - 1 rue de la Chebarde}
 {\refstepcounter{example}
 \medskip\noindent{\bfseries Example \theexample\ #1\,\,\,}}
 {\medskip}
+
+\newcommand{\crossref}[2]{Chapter \ref{#1} • Section \ref{#2}
+(page \pageref{#2})}
 
 % **************************************************
 % Document CONTENT
