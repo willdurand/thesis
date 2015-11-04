@@ -12,5 +12,6 @@
 *.bcf
 *.fdb_latexmk
 *.pdf
+*.loe
 README.html
 CHANGELOG.html

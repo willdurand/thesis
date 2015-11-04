@@ -98,6 +98,7 @@ des C\'ezeaux - 1 rue de la Chebarde}
 \usepackage{fancyvrb} % for \begin{BVerbatim}
 \usepackage{hyperref} % for clickable refs
 \usepackage{rotating} % for \begin{sidewaystable}
+\usepackage{thmtools}
 
 % My commands
 \newcommand{\R}{\mathbb{R}}
@@ -131,6 +132,14 @@ des C\'ezeaux - 1 rue de la Chebarde}
 %\renewcaptionname{ngerman}{\tablename}{Tab.}
 \renewcaptionname{english}{\figurename}{Fig.}
 \renewcaptionname{english}{\tablename}{Tab.}
+
+\renewcommand{\listtheoremname}{List of Definitions}
+
+\makeatletter
+\def\ll@definition{%
+  \protect\numberline{\thedefinition}\thmt@shortoptarg%
+}
+\makeatother
 
 % --------------------------
 % Front matter
@@ -180,6 +189,9 @@ des C\'ezeaux - 1 rue de la Chebarde}
 }
 \cleardoublepage
 
+\listoftheorems[ignoreall,show={definition}]
+\cleardoublepage
+
 \listoffigures
 \cleardoublepage
 
@@ -188,11 +200,6 @@ des C\'ezeaux - 1 rue de la Chebarde}
 
 \input{src/colophon}
 \cleardoublepage
-
-%\input{src/declaration}
-%\clearpage
-%\newpage
-%\mbox{}
 
 % **************************************************
 % End of Document CONTENT
