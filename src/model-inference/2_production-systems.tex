@@ -339,7 +339,7 @@ iff. $Traces(\EuScript{S}) \subseteq Traces(Sua)$.
 	\SetKwInOut{Output}{output}
 
   \Input{$Traces(Sua)$, optionally entry point number $N$ and/or exit point number $M$}
-  \Output{$ST=\{ST_1,...,ST_n\}$}
+  \Output{$CTraces(Sua)=\{ST_1,...,ST_n\}$}
 
 \BlankLine
 \emph{Step 1. $Traces(Sua)$ segmentation}
@@ -369,11 +369,14 @@ $ST:=\{ST_1,...,ST_N\}$\;
 
 	}
 
+    $CTraces(Sua) := ST$
+
 \caption{Trace segmentation algorithm}
 \label{algo_traces}
 \end{algorithm}
 
 \subsection{Trace segmentation and filtering}
+\label{sec:modelinf:prodsystems:segmentation}
 
 We define a \textit{complete trace} as a trace containing all
 events expressing the path taken by a product in a production
@@ -383,6 +386,17 @@ we do not want to keep incomplete traces, i.e. traces related to
 products which did not pass through one of the known entry points
 or moved to the next step of the manufacturing process using one
 of the known exit points.
+
+\begin{definition}[Complete traces]
+Let $\mathit{Sua}$ be a system under analysis and $Traces({Sua})$
+be its trace set. A trace $t=a_1(\alpha_1)...a_n(\alpha_n) \in
+Traces({Sua})$ is said complete iff $\alpha_1$ includes an
+assignment $point=val1$, which denotes an entry point of
+$\mathit{Sua}$, and $\alpha_n$ includes an assignment
+$point=val2$, which denotes an exit point.  The complete traces
+of $\mathit{Sua}$ are denoted with $CTraces({Sua}) \subseteq
+Traces({Sua})$.
+\end{definition}
 
 We chose to split $Traces(Sua)$ constructed in the previous step
 into subsets $ST_i$, one for each entry point of the system under
@@ -420,8 +434,8 @@ $\alpha_i=(point:=val)$ in $POINT_{init}$, we construct a trace
 set $ST_i$ such that a trace of $ST_i$ has a first valued event
 including the assignment $\alpha_i$, and ends with a valued event
 including an assignment $(point:=val2)$ in $POINT_{final}$. We
-obtain the set $ST=\{ST_1,...,ST_N\}$ with $N$ the number of
-entry points of the system $Sua$.
+obtain the set $CTrace(Sua)=\{ST_1,...,ST_N\}$ with $N$ the
+number of entry points of the system $Sua$.
 
 In our straightforward example, we obtain one trace set
 $ST_1=Traces(Sua)$.
@@ -433,7 +447,7 @@ including this pattern $p$ once, then $t$ is removed since we
 suppose that $t$ does not express a new and interesting
 behaviour. Here, traces are removed rather than deleting the
 repetitive patterns to prevent from modifying traces and to keep
-the trace inclusion property between the sets $ST_i$ and
+the trace inclusion property between $CTraces(Sua)$ and
 $Traces(Sua)$.
 In Algorithm \ref{algo_traces}, two traces $t=\sigma_1 p,...,p
 \sigma_n$ and $t'=\sigma_1 p' \sigma_n$ are said equivalent if
@@ -441,30 +455,24 @@ the patterns $p$, $p'$ and the sub-sequences are equivalent,
 denoted with the $\sim_{(pid)}$ notation. Intuitively, this
 relation means that the two equivalent sequences must have the
 same successive valued events after having removed the
-assignments of the variable $pid$.
-
-We obtain a set $ST=\{ST_1,...,ST_N\}$ according to the following
-proposition:
-
-\begin{proposition}
-Let $ST=\bigcup_{1 \leq i \leq N} ST_i$ be the trace set
-obtained from $Sua$.
-We have $Traces(ST_i) \subseteq Traces(Sua)$.
-\end{proposition}
+assignments of the variable $pid$. At the end we obtain the complete
+trace sets $CTraces(Sua)$.
 
 \subsection{STS generation}
+\label{sec:modelinf:prodsystems:generation}
 
-One model is then built for each trace set $ST_i$ in $ST$. Given
-a set $ST_i$, a first STS, denoted $\EuScript{S}_i$, is built in
-a simple but quick manner. Each trace of $ST_i$ is completed to
-derive a set of runs. A run is an alternate sequence of states
-and events. Given a trace $t$ in $ST_i$, states, which are
-unique, are injected before and after each event of $t$. States
-must be unique to keep the ordering of the events in the runs,
-and to prevent merging different behaviours in the model.  The
-initial state is an exception though as it is shared by all the
-runs. The model $\EuScript{S}_i$ is obtained by transforming runs
-into sequences of transitions that are then joined together.
+One model is then built for each trace set $ST_i$ in
+$CTraces(Sua)$. Given a set $ST_i$, a first STS, denoted
+$\EuScript{S}_i$, is built in a simple but quick manner. Each
+trace of $ST_i$ is completed to derive a set of runs. A run is an
+alternate sequence of states and events. Given a trace $t$ in
+$ST_i$, states, which are unique, are injected before and after
+each event of $t$. States must be unique to keep the ordering of
+the events in the runs, and to prevent merging different
+behaviours in the model.  The initial state is an exception
+though as it is shared by all the runs. The model
+$\EuScript{S}_i$ is obtained by transforming runs into sequences
+of transitions that are then joined together.
 
 The translation of $ST_i$ into a run set denoted $Runs_i$ is done
 by completing traces with states. Each run starts by the same
@@ -473,9 +481,9 @@ assignment. Then, new states are injected after each event.
 $Runs_i$ is formally given by the following definition:
 
 \begin{definition}[Structured Runs]
-	Let $ST_i$ be a trace set obtained from $Sua$. We denote
-	$Runs_i$ the set of runs derived from $ST_i$ with the
-	following inference rule:
+    Let $ST_i$ be a complete trace set obtained from $Sua$. We
+denote $Runs_i$ the set of runs derived from $ST_i$ with the
+following inference rule:
   \begin{center}
     $\frac{\sigma_{k(1\leq k \leq n)}=(a_1,\alpha_1)...(a_n,\alpha_n) \in ST_i}
     {(l_0,v_\emptyset) (a_1,\alpha_1) (l_{k1},v_\emptyset) \dots (l_{kn-1},v_\emptyset) (a_n,\alpha_n) (l_{kn},v_\emptyset) \in Runs_i}$
@@ -533,7 +541,7 @@ events:
 \end{definition}
 
 We obtain a model having a tree structure and whose traces are
-equivalent to those of $ST_i$. At this point, production events
+equivalent to those of $CTraces(Sua)$. At this point, production events
 are called actions in the STS.
 
 Figure \ref{fig:firstmodel} depicts the model obtained from the
@@ -557,7 +565,7 @@ following proposition:
   Let $Sua$ be a system under analysis and $Traces(Sua)$ be its
   trace set. $\EuScript{S}_i$ is an inferred STS from
   $Traces(Sua)$.
-  We have $Traces(\EuScript{S}_i) = Traces(ST_i) \subseteq Traces(Sua)$.
+  We have $Traces(\EuScript{S}_i) = CTraces(Sua) \subseteq Traces(Sua)$.
 
 	\label{def:equivtraces_IOSTS}
 \end{proposition}
@@ -566,7 +574,7 @@ Nevertheless, its size is likely too large to be used in an
 efficient manner. That is why we added a reduction step.
 
 \subsection{STS reduction}
-\label{part3:reduction}
+\label{sec:modelinf:prodsystems:reduction}
 
 A model $\EuScript{S}_i$ constructed with the above steps is
 usually too large, and thus cannot be beneficial as is. Using
@@ -585,7 +593,6 @@ we concluded that minimisation is costly and highly time
 consuming on large models. Furthermore, we observed that the STSs
 may become extremely complex, especially when we have thousands
 of branches.
-
 
 Given that a production system has a finite number of elements
 and that there should only be deterministic decisions, the STS
@@ -727,12 +734,12 @@ This is captured with the following proposition:
 \begin{proposition}
   Let $Sua$ be a system under analysis and $Traces(Sua)$ be its traces
   set. $R(\EuScript{S}_i)$ is a STS derived from $Traces(Sua)$.
-  We have $Traces(R(\EuScript{S}_i)) = Traces(ST_i) \subseteq Traces(Sua)$.
+  We have $Traces(R(\EuScript{S}_i)) = CTraces(Sua) \subseteq Traces(Sua)$.
 \end{proposition}
 
 \subsection{STS abstraction}
 
-Given the trace set $ST_i \in ST$, the generated STS
+Given the trace set $ST_i \in CTraces(Sua)$, the generated STS
 $R(\EuScript{S}_i)$ can be used for analysis purpose but is still
 difficult to manually interpret, even for experts.  This Autofunk
 module aims to analyse $R(\EuScript{S}_i)$ to produce a new STS
@@ -898,9 +905,9 @@ for each branch $b$, i.e. a hash (SHA1 algorithm) of the
 concatenation of the signatures of the actions of $b$. The
 branches which have the same signature are gathered together and
 establish branch equivalence classes (as described in section
-\ref{part3:reduction}). Thereafter, the reduced $R(\EuScript{S})$
+\ref{sec:modelinf:prodsystems:reduction}). Thereafter, the reduced $R(\EuScript{S})$
 is constructed thanks to the inference rule given in section
-\ref{part3:reduction}.
+\ref{sec:modelinf:prodsystems:reduction}.
 
 \subsection{Evaluation}
 
