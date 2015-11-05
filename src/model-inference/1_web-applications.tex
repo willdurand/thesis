@@ -13,7 +13,9 @@ But, before tackling the model inference of production systems,
 we chose to validate our initial ideas and concepts by applying
 them on web applications. That is the purpose of this chapter.
 
-Web applications are often smaller and easier to understand than
+\section{Introduction}
+
+web applications are often smaller and easier to understand than
 production systems. The design of web applications is
 well-established: we have a web server that runs the application,
 no matter its underlying programming language, and a client (a
@@ -37,6 +39,20 @@ web server, we are able to read both HTTP requests and responses
 as far as there is no \textit{Secure Socket Layer} (SSL) or
 \textit{Transport Layer Security} (TLS) involved, i.e. the
 communication channel should not be encrypted.
+
+We describe our work in the next section, then we present our
+results in Section \ref{sec:modelinf:webapps:exp}, and we
+conclude on this work in Section
+\ref{sec:modelinf:webapps:conclusion}.
+
+\textbf{Publication.} This work has been published in the
+Proceedings of the Fifth Symposium on Information and
+Communication Technology (SoICT'14)
+\cite{DBLP:conf/soict/DurandS14}.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\section{Overview}
 
 We proposed a new approach to infer models of web applications,
 which is divided into several modules as depicted in Figure
@@ -85,7 +101,7 @@ Models generator. The advantages of this approach are manifold:
 
 \begin{itemize}
 \item it takes a predefined set of traces collected from any kind
-of applications producing traces. In the context of Web
+of applications producing traces. In the context of web
 applications, traces can be produced using automatic testing,
 
 \item the application exploration is guided with a strategy which
@@ -112,16 +128,6 @@ models, to apply verification techniques, to check the
 satisfiability of properties, to automatically generate
 functional test cases, etc.
 \end{itemize}
-
-We describe our work in the next section, then we present our
-results in Section \ref{sec:modelinf:webapps:exp}, and we
-conclude on this work in Section
-\ref{sec:modelinf:webapps:conclusion}.
-
-\textbf{Publication.} This work has been published in the
-Proceedings of the Fifth Symposium on Information and
-Communication Technology (SoICT'14)
-\cite{DBLP:conf/soict/DurandS14}.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
@@ -211,7 +217,7 @@ In the following, we illustrate each layer with examples.
 \subsection{Layer 1: Trace filtering}
 \label{sec:modelinf:webapps:L1}
 
-Traces of Web applications are based upon the HTTP protocol,
+Traces of web applications are based upon the HTTP protocol,
 conceived in such a way that each HTTP request is followed by
 only one HTTP response. Consequently, the traces, given to Layer
 1, are sequences of couples (HTTP request, HTTP response). This
@@ -692,7 +698,7 @@ end
 The rule given in Figure \ref{fig:rule:redirect} corresponds to a
 simple transition aggregation. It aims at recognising the
 successive sending of information with a POST request followed by
-a redirection to another Web page.  If a request sent with the
+a redirection to another web page.  If a request sent with the
 $POST$ method has a response identified as a redirection,
 (identified by the status code 301 or 302), and  a $GET$ request
 comes after, both transitions are reduced into a single one
@@ -855,7 +861,7 @@ end
 \end{figure}
 
 Other rules can also be application-specific, so that these bring
-specific new knowledge to the model. For instance, the GitHub Web
+specific new knowledge to the model. For instance, the GitHub web
 application has a dedicated URL grammar (a.k.a. routing system).
 GitHub users own a profile page that is available at:
 \emph{https://github.com/\{username\}} where \emph{\{username\}}
@@ -929,7 +935,9 @@ behaviours.
     \end{center}
 \end{figure}
 
-\subsection{Strategy layer}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\section{Strategy layer}
 \label{sec:modelinf:webapps:strategy}
 
 Rather than using a static traversal strategy as in
@@ -1087,14 +1095,14 @@ taken into consideration.
 \label{sec:modelinf:webapps:exp}
 
 We implemented this technique in a prototype tool called
-\emph{Autofunk}. A user interacts with Autofunk through a Web
+\emph{Autofunk}. A user interacts with Autofunk through a web
 interface and either gives a URL  or a file containing traces.
 These have to be stored in the HTTP Archive (HAR) format as it is
 the defacto standard to describe HTTP traces, used by various
 HTTP related tools. Such traces can be obtained from many HTTP
 monitoring tools (Mozilla Firefox or Google Chrome included).
 Then, Autofunk produces IOSTS models which are stored in a
-database. The last model is depicted in the Web interface. The
+database. The last model is depicted in the web interface. The
 JBoss Drools Expert tool has been chosen to implement the
 rule-based system. Such an engine leverages Object Oriented
 Programming in the rule statements and takes knowledge bases
