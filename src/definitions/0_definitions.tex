@@ -198,23 +198,3 @@ V)$.
 \end{itemize}
 
 \end{definition}
-
-An IOSTS is also associated with an IOLTS (Input/Output Labelled
-Transition System) to formulate its semantics. Intuitively, IOLTS
-semantics correspond to valued automata without symbolic variable,
-which are often infinite: IOLTS states are labelled by internal
-variable valuations while transitions are labelled by actions and
-parameter valuations. The semantics of an IOSTS
-$\EuScript{S}=<L,l_0,V,V_0,I,\Lambda,\rightarrow>$ is the IOLTS
-$\llbracket \EuScript{S}\rrbracket = <Q,q_0,\Sigma,\rightarrow>$
-composed of valued states in $Q = L \times D_V$, $q_0=(l_0,V_0)$
-is the initial one, $\Sigma$ is the set of valued symbols and
-$\rightarrow$ is the transition relation. The IOLTS semantics
-definition can be found in \cite{FTW05}. In short, for an
-IOSTS transition $l_1 \xrightarrow{a(p),G,A}l_2$, we obtain an
-IOLTS transition $(l_1,v)$ $\xrightarrow{a(p),\theta} (l_2,v')$
-with $v$ a set of valuations over the internal variable set, if
-there exists a parameter valuation set $\theta$ such that the
-guard $G$ evaluates to true with $v \cup \theta$. Once the
-transition is executed, the internal variables are assigned with
-$v'$ derived from the assignment $A(v \cup \theta)$.

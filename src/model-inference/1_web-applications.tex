@@ -3,19 +3,15 @@
 \chapter{Model inference for web applications}
 \label{sec:modelinf:webapps}
 
-Over the last years, we developed an evolutive technique to infer
-behavioral models of existing software systems. Our approach
-relies on different techniques that we combined together in order
-to build partial yet exact models of software systems.
-Nonetheless, our target has always been to be able to construct
-models of (legacy) production systems in an automated fashion.
-But, before tackling the model inference of production systems,
-we chose to validate our initial ideas and concepts by applying
-them on web applications. That is the purpose of this chapter.
+Our target has always been to be able to construct models of
+(legacy) production systems in an automated fashion. But, before
+tackling the model inference of production systems, we chose to
+validate our initial ideas and concepts by applying them on web
+applications. That is the purpose of this chapter.
 
 \section{Introduction}
 
-web applications are often smaller and easier to understand than
+Web applications are often smaller and easier to understand than
 production systems. The design of web applications is
 well-established: we have a web server that runs the application,
 no matter its underlying programming language, and a client (a
@@ -23,56 +19,73 @@ web browser most of the time) that connects to the web server so
 that it can talk to the application. \textit{HyperText Transfer
 Protocol} (HTTP) is the protocol that allows such a discussion by
 means of HTTP requests and HTTP responses. Usually, the client
-initiates a request, and the server responds to it. Requests
-embed HTTP verbs (or methods), \textit{Unique Resource
-Identifiers} (URIs also known as the "web links"), and sometimes
-parameters along with their values. When one submits a
-registration form on a web page, it is likely that the HTTP verb
-is $POST$, and that there are at least as many parameters and
-values as fields in the form. By clicking on the "submit" button
-(or "save", "register", etc.), the web browser crafts an HTTP
-request containing all the information, and sends it to the web
-server that delivers the request to the application. When the
-application sends back the appropriate response, it also goes
-through the web server. By hooking between the web brower and the
-web server, we are able to read both HTTP requests and responses
-as far as there is no \textit{Secure Socket Layer} (SSL) or
-\textit{Transport Layer Security} (TLS) involved, i.e. the
-communication channel should not be encrypted.
+initiates a request, and the server responds to it. That is why
+we consider web applications as event-driven applications: they
+react to events. Requests embed HTTP verbs (or methods),
+\textit{Unique Resource Identifiers} (URIs also known as the "web
+links"), and sometimes parameters along with their values. When
+one submits a registration form on a web page, it is likely that
+the HTTP verb is $POST$, and that there are at least as many
+parameters and values as fields in the form. By clicking on the
+"submit" button (or "save", "register", etc.), the web browser
+crafts an HTTP request containing all the information, and sends
+it to the web server that delivers the request to the
+application. When the application sends back the appropriate
+response, it also goes through the web server. By hooking between
+the web brower and the web server, we are able to read both HTTP
+requests and responses as far as there is no \textit{Secure
+Socket Layer} (SSL) or \textit{Transport Layer Security} (TLS)
+involved, i.e. the communication channel should not be encrypted.
 
-We describe our work in the next section, then we present our
-results in Section \ref{sec:modelinf:webapps:exp}, and we
-conclude on this work in Section
+The information collected by reading HTTP requests and HTTP
+responses are known as (HTTP) \textit{traces}. We use such traces
+(and the underlying knowledge) to infer raw models of the
+behaviors of a web application. We then construct more abstract
+models that can be used for different purposes, e.g.,
+documentation or test case generation. We chose to work on this
+to explore different options for production systems in the
+future. We present an active technique that uses automatic
+testing to stimulate the web application in order to enhance the
+completeness of the inferred models.
+We start by giving an overview of this work in the next section,
+which we describe in Section \ref{sec:modelinf:webapps:contrib}.
+We present our results in Section \ref{sec:modelinf:webapps:exp},
+and we conclude on this work in Section
 \ref{sec:modelinf:webapps:conclusion}.
 
-\textbf{Publication.} This work has been published in the
-Proceedings of the Fifth Symposium on Information and
-Communication Technology (SoICT'14)
+\textbf{Publications.} This work has been published in
+\textit{Actes de la 13eme {\'e}dition d’AFADL, atelier
+francophone sur les Approches Formelles dans l’Assistance au
+D{\'e}veloppement de Logiciels} (AFADL'14)
+\cite{durand2014inference}, and in the Proceedings of the Fifth
+Symposium on Information and Communication Technology (SoICT'14)
 \cite{DBLP:conf/soict/DurandS14}.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \section{Overview}
 
-We proposed a new approach to infer models of web applications,
+We propose a new approach to infer models of web applications,
 which is divided into several modules as depicted in Figure
 \ref{fig:soict-framework}. The \emph{Models generator} is the
-centrepiece of this framework. It takes traces as inputs, which
-can be sent by a \emph{Monitor} collecting them on the fly. Such
-a monitor would be responsible for reading HTTP requests and
+centrepiece of this framework. It takes HTTP traces as inputs,
+which can be sent by a \emph{Monitor} collecting them on-the-fly.
+Such a monitor would be responsible for reading HTTP requests and
 responses in our case. However, it is worth mentioning that the
 traces can also be sent by any tool or even any user, as far as
-they comply to a chosen standard format. The Models generator is
-based upon an expert system, which is an artificial intelligence
-engine emulating acts of a human expert by inferring a set of
-rules representing his knowledge. Such knowledge is organised
-into a hierarchy of several layers. Each layer gathers a set of
-inference rules written with a first-order logic. Typically, each
-layer creates a model, and the higher the layer is, the more
-abstract the model becomes. Models are then stored and can be
-later analysed by experts, verification tools, etc. The number of
-layers is not strictly bounded even though it is manifest that it
-has to be finite.
+they comply to a chosen standard format like \textit{HTTP
+Archive} (HAR), which is implemented in recent browsers'
+developer tools. The Models generator is based upon an expert
+system, which is an artificial intelligence engine emulating acts
+of a human expert by inferring a set of rules representing his
+knowledge.  Such knowledge is organised into a hierarchy of
+several layers.  Each layer gathers a set of inference rules
+written with a first-order logic. Typically, each layer creates a
+model, and the higher the layer is, the more abstract the model
+becomes. Models are then stored and can be later analysed by
+experts, verification tools, etc. The number of layers is not
+strictly bounded even though it is manifest that it has to be
+finite.
 
 \begin{figure}[ht]
     \begin{center}
@@ -89,15 +102,16 @@ relevant IOSTSs. More traces could be yet collected as far as
 the application being analysed is an event-driven application.
 Such traces can be produced by stimulating and exploring the
 application with automatic testing. In our approach, this
-exploration is achieved by the \emph{Robot explorer}. In contrast
-with most of the existing crawling techniques, which are detailed
-in \crossref{sec:related}{sec:related:modelinf:crawling}, our
-robot does not cover the application in blind mode or with a
-static traversal strategy.  Instead, it is cleverly guided by the
-Models generator, which applies an exploration strategy carried
-out by inference rules.  This involves the capture of new traces
-by the Monitor or by the Robot explorer which returns them to the
-Models generator. The advantages of this approach are manifold:
+exploration is achieved by the \emph{Robot explorer}, which is
+our second main contribution in this framework. In contrast with
+most of the existing crawling techniques, which are detailed in
+\crossref{sec:related}{sec:active-crawling}, our robot does not
+cover the application in blind mode or with a static traversal
+strategy.  Instead, it is cleverly guided by the Models
+generator, which applies an exploration strategy carried out by
+inference rules.  This involves the capture of new traces by the
+Monitor or by the Robot explorer which returns them to the Models
+generator. The advantages of this approach are manifold:
 
 \begin{itemize}
 \item it takes a predefined set of traces collected from any kind
@@ -111,8 +125,10 @@ some states of the application when its state number is too large
 for being traversed in a reasonable processing time,
 
 \item the knowledge encapsulated in the expert system can be used
-to cover trace sets of several applications belonging to the same
-category with generic rules,
+to cover trace sets of several applications thanks to generic
+rules. For instance, the same rules can be applied on the
+applications developed with the same framework or programming
+language,
 
 \item but, the rules can also be specialised and refined for one
 application to yield more precise models. This is interesting for
@@ -122,12 +138,14 @@ application comprehension,
 produce one model but several ones, depending on the number of
 layers of the Models generator, which is not limited and may
 evolve in accordance to the application's type. Each model,
-expressing the application's behaviours at a different level of
+expressing the application's behaviors at a different level of
 abstraction, can be used to ease the writing of complete formal
 models, to apply verification techniques, to check the
 satisfiability of properties, to automatically generate
 functional test cases, etc.
 \end{itemize}
+
+In the following section, we describe our model inference method.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
@@ -150,23 +168,26 @@ data also known as facts and the latter is realised with
 inference rules that are applied on the facts. Our Models
 generator initially takes traces as an initial knowledge base and
 owns inference rules organised into layers for trying to fit the
-human expert behaviour. These layers are depicted in Figure
+human expert behavior. These layers are depicted in Figure
 \ref{fig:se}.
 
+\TODO{add "ST" to Model generator figure}
+
 Usually, when a human expert has to read traces of an
-application, he often filters them out to only keep those which
+application, he often filters them out to only keep those that
 make sense against the current application. This step is done by
-the first layer whose role is to format the received raw traces
+the first layer whose role is to format the received HTTP traces
 into sequences of valued actions and to delete those considered
-as unnecessary. The implementation of this layer depends on the
-nature of the input traces. The resulting structured trace set,
-denoted $ST$, is then given to the next layer. This process is
+as unnecessary. The rules of this layer depends on the nature of
+the input traces. The resulting structured trace set, denoted
+$ST$, is then given to the next layer. This process is
 incrementally done, i.e. every time new traces are given to the
 Models generator, these are formatted and filtered before being
 given to Layer 2. The remaining layers yield an IOSTS each
 $\EuScript{S}_i (i\geq 1)$, which has a tree structure derived
 from the traces. The role of Layer 2 is to carry out a first
-IOSTS transformation from the structured traces. The next layers
+IOSTS transformation from the structured traces of $ST$, and then
+to yield a minimized IOSTS $\EuScript{S}_1$. The next layers
 3 to N (with N a finite integer) are composed of rules that
 emulate the ability of a human expert to simplify transitions, to
 analyse the transition syntax for deducing its meaning in
@@ -176,13 +197,13 @@ are often not done in one step. This is why the Models generator
 supports a finite but not defined number of layers.  Each of
 these layers $i$ takes the IOSTS $\EuScript{S}_{i-1}$ given by
 the direct lower layer. This IOSTS, which represents the current
-base of facts, is analysed by the rules to infer another IOSTS
-whose expressiveness is more abstract than the previous one. We
-state that the lowest layers (at least Layer 3) should be
-composed of generic rules that can be reused on several
-applications of the same type. In contrast, the highest layers
-should own the most precise rules that may be dedicated to one
-specific application.
+base of facts, is analysed by the rules of a expert system to
+infer another IOSTS whose expressiveness is more abstract than
+the previous one. We state that the lowest layers (at least Layer
+3) should be composed of generic rules that can be reused on
+several applications of the same type. In contrast, the highest
+layers should own the most precise rules that may be dedicated to
+one specific application.
 
 For readability purpose, we chose to represent inference rules
 with this format: \emph{When conditions on facts Then actions on
@@ -191,11 +212,11 @@ engine \footnote{http://www.jboss.org/drools/}). Independently
 on the application's type, Layers 2 to N handle the following
 fact types: \emph{Location} which represents an IOSTS location,
 and \emph{Transition}, which represents an IOSTS transition,
-composed of two Locations Linit, Lfinal, and two data collections
-Guard and Assign. Now, it is manifest that the inference of
-models has to be done in a finite time and in a deterministic
-way. To reach that purpose, we formulate the following hypotheses
-on the inference rules:
+composed of two Locations $Linit$, $Lfinal$, and two data
+collections Guard and Assign. Now, it is manifest that the
+inference of models has to be done in a finite time and in a
+deterministic way. To reach that purpose, we formulate the
+following hypotheses on the inference rules:
 
 \begin{enumerate}
 \item (finite complexity): a rule can only be applied a limited
@@ -211,6 +232,8 @@ T_{i+1} (i\geq 2)$, with $T_i$ a Transition base, for all
 transition $t=(l_n,l_m,a(p),G,A)$ extracted from $T_{i+1}$, $l_n$
 is reachable from $l_0$.
 \end{enumerate}
+
+\TODO{sound and complete?}
 
 In the following, we illustrate each layer with examples.
 
@@ -264,7 +287,7 @@ the following information: the HTTP verb, the target URI, the
 request content which is a collection of data (headers, content)
 and the response content which is the collection (HTTP status,
 headers, response content). A header may also be a collection of
-data or may be null. Contents are textual, e.g. HTML. Since
+data or may be null. Contents are textual, e.g., HTML. Since
 we wish to translate such traces into IOSTSs, we turn these
 textual items into a structured valued action $(a(p),\theta)$
 with $a$ the HTTP verb and $\theta$ a valuation over the variable
@@ -302,27 +325,27 @@ Content-Length = 13], content= "Hello, World!"\}\}$.
 For a main request performed by a user, many other sub-requests
 are also launched by a browser in order to fetch images, CSS and
 JavaScript files.  Generally speaking, these do not enlighten a
-peculiar functional behaviour of the application. This is why we
+peculiar functional behavior of the application. This is why we
 propose to add rules in Layer 1 to filter these sub-requests out
 from the traces. Such sub-requests can be identified by different
-ways, e.g. by focusing on the file extension found at the end of
+ways, e.g., by focusing on the file extension found at the end of
 the URI or on the content-type value of the request headers.
-Consequently, we created a set of rules, constituted of
+Consequently, this layer includes a set of rules, constituted of
 conditions on the HTTP content found in an action, that remove
 valued actions when the condition is met. A straightforward rule
 example that removes the actions relative to the retrieval of PNG
-images, is given in Figure \ref{fig:layer1:filter}.\\
+images, is given in Figure \ref{fig:layer1:filter}.
 
 \begin{figure}[ht]
 \begin{framed}
 \begin{BVerbatim}
 rule "Filter PNG images"
 when
-  $va: Get(
+  $valued_action: Get(
     request.mime_type = 'png' or request.file_extension = 'png'
   )
 then
-  retract($va);
+  retract($valued_action);
 end
 \end{BVerbatim}
 \end{framed}
@@ -336,62 +359,88 @@ After the instantiation of the Layer 1 rules, we obtain a
 formatted and filtered trace set $ST$ composed of valued actions.
 At this point, we are ready to extract the first IOSTS.
 
-\textit{Completeness, soundness, and complexity.} HTTP traces are
-sequences of valued actions modelled with positive facts.
-Typically, they form Horn clauses. Furthermore, inference rules
-are Modus Ponens (soundness hypothesis). Consequently, Layer 1 is
-sound and complete. Keeping in mind the finite complexity
-hypothesis, its complexity is proportional to
+\paragraph{Completeness, soundness, and complexity of Layer 1.}
+
+HTTP traces are sequences of valued actions modelled with
+positive facts. Typically, they form Horn clauses. Furthermore,
+inference rules are Modus Ponens (soundness hypothesis).
+Consequently, Layer 1 is sound and complete. Keeping in mind the
+finite complexity hypothesis, its complexity is proportional to
 $\EuScript{O}m(k+1)$ with $m$ the valued action number and $k$
 the rule number. (at worst, every action is covered $k+1$ times).
+
+\TODO{ref. for soundness modus ponens}
 
 \subsection{Layer 2: IOSTS transformation}
 \label{sec:modelinf:webapps:L2}
 
-The IOSTS transformation relies upon the IOLTS semantics
-transformation that is achieved in a backward manner.  In order
-to generate the first IOSTS denoted $\EuScript{S}_1$, the
-associated runs are first computed from the structured traces by
-injecting states between valued actions. These steps are detailed
-in the following.
+An IOSTS is also associated with an IOLTS (Input/Output Labelled
+Transition System) to formulate its semantics. Intuitively, IOLTS
+semantics correspond to valued automata without symbolic
+variable, which are often infinite. IOLTS states are labelled by
+internal variable valuations while transitions are labelled by
+actions and parameter valuations. The semantics of an IOSTS
+$\EuScript{S}=<L,l_0,V,V_0,I,\Lambda,\rightarrow>$ is the IOLTS
+$\llbracket \EuScript{S}\rrbracket = <Q,q_0,\Sigma,\rightarrow>$
+composed of valued states in $Q = L \times D_V$, $q_0=(l_0,V_0)$
+is the initial one, $\Sigma$ is the set of valued symbols, and
+$\rightarrow$ is the transition relation. A more complete
+definition of IOLTS semantics can be found in \cite{FTW05}.
+
+Given an IOSTS transition $l_1 \xrightarrow{a(p),G,A}l_2$, we
+obtain an IOLTS transition $(l_1,v)$ $\xrightarrow{a(p),\theta}
+(l_2,v')$ with $v$ a set of valuations over the internal variable
+set, if there exists a parameter valuation set $\theta$ such that
+the guard $G$ evaluates to true with $v \cup \theta$. Once the
+transition is executed, the internal variables are assigned with
+$v'$ derived from the assignment $A(v \cup \theta)$.
+Our IOSTS transformation relies upon this IOLTS semantics
+transformation that we have reversed.  In order to generate the
+first IOSTS denoted $\EuScript{S}_1$, the associated runs are
+first computed from the structured traces by injecting states
+between valued actions. These steps are detailed in the
+following.
 
 \subsubsection{Traces to runs}
 
-Given a trace $\sigma$, a run $r$ is first derived by
-constructing and injecting states on the right and left sides of
-each valued action of $\sigma$. Keeping in mind the IOLTS
-semantics definition, a state shall be modelled by the couple
-$((URI,k),v_\emptyset)$ with $v_\emptyset$ the empty valuation.
-$(URI,k)$ is a couple composed of a URI and of an integer $(k
-\geq 0)$. Typically, a couple $(URI,k)$ shall be a location of
-the future IOSTS. All the runs $r$ of $SR$ start with the same
-state $(l0,v_\emptyset)$. Then, a run is constructed by
-incrementally covering one trace: for an action $(a_i,\theta_i)$
-found in a trace, we extract the valuation $URI=val$ from
-$\theta_i$ giving the URI value of the next resource reached
-after the action $a_i$, and we complete the current run $r$ with
-$(a_i,\theta_i)$ followed by the state $((val,k),v_\emptyset)$.
-Since we wish to preserve the sequential order of the actions
-found in the traces, when a URI previously encountered is once
-more detected, the resulting state is composed of the URI
-accompanied with an integer $k$, which is incremented to yield a
-new and unique state.
+Given a trace $\sigma = (a_1(p),\theta_1) \dots
+(a_n(p),\theta_n)$, a run $r$ is first derived by constructing
+and injecting states on the right and left sides of
+each valued action $(a_i(p),\theta_i)$ of $\sigma$. Keeping in
+mind the IOLTS semantics definition, a state shall be modelled by
+the couple $((URI,k),v_\emptyset)$ with $v_\emptyset$ the empty
+valuation.  $(URI,k)$ is a couple composed of a URI and of an
+integer $(k \geq 0)$. Typically, a couple $(URI,k)$ shall be a
+location of the future IOSTS. All the runs $r$ of the run set
+$SR$ start with the same state $(l0,v_\emptyset)$. Then, a run is
+constructed by incrementally covering one trace: for an action
+$(a_i,\theta_i)$ found in a trace, we extract the valuation
+$URI=val$ from $\theta_i$ giving the URI value of the next
+resource reached after the action $a_i$, and we complete the
+current run $r$ with $(a_i,\theta_i)$ followed by the state
+$((val,k),v_\emptyset)$.  Since we wish to preserve the
+sequential order of the actions found in the traces, when a URI
+previously encountered is once more detected, the resulting state
+is composed of the URI accompanied with an integer $k$, which is
+incremented to yield a new and unique state.
 
 The translation of the structured traces into a run set is
-performed by the Algorithm \ref{traces_to_runs}, which takes a
+performed by Algorithm \ref{traces_to_runs}, which takes a
 trace set $ST$ as input and returns a run set $SR$. It owns a
 set $States$ storing the constructed states. All the runs $r$ of
 $SR$ start with the same state $(l0,v_\emptyset)$. Algorithm
 \ref{traces_to_runs} covers the actions $(a_i,\theta_i)$ of a
 trace $\sigma$ in order to construct the next state $s$. It
-extracts the valuation $URI=val$ (line 7) from $\theta_i$ giving
+extracts the valuation $URI=val$ (line 8) from $\theta_i$ giving
 the URI value of the next resource reached after the action
 $a_i$. The state $s=((val,k+1),v_\emptyset)$ is constructed with
 $k$ such that there exists $((URI,k),v_\emptyset) \in States$
 composed of the greatest integer $k \geq 0$. The current run $r$
 is completed with the valued action $(a_i,\theta_i)$ followed by
-the state $s$ (line 13). Finally, $SR$ gathers all the
+the state $s$ (line 14). Finally, $SR$ gathers all the
 constructed runs.
+
+\TODO{sync lines in algo and text}
 
 \begin{algorithm}
 \SetKwInOut{Input}{input} \SetKwInOut{Output}{output}
@@ -448,12 +497,12 @@ in $r$.
 \subsubsection{IOSTS generation}
 \label{sec:iosts-gen}
 
-The first IOSTS $\EuScript{S}_1$ is derived from the run set $SR$
-in which runs are disjoint except for the initial state
+The first IOSTS $\EuScript{S}_1$ is now derived from the run set
+$SR$ in which runs are disjoint except for the initial state
 $(l0,v_\emptyset)$. Traces are translated into IOSTS paths that
-are assembled together (IOSTS disjoint union). The IOSTS forms a
-tree composed of paths, each expressing one trace, starting from
-the same initial location.
+are assembled together by means of IOSTS disjoint unions. The
+IOSTS forms a tree composed of paths, each expressing one trace,
+starting from the same initial location.
 
 \begin{definition}[IOSTS tree]
 \label{IOSTS_tree}
@@ -477,33 +526,39 @@ SR$, $r$ starts with $(l0_{\EuScript{S}_1},v_\emptyset)$,
 \item $\Lambda_{\EuScript{S}_1}= \{a_i(p) \mid \exists r\in SR,
 (a_i(p),\theta_i)$ is a valued action in $r\}$,
 
-\item $\rightarrow_{\EuScript{S}_1}$ is defined by the following inference
-rule applied on every element $r\in SR$:
+\item $\rightarrow_{\EuScript{S}_1}$ is defined by the following
+    inference rule applied on every run $r\in SR$:
 
-\begin{tabular}{l}
-$s_i (a_i(p),\theta_i) s_{i+1} \text{ is a term
-of } r, s_i=(l_i,v_\emptyset),$
-$s_{i+1}=(l_{i+1},v_\emptyset),$\\$ G_i=\displaystyle \bigwedge_{(x_i=vi)\in \theta_i} x_i==vi$
-$\vdash$ $l_i \xrightarrow{a_i(p),G_i,(x:=x)_{x\in V}}_{\EuScript{S}_1} l_{i+1}$
-\end{tabular}
+    $s_i (a_i(p),\theta_i) s_{i+1} \text{ is a term of } r,
+    s_i=(l_i,v_\emptyset),$ $s_{i+1}=(l_{i+1},v_\emptyset),$
+
+    \begin{center}
+        $\frac{G_i=\displaystyle \bigwedge_{(x_i=vi)\in \theta_i} x_i==vi}
+        {l_i \xrightarrow{a_i(p),G_i,(x:=x)_{x\in V}}_{\EuScript{S}_1} l_{i+1}}$
+    \end{center}
 
 \end{itemize}
 \end{definition}
 
-Here, locations could be merged to reduce the IOSTS size with the
-classical learning algorithms based upon $\EuScript{L}^*$
-\cite{Angluin198787,lambeau08}. Nonetheless, these would create
-an extrapolation of this IOSTS. We prefer rejecting such a
-solution to preserve the trace equivalence of the IOSTS
-$\EuScript{S}_1$ against the structured trace set $ST$ before
-applying inference rules. Instead, we propose to use a
-minimisation technique.
+\TODO{explain formula}
 
 \subsubsection{IOSTS minimisation}
 
+Methods such as gkTail and KLFA could be applied to reduce the
+previous inferred IOSTS tree, however due to the way these
+methods work, it would likely lead to an over-generalized model.
+Similarly, locations could be merged to reduce the IOSTS size
+with the classical learning algorithms based upon
+$\EuScript{L}^*$ \cite{Angluin198787,lambeau08}. Nonetheless,
+these methods would create an extrapolation of this IOSTS. We
+prefer rejecting such solutions to preserve the trace equivalence
+of the IOSTS $\EuScript{S}_1$ against the structured trace set
+$ST$ before applying inference rules. Instead, we propose to use
+a minimisation technique.
+
 This IOSTS tree can be reduced in term of location size by
 applying a bisimulation minimisation technique which still
-preserves the functional behaviours expressed in the original
+preserves the functional behaviors expressed in the original
 model.  Intuitively, this minimisation constructs the state sets
 (blocks) that are bisimilar equivalent. Two states are said
 bisimilar equivalent, denoted $q \sim q'$ iff they simulate each
@@ -518,22 +573,25 @@ from $\EuScript{S}_1$ except from the initial location. We
 perform a union between $\EuScript{S}_1$ and IOSTS paths. Then,
 the resulting IOSTS is minimised.
 
-\textit{Completeness, soundness, complexity.} Layer 2 takes any
-structured trace set obtained from HTTP traces. If the trace set
-is empty then the resulting IOSTS $\EuScript{S}_1$ has a single
-location $l_0$. A structured trace set is translated into an
-IOSTS in finite time: every valued action of a trace is covered
-once to construct states, then every run is lifted to the level
-of one IOSTS path starting from the initial location. Afterwards,
-the IOSTS is minimised with the algorithm presented in
-\cite{Fernandez89animplementation}. Its complexity is
-proportional to $\EuScript{O}(mlog (m+1))$ with $m$ the number of
-valued actions. The soundness of Layer 2 is based upon the notion
-of traces: an IOSTS $\EuScript{S}_1$ is composed of transition
-sequences derived from runs in $SR$, itself obtained from the
-structured trace set $ST$. As defined, the behaviours encoded in
-$ST$ and $\EuScript{S}_1$ are equivalent since ordered runs are
-transformed into ordered IOSTS sequences.
+\paragraph{Completeness, soundness, complexity.}
+
+\TODO{to rewrite with Petrenko ref.}
+
+Layer 2 takes any structured trace set obtained from HTTP traces.
+If the trace set is empty then the resulting IOSTS
+$\EuScript{S}_1$ has a single location $l_0$. A structured trace
+set is translated into an IOSTS in finite time: every valued
+action of a trace is covered once to construct states, then every
+run is lifted to the level of one IOSTS path starting from the
+initial location. Afterwards, the IOSTS is minimised with the
+algorithm presented in \cite{Fernandez89animplementation}. Its
+complexity is proportional to $\EuScript{O}(mlog (m+1))$ with $m$
+the number of valued actions. The soundness of Layer 2 is based
+upon the notion of traces: an IOSTS $\EuScript{S}_1$ is composed
+of transition sequences derived from runs in $SR$, itself
+obtained from the structured trace set $ST$. As defined, the
+behaviors encoded in $ST$ and $\EuScript{S}_1$ are equivalent
+since ordered runs are transformed into ordered IOSTS sequences.
 
 \begin{example}
 We take as example a trace obtained from the GitHub website
@@ -564,9 +622,9 @@ After the application of Layer 2, we obtain the IOSTS given in Figure
 in the request and by an integer to keep the tree structure of
 the initial traces. Actions are composed of the HTTP verb
 enriched with the variables URI, request, and response. This
-IOSTS exactly reflects the trace behaviour but is still difficult
-to interpret. More abstract actions shall be deduced by the next
-layers.
+IOSTS exactly reflects the trace behavior but it is still
+difficult to interpret. More abstract actions shall be deduced by
+the next layers.
 \end{example}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -608,19 +666,21 @@ produced by Layer $i$ has a location set $L_{\EuScript{S}_i}$
 such that $L_{\EuScript{S}_i} \subseteq L_{\EuScript{S}_1}$.
 \end{proposition}
 
-\textit{Completeness, soundness, complexity.} the knowledge base
-is exclusively constituted by (positive) Transition facts that
-have a Horn form. The rules of these layers are Modus Ponens
-(soundness hypothesis). Therefore, these inference rules are
-sound and complete. Furthermore, a behaviour encoded in an IOSTS
-$\EuScript{S}_i$ cannot be lost in $\EuScript{S}_i$. With regards
-to the (no implicit knowledge elimination) hypothesis and to
-Proposition \ref{prop:loc:inclu}, the transitions of
-$\EuScript{S}_i$ are either unchanged, enriched or combined
-together into a new transition. The application of these layers
-ends in a finite time (finite complexity hypothesis) and the
-complexity of each is proportional to $\EuScript{O}m(k)$ with $m$
-the transition number and $k$ the rule number.
+\paragraph{Completeness, soundness, complexity.}
+
+The knowledge base is exclusively constituted by (positive)
+Transition facts that have a Horn form. The rules of these layers
+are Modus Ponens (soundness hypothesis). Therefore, these
+inference rules are sound and complete. With regards to the (no
+implicit knowledge elimination) hypothesis and to Proposition
+\ref{prop:loc:inclu}, the transitions of $\EuScript{S}_i$ are
+either unchanged, enriched or combined together into a new
+transition. The application of these layers ends in a finite time
+(finite complexity hypothesis) and the complexity of each is
+proportional to $\EuScript{O}m(k)$ with $m$ the transition number
+and $k$ the rule number.
+
+\TODO{explain previous paragraph}
 
 \begin{figure}[H]
 \begin{minipage}{.5\textwidth}
@@ -640,15 +700,17 @@ the transition number and $k$ the rule number.
 
 \subsubsection{Layer 3}
 
-It should correspond to a set of generic rules that can be
-applied on a large set of applications belonging to the same
-category. This layer has two roles:
+This layers includes a (potentially empty) set of generic rules
+that can be applied on a large set of applications sharing
+similiarities, e.g., applications written with the same framework
+or same programming language.  This layer has two roles:
 
 \begin{itemize}
 \item the \textbf{enrichment of the meaning captured in
-transitions}. In this step, we chose to mark the transitions with
-new internal variables. These shall help deduce more abstract
-actions in the upper layers. These rules are of the form:
+    transitions}. In this step, we chose to mark the transitions
+    with new internal variables. These shall help deduce more
+    abstract actions in the upper layers. These rules are of the
+    form:
 
 \begin{BVerbatim}
 rule "Layer 3 rule"
@@ -669,11 +731,13 @@ form, then this transition is marked as a "login page" with the
 assignment on the variable $isLoginPage$,
 
 \item the \textbf{generic aggregation of some successive
-transitions}. Here, some transitions (two or more) are analysed
-in the conditional part of the rule. When the rule condition is
-met then the successive transitions are replaced by one
-transition carrying a new action. These rules have the following
-form:
+    transitions}. Here, some transitions (two or more) are
+    analysed in the conditional part of the rule. When the rule
+    condition is met then the successive transitions are replaced
+    by one transition carrying a new action. These rules have the
+    following form:
+
+\TODO{verify rules}
 
 \begin{verbatim}
 rule "Simple aggregation"
@@ -737,6 +801,8 @@ end
 \caption {Login page and logout action recognition rules}
 \label{fig:rule:login}
 \end{figure}
+
+\TODO{verify rule}
 
 \begin{figure}[h]
 \begin{framed}
@@ -826,7 +892,9 @@ end
 \label{fig:rule:deauth}
 \end{figure}
 
-\begin{figure}
+\TODO{verify rule}
+
+\begin{figure}[h]
 \begin{framed}
 \begin{BVerbatim}
 rule "Identify Authentication"
@@ -866,7 +934,7 @@ application has a dedicated URL grammar (a.k.a. routing system).
 GitHub users own a profile page that is available at:
 \emph{https://github.com/\{username\}} where \emph{\{username\}}
 is the nickname of the user. However, some items are reserved,
-e.g. \textit{edu} and \textit{explore}. The rule given in Figure
+e.g., \textit{edu} and \textit{explore}. The rule given in Figure
 \ref{fig:rule:gh-profile} is based upon this structure and
 produces a new action $ShowProfile$ offering more sense.
 Similarly, a GitHub page describing a project has a URL that
@@ -924,7 +992,7 @@ The application of the four previous rules leads to the final
 IOSTS depicted in Figure \ref{fig:github:iosts:4}. Now, it can be
 used for application comprehension since most of its actions have
 a precise meaning and clearly describe the application's
-behaviours.
+behaviors.
 \end{example}
 
 \begin{figure}[ht]
@@ -939,6 +1007,8 @@ behaviours.
 
 \section{Strategy layer}
 \label{sec:modelinf:webapps:strategy}
+
+\TODO{goal?}
 
 Rather than using a static traversal strategy as in
 \cite{Memon:2003,concolicandroid12,crawljax:tweb12,
@@ -977,7 +1047,7 @@ rules, the algorithm checks if it has been previously visited
 
 $L:=\emptyset$ List of explored locations of $\EuScript{S}_1$\;
 BEGIN\;
-\While{$L \neq L_{\EuScript{S}_1}$ and $L \neq \EuScript{S}_i$ }
+\While{$L \neq L_{\EuScript{S}_1}$ and $L \neq L_{\EuScript{S}_i}$ }
 {
 1) Apply the rules on $\EuScript{S}_i$ and extract a  Location List $Loc$\;
 Goback to $\EuScript{S}_1$\;
@@ -1000,31 +1070,36 @@ END\;
 
 The rules of the Strategy layer can encode different strategies.
 We propose two examples below:
+
 \begin{itemize}
+    \item \textbf{classical traversal strategies} (Depth-first
+        search, Breadth-first search) can still be established.
+        For example, Figure \ref{fig:rule:bfs} depicts two rules
+        expressing the choice the next location to explore in a
+        breadth-wise order first. First, the initial location
+        $l0$ is chosen and marked as explored (rule BFS).  Then,
+        the transitions having an initial location marked as
+        explored and a final location not yet explored are
+        collected by the rule BFS2, except for the transitions
+        carrying an HTTP error (response status upper or equal to
+        400).  These locations are marked as explored in the
+        IOSTS $\EuScript{S}_i$ with the method $SetExplored$ in
+        the "then" part of the rule,
 
-\item \textbf{classical traversal strategies} can still be
-established.  For example, Figure \ref{fig:rule:bfs} depicts two
-rules expressing the choice the next location to explore in a
-breadth-wise order first. First, the initial location $l0$ is
-chosen and marked as explored (rule BFS).  Then, the transitions
-having an initial location marked as explored and a final
-location not yet explored are collected by the rule BFS2, except
-for the transitions carrying an HTTP error (response status upper
-or equal to 400).  These locations are marked as explored in the
-IOSTS $\EuScript{S}_i$ with the method $SetExplored$ in the
-"then" part of the rule,
-
-\item \textbf{semantic-driven strategies} could also be applied,
-when the meaning of some actions is recognisable. For instance,
-for e-commerce applications, the login step and the term "buy"
-are usually important. Thereby, a strategy targeting firstly the
-locations of transitions carrying theses actions can be defined
-by the rule "semantic-driven strategy" given in Figure
-\ref{fig:rule:semdriven}.
-It is manifest that the semantic-driven strategy domain can be
-tremendously vast since it depends on the number of recognised
-actions and on their relevance.
+    \item \textbf{semantic-driven strategies} could also be
+        applied, when the meaning of some actions is
+        recognisable. For instance, for e-commerce applications,
+        the login step and the term "buy" are usually important.
+        Thereby, a strategy targeting firstly the locations of
+        transitions carrying theses actions can be defined by the
+        rule "semantic-driven strategy" given in Figure
+        \ref{fig:rule:semdriven}.  It is manifest that the
+        semantic-driven strategy domain can be tremendously vast
+        since it depends on the number of recognised actions and
+        on their relevance.
 \end{itemize}
+
+\TODO{explain accumulate}
 
 \begin{figure}[h]
 \begin{framed}
@@ -1085,7 +1160,7 @@ end
 
 Many other strategies could be defined in relation to the desired
 result in terms of model generation and application coverage.
-Other criteria, e.g. the number of UI elements per Graphical User
+Other criteria, e.g., the number of UI elements per Graphical User
 Interface (GUI) or the number of observed crashes could also be
 taken into consideration.
 
@@ -1101,9 +1176,10 @@ These have to be stored in the HTTP Archive (HAR) format as it is
 the defacto standard to describe HTTP traces, used by various
 HTTP related tools. Such traces can be obtained from many HTTP
 monitoring tools (Mozilla Firefox or Google Chrome included).
-Then, Autofunk produces IOSTS models which are stored in a
-database. The last model is depicted in the web interface. The
-JBoss Drools Expert tool has been chosen to implement the
+Then, Autofunk produces IOSTS models, which are stored in a
+database. The last model is depicted in the web interface.
+
+The JBoss Drools Expert tool has been chosen to implement the
 rule-based system. Such an engine leverages Object Oriented
 Programming in the rule statements and takes knowledge bases
 given as Java objects (Location, Transition, GET, POST objects in
