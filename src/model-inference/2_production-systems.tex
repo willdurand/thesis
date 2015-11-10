@@ -3,10 +3,7 @@
 \chapter{Model inference for production systems}
 \label{sec:modelinf:prodsystems}
 
-In order to infer model of production systems, we reuse what
-worked well for web applications and enhance many parts of our
-framework to come up with a better version of our technique
-called \textit{Autofunk}.
+\section{Introduction}
 
 In the industry, building models for production systems, i.e.
 event-driven systems that run in production environments and are
@@ -61,25 +58,44 @@ consider formal models and their definitions to infer models by
 means of different transformations. But we also take into
 consideration the knowledge of human experts captured by expert
 systems. A part of our approach is based upon this notion of
-knowledge implemented with inference rules.
+knowledge implemented with inference rules. We reuse what worked
+well for web applications and enhance many parts of our framework
+to come up with a better version of our framework called
+\textit{Autofunk}.
+
+In the following section, we describe the context in which this
+work has been conducted. In Section
+\ref{sec:modelinf:prodsystems}, we present Autofunk for
+Michelin's production systems along with a case study. We give
+our results in Section \ref{sec:modelinf:prodsystems:results},
+and we conclude on this work in Section
+\ref{sec:modelinf:prodsystems:conclusion}.
+
+\textbf{Publications.} This work has been published in the
+Proceedings of Formal Methods 2015 (FM'15)
+\cite{DBLP:conf/fm/DurandS15}, and in the Proceedings of the 9th
+International Conference on Distributed Event-Based Systems
+(DEBS'15) \cite{DBLP:conf/debs/SalvaD15}.
+
+\section{Context}
 
 Michelin is a worldwide tire manufacturer and designs most of its
 factories, production systems, and software by itself.  Like
 many other industrial companies, Michelin follows the Computer
-Integrated Manufacturing (CIM) approach, using computers and
-software to control the entire manufacturing process. In this
-paper, we focus on the Level 2 of the CIM approach, i.e. all the
-applications that monitor and control several production devices
-and points, i.e. locations where a production line branches into
-multiple lines, in a workshop. In a factory, there are different
-workshops for each step of the tire building process. At a
-workshop level, we observe a continuous stream of products from
-specific entry points to a finite set of exit points, i.e. where
-products go to reach the next step of the manufacturing process,
-and disappear of the workshop frame in the meantime. Millions of
-\emph{production events} are exchanged among the industrial
-devices of the same workshop every day, allowing some factories
-to build over 30,000 tires a day.
+Integrated Manufacturing (CIM) approach \cite{rehg2004computer},
+using computers and software to control the entire manufacturing
+process. In this paper, we focus on the Level 2 of the CIM
+approach, i.e. all the applications that monitor and control
+several production devices and points, i.e. locations where a
+production line branches into multiple lines, in a workshop. In a
+factory, there are different workshops for each step of the tire
+building process. At a workshop level, we observe a continuous
+stream of products from specific entry points to a finite set of
+exit points, i.e. where products go to reach the next step of the
+manufacturing process, and disappear of the workshop frame in the
+meantime. Millions of \emph{production events} are exchanged
+among the industrial devices of the same workshop every day,
+allowing some factories to build over 30,000 tires a day.
 
 Although there is a finite number of applications, each has
 different versions deployed in factories all over the world,
@@ -138,18 +154,6 @@ to design our framework:
     Besides this, event assignments include a timestamp to sort
     them into traces.
 \end{itemize}
-
-In the following section, we describe Autofunk for Michelin's
-production systems. Therefore, we describe this context, its
-assumptions, and a case study. We give our results in Section
-\ref{sec:modelinf:prodsystems:results}, and we conclude on this
-work in Section \ref{sec:modelinf:prodsystems:conclusion}.
-
-\textbf{Publication.} This work has been published in the
-Proceedings of Formal Methods 2015 (FM'15)
-\cite{DBLP:conf/fm/DurandS15}, and in the Proceedings of the 9th
-International Conference on Distributed Event-Based Systems
-(DEBS'15) \cite{DBLP:conf/debs/SalvaD15}.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
@@ -255,13 +259,12 @@ top of that, expert systems also offer fast processing in this
 situation. We use inference rules of the form: \textit{when
 $a(\alpha)$, condition on $a(\alpha)$, then
 retract($a(\alpha)$)}.
-
 The remaining valued events are ordered to produce an initial set
 of traces denoted $Traces(Sua)$. Figure \ref{fig:tsua}
 illustrates this set obtained from the events of Figure
 \ref{fig:rawdatum}.
 
-\begin{figure}
+\begin{figure}[ht]
 \begin{framed}
     $Traces(Sua) = \{
     (17011(nsys:=1,nsec:modelinf:prodsystems:=8,point:=4,pid:=1)\text{ }
@@ -338,7 +341,7 @@ iff. $Traces(\EuScript{S}) \subseteq Traces(Sua)$.
 	\SetKwInOut{Input}{input}
 	\SetKwInOut{Output}{output}
 
-  \Input{$Traces(Sua)$, optionally entry point number $N$ and/or exit point number $M$}
+  \Input{$Traces(Sua)$,\\optionally entry point number $N$ and/or exit point number $M$}
   \Output{$CTraces(Sua)=\{ST_1,...,ST_n\}$}
 
 \BlankLine
@@ -389,7 +392,7 @@ of the known exit points.
 
 \begin{definition}[Complete traces]
 Let $\mathit{Sua}$ be a system under analysis and $Traces({Sua})$
-be its trace set. A trace $t=a_1(\alpha_1)...a_n(\alpha_n) \in
+be its trace set. A trace $t=a_1(\alpha_1) \dots a_n(\alpha_n) \in
 Traces({Sua})$ is said complete iff $\alpha_1$ includes an
 assignment $point=val1$, which denotes an entry point of
 $\mathit{Sua}$, and $\alpha_n$ includes an assignment
@@ -441,7 +444,7 @@ In our straightforward example, we obtain one trace set
 $ST_1=Traces(Sua)$.
 
 Thereafter, Autofunk scans the traces in $ST$ and tries
-to detect repetitive patterns $p,...,p$. If it finds a trace $t$
+to detect repetitive patterns $p,\dots,p$. If it finds a trace $t$
 having a repetitive pattern $p$ and another equivalent trace
 including this pattern $p$ once, then $t$ is removed since we
 suppose that $t$ does not express a new and interesting
@@ -480,7 +483,7 @@ initial state $(l_0,v_\emptyset)$ with $v_\emptyset$ the empty
 assignment. Then, new states are injected after each event.
 $Runs_i$ is formally given by the following definition:
 
-\begin{definition}[Structured Runs]
+\begin{definition}[Structured runs]
     Let $ST_i$ be a complete trace set obtained from $Sua$. We
 denote $Runs_i$ the set of runs derived from $ST_i$ with the
 following inference rule:
@@ -507,10 +510,10 @@ compound of branches starting from the location $l_0$. Parameters
 and guards are extracted from the assignments found in valued
 events:
 
-\begin{definition}
+\begin{definition}[Run set to STS]
   Given a run set $Runs_i$, $\EuScript{S}_i=<L_{\EuScript{S}_i},
   l0_{\EuScript{S}_i},V_{\EuScript{S}_i}, V0_{\EuScript{S}_i},
-  I_{\EuScript{S}_i},
+  I_{\EuScript{S}_i},\\
   \Lambda_{\EuScript{S}_i},\rightarrow_{\EuScript{S}_i}>$ is the
   STS expressing the behaviours found in $Runs_i$ such that:
 
@@ -633,9 +636,8 @@ the STS reduction. Later, the concatenation of these vectors
 shall give birth to matrices. This adaptation is obtained with
 the definition of the STS operator $Mat$:
 
-\begin{definition}
-	\label{rule:matrix}
-
+\begin{definition}[The $Mat$ operator]
+\label{rule:matrix}
   Let $\EuScript{S}_i=<L_{\EuScript{S}_i},l0_{\EuScript{S}_i},V_{\EuScript{S}_i},V0_{\EuScript{S}_i},I_{\EuScript{S}_i},\Lambda_{\EuScript{S}_i},$
   $\rightarrow_{\EuScript{S}_i}>$ be a STS. We denote
   $Mat(\EuScript{S}_i)$ the STS operator which consists in
@@ -651,12 +653,14 @@ the definition of the STS operator $Mat$:
       and $\rightarrow_{Mat(\EuScript{S}_i)}$ are given by the
       following rule:
 
+    \begin{center}
     $\frac{b_i=l_0 \xRightarrow{(a_1(p_1),G_1,A_1)...(a_n(p_n),G_n,A_n)} l_n}{
       \begin{matrix}
         V0_{Mat(\EuScript{S}_i)}:=V0_{Mat(\EuScript{S}_i)} \wedge M_{i}=[G_1,...,G_n]\\
         l0_{Mat(\EuScript{S}_i)} \xRightarrow{(a_1(p_1),M_i[1],id_V) ...(a_n(p_n),M_i[n],id_V) }_{\rightarrow_{Mat(\EuScript{S}_i)}} l_n\\
       \end{matrix}
     }$
+    \end{center}
   \end{itemize}
 
   Given a branch $b_i \in (\rightarrow_{Mat(\EuScript{S}_i)})^n$, we also denote
@@ -690,7 +694,7 @@ represents a complete and ordered sequence of guards found in one
 initial branch of $\EuScript{S}_i$. $R(\EuScript{S}_i)$ is
 defined as follow:
 
-\begin{definition}%new
+\begin{definition}[Reduced STS $R(\EuScript{S}_i)$]
 	\label{rule:min}
 
 	Let $\EuScript{S}_i=<L_{\EuScript{S}_i},l0_{\EuScript{S}_i},V_{\EuScript{S}_i},V0_{\EuScript{S}_i},I_{\EuScript{S}_i},\Lambda_{\EuScript{S}_i},$ $\rightarrow_{\EuScript{S}_i}>$ be
@@ -700,7 +704,7 @@ defined as follow:
 
   \begin{center}
   $\frac{\begin{matrix}
-      [b]=\{b_1,...,b_m\}\\
+      [b]=\{b_1,...,b_m\},
       b=l0_{\EuScript{S}_i} \xRightarrow{(a_1(p_1),G_{1},A_{1})...(a_n(p_n),G_{n},A_{n})}_{Mat(\EuScript{S}_i)} l_{n}\\
     \end{matrix}
   }
@@ -726,6 +730,13 @@ $M1=[G1\text{ }G2]$ and $M2=[G3\text{ }G4]$.  These are combined
 into the same matrix $M_{[b]}$. The variable $c_{[b]}$ is used to
 take either the guards of the first column or the guards of the
 second one.
+
+\begin{figure}[ht]
+  \includegraphics[width=1.0\linewidth]{figures/STSfinal.png}
+
+	\caption{Final model (STS)}
+	\label{fig:finalmodel}
+\end{figure}
 
 The STS $R(\EuScript{S}_i)$ has less branches but still expresses
 the initial behaviours described by the STS $\EuScript{S}_i$.
@@ -802,19 +813,6 @@ end
   \label{rule:rename-tr}
 \end{figure}
 
-If we take back our example, the actions of the STS of Figure
-\ref{fig:reduced-model} are replaced with the rules of Figure
-\ref{rule:rename-tr} which change the labels \textit{17011} and
-\textit{17021} to more intelligible ones. The third rule of
-Figure \ref{rule:aggregate-tr} aggregates the two transitions
-into a unique transition indicating the movement of a product in
-its production line. These rules are also written using the
-\textit{Drools} formalism. Here, $Transition$ are facts modelling
-STS transitions. From 5 initial production events that are not
-self-explanatory, we generate a simpler STS constituted of one
-transition, clearly expressing a part of the functioning of the
-system.
-
 \begin{figure}[ht]
 \begin{framed}
 \begin{BVerbatim}
@@ -846,12 +844,18 @@ end
   \label{rule:aggregate-tr}
 \end{figure}
 
-\begin{figure}[H]
-  \includegraphics[width=1.0\linewidth]{figures/STSfinal.png}
-
-	\caption{Final model (STS)}
-	\label{fig:finalmodel}
-\end{figure}
+If we take back our example, the actions of the STS of Figure
+\ref{fig:reduced-model} are replaced with the rules of Figure
+\ref{rule:rename-tr} which change the labels \textit{17011} and
+\textit{17021} to more intelligible ones. The third rule of
+Figure \ref{rule:aggregate-tr} aggregates the two transitions
+into a unique transition indicating the movement of a product in
+its production line. These rules are also written using the
+\textit{Drools} formalism. Here, $Transition$ are facts modelling
+STS transitions. From 5 initial production events that are not
+self-explanatory, we generate a simpler STS constituted of one
+transition, clearly expressing a part of the functioning of the
+system.
 
 By writing 20 rules to enrich the meaning of the actions for our
 case study with Michelin, we were able to generate a model that
@@ -1021,7 +1025,8 @@ a workshop contains storage areas where products can stay
 for a while, depending on the production campaigns or needs for
 instance. That is why, on a single day, we can find so many
 incomplete traces. With more production events, such a phenomenon
-is limited because we absorb these storage delays.\\
+is limited because we absorb these storage delays.
+
 We can also notice that experiments $C$ and $D$ have similar
 initial trace sets but experiment $C$ owns more complete traces
 than experiment $D$ by 12\%, which is significant. Furthermore, experiments
