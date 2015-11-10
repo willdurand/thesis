@@ -1078,20 +1078,24 @@ considered acceptable as is by Michelin.
 \section{Conclusion}
 \label{sec:modelinf:prodsystems:conclusion}
 
-In this chapter, we present our revisited framework Autofunk,
+In this chapter, we presented our revisited framework Autofunk,
 combining model inference and expert systems to generate models
 from production systems. Given a large set of production events,
-our framework infers exacts models whose traces are included in
+our framework infers exact models whose traces are included in
 the initial trace set of a system under analysis. We chose to
 design Autofunk for targeting high performance. Our evaluation
 shows that this approach is suitable in the context of production
 systems since we quickly obtain STS trees reduced by 90\% against
 the original trace sets of the system under analysis.
 
+Our statistical analysis used to filter traces and detect
+complete traces is not as efficient as we would like to. This is
+the main weakness of this work, but it could be improved by using
+a machine learning technique that would detect both entry and
+exit points from a set of traces. This is a direction we explore
+in the next chapter.
+
 While there is still room for improvement on how we generate
 exact models, we decided to go deeper and use such models for
 testing purpose. In the next chapter, we describe our testing
 technique that leverages the work presented in this chapter.
-
-
-\TODO{rewrite}
