@@ -1194,7 +1194,9 @@ having performed trace filtering (Layer 1), we obtained a first
 IOSTS tree composed of 28 transitions. The next 4 layers
 automatically inferred a last IOSTS tree $\EuScript{S}_4$, given
 in Figure \ref{fig:git:iosts}, that is composed of 12 transitions
-from which 9 have a clear and intelligible meaning.
+from which 9 have a clear and intelligible meaning. Layers 4 and
+5 include inference rules that are specific to GitHub. For other
+websites, these rules cannot be reused and have to be rewritten.
 
 \begin{figure}[ht]
     \includegraphics[width=.45\textwidth]{figures/gh-2-4-bis.png}
@@ -1209,18 +1211,30 @@ from which 9 have a clear and intelligible meaning.
 \label{sec:modelinf:webapps:conclusion}
 
 In this chapter, we presented an original approach combining
-model inference, expert systems and automatic testing to derive
-IOSTSs models. Our proposal yields several models, reflecting
+model inference, expert systems, and automatic testing to derive
+IOSTSs models by means of a model transformation using inference
+rules.  We chose a minimisation technique over existing
+algorithms such as gkTail and KLFA to keep exactness of the
+inferred models.  Our proposal yields several models, reflecting
 different levels of abstractions of the same application with the
 use of inference rules that capture the knowledge of an expert.
 The first contribution lies in the flexibility and scalability
 brought by the inference rules since they can be applied on
 several applications or on a single application only when the
 rules are specific. The whole framework has not to be
-re-implemented for each application. Our approach can be applied
-on event-driven applications since our framework supports their
-exploration. Furthermore, it can also be applied on other kinds
-of application as far as they produce traces.
+re-implemented for each application, but inference rules have to.
+Our approach can be applied on event-driven applications since
+our framework supports their exploration. Furthermore, it can
+also be applied on other kinds of application as far as they
+produce traces.
+
+Combining expert systems (gathering knowledge) and formal models
+is really interesting but this is not a silver bullet. Indeed,
+writing rules is still an heavy task, and thus not suitable as
+is. It can be as difficult as writing a formal model, hence the
+need for an automated way to write the rules of Layers 3 to N.
+Ideally, the framework itself should generate a set of rules,
+e.g., using a machine learning technique.
 
 While the idea of getting more and more abstract models was
 interesting to us, we chose to stop working on this part as our
