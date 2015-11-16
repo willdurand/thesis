@@ -67,9 +67,9 @@ Symposium on Information and Communication Technology (SoICT'14)
 
 We propose a new approach to infer models of web applications,
 which is divided into several modules as depicted in Figure
-\ref{fig:soict-framework}. The \emph{Models generator} is the
+\ref{fig:soict-framework}. The \textit{Models generator} is the
 centrepiece of this framework. It takes HTTP traces as inputs,
-which can be sent by a \emph{Monitor} collecting them on-the-fly.
+which can be sent by a \textit{Monitor} collecting them on-the-fly.
 Such a monitor would be responsible for reading HTTP requests and
 responses in our case. However, it is worth mentioning that the
 traces can also be sent by any tool or even any user, as far as
@@ -102,7 +102,7 @@ relevant IOSTSs. More traces could be yet collected as far as
 the application being analysed is an event-driven application.
 Such traces can be produced by stimulating and exploring the
 application with automatic testing. In our approach, this
-exploration is achieved by the \emph{Robot explorer}, which is
+exploration is achieved by the \textit{Robot explorer}, which is
 our second main contribution in this framework. In contrast with
 most of the existing crawling techniques, which are detailed in
 \crossref{sec:related}{sec:active-crawling}, our robot does not
@@ -171,8 +171,6 @@ owns inference rules organised into layers for trying to fit the
 human expert behavior. These layers are depicted in Figure
 \ref{fig:se}.
 
-\TODO{add "ST" to Model generator figure}
-
 Usually, when a human expert has to read traces of an
 application, he often filters them out to only keep those that
 make sense against the current application. This step is done by
@@ -206,17 +204,17 @@ layers should own the most precise rules that may be dedicated to
 one specific application.
 
 For readability purpose, we chose to represent inference rules
-with this format: \emph{When conditions on facts Then actions on
+with this format: \textit{When conditions on facts Then actions on
 facts}. This format has been borrowed to the Drools inference
 engine \footnote{http://www.jboss.org/drools/}). Independently
 on the application's type, Layers 2 to N handle the following
-fact types: \emph{Location} which represents an IOSTS location,
-and \emph{Transition}, which represents an IOSTS transition,
-composed of two Locations $Linit$, $Lfinal$, and two data
-collections Guard and Assign. Now, it is manifest that the
-inference of models has to be done in a finite time and in a
-deterministic way. To reach that purpose, we formulate the
-following hypotheses on the inference rules:
+fact types: \textit{Location}, which represents an IOSTS location,
+and \textit{Transition}, which represents an IOSTS transition,
+composed of two locations $Linit$, $Lfinal$, and two data
+collections \textit{Guard} and \textit{Assign}. Now, it is
+manifest that the inference of models has to be done in a finite
+time and in a deterministic way. To reach that purpose, we
+formulate the following hypotheses on the inference rules:
 
 \begin{enumerate}
 \item (finite complexity): a rule can only be applied a limited
@@ -228,7 +226,7 @@ true: If P, then Q. P. Therefore, Q.),
 
 \item (no implicit knowledge elimination): after the application
 of a rule $r$ expressed by the relation $r: T_i \rightarrow
-T_{i+1} (i\geq 2)$, with $T_i$ a Transition base, for all
+T_{i+1} (i\geq 2)$, with $T_i$ a transition base, for all
 transition $t=(l_n,l_m,a(p),G,A)$ extracted from $T_{i+1}$, $l_n$
 is reachable from $l_0$.
 \end{enumerate}
@@ -294,7 +292,7 @@ with $a$ the HTTP verb and $\theta$ a valuation over the variable
 set $p=\{URI,request,response\}$. This is captured by the
 following proposition:
 
-\begin{definition}[Structured HTTP Traces] Let $t=
+\begin{definition}[Structured HTTP traces] Let $t=
 req_1,resp_1$, \dots, $req_n,$ $resp_n$ be a raw HTTP trace
 composed of an alternate sequence of HTTP request $req_i$ and
 HTTP response $resp_i$. The structured HTTP trace $\sigma$ of $t$
@@ -332,9 +330,22 @@ ways, e.g., by focusing on the file extension found at the end of
 the URI or on the content-type value of the request headers.
 Consequently, this layer includes a set of rules, constituted of
 conditions on the HTTP content found in an action, that remove
-valued actions when the condition is met. A straightforward rule
-example that removes the actions relative to the retrieval of PNG
-images, is given in Figure \ref{fig:layer1:filter}.
+valued actions when the condition is met.
+
+A straightforward rule example that removes the actions relative
+to the retrieval of PNG images, and written with the Drools
+formalism, is given in Figure \ref{fig:layer1:filter}.
+$\$valued\_action$ is a variable representing a $Get$ (valued)
+action.  Actions own $request$ and $response$ attributes,
+respectively representing the HTTP request and HTTP response for
+that given valued action. Such attributes can be accessed into
+the action's parentheses: $Action(request.attr)$, where $attr$ is
+a request's attribute (such as $mime\_type$ and
+$file\_extension$), along with logical symbols such as $or$,
+$and$, and $not$. Actions can be manipulated in the $then$ part
+of the rule, as shown in Figure \ref{fig:layer1:filter}. The
+$retract$ keyword is used to remove a fact from the knowledge
+base.
 
 \begin{figure}[ht]
 \begin{framed}
@@ -345,7 +356,7 @@ when
     request.mime_type = 'png' or request.file_extension = 'png'
   )
 then
-  retract($valued_action);
+  retract($valued_action)
 end
 \end{BVerbatim}
 \end{framed}
@@ -364,12 +375,11 @@ At this point, we are ready to extract the first IOSTS.
 HTTP traces are sequences of valued actions modelled with
 positive facts. Typically, they form Horn clauses. Furthermore,
 inference rules are Modus Ponens (soundness hypothesis).
-Consequently, Layer 1 is sound and complete. Keeping in mind the
-finite complexity hypothesis, its complexity is proportional to
-$\EuScript{O}m(k+1)$ with $m$ the valued action number and $k$
-the rule number. (at worst, every action is covered $k+1$ times).
-
-\TODO{ref. for soundness modus ponens}
+Consequently, Layer 1 is sound and complete \cite{logicreasoning}.
+Keeping in mind the finite complexity hypothesis, its complexity
+is proportional to $\EuScript{O}m(k+1)$ with $m$ the valued
+action number and $k$ the rule number. (at worst, every action is
+covered $k+1$ times).
 
 \subsection{Layer 2: IOSTS transformation}
 \label{sec:modelinf:webapps:L2}
@@ -399,7 +409,7 @@ transformation that we have reversed.  In order to generate the
 first IOSTS denoted $\EuScript{S}_1$, the associated runs are
 first computed from the structured traces by injecting states
 between valued actions. These steps are detailed in the
-following.
+sequel.
 
 \subsubsection{Traces to runs}
 
@@ -439,8 +449,6 @@ composed of the greatest integer $k \geq 0$. The current run $r$
 is completed with the valued action $(a_i,\theta_i)$ followed by
 the state $s$ (line 14). Finally, $SR$ gathers all the
 constructed runs.
-
-\TODO{sync lines in algo and text}
 
 \begin{algorithm}
 \SetKwInOut{Input}{input} \SetKwInOut{Output}{output}
@@ -676,11 +684,7 @@ implicit knowledge elimination) hypothesis and to Proposition
 \ref{prop:loc:inclu}, the transitions of $\EuScript{S}_i$ are
 either unchanged, enriched or combined together into a new
 transition. The application of these layers ends in a finite time
-(finite complexity hypothesis) and the complexity of each is
-proportional to $\EuScript{O}m(k)$ with $m$ the transition number
-and $k$ the rule number.
-
-\TODO{explain previous paragraph}
+(finite complexity hypothesis).
 
 \begin{figure}[H]
 \begin{minipage}{.5\textwidth}
@@ -719,9 +723,13 @@ when
 then
   modify ($t) {
     Assign.Add(new assignment over internal variables)
-  };
+  }
 end
 \end{BVerbatim}
+
+$\$t$ is a transition object, like the valued actions in the
+previous rules. The $modify$ keyword allows to change information
+on a given object.
 
 For example, the rules depicted in Figure \ref{fig:rule:login}
 aims at recognising the receipt of a login or logout page. The
@@ -748,16 +756,32 @@ when
   $t2: Transition(Linit == $lfinal, conditions)
 then
   insert(new Transition(
-    new Action,
+    new Action(),
     Guard($t1.Guard, t2.Guard),
-    Assign($t1.Assign, $t2.Assignment),
-    Linit == $t1.Linit,
-    Lfinal == $t2.Lfinal
-  ));
-  retract($t1);
-  retract($t2);
+    Assign($t1.Assign, $t2.Assign),
+    Linit := $t1.Linit,
+    Lfinal := $t2.Lfinal
+  ))
+  retract($t1)
+  retract($t2)
 end
 \end{verbatim}
+
+Both $\$t1$ and $\$t2$ are transition objects. Transitions own
+guards ($Guard$ attribute), assignments ($Assign$ attribute), but
+also two locations: $Linit$ and $Lfinal$. In order to aggregate
+two consecutive transitions, we have to add a condition on the
+initial location of the second transition ($Linit == \$lfinal$),
+i.e. the final location of the first transition must be the
+initial location of the second transition, otherwise these two
+transitions are not consecutive. The $insert$ keyword in the
+$then$ part is used to add a new fact to the knowledge base.
+Here, we add a new transition with a more meaningful action (that
+reflects the aggregation), the unions of the guards and
+assignments of both transitions $\$t1$ and $\$t2$, and we set the
+initial location of this new transition to the initial location
+of the first transition and we set the final location of this new
+transition to the final location of the section transition.
 
 The rule given in Figure \ref{fig:rule:redirect} corresponds to a
 simple transition aggregation. It aims at recognising the
@@ -766,7 +790,11 @@ a redirection to another web page.  If a request sent with the
 $POST$ method has a response identified as a redirection,
 (identified by the status code 301 or 302), and  a $GET$ request
 comes after, both transitions are reduced into a single one
-carrying the new action $PostRedirection$.
+carrying the new action $PostRedirection$. Just like valued
+actions, guards can be accessed: $Guard.something$ where
+$something$ is a guard. The Drools Domain-Specific Language (DSL)
+also provides keywords such as $contains$ or $match$ to deal with
+the values.
 \end{itemize}
 
 \begin{figure}[h]
@@ -779,7 +807,9 @@ when
     Guard.response.content contains('login-form')
   )
 then
-  modify ($t) { Assign.add("isLoginPage := true") }
+  modify ($t) {
+    Assign.add("isLoginPage := true")
+  }
 end
 \end{BVerbatim}
 \end{framed}
@@ -793,7 +823,9 @@ when
     Guard.uri matches("/logout")
   )
 then
-  modify ($t1) { Assign.add("isLogout := true") }
+  modify ($t1) {
+    Assign.add("isLogout := true")
+  }
 end
 \end{BVerbatim}
 \end{framed}
@@ -801,8 +833,6 @@ end
 \caption {Login page and logout action recognition rules}
 \label{fig:rule:login}
 \end{figure}
-
-\TODO{verify rule}
 
 \begin{figure}[h]
 \begin{framed}
@@ -825,9 +855,9 @@ then
     Assign($t1.Assign, $t2.Assign),
     $t1.Linit,
     $t2.Lfinal
-  );
-  retract($t1);
-  retract($t2);
+  )
+  retract($t1)
+  retract($t2)
 end
 \end{BVerbatim}
 \end{framed}
@@ -859,7 +889,7 @@ to the action. The rule given in Figure \ref{fig:rule:deauth} is
 an example which recognises a user de-authentication and adds a
 new action "Deauthentication". This rule means that if a
 $PostRedirection$ action is triggered against a "Logout" endpoint
-(given by the variable \emph{isLogout} added by Layer 3), then
+(given by the variable \textit{isLogout} added by Layer 3), then
 this is a deauthentication,
 
 \item the rules can also aggregate several successive transitions
@@ -883,7 +913,7 @@ when
     Assign contains "isLogout:=true"
   )
 then
-  modify ($t) { $t.setAction("Deauthentication") };
+  modify ($t) { $t.setAction("Deauthentication") }
 end
 \end{BVerbatim}
 \end{framed}
@@ -917,9 +947,9 @@ then
     Assign($t1.Assign, $t2.Assign),
     $t1.Linit,
     $t2.Lfinal
-  );
-  retract($t1);
-  retract($t2);
+  )
+  retract($t1)
+  retract($t2)
 end
 \end{BVerbatim}
 \end{framed}
@@ -932,14 +962,14 @@ Other rules can also be application-specific, so that these bring
 specific new knowledge to the model. For instance, the GitHub web
 application has a dedicated URL grammar (a.k.a. routing system).
 GitHub users own a profile page that is available at:
-\emph{https://github.com/\{username\}} where \emph{\{username\}}
+\textit{https://github.com/\{username\}} where \textit{\{username\}}
 is the nickname of the user. However, some items are reserved,
 e.g., \textit{edu} and \textit{explore}. The rule given in Figure
 \ref{fig:rule:gh-profile} is based upon this structure and
 produces a new action $ShowProfile$ offering more sense.
 Similarly, a GitHub page describing a project has a URL that
 always matches the pattern:
-\emph{https://github.com/\{username\}/\{project\_name\}}. The
+\textit{https://github.com/\{username\}/\{project\_name\}}. The
 rule given in Figure \ref{fig:rule:gh-project} captures this
 pattern and derives a new action named $ShowProject$.
 
@@ -954,7 +984,7 @@ when
      Guard.uri not in [ "/edu", "/explore" ])
   )
 then
-  modify ($t) { $t.setAction("ShowProfile") };
+  modify ($t) { $t.setAction("ShowProfile") }
 end
 \end{BVerbatim}
 \end{framed}
@@ -974,10 +1004,10 @@ when
     $uri := Guard.uri
   )
 then
-  String s = ParseProjectName($uri);
+  String s = ParseProjectName($uri)
   modify ($t) {
-    $t.setAction("ShowProject");
-    Assign.add("ProjectName := " + s);
+    $t.setAction("ShowProject")
+    Assign.add("ProjectName := " + s)
   }
 end
 \end{BVerbatim}
@@ -1108,7 +1138,7 @@ rule "BFS"
 when
   $l: Location(name == l0, explored == false)
 then
-  $l.SetExplored();
+  $l.SetExplored()
 end
 \end{BVerbatim}
 \end{framed}
@@ -1128,7 +1158,7 @@ when
     result(Loc)
   )
 then
-  Loc.SetExplored();
+  Loc.SetExplored()
 end
 \end{BVerbatim}
 \end{framed}
@@ -1147,9 +1177,9 @@ when
     or Guard.response matches "*buy*"
   )
 then
-  ArrayList Loc = new ArrayList();
-  Loc.add($t.Linit, $t.Lfinal);
-  Loc.SetExplored();
+  ArrayList Loc = new ArrayList()
+  Loc.add($t.Linit, $t.Lfinal)
+  Loc.SetExplored()
 end
 \end{BVerbatim}
 \end{framed}
@@ -1170,7 +1200,7 @@ taken into consideration.
 \label{sec:modelinf:webapps:exp}
 
 We implemented this technique in a prototype tool called
-\emph{Autofunk}. A user interacts with Autofunk through a web
+\textit{Autofunk}. A user interacts with Autofunk through a web
 interface and either gives a URL  or a file containing traces.
 These have to be stored in the HTTP Archive (HAR) format as it is
 the defacto standard to describe HTTP traces, used by various

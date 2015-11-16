@@ -27,7 +27,7 @@ that exchange thousands of events a day. Several approaches have
 already been proposed for different types of systems, usually for
 GUI applications, e.g. desktop or mobile applications. However,
 we noticed that these approaches were not tailored to support
-production systems. From the literature (given in Section
+production systems. From the literature (given in Chapter
 \ref{sec:related}), we deduced the following key observations:
 
 \begin{itemize}
@@ -793,7 +793,7 @@ rule "Mark destination requests"
 when:
   $t: Transition(name matches "17011")
 then
-  $t.changeAction("Destination Request")
+  $t.setAction("Destination Request")
 end
 \end{BVerbatim}
 \end{framed}
@@ -804,7 +804,7 @@ rule "Mark destination responses"
 when:
   $t: Transition(name matches "17021")
 then
-  $t.changeAction("Destination Response")
+  $t.setAction("Destination Response")
 end
 \end{BVerbatim}
 \end{framed}
@@ -898,20 +898,19 @@ base and creates a set for each assignment of the identifier
 $pid$. These sets are sorted to construct traces given as $Trace$
 Java objects. These objects correspond to $Traces(Sua)$. The
 generation of the trace subsets $ST= \{ST_1,...,ST_N\}$ and of
-the first STSs are done with Drools inference rules as described
-in section \ref{sec:theory}, but applied in parallel. The STS
-reduction, and specifically the generation of STS branches
-equivalence classes, has been implemented with a specific
-algorithm for better performance. Indeed, comparing every action
-in STS branches in order to aggregate them is time consuming.
-Given a STS $\EuScript{S}$, this algorithm generates a signature
-for each branch $b$, i.e. a hash (SHA1 algorithm) of the
-concatenation of the signatures of the actions of $b$. The
+the first STSs are done with Drools inference rules applied
+in parallel. The STS reduction, and specifically the generation
+of STS branches equivalence classes, has been implemented with a
+specific algorithm for better performance. Indeed, comparing
+every action in STS branches in order to aggregate them is time
+consuming.  Given a STS $\EuScript{S}$, this algorithm generates
+a signature for each branch $b$, i.e. a hash (SHA1 algorithm) of
+the concatenation of the signatures of the actions of $b$. The
 branches which have the same signature are gathered together and
 establish branch equivalence classes (as described in section
-\ref{sec:modelinf:prodsystems:reduction}). Thereafter, the reduced $R(\EuScript{S})$
-is constructed thanks to the inference rule given in section
-\ref{sec:modelinf:prodsystems:reduction}.
+\ref{sec:modelinf:prodsystems:reduction}). Thereafter, the
+reduced $R(\EuScript{S})$ is constructed thanks to the inference
+rule given in section \ref{sec:modelinf:prodsystems:reduction}.
 
 \subsection{Evaluation}
 
