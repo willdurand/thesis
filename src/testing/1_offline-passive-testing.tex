@@ -64,12 +64,13 @@ filter the initial trace set given as input. Indeed, with the
 statistical analysis introduced in
 \crossref{sec:modelinf:prodsystems}{sec:modelinf:prodsystems:segmentation},
 we hit several problems, mainly because our algorithm was not
-stable, i.e. the use of a configurable minimum limit was not
-accurate enough. In Section \ref{sec:testing:offpassive:normal},
-we introduce a new step of the model inference method described
-in Chapter \ref{sec:modelinf:prodsystems} that is required to
-enable testing. Then, we present our offline passive testing
-technique on-top of this model inference method in Section
+stable, in other words the use of a configurable minimum limit
+was not accurate enough. In Section
+\ref{sec:testing:offpassive:normal}, we introduce a new step of
+the model inference method described in Chapter
+\ref{sec:modelinf:prodsystems} that is required to enable
+testing. Then, we present our offline passive testing technique
+on-top of this model inference method in Section
 \ref{sec:testing:offpassive:testing}. We present key results in
 Section \ref{sec:testing:offpassive:impl-exp}, and we conclude on
 this work in Section \ref{sec:testing:offpassive:conclusion}.
@@ -81,6 +82,7 @@ Methods and Models for Co-Design (MEMOCODE'15).
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \subsection{A better solution to trace segmentation and filtering}
+\label{sec:testing:offpassive:segmentation}
 
 In
 \crossref{sec:modelinf:prodsystems}{sec:modelinf:prodsystems:segmentation},
@@ -176,10 +178,10 @@ test $\mathit{Sut}$. As depicted in Figure
 is performed offline, i.e. a set of production events has been
 collected beforehand from $\mathit{Sut}$, in the same way as for
 $\mathit{Sua}$. These are grouped into traces to form the trace
-set $Traces({Sut})$. The latter is filtered as described in
-Section \ref{part2:segmentation} to obtain a set of complete
-traces denoted with $CTraces({Sut})$.  We then perform passive
-testing to check if $\mathit{Sut}$ conforms to
+set $Traces({Sut})$. The latter is then filtered Section
+\ref{sec:testing:offpassive:segmentation} to obtain a set of
+complete traces denoted with $CTraces({Sut})$. We then perform
+passive testing to check if $\mathit{Sut}$ conforms to
 $\EuScript{S}^{N}$. Below, we define conformance with
 implementation relations, and provide a passive testing algorithm
 that aims to check whether these relations hold.
@@ -211,7 +213,7 @@ $\EuScript{S}^{N}=\{\EuScript{S}_1^{N},\dots,\EuScript{S}_n^{N}\}$.
 The first implementation relation can be written with the
 following definition:
 
-\begin{definition}
+\begin{definition}[The $\leq_{ct}$ implementation relation]
 \label{rel:impl1}
 Let $\EuScript{S}^{N}$ be an inferred model of $\mathit{Sua}$ and
 $\mathit{Sut}$ be the system under test. When $\mathit{Sut}$ produces complete
@@ -227,7 +229,8 @@ $\EuScript{S}^{N}$ and $R(\EuScript{S}^{N})$ are trace equivalent:
 
 \begin{proposition}
 \label{rel:impl12}
-${Sut} \leq_{ct} \EuScript{S}^{N} \text{ iff } CTraces({Sut}) \subseteq  Traces_{Pass}(R(\EuScript{S}^{N}))$
+${Sut} \leq_{ct} \EuScript{S}^{N} \text{ iff } CTraces({Sut})
+\subseteq  Traces_{Pass}(R(\EuScript{S}^{N}))$.
 \end{proposition}
 
 As stated previously, the inferred model $\EuScript{S}^{N}$ of
@@ -256,7 +259,7 @@ implementation relation aims at expressing that this trace $t$
 captures a correct behaviour as well.
 
 % \begin{comment}
-% This second implemenation relation, denoted with $\leq_{mct}$, is written
+% This second implementation relation, denoted with $\leq_{mct}$, is written
 % with the classes of equivalent paths $[b]$, found in a STS of
 % $\EuScript{S}^{N}=\{\EuScript{S}_1^{N},...,\EuScript{S}_n^{N}\}$.
 % Indeed, an equivalent class $[b]$ of $\EuScript{S}_i^{N}$ gathers
@@ -294,7 +297,7 @@ captures a correct behaviour as well.
 This implementation relation, denoted with $\leq_{mct}$, is
 written with:
 
-\begin{definition}
+\begin{definition}[The $\leq_{mct}$ implementation relation]
 	\label{impl21}
 	 Let $\EuScript{S}^{N}$ be an inferred model of $\mathit{Sua}$ and
 	 $\mathit{Sut}$ be the system under test.
@@ -376,7 +379,7 @@ disjunctions for every variable $x$ that belongs to the parameter
 set $p_j$. Such equalities can be extracted with the
 \textit{Proj} operator (see Definition \ref{}). We
 obtain one guard of the form $\bigwedge_{x \in p_j}(x==val_1 \vee
-... \vee x==val_k)$. The STS $D(\EuScript{S}_i^{N})$, derived
+\dots \vee x==val_k)$. The STS $D(\EuScript{S}_i^{N})$, derived
 from $R(\EuScript{S}_i^{N})$, is constructed with this
 simplification of guards:
 
@@ -394,7 +397,7 @@ simplification of guards:
 %column in the matrices), but rather the disjunction of the guards
 %belonging to the matrices of this branch.
 
-\begin{definition}
+\begin{definition}[Derived STS $D(\EuScript{S}_i^{N})$]
     Let $R(\EuScript{S}_i^{N})=<L_R,l0_R,V_R,V0_R,I_R,\Lambda_R,\rightarrow_R>$ be a STS of $R(\EuScript{S}^{N})$. We denote $D(\EuScript{S}_i^{N})$ the STS $ <L_D,l0_D,V_D,V0_D,I_D,\Lambda_D,\rightarrow_D>$ derived from $R(\EuScript{S}_i^{N})$ such that:
 \begin{itemize}
     \item $L_D=L_{R}, l0_D=l0_{R}, I_D=I_{R}, \Lambda_D=\Lambda_{R}$,
