@@ -231,8 +231,6 @@ transition $t=(l_n,l_m,a(p),G,A)$ extracted from $T_{i+1}$, $l_n$
 is reachable from $l_0$.
 \end{enumerate}
 
-\TODO{sound and complete?}
-
 In the following, we illustrate each layer with examples.
 
 \subsection{Layer 1: Trace filtering}
@@ -741,11 +739,9 @@ assignment on the variable $isLoginPage$,
 \item the \textbf{generic aggregation of some successive
     transitions}. Here, some transitions (two or more) are
     analysed in the conditional part of the rule. When the rule
-    condition is met then the successive transitions are replaced
+    condition is met, then the successive transitions are replaced
     by one transition carrying a new action. These rules have the
     following form:
-
-\TODO{verify rules}
 
 \begin{verbatim}
 rule "Simple aggregation"
@@ -845,9 +841,8 @@ when
     $l1final := Lfinal
   )
   $t2: Transition(
-    Action == "GET", Linit == $l1final, $l2init := Linit
+    Action == "GET", Linit == $l1final
   )
-  not Transition(Linit == $l2init)
 then
   insert(new Transition(
     "PostRedirection",
@@ -886,8 +881,8 @@ rules may have different forms:
 \item they can be applied on a single transition only. In this
 case, the rule replaces the transition action to add more sense
 to the action. The rule given in Figure \ref{fig:rule:deauth} is
-an example which recognises a user de-authentication and adds a
-new action "Deauthentication". This rule means that if a
+an example, which recognises a user de-authentication, and adds a
+new action $Deauthentication$. This rule means that if a
 $PostRedirection$ action is triggered against a "Logout" endpoint
 (given by the variable \textit{isLogout} added by Layer 3), then
 this is a deauthentication,
@@ -897,10 +892,10 @@ up to complete paths into one transition labelled by a more
 abstract action. For instance, the rule illustrated in Figure
 \ref{fig:rule:auth} recognises a user authentication thanks to
 the variable $isLoginPage$ added by Layer 3. This rule means that
-if a "Login" page is displayed, followed by a redirection
+if a "login" page is displayed, followed by a redirection
 triggered by a $POST$ request, then this is an authentication
 step, and the two transitions are reduced into a single one
-composed of the action "Authentication".
+composed of the action $Authentication$.
 \end{itemize}
 
 \begin{figure}[h]
@@ -910,10 +905,12 @@ rule "Identify Deauthentication"
 when
   $t: Transition(
     action == "PostRedirection",
-    Assign contains "isLogout:=true"
+    Assign contains "isLogout := true"
   )
 then
-  modify ($t) { $t.setAction("Deauthentication") }
+  modify ($t) {
+    $t.setAction("Deauthentication")
+  }
 end
 \end{BVerbatim}
 \end{framed}
@@ -922,8 +919,6 @@ end
 \label{fig:rule:deauth}
 \end{figure}
 
-\TODO{verify rule}
-
 \begin{figure}[h]
 \begin{framed}
 \begin{BVerbatim}
@@ -931,15 +926,13 @@ rule "Identify Authentication"
 when
   $t1: Transition(
     Action == "GET",
-    Assign contains "isLoginPage:= true",
+    Assign contains "isLoginPage := true",
     $t1final := Lfinal
   )
   $t2: Transition(
     Action == "PostRedirection",
-    Linit == $t1lfinal,
-    $t2linit := Linit
+    Linit == $t1final
   )
-  not (Transition (Linit == $t2linit))
 then
   insert(new Transition(
     "Authentication",
@@ -1038,7 +1031,12 @@ behaviors.
 \section{Getting more complete models with strategies}
 \label{sec:modelinf:webapps:strategy}
 
-\TODO{goal?}
+Since the inference of our models depends on both the amount and
+the quality of the collected traces, these models are said
+partial. In order to improve the completeness of our inferred
+models, we rely on an automatic testing technique (that is,
+crawling) to interact with the application. This is the role of
+the Robot explorer, driven by the Models generator.
 
 Rather than using a static traversal strategy as in
 \cite{Memon:2003,concolicandroid12,crawljax:tweb12,
@@ -1112,9 +1110,11 @@ We propose two examples below:
         explored and a final location not yet explored are
         collected by the rule BFS2, except for the transitions
         carrying an HTTP error (response status upper or equal to
-        400).  These locations are marked as explored in the
-        IOSTS $\EuScript{S}_i$ with the method $SetExplored$ in
-        the "then" part of the rule,
+        400).  The $accumulate$ keyword is a Drools function that
+        allows to operate on sets of data, which we used to
+        transcribe the previous sentence.  The selected locations
+        are marked as explored in the IOSTS $\EuScript{S}_i$ with
+        the method $SetExplored$ in the "then" part of the rule,
 
     \item \textbf{semantic-driven strategies} could also be
         applied, when the meaning of some actions is
@@ -1128,8 +1128,6 @@ We propose two examples below:
         since it depends on the number of recognised actions and
         on their relevance.
 \end{itemize}
-
-\TODO{explain accumulate}
 
 \begin{figure}[h]
 \begin{framed}
