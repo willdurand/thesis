@@ -722,7 +722,7 @@ when
   $t: Transition(conditions on action, Guard, Assign)
 then
   modify ($t) {
-    Assign.Add(new assignment over internal variables)
+    Assign.add(new assignment over internal variables)
   }
 end
 \end{BVerbatim}
@@ -803,7 +803,7 @@ the values.
 rule "Identify Login page"
 when
   $t: Transition(
-    Action == GET,
+    Action == "GET",
     Guard.response.content contains('login-form')
   )
 then
@@ -819,7 +819,7 @@ end
 rule "Identify Logout action"
 when
   $t: Transition(
-    Action == GET,
+    Action == "GET",
     Guard.uri matches("/logout")
   )
 then
@@ -840,14 +840,14 @@ end
 rule "Identify Redirection after a POST"
 when
   $t1: Transition(
-    Action == POST,
+    Action == "POST",
     (Guard.response.status = 301 or Guard.response.status = 302),
     $l1final := Lfinal
   )
   $t2: Transition(
-    Action == GET, linit == $l1final, $l2linit := Linit
+    Action == "GET", Linit == $l1final, $l2init := Linit
   )
-  not (Transition(Linit == $l2linit))
+  not Transition(Linit == $l2init)
 then
   insert(new Transition(
     "PostRedirection",
@@ -909,7 +909,7 @@ composed of the action "Authentication".
 rule "Identify Deauthentication"
 when
   $t: Transition(
-    action == PostRedirection,
+    action == "PostRedirection",
     Assign contains "isLogout:=true"
   )
 then
@@ -930,12 +930,12 @@ end
 rule "Identify Authentication"
 when
   $t1: Transition(
-    Action == GET,
+    Action == "GET",
     Assign contains "isLoginPage:= true",
     $t1final := Lfinal
   )
   $t2: Transition(
-    Action == PostRedirection,
+    Action == "PostRedirection",
     Linit == $t1lfinal,
     $t2linit := Linit
   )
@@ -979,7 +979,7 @@ pattern and derives a new action named $ShowProject$.
 rule "GitHub profile pages"
 when
   $t: Transition(
-    action == GET,
+    action == "GET",
     (Guard.uri matches "/[a-zA-Z0-9]+$",
      Guard.uri not in [ "/edu", "/explore" ])
   )
@@ -999,7 +999,7 @@ end
 rule "GitHub project pages"
 when
   $t: Transition(
-    action == GET,
+    action == "GET",
     Guard.uri matches "/[a-zA-Z0-9]+/.+$",
     $uri := Guard.uri
   )
@@ -1035,7 +1035,7 @@ behaviors.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\section{Strategy layer}
+\section{Getting more complete models with strategies}
 \label{sec:modelinf:webapps:strategy}
 
 \TODO{goal?}
