@@ -16,8 +16,7 @@ the software is completely free of defects. Rather, it must be
 good enough for its intended use.
 Testing is a verification and validation process
 \cite{wallace1989software}. I use to (informally) explain both
-terms with the following questions, although it is worth
-mentioning that I am certainly not the author of any of them:
+terms with the following questions \cite{Boehm1979}:
 
 \begin{itemize}
 \item \textbf{Validation:} are we building the right software?
@@ -33,7 +32,18 @@ simulation are all verification methods.
 
 Validation is testing as the act of revealing bugs. That is what
 most people think testing is, and also the meaning we give to the
-word "testing" in the sequel of this thesis.
+word "testing" in the sequel of this thesis. Testing involves a
+\textit{software under test} (SUT). \textit{Test inputs} are sent
+on a system under test, which leads to \textit{test outputs}. We
+then have to determine whether these outputs are correct. A
+\textit{test case} (TC) is compound of \textit{test data}, i.e.
+inputs which have been devised to test the system, an expected
+behavior, and an expected output. We call \textit{test suite}
+(TS) a set of test cases. We rely on a \textit{tester} to
+determine whether a test has \textit{passed} or \textit{failed}.
+
+\subsection{Types of testing}
+
 Nowadays, software testing, if not always applied, is well-known
 in the Industry. It is considered a good practice and many
 techniques and tools have been developed over the last 10 years.
@@ -42,20 +52,344 @@ There are a lot of new terms that all end with "Testing" such as:
 Unit Testing, Integration Testing, Functional Testing, System
 Testing, Stress Testing, Performance Testing, Usability Testing,
 Acceptance Testing, Regression Testing, Beta Testing, and so on.
+ISO 9126 \cite{iso9126}, replaced by ISO/IEC 25010:2011
+\cite{10951538}, provides six characteristics of quality that can
+be used to sort these testing techniques into six testing types:
 
 \begin{itemize}
-\item \textbf{Unit Testing:}
-
-\item \textbf{Integration Testing:}
-
-\item \textbf{Acceptance Testing:}
-
-\item \textbf{System Testing:}
+\item efficiency testing,
+\item functionality testing,
+\item maintainability testing,
+\item portability testing,
+\item reliability testing,
+\item usability testing.
 \end{itemize}
 
-The most positive fact about this is that everyone in the
-Industry understands the need for testing, and tries to improve
-his daily routine. However, testing is still mostly performed by
-hand.
+However, this classification can not be generally accepted as
+single or complete. In \cite{4425813}, authors suggested to
+classify the different techniques based on the target of the
+test (sometimes we refer to this classification as level of
+detail):
 
-\subsection{}
+\begin{itemize}
+\item \textbf{Unit testing:} units (e.g., functions, methods,
+modules) of the system are tested in isolation. Typically this
+testing type implies access to the source code being tested,
+
+\item \textbf{Integration testing:} interactions between software
+components are tested. This testing type is a continuous task,
+hence the \textit{continous integration} (CI) practice,
+
+\item \textbf{System testing:} the whole system is taken into
+consideration. This testing type is appropriate for validating
+not-only-functional requirements, such as security, performance
+(speed), accuracy, and reliability (fault tolerence).
+\end{itemize}
+
+These requirements are sometimes seen as \textit{objectives} of
+testing, leading to even more different testing types as listed
+before. There are also different approaches to perform testing,
+depending on the information available to construct the test
+cases:
+
+\begin{itemize}
+\item \textbf{white-box:} a method that tests the internal
+structure of a SUT. It is usually done at the unit level,
+
+\item \textbf{black-box:} a method that tests the functionalities
+of a SUT without knowing its internal structure.  It is also
+known as functional testing,
+
+\item \textbf{grey-box:} the combination of white-box testing and
+black-box testing. One has access to the relevant internal parts
+of a SUT.
+\end{itemize}
+
+Because testing cannot guarantee the absence of faults, a
+challenge is to select subset of test cases from all possible
+test cases with a high chance of detecting most faults. A lot of
+research on \textit{test selection} (or strategies) has been
+done, and there are numerous existing methods for both black-box
+and white-box approaches (these lists are not exhaustive):
+
+\begin{itemize}
+\item black-box: Combinatorial Testing (Pairwise), Equivalence
+Partitioning, Boundary Value Analysis, Function Coverage,
+
+\item white-box: Fuzz Testing (Random), Statistical Testing,
+Statement Testing, Path Testing, Branch Testing, Condition
+Testing, Multiple Condition (MC) Testing, Loop Testing, Mutation
+Testing.
+\end{itemize}
+
+While the Industry created many different testing tools (often
+originating from Academia), they mostly perform testing by hand.
+Researchers in software testing have worked for decades on
+automatic test generation. Automatic testing is, for instance,
+one way to automate white-box approaches, but there are many
+other techniques. On the contrary, Model-based Testing (MbT) is
+one research area that tries to automate black-box approaches.
+
+\subsection{Model-based Testing}
+
+\textit{Model-based Testing} (MbT) is application of Model-based
+design for designing and optionally also executing artifacts to
+perform software testing. Models can be used to represent the
+desired behavior of an SUT, or to represent testing strategies
+and a test environement. Model-based Testing is a three-step
+process:
+
+\begin{enumerate}
+\item Formally modelling the requirements (specification),
+
+\item Generating test cases from the model,
+
+\item Running these test cases against an actual SUT and
+evaluating the results.
+\end{enumerate}
+
+\subsubsection{What is a model?}
+\label{sec:related:testing:model}
+
+Generally speaking, a model is a representation of a thing that
+allows for investigation of its properties, and most of the time,
+a model hides the complexity of the item it represents. In the
+software engineering field, models help describe software systems
+in order to: (i) ease the process of studying them, (ii) leverage
+them to build tools or generate documentation, (iii) reveal
+defects (validation or verification).
+
+Such models usually describe the behaviors of the software being
+modeled, and can also be known as specifications, helping
+understand and predict its behavior. It is worth mentioning that
+a model does not have to completely describe it to be effective.
+
+We can classify models into two categories:
+
+\begin{itemize}
+\item \textbf{Behavior/Control oriented:} Finite Automata (FSM,
+STS, LTS), Petri Nets, Synchronous Languages (Lustre
+\cite{lustre:ieee}, SCADE
+\cite{LeSergent:2011:SCF:2188575.2188578}),
+
+\item \textbf{Data oriented (pre/post):} often using annotation
+languages originating from the \textit{Design-By-Contract}
+paradigm \cite{Meyer:1992:ADC:618974.619797}. These languages
+make it possible to express formal properties (invariants,
+pre/post-conditions) that directly annotate program entities
+(such as classes, methods, attributes) in the source code. Many
+annotation languages exist, such as the Java Modeling Language
+\cite{jml}, Spec\# \cite{117852}, the Object Constraint Language
+\cite{Warmer:1998:OCL:291202}, the B-Method
+\cite{Lano:1996:BLM:525749}, and Praspel
+\cite{Enderlin:2011:PSL:2075545.2075551}.
+\end{itemize}
+
+Below we introduce a few definitions of models that we use in
+this thesis.
+
+\paragraph{Symbolic Transition Systems}
+\label{sec:definitions:sts}
+
+The \textit{Symbolic Transition System} (STS) is known as a very
+general and powerful model for describing several aspects of
+event-based systems. The use of symbolic variables helps describe
+infinite state machines in a finite manner. This potentially
+infinite behaviour is represented by the semantics of a STS,
+given in terms of \textit{Labelled Transition System} (LTS). STS
+operations and transformations are often given with inference
+rules.
+
+We briefly give some definitions related to the STS model below,
+but we refer to \cite{FTW05} for a more detailed description.
+
+\begin{definition}[Variable assignment]
+We assume that there exist a domain of values denoted $D$ and a
+variable set $X$ taking values in $D$. The assignment of
+variables in $Y \subseteq X$ to elements of $D$ is denoted with a
+mapping  $\alpha: Y \rightarrow D$.
+
+We denote $D_Y$ the assignment set over $Y$. We also denote
+$id_Y$ the identity assignment over $Y$, and $v_\emptyset$ the
+empty assignment.
+\end{definition}
+
+\begin{definition}[STS]
+    A Symbolic Transition System (STS) is a tuple
+    $<L,l_0,V,V_0,I,\Lambda,\rightarrow>$, where:
+
+	\begin{itemize}
+        \item STSs do not have states but locations and $L$ is
+        the finite location set, with $l_0$ being the initial
+        one,
+
+        \item $V$ is the finite set of internal variables, while
+        $I$ is the finite set of parameters. The internal
+        variables are initialised with the condition $V_0$ on
+        $V$,
+
+        \item $\Lambda$ is the finite set of symbolic events
+        $a(p)$, with $p=(p_1,...,p_k)$ a finite set of parameters
+        in $I^k (k \in \N)$,
+
+        \item $\rightarrow$ is the finite transition set. A
+        transition $(l_i,l_j,a(p),G,A)$, from the location $l_i
+        \in L$ to $l_j \in L$, also denoted $l_i
+        \xrightarrow{a(p),G,A} l_j$ is labelled by:
+
+		\begin{itemize}
+            \item an action $a(p) \in \Lambda$,
+
+            \item $G$ is a guard over $(p \cup V \cup T(p \cup
+            V))$ which restricts the firing of the transition.
+            $T(p \cup V)$ are boolean terms, a.k.a. predicates
+            over $p \cup V$,
+
+            \item internal variables are updated with the
+            assignment function $A$ of the form $(x:=A_x)_{x \in
+            V}$, $A_x$ is an expression over $V\cup p \cup
+            T(p\cup V)$.
+		\end{itemize}
+	\end{itemize}
+
+	\label{def:sts}
+\end{definition}
+
+For readability purpose, we also use the generalised transition
+relation $\Rightarrow$ to represent STS paths:\\ $l
+\xRightarrow{(a_1,G_1,A_1) \dots (a_n,G_n,A_n)} l' =_{def}
+\exists l_0 \dots l_n, l=l_0 \xrightarrow{a_1,G_1,A_1} l_1 \dots
+l_{n-1}\xrightarrow{a_n,G_n,A_n}l_n=l'$.
+
+\paragraph{Labelled Transition Systems}
+
+A STS is associated with a Labelled Transition System (LTS) to
+formulate its semantics. Intuitively, a LTS semantics corresponds
+to a valued state machine, without symbolic variables, which is
+often infinite: the LTS states are labelled by internal variable
+assignments while transitions are labelled by actions combined
+with parameter assignments.
+
+\begin{definition}[LTS semantics]
+    The semantics of a STS $\EuScript{S}=<L,l_0,$ $V,$ $V_0,$
+    $I,\Lambda,\rightarrow>$ is the LTS
+    $||\EuScript{S}||=<Q,q_0,\sum,\rightarrow>$ where:
+
+	\begin{itemize}
+
+		\item $Q=L \times D_V$ is the set of states,
+
+        \item $q_0=(l_0,V_0)$ is the initial state,
+
+		\item $\sum=\{(a(p),\alpha)  \mid  a(p)\in\Lambda, \alpha \in
+		D_p\}$ is the set of valued events,
+
+        \item $\rightarrow$ is the transition relation $Q \times
+        \Sigma \times Q$ deduced by the following rule:\\
+	\end{itemize}
+	\begin{center}
+		\fbox{
+			\begin{minipage}{0.6\textwidth}
+				\begin{tabular}{l}
+					$\frac{l_1 \xrightarrow{a(p),G,A}l_2,\alpha \in D_p, v \in D_V, v'
+						\in D_V, v \cup \alpha \models G, v'=A(v \cup \alpha))}{(l_1,v)
+						\xrightarrow{a(p),\alpha} (l_2,v') }$
+				\end{tabular}
+				\newline
+			\end{minipage}
+		}
+	\end{center}
+
+	\label{def:semantics}
+\end{definition}
+
+This rule can be read as follows: for a STS transition $l_1
+\xrightarrow{a(p),G,A}l_2$, we obtain a LTS transition $(l_1,v)$
+$\xrightarrow{a(p),\alpha} (l_2,v')$ with $v$ a variable
+assignment over the internal variable set, if there exists an
+assignment $\alpha$ such that the guard $G$ evaluates to true
+with $v \cup \alpha$. Once the transition is executed, the
+internal variables are assigned with $v'$ derived from the
+assignment $A(v \cup \alpha)$.
+
+Finally, runs and traces, which represent executions and event
+sequences, can also be derived from LTS semantics:
+
+\begin{definition}[Runs and traces]
+    Given a STS $\EuScript{S}=$ $<L,l_0,V,V_0,I,\Lambda,
+	\rightarrow>$, interpreted by its LTS semantics
+	$||\EuScript{S}||=<Q,q_0,\sum,\rightarrow>$, a run $q_0
+	\alpha_0 \dots \alpha_{n-1} q_n$ is an alternate sequence of states
+    and valued actions. $Run(\EuScript{S})=Run(||\EuScript{S}||)$ is
+	the set of runs found in $||\EuScript{S}||$.
+
+    It follows that a trace of a run $r$ is defined as the projection
+    $proj_{\sum}(r)$ on the actions.
+
+	\label{def:runs-and-traces}
+\end{definition}
+
+\paragraph{Input/Output Symbolic Transition Systems}
+\label{sec:definitions:iosts}
+
+We consider the input/output Symbolic Transition System (IOSTS)
+formalism \cite{FTW05} for describing the functional behaviour of
+systems or applications. An IOSTS is a kind of automata model
+which is extended with two sets of variables, internal variable
+to store data, and parameters to enrich the actions. Transitions
+carry actions, guards, and assignments over variables. The action
+set can be divided into two subsets: one containing inputs
+beginning by $?$ to express actions expected by the system, and
+another containing outputs beginning by $!$ to express actions
+produced by the system. An IOSTS does not have states but
+locations.
+
+\begin{definition}[IOSTS]
+An IOSTS $\EuScript{S}$ is a tuple $<
+L,l0,V,V0,I,\Lambda,\rightarrow>$, where:
+
+\begin{itemize}
+\item $L$ is the finite set of locations, $l0$ the initial
+location,
+
+\item $V$ is the finite set of internal variables, $I$ is the
+finite set of parameters. We denote $D_v$ the domain in which a
+variable $v$ takes values. The assignment of values of a set of
+variables $Y \subseteq V \cup I$ is denoted by valuations where a
+valuation is a function $v: Y \rightarrow D$. $v_\emptyset$
+denotes the empty valuation. $D_Y$ stands for the valuation set
+over the variable set $Y$. The internal variables are initialised
+with the assignment $V0$ on $V$, which is assumed to be unique,
+
+\item $\Lambda$ is a finite set of symbolic actions $a(p)$, with
+$p = (p_1,\dots,p_k)$ a finite list of parameters in $I^k(k \in
+\mathbb{N})$. $p$ is assumed unique. $\Lambda= \Lambda^I  \cup
+\Lambda^O \cup \{!\delta \}$: $\Lambda^I$ represents the set of
+input actions, $\Lambda^O$ the set of output actions, and
+$\delta$ the quiescence,
+
+\item $\rightarrow$ is the finite transition set. A transition
+$(l_i,l_j,a(p),G,A)$, from the location $l_i \in L$ to $l_j \in
+L$, denoted $l_i \xrightarrow{a(p),G,A} l_j$ is labelled by: an
+action $a(p) \in \Lambda$, a guard  $G$ over $(p \cup V \cup T(p
+\cup V))$ which restricts the firing of the transition. $T(p \cup
+V)$ is a set of functions that return boolean values only (a.k.a.
+predicates) over $p \cup V$, an assignment function $A$ which
+updates internal variables. $A$ is on of the form $(x:=A_x)_{x\in
+V}$, where $A_x$ is an expression over $V \cup p \cup T(p \cup
+V)$.
+\end{itemize}
+\end{definition}
+
+\subsubsection{MbT principle}
+
+Executing a test case on a system yields a set of observations.
+Every observation represents a part of the \textit{implementation
+model} of the system. The set of all observations made with all
+possible test cases represents the complete implementation model
+of the system.
+
+\paragraph{Testing hypothesis} For every system there is a
+corresponding observational equivalent implementation model:
+
+\TODO{http://slides.williamdurand.fr/ouatist/\#/6/7}
