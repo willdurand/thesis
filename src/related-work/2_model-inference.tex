@@ -32,9 +32,7 @@ is that the model generation may lead to a state space explosion
 problem. Some works construct lightweight models to avoid this
 issue \cite{WPX13}, others yield extrapolated models by merging
 application's states that, unfortunately, express more or
-slightly different behaviors than those observed \cite{4023976}
-(issues such as this one are discussed in subsection
-\ref{sec:discussion:limitations}).
+slightly different behaviors than those observed \cite{4023976}.
 
 Model inference is employed for different purposes. One can infer
 model from log files in order to retrieve important information
@@ -95,7 +93,7 @@ to improve a model as depicted in Figure \ref{fig:active}.
 Moreover, by asking informative queries (e.g., close to the
 decision boundary), an active learner potentially requires much
 less examples than a passive learner that learns from data
-samples as we will see in subsection \ref{sec:passive}. In this
+samples as we will see in Section \ref{sec:passive}. In this
 paper, we focus on methods that ask queries to software systems,
 which we decided to extend by incorporating some crawling
 techniques originating from the automated Graphical User
@@ -103,12 +101,12 @@ Interface (GUI) testing field.
 
 Most of the existing active learning techniques have been
 initially conceived upon two concepts: the $\EuScript{L}^*$
-algorithm, presented in subsection \ref{sec:active-letoile}, and
-incremental learning, presented in subsection
+algorithm, presented in Section \ref{sec:active-letoile}, and
+incremental learning, presented in Section
 \ref{sec:active-increment}. However, as said above, some works
 use crawling techniques to infer models and can be categorised as
 active learning techniques too. We introduce some of them in
-subsection \ref{sec:active-crawling}.
+Section \ref{sec:active-crawling}.
 
 \subsubsection{$\EuScript{L}^*$-based techniques and related}
 \label{sec:active-letoile}
@@ -157,7 +155,7 @@ The work described in \cite{Alur:2005:SIS:1047659.1040314}
 generates behavioral interface specifications for Java classes by
 means of predicate abstraction and active learning. This is a
 white-box approach inspired by
-\cite{Whaley:2002:AEO:566171.566212} (see subsection
+\cite{Whaley:2002:AEO:566171.566212} (see Section
 \ref{sec:passive-white}) that, first, uses \textit{predicate
 abstraction} to generate an abstract version of the considered
 class. Afterwards, a minimal version (interface) of this
@@ -310,7 +308,7 @@ example, Meinke and Sindhu \cite{tap2011} introduced an
 incremental learning algorithm named \textit{Incremental Kripke
 Learning} (IKL) for Kripke structures modeling reactive systems.
 
-In the next subsection, we present some other works that infer
+In the next Section, we present some other works that infer
 models by interacting with software systems by exploring them.
 
 \subsubsection{Crawling techniques through Graphical User Interfaces}
@@ -332,7 +330,7 @@ applications (either desktop, web, or mobile) by exploring them
 (in other words, crawling them). Learning is achieved by
 stimulating the application and gathering all the events in a
 model as depicted in Figure \ref{fig:crawler}. While the
-techniques presented in the two previous subsections try to learn an
+techniques presented in the two previous Sections try to learn an
 exact model reflecting counterexamples, the works presented below
 don't always learn from counterexamples. However, they all crawl
 the applications in order to infer models.
@@ -399,7 +397,7 @@ novel Learning-Based Testing algorithm that avoids restarts and
 aggressively merges states in order to quickly prune the state
 space, so that it outperforms $\EuScript{L}^*$-based testing.
 
-In the following subsection, we present our second category of model
+In the following Section, we present our second category of model
 inference techniques, which don't interact with the software
 system to learn models but rather, infer models from execution
 traces.
@@ -424,14 +422,14 @@ and even documentation. The algorithms are designed to construct
 models based on this fixed set of positive (and possibly
 negative) examples only as shown in Figure \ref{fig:passive}.
 
-We cover Finite State Automaton inference in subsection
+We cover Finite State Automaton inference in Section
 \ref{sec:passive-fsa} since these works are prominent in passive
 learning model inference. Such techniques use behavioral
 equivalence to merge states in order to construct models.
 We then present techniques that use invariants to merge states in
-subsection \ref{sec:passive-spec}. Some white-box techniques used to
-infer models are presented in subsection \ref{sec:passive-white},
-and a few alternative works are introduced in subsection
+Section \ref{sec:passive-spec}. Some white-box techniques used to
+infer models are presented in Section \ref{sec:passive-white},
+and a few alternative works are introduced in Section
 \ref{sec:passive-others}.
 
 \subsubsection{FSA inference techniques}
@@ -508,14 +506,14 @@ which is extremly slow. The study also revealed that having more
 traces is important but not enough because these algorithms have
 difficulties to control over-generalization.
 
-The techniques presented in this subsection are focused on building
+The techniques presented in this Section are focused on building
 specifications modeled as Finite State Automata. However, the
 execution traces often provide a highly detailed but limited
 subset of the possibly infinite set of legal executions. This is
 a barrier for inferring exact models.
 That is why other techniques, such as state invariant methods for
 instance, have been employed to overcome this limitation. In the
-next subsection, we present some of these state invariant
+next Section, we present some of these state invariant
 techniques.
 
 
@@ -551,7 +549,7 @@ Krka et al. inferred object level behavioral models from
 dynamically observed executions, by using not only execution
 traces but also dynamically inferred invariants. That way, they
 proposed a better technique to infer FSA than those presented in
-subsection \ref{sec:passive-fsa}.
+Section \ref{sec:passive-fsa}.
 
 Yang et al. \cite{Yang:2006:PMT:1134285.1134325} created
 \textit{Perracotta}, an inference engine for temporal API rules
@@ -588,8 +586,8 @@ abstraction function that maps concrete states to abstract ones.
 By applying these abstraction functions to concrete input traces
 they are able to generate the output model.
 
-The works presented in this subsection are either grey- or black-box
-techniques. Next subsection introduces some passive inference
+The works presented in this Section are either grey- or black-box
+techniques. Next Section introduces some passive inference
 techniques that use a white-box approach.
 
 
@@ -608,7 +606,7 @@ dynamic instrumentation technique, and a static analyzis that
 infers pairs of methods that cannot be called consecutively,
 leading to a DFA with one state per method. A more general and
 formal solution to interface synthesis is given in
-\cite{Alur:2005:SIS:1047659.1040314} (and covered in subsection
+\cite{Alur:2005:SIS:1047659.1040314} (and covered in Section
 \ref{sec:active-letoile}).
 
 Salah et al. proposed \textit{Scenariographer}
@@ -626,7 +624,7 @@ possible behaviors in client software, and (ii) a summarization
 phase to filter out noise. Mined specifications are often too
 detailed here, and their solution does not scale well. The
 scaling problem is fundamental to all software analyzes and is
-discussed in subsection \ref{sec:discussion:limitations}.
+discussed in Section \ref{sec:discussion:limitations}.
 
 In \cite{Pradel:2009}, Pradel and Gross presented a scalable
 dynamic analyzis that infers extremely detailed specifications of
@@ -668,7 +666,7 @@ solved.
 Some other passive learning techniques rely on another set of
 knowledge to infer models, such as documentation for instance,
 and a few others leverage different techniques altogether to
-construct models. In this subsection, we present some of these
+construct models. In this Section, we present some of these
 works.
 
 Bertolino et al. presented \textit{StrawBerry} in
