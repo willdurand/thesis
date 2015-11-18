@@ -63,21 +63,14 @@ beginning of the model inference process. Indeed, learning
 algorithms but also crawlers enable the possibility to actively
 learn models by interacting with the system to model.
 
-\textit{Outline.} The paper is organized as follows. In the
-following subsection, we give an overview of prominent active
+In the following Section, we give an overview of prominent active
 learning techniques: introducing $\EuScript{L}^*$-based
-techniques in subsection \ref{sec:active-letoile}, incremental
-learning techniques in subsection \ref{sec:active-increment}, and
-crawling techniques in subsection \ref{sec:active-crawling}.
-Passive learning techniques are extensively described in subsection
+techniques, incremental learning techniques, and crawling
+techniques.
+Passive learning techniques are extensively described in Section
 \ref{sec:passive}, covering Finite State Automaton (FSA)
-inference techniques in subsection \ref{sec:passive-fsa},
-state invariant methods in subsection \ref{sec:passive-spec},
-white-box approaches in subsection \ref{sec:passive-white}, and we
-add a few alternative techniques in subsection
-\ref{sec:passive-others}. We discuss the current state of model
-inference and give perspectives in subsection \ref{sec:discussion},
-and we conclude in subsection \ref{sec:conclusion}.
+inference techniques, state invariant methods, white-box
+approaches, and we add a few alternative techniques.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
@@ -700,114 +693,3 @@ implementations match it.  Such specifications do not reflect the
 implementation behavior though. Furthermore, this method can be
 applied only if these API documentations are available in a
 readable format.
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
-\subsection{Discussion}
-\label{sec:discussion}
-
-Most of the active and passive learning techniques cited in this
-paper aim at inferring models in an automatic fashion. The main
-goal is to model how a software system behaves before acting on
-it. It is useful because it allows to understand the system, to
-perform analyzes on it, but also testing among all other
-possibilities.  However, there is still room for improvements.
-
-In subsection \ref{sec:discussion:limitations}, we highlight some
-issues we found studying many model inference techniques, along
-with some perspectives to tackle these limitations or that might
-improve the current state of model inference in subsection
-\ref{sec:discussion:perspectives}.
-
-
-\subsubsection{Limitations}
-\label{sec:discussion:limitations}
-
-Most of the model inference techniques construct models that are
-either under-approximate, i.e. not complete or accurate enough,
-or over-approximate, i.e. modeling more behaviors than those
-observed or different behaviors than what a software system can
-do. When models are used for testing, over-approximation results
-in the generation of infeasible test cases, i.e.  test cases that
-cannot be activated by any input data.  Under-approximation
-results in missing test cases, i.e. system behaviors that are not
-represented in the model are also never tested.
-
-For example, in subsection \ref{sec:passive-fsa}, we presented
-Finite State Automaton inference techniques. Such finite state
-machines are actually a generalization of the observed sequences,
-not their union. Such generalizations are usually unsound: models
-might contain paths that are impossible in the real application
-(over-approximation), or models might forget paths allowed in the
-real application (under-approximation). Tonella et al. discussed
-this fact in \cite{tonella2012finding} and proposed an approach
-to balance over-approximation and under-approximation of inferred
-models, by resorting to multi-objective optimization achieved by
-means of two searchbased algorithms: A multi-objective
-\textit{Genetic Algorithm} (GA) and the nondominated sorting
-genetic algorithm \textit{NSGA-II}
-\cite{Srinivas94multiobjectiveoptimization}. To the best of our
-knowledge, the main advantage of having over-approximate models
-is their reduced size, since over-approximation is often a
-consequence of an agressive merge of similar states. However, we
-demonstrated in
-\cite{DBLP:conf/soict/DurandS14,DBLP:conf/fm/DurandS15,DBLP:conf/debs/SalvaD15}
-that one could infer usable yet exact models.
-
-This problem of excessive size leads to another issue with model
-inference: inferred models are often (too) large to be
-efficiently used in practice. Because systems are often complex,
-there are a lot of events, states and data to model. The size of
-the models often impacts the build time, and might even increases
-the time needed to explore or leverage the models.
-Crawling techniques as in subsection \ref{sec:active-crawling}
-often hit the state space explosion problem because of the way
-they work, i.e. interacting with a system through its user
-interface. To overcome this problem, many works tried to reduce
-the scope of their models, leading to either under- or
-over-approximate models. It is worth mentioning that some works
-related to model checking also coped with this problem
-\cite{rafe2013survey}, e.g. using on-the-fly techniques, but it
-is out of the scope of this paper.
-
-Last but not least, many techniques are not able to scale when
-there are a lot of examples available, e.g., large trace sets in
-passive learning. Too few works take this problem into account
-while complexity and size of real world software systems
-increase.
-
-
-\subsubsection{Perspectives}
-\label{sec:discussion:perspectives}
-
-As mentioned in the previous subsection, the completeness and
-soundness of the inferred models are important when models are
-used in other software engineering steps, e.g. testing or
-enforcement. Even if some works
-\cite{DBLP:conf/soict/DurandS14,DBLP:conf/fm/DurandS15,DBLP:conf/debs/SalvaD15,tonella2012finding}
-proposed techniques to overcome these points, there is still room
-for improvements to infer both complete and sound models, but as
-software systems tend to be more and more complex, it will not be
-easy.
-
-However, constructing such models has a cost, at least in term of
-execution time (speed), and too few works tackled this point yet,
-leaving it as an implementation detail. Additionally, scalability
-seems not to be a priority (except for, e.g.,
-\cite{Yang:2006:PMT:1134285.1134325,Pradel:2009,DBLP:conf/debs/SalvaD15}),
-but there again, given how complex and large new software systems
-are, there is room for improvements. Several works combined
-different fields and obtained impressive results. Often, they had
-to combine (what seemed at first glance) heterogeneous techniques
-to cope with known limitations (potentially tied to Industry
-requirements), despite the fact that such techniques are
-engineering ones. We noted major improvements by considering
-practical use cases, and the model inference field needs more
-works bringing Industry needs and theory back.
-
-To finish, many techniques infer models of a software system
-based on its behaviors. When such models are then used for
-testing purpose (either validation or verification), which is
-often the case in this paper, one could challenge the veracity of
-these models. Even if they are sound and complete, they may model
-faults.
