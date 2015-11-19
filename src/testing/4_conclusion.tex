@@ -1,0 +1,20 @@
+\section{Conclusion}
+\label{sec:testing:conclusion}
+
+In this section, we present a fast offline passive testing
+framework combining different fields such as model inference,
+expert systems, and machine learning. Such a framework is an
+extension of previous works based on model inference, whose name
+is Autofunk.
+
+Given a large set of production events, our framework infers
+exact models whose traces are included in the initial trace set
+of a system under analysis.  Such models are then reused as
+specifications to perform offline passive testing, using a second
+set of traces recorded on a system under test.  Using two
+implementation relations, Autofunk is able to determine what has
+changed between the two systems. This is particularly useful for
+our industrial partner Michelin since potential regressions can
+be detected while deploying changes in production. Initial
+results are encouraging, and Michelin engineers see a real
+potential in this framework.

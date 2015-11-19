@@ -1,0 +1,157 @@
+\section{Introduction}
+\label{sec:testing:intro}
+
+Manual testing is, by far, the most popular technique for
+testing, but this technique is known to be error-prone as well.
+Additionally, production systems are usually composed of
+thousands of states (i.e. sets of conditions that exist at a
+given instant in time) and production events, which makes
+testing time consuming. Our industrial partner Michelin is a
+worldwide tire manufacturer that designs most of its factories,
+production systems, and software by itself. In a factory, there
+are different workshops for each step of the tire building
+process. At a workshop level, we observe a continuous stream of
+products from specific entry points (railroad switches) to a
+finite set of exit points, constituting production lines.
+Thousands of \emph{production events} are exchanged among the
+industrial devices of the same workshop every day, allowing some
+factories to build over 30,000 tires a day.
+
+In this context, we propose a testing framework for production
+systems that is composed of two parts: a model inference engine
+as described in Chapter \ref{sec:modelinf:prodsystems}, and a
+passive testing engine that is presented in this section.
+Both parts have to be fast and scalable to be used in practice.
+The main idea of our proposal is that, given a running production
+system, we extract knowledge and models by passively monitoring
+it. Such models describe the functional behaviours of the system,
+and may serve for different purposes, e.g., testing of a second
+production system. The latter can be a new system roughly
+comparable to the first one in terms of features, but it can also
+be an updated version of the first one. Indeed, upgrades might
+inadvertently introduce or create faults, and could lead to
+severe damages. Here, testing the updated system means detecting
+potential regressions before deploying changes in production.
+
+\TODO{talk about online}
+
+A \textit{passive tester} (a.k.a. observer) aims at checking
+whether a system under test conforms to an inferred model in
+offline mode. \textit{Offline testing} means that a set of
+traces has been collected while the system is running. Then, the
+tester gives verdicts.
+We collect the traces of the system under test by reusing some
+parts of the model inference engine, and we build a set of traces
+with the same level of abstraction as those considered for
+inferring models. Then, we use these traces to check if the
+system under test conforms to the inferred models.  Conformance
+is defined with two implementation relations, which express
+precisely what the system under test should do. The first
+relation corresponds to the trace preoder \cite{DNH84}, which is
+a well-known relation based upon trace inclusion, and heavily
+used with passive testing.  Nevertheless, our inferred models are
+partials, i.e.  they do not necessarily capture all the possible
+behaviours that should happen. That is why we propose a second
+implementation relation, less restrictive on the traces that
+should be observed from the system under test.
+
+In the next section, we describe a better solution to segment and
+filter the initial trace set given as input. Indeed, with the
+statistical analysis introduced in
+\crossref{sec:modelinf:prodsystems}{sec:modelinf:prodsystems:segmentation},
+we hit several problems, mainly because our algorithm was not
+stable, in other words the use of a configurable minimum limit
+was not accurate enough. In Section
+\ref{sec:testing:offpassive:normal}, we introduce a new step of
+the model inference method described in Chapter
+\ref{sec:modelinf:prodsystems} that is required to enable
+testing. Then, we present our offline passive testing technique
+on-top of this model inference method in Section
+\ref{sec:testing:offpassive:testing}. We present key results in
+Section \ref{sec:testing:offpassive:impl-exp}, and we conclude on
+this work in Section \ref{sec:testing:offpassive:conclusion}.
+
+\TODO{talk about online}
+
+\textbf{Publication.} This work has been published in the
+Proceedings of the 13th International Conference on Formal
+Methods and Models for Co-Design (MEMOCODE'15).
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\section{A better solution to trace segmentation and filtering}
+\label{sec:testing:offpassive:segmentation}
+
+In
+\crossref{sec:modelinf:prodsystems}{sec:modelinf:prodsystems:segmentation},
+we presented a statistical analysis to segment and filter the
+initial trace set used to infer models. However, this method was
+not stable, and we decided to rework it. We now rely on a machine
+learning technique to segment it into several subsets, one per
+entry point of the system $\mathit{Sua}$. We leverage this
+process to also remove incomplete traces, i.e. traces that do not
+express an execution starting from an entry point and ending to
+an exit point. These can be extracted by analysing the traces and
+the variable $point$, which captures the product physical
+location.
+
+In order to determine both entry and exit points of
+$\mathit{Sua}$, we rely on an outlier detection approach
+\cite{1695852}. An outlier is an observation which deviates so
+much from the other observations as to arouse suspicions that it
+was generated by a different mechanism. More precisely, we chose
+to use the \textit{k-means clustering} method, a machine learning
+algorithm, which is both fast and efficient, and does not need to
+be trained before being effectively used (that is called
+unsupervised learning, and it is well-known in the machine
+learning field). \textit{k-means clustering} aims to partition
+$n$ observations into $k$ clusters.  Here, observations are
+represented by the variable $point$ present in each trace of
+$Traces({Sua})$, which captures the product physical location,
+and $k=2$ as we want to group the outliers together, and leave
+the other points in another cluster. But, since we want to
+leverage the largest part of the initial trace set, we apply
+\textit{k-means clustering} several times until reaching 80\% of
+traces retained.
+
+Once the entry and exit points are found, we segment
+$Traces({Sua})$ and obtain a set $CTraces({Sua})=\{ST_1, \dots,
+ST_n\}$. Then, we apply the same generation and reduction steps
+as described in
+\crossref{sec:modelinf:prodsystems}{sec:modelinf:prodsystems:generation}
+and
+\crossref{sec:modelinf:prodsystems}{sec:modelinf:prodsystems:reduction}
+so that we obtain the reduced model $R(\EuScript{S}) =
+\{R(\EuScript{S}_1),\dots,R(\EuScript{S}_n)\}$.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\section{Extending inferred models with normalisation}
+\label{sec:testing:offpassive:normal}
+
+In order to perform testing, we reuse the reduced model
+$R(\EuScript{S}) = \{R(\EuScript{S}_1),\dots,R(\EuScript{S}_n)\}$
+inferred with Autofunk that we \textit{normalise} to get rid of
+some runtime-dependent information.  Indeed, both models
+$\EuScript{S}$ and $R(\EuScript{S})$ include parameters that are
+dependent to the products being manufactured.  That is a
+consequence of generating models that describe behaviours of a
+continuous stream of products which are strictly identified, i.e.
+for each action in a given sequence, we have the assignment $(pid
+= val)$ ($pid$ stands for product identifier).  Here, we
+normalise these models before using them for testing.  The
+resulting models are denoted with $\EuScript{S}^{N}$ and
+$R(\EuScript{S}^{N})$.
+
+We remove the assignments relative to product identifiers and
+timestamps. Furthermore, we label all the final locations with
+"Pass". We denote these locations as verdict locations and gather
+them in the set $Pass \subseteq L_{\EuScript{S_i}^{N}}$. Both
+$\EuScript{S}^{N}$ and $R(\EuScript{S}^{N})$ represent more
+generic models, i.e.  they express \textit{some possible
+behaviours that should happen}. These behaviours are represented
+by the traces $Traces_{Pass} (\EuScript{S}^{N})=\displaystyle
+\bigcup_{1 \leq i \leq n} Traces_{Pass}
+(\EuScript{S}_i^{N})=Traces_{Pass} (R(\EuScript{S}^{N}))$. We
+refer to these traces as \textit{pass traces}. We call the other
+traces \textit{possibly fail traces}.
