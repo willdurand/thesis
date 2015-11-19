@@ -121,6 +121,8 @@ black-box testing. One has access to the relevant internal parts
 of a SUT.
 \end{itemize}
 
+\subsubsection{Test selection}
+
 Because testing cannot guarantee the absence of faults, a
 challenge is to select subset of test cases from all possible
 test cases with a high chance of detecting most faults. A lot of
@@ -259,20 +261,22 @@ this thesis. We mainly work with behavior-oriented models that
 are finite automata since they are particularly suitable for
 modeling both web applications and production systems behaviors.
 
+\subsubsection{Model definitions}
+
 \paragraph{Symbolic Transition Systems}
 \label{sec:definitions:sts}
 
 The \textit{Symbolic Transition System} (STS) is known as a very
 general and powerful model for describing several aspects of
-event-based systems. The use of symbolic variables helps describe
-infinite state machines in a finite manner. This potentially
-infinite behaviour is represented by the semantics of a STS,
-given in terms of \textit{Labelled Transition System} (LTS). STS
-operations and transformations are often given with inference
-rules.
+event-based systems. The use of symbolic variables
+helps describe infinite state machines in a finite manner. This
+potentially infinite behaviour is represented by the semantics of
+a STS, given in terms of \textit{Labelled Transition System}
+(LTS). STS operations and transformations are often given with
+inference rules.
 
-We briefly give some definitions related to the STS model below,
-but we refer to \cite{FTW05} for a more detailed description.
+We give some definitions related to the STS model below, but we
+refer to \cite{FTW05} for a more detailed description.
 
 \begin{definition}[Variable assignment]
 We assume that there exist a domain of values denoted $D$ and a
