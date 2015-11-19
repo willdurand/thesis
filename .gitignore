@@ -13,5 +13,7 @@
 *.fdb_latexmk
 *.pdf
 *.loe
+*.mtc*
+*.maf
 README.html
 CHANGELOG.html
