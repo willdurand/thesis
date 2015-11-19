@@ -33,17 +33,17 @@ that aims to check whether these relations hold.
 Our industrial partner wishes to check whether every complete
 execution trace of $\mathit{Sut}$ matches a behaviour captured by
 $\EuScript{S}^{N}$. In this case, the test verdict must reflect a
-successful result. On the contrary, if an execution of $\mathit{Sut}$ is
-not captured by $\EuScript{S}^{N}$, one cannot conclude that
-$\mathit{Sut}$ is faulty because $\EuScript{S}^{N}$ is a partial model,
-and it does not necessarily includes all the correct
-behaviours. Below, we formalise theses verdict notions with two
-implementation relations. Such relations between models can only be written
-by assuming the following classical test assumption: the
-black-box system $\mathit{Sut}$ can be described by a model, here
-with a LTS as defined in
-\crossref{sec:definitions}{sec:definitions:sts}. We also denote
-this model with $\mathit{Sut}$.
+successful result. On the contrary, if an execution of
+$\mathit{Sut}$ is not captured by $\EuScript{S}^{N}$, one cannot
+conclude that $\mathit{Sut}$ is faulty because $\EuScript{S}^{N}$
+is a partial model, and it does not necessarily includes all the
+correct behaviours. Below, we formalise theses verdict notions
+with two implementation relations. Such relations between models
+can only be written by assuming the following classical test
+assumption: the black-box system $\mathit{Sut}$ can be described
+by a model, here with a LTS as defined in
+\crossref{sec:related:testing}{sec:definitions:lts}. We also
+denote this model with $\mathit{Sut}$.
 
 The first implementation relation, denoted with $\leq_{ct}$,
 refers to the trace preorder relation \cite{DNH84}. It aims at
@@ -247,7 +247,7 @@ simplification of guards:
 					\begin{matrix}
 					b=l0_{R}
 					\xRightarrow{(a_1(p_1),M_{[b]}[1,c_{[b]}])\dots (a_m(p_m),M_{[b]}[m,c_{[b]}]}_{\rightarrow_{R}}
-					l_{m}\\
+					l_{m},
 					(1 \leq c_{[b]} \leq k) \text{ in } V0_{R}
 					\end{matrix}
 				}
