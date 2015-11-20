@@ -344,7 +344,7 @@ set $Traces(Sua)$:
 We can now state that a STS model $\EuScript{S}$ is said exact
 iff. $Traces(\EuScript{S}) \subseteq Traces(Sua)$.
 
-\begin{algorithm}
+\begin{algorithm}[h]
 	\SetKwInOut{Input}{input}
 	\SetKwInOut{Output}{output}
 
@@ -352,6 +352,7 @@ iff. $Traces(\EuScript{S}) \subseteq Traces(Sua)$.
   \Output{$CTraces(Sua)=\{ST_1,...,ST_n\}$}
 
 \BlankLine
+BEGIN\;
 \emph{Step 1. $Traces(Sua)$ segmentation}
 
 \ForEach{$t=(a_1,\alpha_1)...(a_n,\alpha_n) \in Traces(Sua)$} {
@@ -380,6 +381,8 @@ $ST:=\{ST_1,...,ST_N\}$\;
 	}
 
     $CTraces(Sua) := ST$
+
+END\;
 
 \caption{Trace segmentation algorithm}
 \label{algo_traces}

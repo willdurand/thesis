@@ -1046,13 +1046,13 @@ addition of an orthogonal layer in the Models generator to
 describe any kind of exploration strategy by means of rules.
 
 The simplified Algorithm of the Strategy layer is given in
-Algorithm \ref{Exploration Strategy}. The latter applies the
+Algorithm \ref{exploration-strategy}. The latter applies the
 rules on any stored IOSTS $\EuScript{S}_i$. It emerges a
 location list $Loc$ that are marked with "explored" by the rules
 to avoid re-using them twice (line 4). Then, the algorithm goes
 back to the first generated IOSTS $\EuScript{S}_1$ in order to
 extract one complete and executable path $p$ ended by a location
-$l$ of $Loc$ (line 7). This step is sound since all the locations
+$l$ of $Loc$ (line 5). This step is sound since all the locations
 of $\EuScript{S}_i$ belong to the location set of
 $\EuScript{S}_1$ (Proposition \ref{prop:loc:inclu}). Such an
 IOSTS preamble is required by the Robot explorer for trying to
@@ -1078,7 +1078,7 @@ $L:=\emptyset$ List of explored locations of $\EuScript{S}_1$\;
 BEGIN\;
 \While{$L \neq L_{\EuScript{S}_1}$ and $L \neq L_{\EuScript{S}_i}$ }
 {
-1) Apply the rules on $\EuScript{S}_i$ and extract a  Location List $Loc$\;
+Apply the rules on $\EuScript{S}_i$ and extract a  Location List $Loc$\;
 Goback to $\EuScript{S}_1$\;
 
 \ForEach{$l \in Loc$}{
@@ -1093,8 +1093,8 @@ $List:= List \cup  \{p\}$\;
 }
 END\;
 
-\caption{Exploration Strategy}
- \label{Exploration Strategy}
+\caption{Exploration strategy}
+\label{exploration-strategy}
 \end{algorithm}
 
 The rules of the Strategy layer can encode different strategies.
