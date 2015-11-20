@@ -203,7 +203,7 @@ test $\mathit{Sut}$.
 \begin{figure}[ht]
 \includegraphics[width=0.85\linewidth]{figures/passive_autofunk.png}
 
-\caption{Autofunk's testing architecture}
+\caption{Autofunk's passive testing architecture}
 \label{fig:passive-autofunk}
 \end{figure}
 
@@ -211,12 +211,15 @@ Figure \ref{fig:passive-autofunk} depicts the architecture of our
 passive testing technique. In offline mode, a set of production
 events has been collected beforehand from $\mathit{Sut}$ in the
 same way as for $\mathit{Sua}$. These are grouped into traces to
-form the trace set $Traces({Sut})$. In online mode, traces of
-$\mathit{Sut}$ come on-the-fly. Such traces are then filtered as
+form the trace set $Traces({Sut})$, and then filtered as
 explained in Section \ref{sec:testing:segmentation} to obtain a
-set of complete traces denoted with $CTraces({Sut})$. Finally, we
-perform passive testing to check if $\mathit{Sut}$ conforms to
+set of complete traces denoted with $CTraces({Sut})$. In online
+mode, we don't have traces but rather filtered valued events of
+$\mathit{Sut}$ coming on-the-fly. Finally, we perform passive
+testing to check if $\mathit{Sut}$ conforms to
 $\EuScript{S}^{N}$.
+
+\TODO{figure? maybe 2?}
 
 Our industrial partner wishes to check whether every complete
 execution trace of $\mathit{Sut}$ matches a behaviour captured by
@@ -331,8 +334,14 @@ written with:
 	\label{impl21}
 	 Let $\EuScript{S}^{N}$ be an inferred model of $\mathit{Sua}$ and
 	 $\mathit{Sut}$ be the system under test.
-	We denote ${Sut} \leq_{mct} \EuScript{S}^{N} =_{def} \forall t=
-	a_1(\alpha_1) \dots a_m(\alpha_m) \in CTraces({Sut}), \forall \alpha_j(x)_{(1 \leq j \leq m)}, \exists \EuScript{S}_i^{N} \in \EuScript{S}^{N} \text{ and } t'\in Traces_{Pass}(\EuScript{S}_i^{N})$ such that $t'=a_1(\alpha_1')...a_m(\alpha_m')$ \text{ and } $\alpha_j'(x)=\alpha_j(x)$.
+
+     We denote ${Sut} \leq_{mct} \EuScript{S}^{N} =_{def} \forall
+     t= a_1(\alpha_1) \dots a_m(\alpha_m) \in CTraces({Sut}),
+     \forall \alpha_j(x)_{(1 \leq j \leq m)},\\ \exists
+     \EuScript{S}_i^{N} \in \EuScript{S}^{N} \text{ and } t'\in
+     Traces_{Pass}(\EuScript{S}_i^{N})$ such that
+     $t'=a_1(\alpha_1')...a_m(\alpha_m')$ \text{ and }
+     $\alpha_j'(x)=\alpha_j(x)$.
 \end{definition}
 
 In the following, we rewrite this relation in an equivalent but
@@ -444,7 +453,7 @@ simplification of guards:
 					l0_D
 					\xRightarrow{(a_1(p_1),M_b[1])\dots (a_m(p_m),M_b[m])}_{\rightarrow_D}
 					l_m\\
-					V0_D=V0_D \wedge M_b, M_b[j, 1]_{(1\leq j \leq m)} =\\
+					V_D=V0_D \wedge M_b, M_b[j, 1]_{(1\leq j \leq m)} =\\
 					 \displaystyle \bigwedge_{x \in p_j} ( Proj_x(M_{[b]}[j, 1]) \vee \dots \vee Proj_x(M_{[b]}[j, k]))
 
 
