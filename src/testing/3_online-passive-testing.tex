@@ -1,4 +1,24 @@
 \subsection{Online passive testing}
 \label{sec:testing:online}
 
-\TODO{...}
+Our online passive testing algorithm, which aims to check whether
+the two previous implementation relations hold, is given in
+Algorithm \ref{algo:check-online}. It takes the complete traces
+of $\mathit{Sut}$ and the models $R(\EuScript{S}^{N})$ and
+$D(\EuScript{S}^{N})$, with regards to Propositions
+\ref{rel:impl12} and \ref{rel:impl2}. It also returns the verdict
+"Pass$\leq_{ct}$" ("Pass$\leq_{mct}$") if the relation
+$\leq_{ct}$ is satisfied ($\leq_{mct}$ respectively).
+
+\begin{algorithm}[h]
+    \SetKwInOut{Input}{input}
+    \SetKwInOut{Output}{output}
+    \SetKwFunction{check}{check}
+
+    \Input{$R(\EuScript{S}^{N})=\{R(\EuScript{S}_1^{N}),...,R(\EuScript{S}_n^{N})\},
+    D(\EuScript{S}^{N})=\{D(\EuScript{S}_1^{N}),...,D(\EuScript{S}_n^{N})\}, CTraces({Sut})$}
+    \Output{Verdits or possibly fail trace sets $T_1, T_2$ }
+
+    \caption{Online passive testing algorithm}
+    \label{algo:check-online}
+\end{algorithm}

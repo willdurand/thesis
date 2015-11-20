@@ -3,12 +3,12 @@
 
 We conducted several experiments with real sets of production
 events, recorded in one of Michelin's factories at different
-periods of time. The results presented in this section are
-focused on our \textbf{offline} passive testing technique. We
-executed our implementation on a Linux (Debian) machine with 12
-Intel(R) Xeon(R) CPU X5660 @ 2.8GHz and 64GB RAM.
+periods of time. The results given in this section are focused on
+our \textbf{offline} passive testing technique. We executed our
+implementation on a Linux (Debian) machine with 12 Intel(R)
+Xeon(R) CPU X5660 @ 2.8GHz and 64GB RAM.
 
-We present, in Figure \ref{fig:results}, the results of several
+We present, in Figure \ref{fig:testing:offline:results}, the results of several
 experiments on the same production system with different trace
 sets, recorded at different periods of time. The first column
 shows the experiment number, columns 2 and 3 respectively give
@@ -18,7 +18,7 @@ two next columns show the percentage of pass traces w.r.t the
 relations $\leq_{ct}$ and $\leq_{mct}$. The last column indicates
 the execution time for the testing phase.
 
-\begin{table}
+\begin{table}[h]
 \begin{center}
 \begin{tabular}{| c | c | c | c | c | c |}
 \hline
@@ -34,8 +34,8 @@ $3$ & 53,996 & 25,047 & 98\% & 98\% & 10\\
 \end{tabular}
 \end{center}
 
-    \caption{Results of our passive testing method based on a same specification}
-    \label{fig:results}
+    \caption{Results of our offline passive testing method based on a same specification}
+    \label{fig:testing:offline:results}
 \end{table}
 
 In Experiment $1$, we decided to use the same production events
