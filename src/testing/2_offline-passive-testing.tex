@@ -4,7 +4,7 @@
 Our offline passive testing algorithm, which aims to check
 whether the two previous implementation relations hold, is given
 in Algorithm \ref{algo:check}. It takes the complete traces of
-$\mathit{Sut}$ and the models $R(\EuScript{S}^{N})$ and
+$\mathit{Sut}$, and the models $R(\EuScript{S}^{N})$ and
 $D(\EuScript{S}^{N})$, with regards to Propositions
 \ref{rel:impl12} and \ref{rel:impl2}. It returns the verdict
 "Pass$\leq_{ct}$" ("Pass$\leq_{mct}$") if the relation
@@ -18,23 +18,6 @@ find a matrix column  $M=M_{[b]}[*,i]$ such that every variable
 assignment $\alpha_j$ satisfies the guard $M[j]$. If such a
 column of guards exists, the function returns True, and False
 otherwise.
-
-Algorithm \ref{algo:check} covers every trace $t$ of
-$CTraces({Sut})$ and tries to find a STS $R(\EuScript{S}_i^{N})$
-such that $t$ is also a trace of $R(\EuScript{S}_i^{N})$ with
-$check(t, R(\EuScript{S}_i^{N}))$.  If no model
-$R(\EuScript{S}_i^{N})$ has been found, the trace $t$ is placed
-into the set $T_1$. $T_1$ gathers the possibly fail traces
-w.r.t. $\leq_{ct}$. Thereafter, the algorithm performs the same
-step but on the STS $D(\EuScript{S}^{N})$. One more time, if no
-model $D(\EuScript{S}_i^{N})$ has been found, the trace $t$ is placed
-into the set $T_2$.  The latter gathers the possibly fail traces,
-w.r.t. the relation $\leq_{mct}$.
-
-Finally, if $T_1$ is empty, the verdict "Pass$\leq_{ct}$" is
-returned, which means that the first implementation relation holds.
-Otherwise, $T_1$ is provided. If $T_2$ is empty, the verdict
-"Pass$\leq_{mct}$" is returned, or $T_2$ in the other case.
 
 \begin{algorithm}[h]
     \SetKwInOut{Input}{input}
@@ -109,6 +92,23 @@ $T_1 = T_2 = \emptyset$\;
     \caption{Offline passive testing algorithm}
     \label{algo:check}
 \end{algorithm}
+
+Algorithm \ref{algo:check} covers every trace $t$ of
+$CTraces({Sut})$ and tries to find a STS $R(\EuScript{S}_i^{N})$
+such that $t$ is also a trace of $R(\EuScript{S}_i^{N})$ with
+$check(t, R(\EuScript{S}_i^{N}))$.  If no model
+$R(\EuScript{S}_i^{N})$ has been found, the trace $t$ is placed
+into the set $T_1$. $T_1$ gathers the possibly fail traces
+w.r.t. $\leq_{ct}$. Thereafter, the algorithm performs the same
+step but on the STS $D(\EuScript{S}^{N})$. One more time, if no
+model $D(\EuScript{S}_i^{N})$ has been found, the trace $t$ is placed
+into the set $T_2$.  The latter gathers the possibly fail traces,
+w.r.t. the relation $\leq_{mct}$.
+
+Finally, if $T_1$ is empty, the verdict "Pass$\leq_{ct}$" is
+returned, which means that the first implementation relation holds.
+Otherwise, $T_1$ is provided. If $T_2$ is empty, the verdict
+"Pass$\leq_{mct}$" is returned, or $T_2$ in the other case.
 
 When one of the implementation relations does not hold, this
 algorithm offers the advantage to provide the possibly fail

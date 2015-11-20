@@ -380,7 +380,7 @@ creates state flow graphs of iOS applications in
 
 Yang et al. \cite{WPX13} presented a grey-box testing method for
 Android applications whose originality lies in the static
-analyzis of the code to only infer the events that can be applied
+analysis of the code to only infer the events that can be applied
 to the GUI later. Then, a classical crawling technique is
 employed to derive a lightweight models (simple trees). The
 exploration can be directed either in breadth-first order or in
@@ -483,9 +483,9 @@ considered too short to be relevant). Then, kBehavior extends the
 automaton with the addition of new branches that suitably connect
 the identified sub-automata, producing a new version of the
 automaton that accepts the entire input trace. They successfully
-applied this algorithm to automatically analyze log files and
+applied this algorithm to automatically analyse log files and
 retrieved important information to identify failure causes
-\cite{4700316}. They also automatically analyzed logs obtained
+\cite{4700316}. They also automatically analysed logs obtained
 from workloads to highlight useful information that can relate
 the failure to its cause \cite{cotroneo2007investigation}.  Both
 works describe the \textit{kLFA} technique that generates an FSA
@@ -602,7 +602,7 @@ interact with the system by querying it.
 Whaley et al. proposed using multiple FSM submodels to model the
 interface of a class in \cite{Whaley:2002:AEO:566171.566212}. Two
 techniques are given to automatically construct such models: a
-dynamic instrumentation technique, and a static analyzis that
+dynamic instrumentation technique, and a static analysis that
 infers pairs of methods that cannot be called consecutively,
 leading to a DFA with one state per method. A more general and
 formal solution to interface synthesis is given in
@@ -617,32 +617,32 @@ each group comprises a set of similar method invocation sequences
 that represent a usage scenario.
 
 Later, Shoham et al. introduced an approach to mine temporal API
-specifications based on static analyzis in
+specifications based on static analysis in
 \cite{Shoham:2007:SSM:1273463.1273487}. They proposed a two-step
 approach: (i) an abstract-trace collection to collect sets of
 possible behaviors in client software, and (ii) a summarization
 phase to filter out noise. Mined specifications are often too
 detailed here, and their solution does not scale well. The
-scaling problem is fundamental to all software analyzes and is
+scaling problem is fundamental to all software analyses and is
 discussed in Section \ref{sec:discussion:limitations}.
 
 In \cite{Pradel:2009}, Pradel and Gross presented a scalable
-dynamic analyzis that infers extremely detailed specifications of
+dynamic analysis that infers extremely detailed specifications of
 correct method call sequences on multiple related objects. Their
 approach preprocesses method traces to identify small sets of
 related objects (object collaborations) and method calls which
-can be analyzed separately. Then, they derive temporal
+can be analysed separately. Then, they derive temporal
 specifications. This work has been extended in
 \cite{Dallmeier_generatingtest} by means of active testing.
 
 In \cite{Wasylkowski07detectingobject}, Wasylkowski et al.
-proposed \textit{JADET}, a Java code analyzer to infer sequences
+proposed \textit{JADET}, a Java code analyser to infer sequences
 of method calls. These sequences are then used to produce object
 usage patterns that serve to detect object usage violations in
 the code. This is similar to
 \cite{Wasylkowski_miningoperational}, which introduced
 \textit{OP-Miner}, a tool that learns and checks operational
-preconditions of methods by static software analyzis.
+preconditions of methods by static software analysis.
 
 The methods described in \cite{concolicandroid12,5416728} rely
 upon concolic testing to explore symbolic execution paths of the
