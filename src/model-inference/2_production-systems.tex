@@ -137,8 +137,8 @@ to design our framework:
     be passively collected. Such systems are compound of
     production lines fragmented into several devices and sensors.
     Hence, a production system can have several entry and exit
-    points. In this paper, we denote such a system with $Sua$
-    (System under analysis),
+    points. In this paper, we denote such a system with $\mathit{Sua}$
+    (system under analysis),
 
     \item Production events: an event of the form $a(\alpha)$
     must include a distinctive label $a$ along with a parameter
@@ -193,10 +193,10 @@ domains in such a way that each model modification can be
 expressed and implemented with a rule. As a consequence, the data
 collections handled by Autofunk are always expressed with
 knowledge bases (Events, Actions, Traces, STS, etc.) on which
-rules are applied to infer models. Given a system $Sua$ and a set
+rules are applied to infer models. Given a system $\mathit{Sua}$ and a set
 of production events, Autofunk builds exact models, i.e. the
 traces of a model $\EuScript{S}$ are included in the traces of
-$Sua$.
+$\mathit{Sua}$.
 
 To explain how Autofunk works, we consider a case study based
 upon the example of Figure \ref{fig:rawdatum}. It depicts
@@ -238,7 +238,7 @@ updating the first module of Autofunk.
 \label{part3:collecting}
 
 Autofunk takes production events as input from a system under
-analysis $Sua$. To avoid disrupting the (running) system $Sua$,
+analysis $\mathit{Sua}$. To avoid disrupting the (running) system $\mathit{Sua}$,
 we do not instrument the industrial equipments composing the
 whole system. Everything is done offline with a logging system or
 with monitoring. We start by formatting these events to obtain a
@@ -332,7 +332,7 @@ each valued event, and timestamps. We call the resulting trace
 set $Traces(Sua)$:
 
 \begin{definition}[$Traces(Sua)$]
-    Given a system under analysis $Sua$, $Traces(Sua)$ denotes
+    Given a system under analysis $\mathit{Sua}$, $Traces(Sua)$ denotes
     its formatted trace set. $Traces(Sua)$ includes traces of the
     form $(a_1,\alpha_1) \dots (a_n,\alpha_n)$ such that
     $(a_i,\alpha_i)_{(1 \leq i \leq n)}$ are (ordered) valued
@@ -410,14 +410,14 @@ Traces({Sua})$.
 
 We chose to split $Traces(Sua)$ constructed in the previous step
 into subsets $ST_i$, one for each entry point of the system under
-analysis $Sua$. Later, every trace set $ST_i$ shall give birth to
+analysis $\mathit{Sua}$. Later, every trace set $ST_i$ shall give birth to
 one model, describing all possible behaviors starting from its
 corresponding entry point.
 
 This module performs two steps which are summarised in Algorithm
 \ref{algo_traces}. It starts by splitting $Traces(Sua)$ into
 several trace sets $ST_i$, one for each entry point of the system
-$Sua$, and then removes incomplete traces. Since we want a
+$\mathit{Sua}$, and then removes incomplete traces. Since we want a
 framework as flexible as possible, we chose to perform a
 statistical analysis on $Traces(Sua)$ aiming at automatically
 detecting the entry and exit points.
@@ -427,7 +427,7 @@ points of the systems.
 This analysis is performed on the assignments $(point:=val)$
 found in the first and last valued events of the traces of
 $Traces(Sua)$ since $point$ captures the product physical
-location and especially the entry and exit points of $Sua$.
+location and especially the entry and exit points of $\mathit{Sua}$.
 We obtain two ratios $Rinit(point:=val)$ and
 $Rfinal(point:=val)$.  Based on these ratios, one can deduce the
 entry point set $POINT_{init}$ and the exit point set
@@ -445,7 +445,7 @@ set $ST_i$ such that a trace of $ST_i$ has a first valued event
 including the assignment $\alpha_i$, and ends with a valued event
 including an assignment $(point:=val2)$ in $POINT_{final}$. We
 obtain the set $CTrace(Sua)=\{ST_1,...,ST_N\}$ with $N$ the
-number of entry points of the system $Sua$.
+number of entry points of the system $\mathit{Sua}$.
 
 In our straightforward example, we obtain one trace set
 $ST_1=Traces(Sua)$.
@@ -491,7 +491,7 @@ assignment. Then, new states are injected after each event.
 $Runs_i$ is formally given by the following definition:
 
 \begin{definition}[Structured runs]
-    Let $ST_i$ be a complete trace set obtained from $Sua$. We
+    Let $ST_i$ be a complete trace set obtained from $\mathit{Sua}$. We
 denote $Runs_i$ the set of runs derived from $ST_i$ with the
 following inference rule:
   \begin{center}
@@ -504,7 +504,7 @@ The above definition preserves trace inclusion between $Runs_i$
 and $Traces(Sua)$, and we can deduce the following proposition:
 
 \begin{proposition}
-Let $ST_i$ be a trace set obtained from $Sua$. We have
+Let $ST_i$ be a trace set obtained from $\mathit{Sua}$. We have
 $Traces(Runs_i) \subseteq Traces(Sua)$.
 \end{proposition}
 
@@ -572,7 +572,7 @@ between an inferred STS and $Traces(Sua)$ is captured by the
 following proposition:
 
 \begin{proposition}
-  Let $Sua$ be a system under analysis and $Traces(Sua)$ be its
+  Let $\mathit{Sua}$ be a system under analysis and $Traces(Sua)$ be its
   trace set. $\EuScript{S}_i$ is an inferred STS from
   $Traces(Sua)$.
   We have $Traces(\EuScript{S}_i) = CTraces(Sua) \subseteq Traces(Sua)$.
@@ -758,7 +758,7 @@ the initial behaviors described by the STS $\EuScript{S}_i$.
 This is captured with the following proposition:
 
 \begin{proposition}
-  Let $Sua$ be a system under analysis and $Traces(Sua)$ be its traces
+  Let $\mathit{Sua}$ be a system under analysis and $Traces(Sua)$ be its traces
   set. $R(\EuScript{S}_i)$ is a STS derived from $Traces(Sua)$.
   We have $Traces(R(\EuScript{S}_i)) = CTraces(Sua) \subseteq Traces(Sua)$.
 \end{proposition}
