@@ -279,13 +279,13 @@ We give some definitions related to the STS model below, but we
 refer to \cite{FTW05} for a more detailed description.
 
 \begin{definition}[Variable assignment]
-We assume that there exist a domain of values denoted $D$ and a
-variable set $X$ taking values in $D$. The assignment of
-variables in $Y \subseteq X$ to elements of $D$ is denoted with a
-mapping $\alpha: Y \rightarrow D$. $\alpha(x)$ denotes the
-assignment of the variable $x$ to a value in $D$.
+We assume that there exist a domain of values denoted by $D$ and
+a variable set $X$ taking values in $D$. The assignment of
+variables in $Y \subseteq X$ to elements of $D$ is denoted by
+$\alpha: Y \rightarrow D$. $\alpha(x)$ denotes the assignment of
+the variable $x$ to a value in $D$.
 
-We denote $D_Y$ the assignment set over $Y$. We also denote
+We denote by $D_Y$ the assignment set over $Y$. We also denote by
 $id_Y$ the identity assignment over $Y$. Finally, $v_\emptyset$
 is the empty assignment.
 \end{definition}
@@ -313,7 +313,7 @@ is the empty assignment.
         finite set of symbolic transitions. A symbolic transition
         $t = (l_i,l_j,a(p),G,\\A)$,
         from the location $l_i \in L$ to $l_j \in L$, also
-        denoted $l_i \xrightarrow{a(p),G,A} l_j$, is labelled by:
+        denoted by $l_i \xrightarrow{a(p),G,A} l_j$, is labelled by:
 
 		\begin{itemize}
             \item an action $a(p) \in \Lambda$,
@@ -332,14 +332,14 @@ is the empty assignment.
 	\label{def:sts}
 \end{definition}
 
-We also denote $Proj_{x}(G)$ the projection of the guard $G$ over
+We also denote by $Proj_{x}(G)$ the projection of the guard $G$ over
 the variable $x \in I \cup V$, which extracts the equality
 $(x==val)$ from $G$. For example, given the guard $G_1 = [nsys==1
 \wedge nsec==8 \wedge point==1 \wedge pid==1]$, $Proj_{nsys}(G_1)
 = (nsys==1)$.
 
 For readability purpose, if $A$ is the identity function $id_V$,
-we denote a transition with $l_i \xrightarrow{a(p),G} l_j$. We
+we denote a transition by $l_i \xrightarrow{a(p),G} l_j$. We
 also use the generalised transition relation $\Rightarrow$ to
 represent STS paths: $l \xRightarrow{(a_1,G_1,A_1)\dots
 (a_n,G_n,A_n)} l' =_{def} \exists l_0\dots l_n, l=l_0
@@ -438,7 +438,7 @@ $\delta$ the quiescence,
 
 \item $\rightarrow$ is the finite transition set. A transition
 $(l_i,l_j,a(p),G,A)$, from the location $l_i \in L$ to $l_j \in
-L$, denoted $l_i \xrightarrow{a(p),G,A} l_j$ is labelled by: an
+L$, denoted by $l_i \xrightarrow{a(p),G,A} l_j$ is labelled by: an
 action $a(p) \in \Lambda$, a guard  $G$ over $(p \cup V \cup T(p
 \cup V))$ which restricts the firing of the transition. $T(p \cup
 V)$ is a set of functions that return boolean values only (a.k.a.

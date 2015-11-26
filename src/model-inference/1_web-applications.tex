@@ -5,7 +5,13 @@ Our target has always been to be able to construct models of
 (legacy) production systems in an automated fashion. But, before
 tackling the model inference of production systems, we chose to
 validate our initial ideas and concepts by applying them on web
-applications. That is the purpose of this chapter.\\
+applications. Given a black-box approach, web applications are
+often smaller and less complex than production systems: no
+physical devices involved, a well-known client-server
+architecture, and a well-defined protocol to exchange
+information. The purpose of this chapter is to present the
+premises of our work on model inference (of production systems)
+applied on web applications.\\
 
 \minitoc
 
@@ -178,7 +184,7 @@ make sense against the current application. This step is done by
 the first layer whose role is to format the received HTTP traces
 into sequences of valued actions and to delete those considered
 as unnecessary. The rules of this layer depends on the nature of
-the input traces. The resulting structured trace set, denoted
+the input traces. The resulting structured trace set, denoted by
 $ST$, is then given to the next layer. This process is
 incrementally done, i.e. every time new traces are given to the
 Models generator, these are formatted and filtered before being
@@ -308,7 +314,7 @@ values extracted from $req_i$ and $resp_i$.
 \end{itemize}
 
 The resulting structured HTTP trace set derived from the raw HTTP
-traces is denoted $ST$.
+traces is denoted by $ST$.
 \end{definition}
 
 If we take back the HTTP messages given in Figure
@@ -405,7 +411,7 @@ transition is executed, the internal variables are assigned with
 $v'$ derived from the assignment $A(v \cup \theta)$.
 Our IOSTS transformation relies upon this IOLTS semantics
 transformation that we have reversed.  In order to generate the
-first IOSTS denoted $\EuScript{S}_1$, the associated runs are
+first IOSTS denoted by $\EuScript{S}_1$, the associated runs are
 first computed from the structured traces by injecting states
 between valued actions. These steps are detailed in the
 sequel.
@@ -568,7 +574,7 @@ applying a bisimulation minimisation technique which still
 preserves the functional behaviors expressed in the original
 model.  Intuitively, this minimisation constructs the state sets
 (blocks) that are bisimilar equivalent. Two states are said
-bisimilar equivalent, denoted $q \sim q'$ iff they simulate each
+bisimilar equivalent, denoted by $q \sim q'$ iff they simulate each
 other and go to states from where they can simulate each other
 again. Due to lack of room, we only refer to the bisimulation
 minimisation algorithm of \cite{Fernandez89animplementation}.
