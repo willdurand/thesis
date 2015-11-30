@@ -44,6 +44,8 @@ an expected behavior, and an expected output. We call
 or \textit{failed}. Those two words are known as
 \textit{verdicts}.
 
+\TODO{informel}
+
 In the following section, we introduce the software testing
 realm. We focus on Model-based Testing, presented in Section
 \ref{sec:related:testing:mbt} along with some definitions used
@@ -58,6 +60,8 @@ in the rest of this thesis.
 
     \caption{Sorts of testing}
 \end{figure}
+
+\TODO{PO/PCO ? ISO...}
 
 Nowadays, software testing, if not always applied, is well-known
 in the Industry. It is considered a good practice and many
@@ -207,6 +211,8 @@ evaluating the results.
 \subsubsection{What is a model?}
 \label{sec:related:testing:model}
 
+\TODO{test oracle => tester}
+
 Generally speaking, a model is a representation of a thing that
 allows for investigation of its properties, and most of the time,
 a model hides the complexity of the item it represents. In the
@@ -252,6 +258,8 @@ annotation languages exist, such as the Java Modeling Language
 \cite{Enderlin:2011:PSL:2075545.2075551}.
 \end{itemize}
 
+\TODO{others: DFA, FSM, EFSM, TFSM, timed automata}
+
 In \cite{Sommerville:1997:REG:549198}, Sommerville and Sawyer
 give some guidelines for choosing a model for software
 requirements. The choice of a model depends on many factors, such
@@ -262,6 +270,11 @@ are finite automata since they are particularly suitable for
 modeling both web applications and production systems behaviors.
 
 \subsubsection{Model definitions}
+
+\paragraph{Labelled Transition Systems}
+\label{sec:definitions:lts}
+
+\TODO{...}
 
 \paragraph{Symbolic Transition Systems}
 \label{sec:definitions:sts}
@@ -346,8 +359,8 @@ represent STS paths: $l \xRightarrow{(a_1,G_1,A_1)\dots
 \xrightarrow{a_1,G_1,A_1} l_1\dots
 l_{n-1}\xrightarrow{a_n,G_n,A_n}l_n=l'$.
 
-\paragraph{Labelled Transition Systems}
-\label{sec:definitions:lts}
+\paragraph{Labelled Transition System semantics}
+\label{sec:definitions:lts-semantics}
 
 A STS is associated with a Labelled Transition System (LTS) to
 formulate its semantics. Intuitively, a LTS semantics corresponds
@@ -535,3 +548,103 @@ communicates with a \textit{tester}.
 To be able to decide about the success of each, a
 \textit{verdict} (most of the time, $pass$ or $fail$) is attached
 to each state of each test case.
+
+
+\TODO{passive testing}
+
+Several works, dealing with passive testing of protocols or
+components, have been proposed recently. For all of these, the
+tester is made up of a module, located in the implementation
+environment, which collects trace sets. These works can be
+grouped in the following categories:
+
+• Invariant satisfiability [CMdO09, AMNn12]: invariants represent
+properties always true. These are constructed by hands from the
+specification and are later checked on the collected traces.
+Similarly to runtime verification [LS09], this approach allows
+testing complex properties on implementations. It gave birth to
+several works in the literature. For instance, the passive
+testing method, presented in [CMdO09], aims to test the
+satisfiability of invariants on Mobile ad-hoc network routing
+protocols. Different steps are required: definition of invariants
+from the specification, extraction of execution traces with
+sniffers, verification of the invariants on the trace set. Other
+works focus on component-based system testing: in this case,
+passive methods are usually used to check conformance or
+security. For instance, the TIP tool [MMC+10] performs an
+automated analysis of the captured trace sets to determine if a
+given set of timed extended invariants are satisfied. As in
+[CMdO09], invariants are constructed from the specification and
+traces are collected with network sniffers. Cavalli et al.
+propose an approach for testing the security of Web service
+compositions in [CBML09]. Security rules are here modelled with
+the Nomad language which expresses authorisations or prohibitions
+by means of deontic and temporal logics. Preliminary, a rule set
+is manually constructed from a specification. Traces of the
+implementation are extracted with modules which are placed at
+each workflow engine layer which executes Web services. Then, the
+method checks, with the collected traces, that the implementation
+does not contradict security rules. César et al. present a
+methodology to perform passive testing of timed systems in
+[AMNn12]. The paper gives two algorithms to decide the
+correctness of proposed invariants with respect to a given
+specification and algorithms to check the correctness of a log,
+recorded from the implementation under test, with respect to an
+invariant.
+
+• Forward checking [MA00, LCH+06]: implementation reactions are
+given on the fly to an algorithm which detects incorrect
+behaviours by covering the specification transitions with these
+reactions. In this field, Lee et al. propose a passive testing
+method dedicated to wired protocols [LCH+06]. Protocols are
+modelled with Event- driven Extended Finite State Machines
+(EEFSM), composed of variables. Several algorithms on the EEFSM
+model and their applications to the OSPF protocol and TCP state
+machines are presented. Algorithms check whether partial traces
+(not beginning from the initial implementation state), composed
+of actions and parameters, meet a given symbolic specification on
+the fly. The analysis of the symbolic specification is performed
+by means of configurations. A configuration represents a tuple
+gathering the current state label and a set of assignments and
+guards modelling the variable state. As described in the
+experimentation part, reactions are extracted by means of
+sniffers,
+
+• Backward checking [ACC+04]: this approach processes a partial
+trace backward to narrow down the possible specifications. The
+algorithm performs two steps. It first follows a given trace
+backward, from the current configuration to a set of starting
+ones, according to the specification. With this step, the
+algorithm finds the possible starting configurations of the
+trace, which lead to the current configuration. Then, it analyses
+the past of this set of starting configurations, also in a
+backward manner, seeking for configurations in which the
+variables are determined. When such configurations are reached, a
+decision is taken on the validity of the studied paths (traces
+are completed). Such an approach is usually applied as a
+complement to forward checking to detect more errors.
+
+The passive testing methods proposed in the literature, and
+particularly the previous ones, rely on observers (usually a kind
+of sniffer-based tool) as central points to collect all the
+implementation reactions (messages, packets, etc.). Observers
+have to be installed in the implementation environment without
+any deeper concern about the feasibility of this deployment
+strategy. The work proposed by Benharref et al. [BDSG09]
+summaries several observer-based test architectures for Web
+services: a classical mono-observer architecture is considered
+for basic Web Services. For composite services, a network of
+observers is said required to collect information on interactions
+between a client, composite Web Service, and its basic Web
+Services. But here again, observers have to be located inside the
+same environment as the implementation with both architectures.
+As stated previously, this prerequisite condition cannot always
+be satisfied with any implementation environment. For instance,
+installing a sniffer-based tool in a Cloud platform is not
+possible since applications are geographically deployed in a
+dynamic manner and since the access and the modification of Cloud
+layers are not authorised. In [CBML09], the originality of the
+proposed test environment concerns the modification of workflow
+engines to collect traces. Even though this solution sounds
+interesting, it also requires authorisations (this is never
+granted in Cloud architectures).
