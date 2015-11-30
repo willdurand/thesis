@@ -102,10 +102,12 @@ stream of products from specific entry points to a finite set of
 exit points, i.e. where products go to reach the next step of the
 manufacturing process, and disappear of the workshop frame in the
 meantime. Depending on the workshops, products can stay in this
-frame for days up to several weeks.  Millions of \emph{production
-events} are exchanged among the industrial devices of the same
-workshop every day, allowing some factories to build over 30,000
-tires a day.
+frame for days up to several weeks. Indeed, a workshop may
+contain storage areas where products can stay for a while,
+depending on the production campaigns or needs for instance.
+Millions of \emph{production events} are exchanged among the
+industrial devices of the same workshop every day, allowing some
+factories to build over 30,000 tires a day.
 
 \TODO{figure?}
 \TODO{entry/exit points}
@@ -936,13 +938,16 @@ If we take back our example, the actions of the STS of Figure
 \textit{17021} to more intelligible ones. The third rule of
 Figure \ref{rule:aggregate-tr} aggregates the two transitions
 into a unique transition indicating the movement of a product in
-its production line. Here, $Transition$ are facts modelling STS
-transitions as seen in Chapter \ref{sec:modelinf:webapps}. From 5
-initial production events that are not self-explanatory, we
-generate a simpler STS constituted of one transition, clearly
+its production line. $Transition$ are facts modelling STS
+transitions as seen in Chapter \ref{sec:modelinf:webapps}. We
+need a variable $\$lfinal$ that retains the final location of the
+first transition $\$t1$, so that we can reuse it in the condition
+of the second transition $\$t2$. The final location of the first
+transition must be the initial location of the second transition
+($Linit == \$lfinal$) to perform the aggregation.
+From 5 initial production events that are not self-explanatory,
+we generate a simpler STS constituted of one transition, clearly
 expressing a part of the functioning of the system.
-
-\TODO{explain rule}
 
 % By writing 20 rules to enrich the meaning of the actions for our
 % case study with Michelin, we were able to generate a model that
@@ -962,7 +967,65 @@ evaluation on real production systems.
 \subsection{Implementation}
 \label{sec:impl-exp-collect}
 
-\TODO{fix figure}
+Our framework Autofunk is developed in Java and leverages Drools.
+In our industrial context, we have several bases of facts used
+throughout the different Autofunk modules, represented as Java
+objects such as: Events, Trace sets $ST_i$, Runs, Transitions,
+and STSs. We chose to target performance and simplicity while
+implementing Autofunk. That is why most of the steps are
+implemented with parallel algorithms (except the production event
+parsing). Figure \ref{} shows the initial setup of Autofunk. We
+have sets of log files to parse coming from Michelin's logging
+system. Autofunk reads these files, and transforms them into
+traces, that are then used to build models.
+
+\TODO{add figure}
+
+The input trace collection is constructed with a classical
+parser, which returns $Event$ Java objects. By now, we are not
+able to parallelise this part because of an issue we faced with
+Michelin's logging system. The resulting drawback is that the
+time to parse traces is longer than expected and heavily depends
+on the size of data to parse. The $Event$ base is then filtered
+with Drools inference rules as presented in Section
+\ref{part3:collecting}.  Then, we call a straightforward
+algorithm for reconstructing traces: it iterates over the $Event$
+base and creates a set for each assignment of the identifier
+$pid$. These sets are sorted to construct traces given as $Trace$
+Java objects. These objects correspond to $Traces(Sua)$. The
+generation of the trace subsets $ST= \{ST_1,...,ST_N\}$ and of
+the first STSs are done with Drools inference rules applied in
+parallel.
+
+The STS reduction, and specifically the generation
+of STS branches equivalence classes, has been implemented with a
+specific algorithm for better performance. Indeed, comparing
+every action in STS branches in order to aggregate them is time
+consuming.  Given a STS $\EuScript{S}$, this algorithm generates
+a signature for each branch $b$, i.e. a hash (SHA1 algorithm) of
+the concatenation of the signatures of the actions of $b$. The
+branches which have the same signature are gathered together and
+establish branch equivalence classes (as described in Section
+\ref{sec:modelinf:prodsystems:reduction}). Implementing
+equivalence classes using hashes allows to quickly reduce STS of
+any size, especially because this technique scales well.
+Thereafter, the reduced $R(\EuScript{S})$ is constructed thanks
+to the inference rule given in Section
+\ref{sec:modelinf:prodsystems:reduction}.
+
+At the time of writing, we are working on the architecture
+depicted in Figure \ref{fig:autofunk_branded}. It shows how we
+plan to integrate Autofunk with any Michelin production system.
+Events are collected on the fly from a system under analyis, and
+sent to a database
+(Elasticsearch\footnote{https://www.elastic.co/products/elasticsearch}
+here) thanks to a message broker (namely
+RabbitMQ\footnote{https://www.rabbitmq.com/}). Initial benchmarks
+revealed that such an infrastructure allows to collect up to
+10,000 events per second with a negligible overhead on the
+system. Autofunk then queries the database to fetch product
+events, and finally build models. This approach also solves the
+issue mentioned previously.
 
 \begin{figure}[ht]
 \includegraphics[width=1.0\linewidth]{figures/model-gen-branded.png}
@@ -971,42 +1034,7 @@ evaluation on real production systems.
   \label{fig:autofunk_branded}
 \end{figure}
 
-Our framework Autofunk is developed in Java and mainly based on
-Drools, a Java rule-based expert system engine. Drools supports
-knowledge bases with facts given as Java objects. In our context,
-we have several bases of facts used throughout the different
-Autofunk modules: Events, Trace sets $ST_i$, Runs, Transitions
-and STSs.  We chose to target performance and simplicity while
-implementing Autofunk. That is why most of the steps are
-implemented with parallel algorithms (except the production event
-parsing).
-
-The input trace collection is constructed with a classical parser
-with returns $Event$ Java objects. By now, we are not able to
-parallelise this part because of an issue we faced with
-Michelin's logging system. The resulting drawback is that the
-time to parse traces is longer than expected and heavily depends
-on the size of data to parse. The $Event$ base is then filtered
-with Drools inference rules as presented in section
-\ref{part3:collecting}.  Then, we call a straightforward
-algorithm for reconstructing traces: it iterates over the $Event$
-base and creates a set for each assignment of the identifier
-$pid$. These sets are sorted to construct traces given as $Trace$
-Java objects. These objects correspond to $Traces(Sua)$. The
-generation of the trace subsets $ST= \{ST_1,...,ST_N\}$ and of
-the first STSs are done with Drools inference rules applied
-in parallel. The STS reduction, and specifically the generation
-of STS branches equivalence classes, has been implemented with a
-specific algorithm for better performance. Indeed, comparing
-every action in STS branches in order to aggregate them is time
-consuming.  Given a STS $\EuScript{S}$, this algorithm generates
-a signature for each branch $b$, i.e. a hash (SHA1 algorithm) of
-the concatenation of the signatures of the actions of $b$. The
-branches which have the same signature are gathered together and
-establish branch equivalence classes (as described in section
-\ref{sec:modelinf:prodsystems:reduction}). Thereafter, the
-reduced $R(\EuScript{S})$ is constructed thanks to the inference
-rule given in section \ref{sec:modelinf:prodsystems:reduction}.
+\TODO{fix figure}
 
 \subsection{Evaluation}
 
@@ -1019,19 +1047,17 @@ periods of time. We executed our implementation on a Linux
 We present here the results of 6 experiments on the same
 production system with different event sets collected during 1,
 8, 11, 20, and 23 days. These results are depicted in Figure
-\ref{fig:results}. For confidentiality reasons, we are not able
-to provide results related to the generation of more abstract
-models. The third column gives the number of production events
-recorded on the system. The next column shows the trace number
-obtained after the parsing step.  $N$ and $M$ represent the entry
-and exit points automatically computed with the statistical
-analysis. The column Trace Subsets shows how $Traces(Sua)$ is
-segmented into subsets $\{ST_1,...,ST_N\}$ and the number of
-traces included in each subset. These numbers of traces also
-correspond to the numbers of branches generated in the STSs
-$\EuScript{S}_1,...,\EuScript{S}_N$. The eighth column, \#
-$R(\EuScript{S}_i)$, represents the number of branches found in
-each reduced STSs $R(\EuScript{S}_1),...,R(\EuScript{S}_N)$.
+\ref{fig:results}. The third column gives the number of
+production events recorded on the system. The next column shows
+the trace number obtained after the parsing step.  $N$ and $M$
+represent the entry and exit points automatically computed with
+the statistical analysis. The column Trace Subsets shows how
+$Traces(Sua)$ is segmented into subsets $\{ST_1,...,ST_N\}$ and
+the number of traces included in each subset. These numbers of
+traces also correspond to the numbers of branches generated in
+the STSs $\EuScript{S}_1,...,\EuScript{S}_N$. The eighth column,
+\# $R(\EuScript{S}_i)$, represents the number of branches found
+in each reduced STSs $R(\EuScript{S}_1),...,R(\EuScript{S}_N)$.
 Finally, execution times are rounded and expressed in minutes in
 the last column.
 
@@ -1070,26 +1096,26 @@ $F_2$ &       &           &         &   &   & 43,536 & 1,585 &    \\
 \end{sidewaystable}
 
 First, these results show that our framework can take millions
-of production events and still builds models quickly (less than
-half an hour). With sets collected during one day up to one
-week (experiments $A$, $B$, $C$, and $D$), models are inferred in
-less than 10 minutes. Hence, Autofunk can be used to
-quickly infer models for analysis purpose or to help diagnose
-faults in a system. Experiment $F$ handled almost 10 million
-events in less
+of production events and still builds models quickly (20
+minutes). With sets collected during one day up to one week
+(experiments $A$, $B$, $C$, and $D$), models are inferred in less
+than 10 minutes. Hence, Autofunk can be used to quickly infer
+models for analysis purpose or to help diagnose faults in a
+system. Experiment $F$ handled almost 10 million events in less
 than half an hour to build two models including around 1,600
-branches. As mentioned in section \ref{sec:impl-exp-collect},
-the parsing process is not parallelized yet, and it took up to 20
+branches. As mentioned in Section \ref{sec:impl-exp-collect}, the
+parsing process is not parallelized yet, and it took up to 20
 minutes to open and parse around 1,000 files (number of Michelin
-log files for this experiment). This is an issue we want to
-tackle in the next version of Autofunk. The graph shown
-in Figure \ref{fig:time-vs-messages} summarises the performances
-of our framework and how fast it is at transforming production
-events into models (experiments $B$, $C$ and $D$ run in about 9
-minutes). It also demonstrates that doubling the event
-set does not involve doubling its execution time. The exponential
-trend line reveals that the overall framework scales well, even
-with the current parsing implementation.
+log files for this experiment). This issue is solved by the
+architecture presented in Figure \ref{fig:autofunk_branded}.
+The graph shown in Figure \ref{fig:time-vs-messages} summarises
+the performances of our framework and how fast it is at
+transforming production events into models (experiments $B$, $C$
+and $D$ run in about 9 minutes). It also demonstrates that
+doubling the event set does not involve doubling its execution
+time. The exponential trend line reveals that the overall
+framework scales well, even with the current parsing
+implementation.
 
 In Figure \ref{fig:results}, the difference between the number of
 trace subsets (7th column) and the number of branches included in
@@ -1097,30 +1123,37 @@ the STSs $R(\EuScript{S}_i)$ (8th column) clearly shows that our
 STS reduction approach is effective. For instance, with
 experiment $B$, we reduce the STSs by 91.88\% against the initial
 trace set $Traces(Sua)$. In other words, 91\% of the original
-behaviors are packed into matrices.
+behaviors are packed into matrices. As a reminder, such results
+are tied to the specific context of Michelin production systems.
+The reduction ratio may vary with other systems.
 
 \begin{figure}[ht]
-  \includegraphics[width=0.9\linewidth]{figures/proportions.png}
+  \includegraphics[width=1.0\linewidth]{figures/time-vs-messages.png}
 
-  \caption{Proportions of complete traces}
-  \label{fig:proportions}
+  \caption{Execution time vs events}
+  \label{fig:time-vs-messages}
 \end{figure}
 
 We also extracted the values of columns 4 and 7 in Figure
 \ref{fig:results} to depict the stacked bar chart illustrated in
-Figure \ref{fig:proportions}. This chart shows, for each experiment, the
-proportion of complete traces kept by Autofunk to build
-models, over the initial number of traces in $Traces(Sua)$.
-Autofunk has kept only 37\% of the initial traces in
-Experiment $A$ because its initial trace set is too small and
-contains many incomplete behaviors. During a day, most of the
-recorded traces do not start or end at entry or exit points, but
-rather start or end somewhere in production lines. Indeed,
-a workshop contains storage areas where products can stay
-for a while, depending on the production campaigns or needs for
-instance. That is why, on a single day, we can find so many
-incomplete traces. With more production events, such a phenomenon
-is limited because we absorb these storage delays.
+Figure \ref{fig:proportions}. This chart shows, for each
+experiment, the proportion of complete traces kept by Autofunk to
+build models, over the initial number of traces in $Traces(Sua)$.
+Autofunk has kept only 37\% of the initial traces in Experiment
+$A$ because its initial trace set is too small and contains many
+incomplete behaviors. During a day, most of the recorded traces
+do not start or end at entry or exit points, but rather start or
+end somewhere in production lines (cf. Section
+\ref{prodsys:context}). That is why, on a single day, we can find
+so many incomplete traces. With more production events, such a
+phenomenon is limited because we absorb these storage delays.
+
+\begin{figure}[ht]
+  \includegraphics[width=1.0\linewidth]{figures/proportions.png}
+
+  \caption{Proportions of complete traces}
+  \label{fig:proportions}
+\end{figure}
 
 We can also notice that experiments $C$ and $D$ have similar
 initial trace sets but experiment $C$ owns more complete traces
@@ -1139,12 +1172,11 @@ of $N$ for experiments $B$ and $C$, but would also impact
 experiment $A$ by introducing false results since incorrect entry
 points could be selected. By means of a manual analysis, we
 concluded that 10\% was the best ratio for removing incomplete
-traces in our experiments. 30\% of initial traces have been
-removed, which is close to the reality. However, this simple
-analysis could be improved in the future.
+traces in our experiments.  30\% of initial traces have been
+removed, which is close to the reality.
 
 \begin{figure}[ht]
-  \includegraphics[width=0.8\linewidth]{figures/memory-time.png}
+  \includegraphics[width=1.0\linewidth]{figures/memory-time.png}
 
   \caption{Memory consumption vs execution time}
   \label{fig:memory-time}
@@ -1153,7 +1185,7 @@ analysis could be improved in the future.
 Another potential issue with our parsing implementation is that
 every event has to be loaded in memory, so that we can perform
 computation and apply our algorithms on them. However working
-with millions of Java objects requires enough memory, i.e.
+with millions of Java objects requires a lot of memory, i.e.
 memory consumption depends on the amount of initial traces. We
 compared execution time and memory consumption in Figure
 \ref{fig:memory-time}, showing that memory consumption tends to
@@ -1161,30 +1193,29 @@ follow a logarithmic trend. In the next version of Autofunk, we
 plan to work on improving memory consumption even if it has been
 considered acceptable as is by Michelin.
 
-\begin{figure}[ht]
-  \includegraphics[width=0.9\linewidth]{figures/time-vs-messages.png}
-
-  \caption{Execution time vs events}
-  \label{fig:time-vs-messages}
-\end{figure}
+For confidentiality reasons, we are not able to provide results
+related to the generation of more abstract models.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \section{A better solution to trace segmentation and filtering}
 \label{sec:testing:segmentation}
 
-In
-\crossref{sec:modelinf:prodsystems}{sec:modelinf:prodsystems:segmentation},
-we presented a statistical analysis to segment and filter the
-initial trace set used to infer models. However, this method was
-not stable, and we decided to rework it. We now rely on a machine
-learning technique to segment it into several subsets, one per
-entry point of the system $\mathit{Sua}$. We leverage this
-process to also remove incomplete traces, i.e. traces that do not
-express an execution starting from an entry point and ending to
-an exit point. These can be extracted by analysing the traces and
-the variable $point$, which captures the product physical
-location.
+In Section \ref{sec:modelinf:prodsystems:segmentation}, we
+presented a statistical analysis to segment and filter the
+initial trace set used to infer models. However, experiments (as
+seen in the previous section) revealed that this empirical method
+was not stable, in other words the use of a configurable minimum
+limit was not accurate enough. That is why we chose to work on a
+new solution to segment and filter traces.
+
+We now rely on a machine learning technique to segment a trace
+set into several subsets, one per entry point of the system
+$\mathit{Sua}$. We leverage this process to also remove
+incomplete traces, i.e. traces that do not express an execution
+starting from an entry point and ending to an exit point. These
+can be extracted by analysing the traces and the variable
+$point$, which captures the product physical location.
 
 \begin{figure}[ht]
     \includegraphics[width=1.0\linewidth]{figures/kmeans.png}
@@ -1217,11 +1248,9 @@ until reaching 80\% of traces retained.
 Once the entry and exit points are found, we segment
 $Traces({Sua})$ and obtain a set $CTraces({Sua})=\{ST_1, \dots,
 ST_n\}$. Then, we apply the same generation and reduction steps
-as described in
-\crossref{sec:modelinf:prodsystems}{sec:modelinf:prodsystems:generation}
-and
-\crossref{sec:modelinf:prodsystems}{sec:modelinf:prodsystems:reduction}
-so that we obtain the reduced model $R(\EuScript{S}) =
+as described in Section \ref{sec:modelinf:prodsystems:generation}
+and Section \ref{sec:modelinf:prodsystems:reduction} so that we
+obtain the reduced model $R(\EuScript{S}) =
 \{R(\EuScript{S}_1),\dots,R(\EuScript{S}_n)\}$.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -1230,21 +1259,15 @@ so that we obtain the reduced model $R(\EuScript{S}) =
 \label{sec:modelinf:prodsystems:conclusion}
 
 In this chapter, we presented our revisited framework Autofunk,
-combining model inference and expert systems to generate models
-from production systems. Given a large set of production events,
-our framework infers exact models whose traces are included in
-the initial trace set of a system under analysis. We chose to
-design Autofunk for targeting high performance. Our evaluation
-shows that this approach is suitable in the context of production
-systems since we quickly obtain STS trees reduced by 90\% against
-the original trace sets of the system under analysis.
-
-Our statistical analysis used to filter traces and detect
-complete traces is not as efficient as we would like to. This is
-the main weakness of this work, but it could be improved by using
-a machine learning technique that would detect both entry and
-exit points from a set of traces. This is a direction we explore
-in the next chapter.
+combining model inference, machine learning, and expert systems
+to generate models from production systems. Given a large set of
+production events, our framework infers exact models whose traces
+are included in the initial trace set of a system under analysis.
+We chose to design Autofunk for targeting high performance. Our
+evaluation shows that this approach is suitable in the context of
+production systems since we quickly obtain STS trees reduced by
+90\% against the original trace sets of the system under
+analysis.
 
 While there is still room for improvement on how we generate
 exact models, we decided to go deeper and use such models for
