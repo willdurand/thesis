@@ -3,6 +3,110 @@
 \chapter{Introduction}
 \label{sec:intro}
 
-% \cleanchapterquote{You can’t do better design with a computer, but you can
-% speed up your work enormously.}{Wim Crouwel}{(Graphic designer and
-% typographer)}
+\minitoc
+
+I am studying Computer Science for more than 8 years now. I
+remember my first lectures on quality assurance (QA) and software
+testing, how pointless it seemed to all of us, students who don't
+write bugs \footnote{The last part of this sentence is adapted
+from this tweet:
+\url{https://twitter.com/hipsterhacker/status/396352411754717184}.}.
+Indeed, almost a decade ago, quality assurance was not a common
+practice, and researchers had to prove what the benefits of, for
+instance, testing could be.
+
+Nowadays, quality assurance and software testing are well-known
+in the Industry, and everyone understands the need for them.
+
+\TODO{...}
+
+
+\section{Contributions}
+
+The contributions of this thesis are:
+
+\begin{enumerate}
+    \item \textit{Autofunk}, a framework, combining several
+        techniques originating from different fields such as
+        expert systems, machine learning and model inference, for
+        inferring formal models of software systems. Autofunk's
+        modular architecture allows multiple extensions;
+
+    \item An empirical study that evaluates Autofunk on web
+        applications for inferring models. Here, Autofunk is
+        combined with an automatic testing technique to interact
+        with web applications in order to improve the
+        completeness of the inferred models. Several models can
+        be built at different levels of abstraction, allowing to
+        create, for instance, human-readable documentation;
+
+    \item An empirical study that evaluates Autofunk on
+        Michelin's production systems, proving that it is able to
+        build exact models in an efficient manner, based on large
+        sets of traces (for now, we can define a set of traces as
+        information collected from a software system, and
+        describing its behaviors);
+
+    \item A reduction technique for symbolic transition systems
+        that is both fast and efficient, keeping the exactness of
+        the models, and targetting large models;
+
+    \item An offline passive testing technique leveraging the
+        inferred models for testing production systems, along
+        with a case study. This work is an extension of Autofunk;
+
+    \item An online passive testing technique similar to the
+        offline passive testing, but enabling on the fly testing
+        of production systems.
+\end{enumerate}
+
+
+\section{Overview}
+
+\textbf{Chapter \ref{sec:related}} surveys the literature in
+software testing first, and then in model inference applied to
+software systems. The chapter starts by introducing what software
+testing means, mentioning some important notions as well as the
+different types of testing. It then presents what Model-based
+Testing (MbT) is, along with a few definitions and common terms
+employed in MbT. The software testing part ends with a review on
+some passive testing techniques, and why they are interesting in
+our case. The second part of this chapter presents what model
+inference is, from active learning to passive learning
+techniques.
+
+\textbf{Chapter \ref{sec:modelinf:webapps}} presents our work on
+model inference applied to web applications, a preliminary work
+that gave birth to \textit{Autofunk}, our modular framework for
+inferring models (and later, performing testing). This chapter
+gives an overview of Autofunk's very first architecture. It then
+presents how Autofunk relies on an automatic testing technique to
+improve the completeness of the inferred models. A note on its
+implementation is then given, following by an experimentation.
+
+
+\textbf{Chapter \ref{sec:modelinf:prodsystems}} introduces our
+framework Autofunk revisited to target production systems. This
+chapter gives the context that led to our choices regarding the
+edesign of Autofunk. Our reduction technique that heavily reduces
+models is then presented, along with the results of a case study
+on Michelin's production systems. A whole section is dedicated to
+the implementation of Autofunk for Michelin. Last significant
+part of this chapter is the use of a machine learning technique
+to maximize one part of our model inference technique.
+
+\textbf{Chapter \ref{sec:testing}} tackles the problem of testing
+production systems, without disturbing them, and without having
+any specification. It presents our work on both offline and
+online passive testing, by extending Autofunk's model inference
+ramework. After having presented the overall idea, two algorithms
+are given and explained. The results of a case study on
+Michelin's production systems is given. Such results are related
+to the offline passive testing technique.
+
+\textbf{Chapter \ref{sec:conclusion}} closes the main body of the
+thesis with concluding comments and proposals for future work.
+
+% The End.
+\cleardoublepage
+\blankpage

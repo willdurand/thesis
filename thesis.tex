@@ -102,6 +102,7 @@ des C\'ezeaux - 1 rue de la Chebarde}
 \usepackage{amssymb}  % for \Leftrightarrow
 \usepackage{amssymb}  % for \mathbf
 \usepackage{minitoc}
+\usepackage{afterpage} % for new page
 
 % My commands
 \newcommand{\R}{\mathbb{R}}
@@ -122,6 +123,10 @@ des C\'ezeaux - 1 rue de la Chebarde}
 
 \newcommand{\crossref}[2]{Chapter \ref{#1} • Section \ref{#2}
 (page \pageref{#2})}
+
+\newcommand\blankpage{%
+    \null
+    \newpage}
 
 % **************************************************
 % Document CONTENT
@@ -155,14 +160,34 @@ des C\'ezeaux - 1 rue de la Chebarde}
 \pagestyle{plain}				% display just page numbers
 \input{src/abstract}		    % INCLUDE: the abstracts
 \cleardoublepage
-%
+
 \input{src/acknowledgement}     % INCLUDE: acknowledgement
 \cleardoublepage
-%
+
 \setcounter{tocdepth}{3}		% define depth of toc
 \dominitoc
 \tableofcontents				% display table of contents
+
 \cleardoublepage
+\blankpage
+
+% --------------------------
+%
+% --------------------------
+\listoftheorems[ignoreall,show={definition}]
+\cleardoublepage
+
+\blankpage
+
+\listoffigures
+\cleardoublepage
+
+\blankpage
+
+\listoftables
+\cleardoublepage
+
+\blankpage
 
 % --------------------------
 % Body matter
@@ -178,6 +203,7 @@ des C\'ezeaux - 1 rue de la Chebarde}
 \input{src/conclusion/0_conclusion}
 
 \cleardoublepage
+\blankpage
 
 % --------------------------
 % Back matter
@@ -192,14 +218,7 @@ des C\'ezeaux - 1 rue de la Chebarde}
 }
 \cleardoublepage
 
-\listoftheorems[ignoreall,show={definition}]
-\cleardoublepage
-
-\listoffigures
-\cleardoublepage
-
-\listoftables
-\cleardoublepage
+\blankpage
 
 \input{src/colophon}
 \cleardoublepage

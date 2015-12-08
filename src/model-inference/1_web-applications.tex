@@ -213,7 +213,7 @@ one specific application.
 For readability purpose, we chose to represent inference rules
 with this format: \textit{When conditions on facts Then actions on
 facts}. This format has been borrowed to the Drools inference
-engine \footnote{http://www.jboss.org/drools/}). Independently
+engine \footnote{\url{http://www.jboss.org/drools/}}). Independently
 on the application's type, Layers 2 to N handle the following
 fact types: \textit{Location}, which represents an IOSTS location,
 and \textit{Transition}, which represents an IOSTS transition,
@@ -608,7 +608,7 @@ since ordered runs are transformed into ordered IOSTS sequences.
 
 \begin{example}
 We take as example a trace obtained from the GitHub website
-\footnote{https://github.com/} after having executed the
+\footnote{\url{https://github.com/}} after having executed the
 following actions: login with an existing account, choose an
 existing project, and logout. These few actions already produced
 a large set of requests and responses. Indeed, a web browser
@@ -1220,7 +1220,7 @@ Programming in the rule statements and takes knowledge bases
 given as Java objects (Location, Transition, GET, POST objects in
 this work).
 
-The GitHub website \footnote{https://github.com/} is an example
+The GitHub website \footnote{\url{https://github.com/}} is an example
 of application giving significant results. We recorded a trace
 set composed of 840 HTTP requests / responses. Then, we applied
 Autofunk on them with a Models generator composed of 5 layers
@@ -1250,8 +1250,8 @@ model inference, expert systems, and automatic testing to derive
 IOSTSs models by means of a model transformation using inference
 rules.  We chose a minimisation technique over existing
 algorithms such as gkTail and KLFA to keep exactness of the
-inferred models.  Our proposal yields several models, reflecting
-different levels of abstractions of the same application with the
+inferred models. Our proposal yields several models, reflecting
+different levels of abstraction of the same application with the
 use of inference rules that capture the knowledge of an expert.
 The first contribution lies in the flexibility and scalability
 brought by the inference rules since they can be applied on

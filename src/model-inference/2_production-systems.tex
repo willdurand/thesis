@@ -1018,9 +1018,9 @@ depicted in Figure \ref{fig:autofunk_branded}. It shows how we
 plan to integrate Autofunk with any Michelin production system.
 Events are collected on the fly from a system under analyis, and
 sent to a database
-(Elasticsearch\footnote{https://www.elastic.co/products/elasticsearch}
+(Elasticsearch\footnote{\url{https://www.elastic.co/products/elasticsearch}}
 here) thanks to a message broker (namely
-RabbitMQ\footnote{https://www.rabbitmq.com/}). Initial benchmarks
+RabbitMQ\footnote{\url{https://www.rabbitmq.com/}}). Initial benchmarks
 revealed that such an infrastructure allows to collect up to
 10,000 events per second with a negligible overhead on the
 system. Autofunk then queries the database to fetch product
