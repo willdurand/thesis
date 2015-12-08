@@ -14,7 +14,7 @@ provide confidence of reliability, correctness, and absence of
 particular faults on software we develop. This does not mean that
 the software is completely free of defects. Rather, it must be
 good enough for its intended use.
-Testing is a verification and validation process
+Testing is a verification and validation (V\&V) process
 \cite{wallace1989software}. I use to (informally) explain both
 terms with the following questions \cite{Boehm1979}:
 
@@ -33,18 +33,19 @@ simulation are all verification methods.
 Validation is testing as the act of revealing bugs. That is what
 most people think testing is, and also the meaning we give to the
 word "testing" in the sequel of this thesis. Testing involves a
-(software) \textit{system under test} (SUT). \textit{Test inputs}
-are sent on a system under test, which leads to \textit{test
-outputs}. We then have to determine whether these outputs are
-correct. A \textit{test case} (TC) is compound of \textit{test
-data}, i.e.  inputs which have been devised to test the system,
-an expected behavior, and an expected output. We call
-\textit{test suite} (TS) a set of test cases. We rely on a
-\textit{tester} to determine whether a test has \textit{passed}
-or \textit{failed}. Those two words are known as
-\textit{verdicts}.
-
-\TODO{informel}
+(software) \textit{system under test} (SUT). The prevailing
+intuition of testing is reflected in its operational
+characterization as an activity in which a \textit{tester} first
+generates and sends stimuli, i.e. \textit{test input} data, to a
+system under test in order to observe phenomena (mainly
+behaviors). Such phenomena can be represented by the existence of
+\textit{test outputs} for instance. We then have to decide on a
+suitable \textit{verdict}, which expresses the assessment made.
+The two most well-known verdicts are $Pass$ and $Fail$.
+We call \textit{test case} (TC), a structure that is compound of
+\textit{test data}, i.e.  inputs which have been devised to test
+the system, an expected behavior, and an expected output. A set
+of test cases is called a \textit{test suite} (TS).
 
 In the following section, we introduce the software testing
 realm. We focus on Model-based Testing, presented in Section
@@ -60,8 +61,6 @@ in the rest of this thesis.
 
     \caption{Sorts of testing}
 \end{figure}
-
-\TODO{PO/PCO ? ISO...}
 
 Nowadays, software testing, if not always applied, is well-known
 in the Industry. It is considered a good practice and many
@@ -114,15 +113,18 @@ cases:
 
 \begin{itemize}
 \item \textbf{white-box:} a method that tests the internal
-structure of a SUT. It is usually done at the unit level,
+    structure of a SUT. It is usually done at the unit level;
 
 \item \textbf{black-box:} a method that tests the functionalities
-of a SUT without knowing its internal structure.  It is also
-known as functional testing,
+    of a SUT without knowing its internal structure. The behavior
+    of the \textit{implementation under test} (IUT) is only
+    visible through a restricted interface called \textit{Points
+    of Control and Observation} (PCOs). Such a technique is also
+    known as functional testing;
 
 \item \textbf{grey-box:} the combination of white-box testing and
-black-box testing. One has access to the relevant internal parts
-of a SUT.
+    black-box testing. One has access to the relevant internal
+    parts of a SUT.
 \end{itemize}
 
 \subsubsection{Test selection}
@@ -211,7 +213,7 @@ evaluating the results.
 \subsubsection{What is a model?}
 \label{sec:related:testing:model}
 
-\TODO{test oracle => tester}
+\TODO{Figure: test oracle => tester}
 
 Generally speaking, a model is a representation of a thing that
 allows for investigation of its properties, and most of the time,
@@ -232,7 +234,7 @@ that a model does not have to completely describe it to be
 effective.
 
 We can classify models that can be employed for testing into two
-categories:
+categories (these lists are not exhaustive):
 
 \begin{itemize}
 \item \textbf{Behavior/Control oriented:} Finite Automata (like
@@ -243,7 +245,8 @@ model software systems. For real-time and/or safety-critical
 systems, we often rely on Synchronous Languages such as Lustre
 \cite{lustre:ieee} and SCADE
 \cite{LeSergent:2011:SCF:2188575.2188578}. We can also mention
-Petri Nets,
+Petri Nets, Finite State Machines, and timed automata
+\cite{Alur94atheory},
 
 \item \textbf{Data oriented (pre/post):} often using annotation
 languages originating from the \textit{Design-By-Contract}
@@ -257,8 +260,6 @@ annotation languages exist, such as the Java Modeling Language
 \cite{Lano:1996:BLM:525749}, and Praspel
 \cite{Enderlin:2011:PSL:2075545.2075551}.
 \end{itemize}
-
-\TODO{others: DFA, FSM, EFSM, TFSM, timed automata}
 
 In \cite{Sommerville:1997:REG:549198}, Sommerville and Sawyer
 give some guidelines for choosing a model for software
@@ -274,7 +275,36 @@ modeling both web applications and production systems behaviors.
 \paragraph{Labelled Transition Systems}
 \label{sec:definitions:lts}
 
-\TODO{...}
+A \textit{Labelled Transition System} is a model compound of
+states with transitions, labelled with actions, between them.
+The states model the system states and the labelled transitions
+model the actions that a system can perform.
+
+We give the definition of the LTS model below, but we refer to
+\cite{ltsTretmans} for a more detailed description.
+
+\begin{definition}[Labelled Transition System]
+    A labelled transition system is a 4-tuple $<Q,L,T,q_0>$ where:
+
+    \begin{itemize}
+    \item $Q$ is a countable, non-empty set of state;
+
+    \item $L$ is a countable set of labels;
+
+    \item $T \subseteq Q \times (L \cup \{\tau\}) \times Q$, with
+    $\tau \not\in L$, is the transition relation;
+
+    \item $q_0 \in Q$ is the initial state.
+
+    \end{itemize}
+
+    We write $q \xrightarrow[]{t} q'$ if there is a transition
+    labelled $t$ from state $q$ to state $q'$ , i.e., $(q, t, q')
+    \in T$.
+
+	\label{def:lts}
+\end{definition}
+
 
 \paragraph{Symbolic Transition Systems}
 \label{sec:definitions:sts}
@@ -476,10 +506,9 @@ of the system.
 \paragraph{Testing hypothesis} For every system there is a
 corresponding observational equivalent implementation model:
 $\forall \text{ } iut \in IMPS, \exists \text{ } I_{iut} \in
-MODS$, where $iut$ is a concrete \textit{implementation under
-test} (IUT), $IMPS$ is the universe of implementations, $I_{iut}$
-is a model of $iut$, and $MODS$ is the universe of the models of
-all IUT.
+MODS$, where $iut$ is a concrete implementation under test,
+$IMPS$ is the universe of implementations, $I_{iut}$ is a model
+of $iut$, and $MODS$ is the universe of the models of all IUT.
 
 \paragraph{Implementation relation} To define conformance between
 an implementation under test $imp$ and a specification $spec$, we
@@ -550,101 +579,135 @@ To be able to decide about the success of each, a
 to each state of each test case.
 
 
-\TODO{passive testing}
+\subsection{(Active and) passive testing}
+
+In this section, we introduce two different approaches based on
+how we apply the test cases to the system under test:
+
+\begin{itemize}
+    \item \textbf{Active testing}, which is the classical process
+        in which a tester examines the functionality of a unit
+        under test before that unit is being deployed, i.e.
+        during its development;
+    \item \textbf{Passive testing}, which takes place after the
+        deployment of that unit, and requires, for instance, the
+        presence of a \textit{monitor}. Passive testing is also
+        useful when one wants to test a system during a long
+        period of time.
+\end{itemize}
+
+While active testing can take place as black- or white-box
+testing, passive testing is often a special form of black-box
+testing. Active testing works by stimulating the system under
+test, i.e. observing outputs of an implementation for predefined
+inputs. Most of the classical testing techniques and tools found
+in the Industry perform active testing, e.g., \textit{xUnit}
+frameworks
+\footnote{http://www.martinfowler.com/bliki/Xunit.html}.
+
+Passive testing rather examines the input/output behavior of an
+implementation without predefining the input. One advantage of
+passive testing is that it does not disturb the system, and it
+can be applied on large (distributed) systems. While most of the
+works on passive testing are related to networks, protocols, and
+web services, such a technique can be particularly suitable for
+production systems.
 
 Several works, dealing with passive testing of protocols or
-components, have been proposed recently. For all of these, the
-tester is made up of a module, located in the implementation
-environment, which collects trace sets. These works can be
-grouped in the following categories:
+components, have been proposed over the last decade. For all of
+these, the tester is made up of a module, located in the
+implementation environment, which collects trace sets. These
+works can be grouped in three different categories.
 
-• Invariant satisfiability [CMdO09, AMNn12]: invariants represent
-properties always true. These are constructed by hands from the
-specification and are later checked on the collected traces.
-Similarly to runtime verification [LS09], this approach allows
-testing complex properties on implementations. It gave birth to
-several works in the literature. For instance, the passive
-testing method, presented in [CMdO09], aims to test the
-satisfiability of invariants on Mobile ad-hoc network routing
-protocols. Different steps are required: definition of invariants
-from the specification, extraction of execution traces with
-sniffers, verification of the invariants on the trace set. Other
-works focus on component-based system testing: in this case,
-passive methods are usually used to check conformance or
-security. For instance, the TIP tool [MMC+10] performs an
+\subsubsection{Invariant satisfiability}
+
+Invariants represent properties that are always true. They are
+constructed by hand from a specification, and later checked on
+the collected traces. Similarly to runtime verification
+\cite{Leucker2009293}, this approach allows to test complex
+properties on an implementation. It gave birth to several works
+in the literature. For instance, the passive testing method,
+presented in \cite{CMdO09}, aims to test the satisfiability of
+invariants on Mobile ad hoc network (MANET) routing protocols.
+Different steps are required: definition of invariants from the
+specification, extraction of execution traces with sniffers,
+verification of the invariants on the trace set. Other works
+focus on component-based system testing: in this case, passive
+methods are usually used to check conformance or security. For
+instance, the \textit{TIPS} tool \cite{5552735} performs an
 automated analysis of the captured trace sets to determine if a
 given set of timed extended invariants are satisfied. As in
-[CMdO09], invariants are constructed from the specification and
-traces are collected with network sniffers. Cavalli et al.
-propose an approach for testing the security of Web service
-compositions in [CBML09]. Security rules are here modelled with
-the Nomad language which expresses authorisations or prohibitions
-by means of deontic and temporal logics. Preliminary, a rule set
-is manually constructed from a specification. Traces of the
-implementation are extracted with modules which are placed at
-each workflow engine layer which executes Web services. Then, the
-method checks, with the collected traces, that the implementation
-does not contradict security rules. César et al. present a
-methodology to perform passive testing of timed systems in
-[AMNn12]. The paper gives two algorithms to decide the
-correctness of proposed invariants with respect to a given
+\cite{CMdO09}, invariants are constructed from the specification
+and traces are collected with network sniffers. Cavalli et al.
+propose an approach for testing the security of web service
+compositions in \cite{cavalli2009passive}. Security rules are
+here modelled with the Nomad language \cite{cuppens2005nomad},
+which expresses authorizations or prohibitions by means of
+deontic and temporal logics. Preliminary, a rule set is manually
+constructed from a specification. Traces of the implementation
+are extracted with modules that are placed at each workflow
+engine layer that executes web services. Then, the method checks,
+with the collected traces, that the implementation does not
+contradict security rules. Andrés et al. presented a methodology
+to perform passive testing of timed systems in
+\cite{andres2012formal}. The paper gives two algorithms to decide
+the correctness of proposed invariants with respect to a given
 specification and algorithms to check the correctness of a log,
 recorded from the implementation under test, with respect to an
 invariant.
 
-• Forward checking [MA00, LCH+06]: implementation reactions are
-given on the fly to an algorithm which detects incorrect
-behaviours by covering the specification transitions with these
-reactions. In this field, Lee et al. propose a passive testing
-method dedicated to wired protocols [LCH+06]. Protocols are
-modelled with Event- driven Extended Finite State Machines
-(EEFSM), composed of variables. Several algorithms on the EEFSM
-model and their applications to the OSPF protocol and TCP state
-machines are presented. Algorithms check whether partial traces
-(not beginning from the initial implementation state), composed
-of actions and parameters, meet a given symbolic specification on
-the fly. The analysis of the symbolic specification is performed
-by means of configurations. A configuration represents a tuple
-gathering the current state label and a set of assignments and
-guards modelling the variable state. As described in the
-experimentation part, reactions are extracted by means of
-sniffers,
+\subsubsection{Forward checking}
 
-• Backward checking [ACC+04]: this approach processes a partial
-trace backward to narrow down the possible specifications. The
-algorithm performs two steps. It first follows a given trace
-backward, from the current configuration to a set of starting
-ones, according to the specification. With this step, the
-algorithm finds the possible starting configurations of the
-trace, which lead to the current configuration. Then, it analyses
-the past of this set of starting configurations, also in a
-backward manner, seeking for configurations in which the
-variables are determined. When such configurations are reached, a
-decision is taken on the validity of the studied paths (traces
-are completed). Such an approach is usually applied as a
-complement to forward checking to detect more errors.
+Implementation reactions are given on the fly to an algorithm
+that detects incorrect behaviours by covering the specification
+transitions with these reactions. Lee et al. proposed a passive
+testing method dedicated to wired protocols \cite{1621118}.
+Protocols are modelled with \textit{Event-driven Extended Finite
+State Machines} (EEFSM), compound of variables.  Several
+algorithms on the EEFSM model and their applications to the OSPF
+protocol and TCP state machines are presented. Algorithms check
+whether partial traces, composed of actions and parameters, meet
+a given symbolic specification on the fly. The analysis of the
+symbolic specification is performed by means of configuration. A
+configuration represents a tuple gathering the current state
+label, and a set of assignments and guards modelling the variable
+state.
 
-The passive testing methods proposed in the literature, and
-particularly the previous ones, rely on observers (usually a kind
-of sniffer-based tool) as central points to collect all the
-implementation reactions (messages, packets, etc.). Observers
-have to be installed in the implementation environment without
-any deeper concern about the feasibility of this deployment
-strategy. The work proposed by Benharref et al. [BDSG09]
-summaries several observer-based test architectures for Web
-services: a classical mono-observer architecture is considered
-for basic Web Services. For composite services, a network of
-observers is said required to collect information on interactions
-between a client, composite Web Service, and its basic Web
-Services. But here again, observers have to be located inside the
-same environment as the implementation with both architectures.
-As stated previously, this prerequisite condition cannot always
-be satisfied with any implementation environment. For instance,
-installing a sniffer-based tool in a Cloud platform is not
-possible since applications are geographically deployed in a
-dynamic manner and since the access and the modification of Cloud
-layers are not authorised. In [CBML09], the originality of the
-proposed test environment concerns the modification of workflow
-engines to collect traces. Even though this solution sounds
-interesting, it also requires authorisations (this is never
-granted in Cloud architectures).
+\subsubsection{Backward checking}
+
+Alcalde et al. proposed an approach that processes a partial
+trace backward to narrow down the possible specifications in
+\cite{alcalde2004network}. The algorithm performs two steps. It
+first follows a given trace backward, from the current
+configuration to a set of starting ones, according to the
+specification. With this step, the algorithm finds the possible
+starting configurations of the trace, which lead to the current
+configuration. Then, it analyses the past of this set of starting
+configurations, also in a backward manner, seeking for
+configurations in which the variables are determined.  When such
+configurations are reached, a decision is taken on the validity
+of the studied paths (traces are completed). Such an approach is
+usually applied as a complement to forward checking to detect
+more errors.
+
+\subsubsection{Why passive testing?}
+
+It is worth mentioning that passive testing has also been
+successfully applied for fault management \cite{965909}, fault
+detection \cite{Ural:2007:IAP:1270230.1270259}, and security
+purpose \cite{4698175}. To summarize, while passive testing is
+less powerful than active testing, because the latter allows a
+closer control of the implementation under test, passive testing
+still presents interesting advantages:
+
+\begin{itemize}
+    \item Passive testing is less costly than active testing in
+        general since it does not have to control the
+        implementation under test;
+
+    \item Passive testing can be applied to large systems where
+        active testing is not even feasible, such as systems with
+        many different components, e.g., software oriented
+        architectures, distributed systems, but also production
+        systems.
+\end{itemize}
