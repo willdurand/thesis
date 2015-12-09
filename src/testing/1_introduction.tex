@@ -38,14 +38,14 @@ whether a system under test conforms to an inferred model. It can
 be performed in either online or offline mode, as defined below:
 
 \begin{itemize}
-\item \textbf{Online testing:} sometimes called on-the-fly
-testing, it is a technique in which test case generation and test
-execution are combined into a single algorithm. The tester gives
-a verdict everytime a trace incomes,
+    \item \textbf{Online testing:} sometimes called on-the-fly
+        testing, it is a technique in which test case generation
+        and test execution are combined into a single algorithm.
+        The tester gives a verdict everytime a trace incomes;
 
-\item \textbf{Offline testing:} it means that a set of traces has
-been collected while the system is running. Then, the tester
-gives verdicts.
+    \item \textbf{Offline testing:} it means that a set of traces
+        has been collected while the system is running. Then, the
+        tester gives verdicts.
 \end{itemize}
 
 We collect the traces of the system under test by reusing
@@ -388,7 +388,8 @@ simplification of guards:
     $R(\EuScript{S}_i^{N})=<L_R,l0_R,V_R,V0_R,I_R,\Lambda_R,\rightarrow_R>$
     be a STS of $R(\EuScript{S}^{N})$. We denote by $D(\EuScript{S}_i^{N})$ the STS $ <L_D,l0_D,V_D,V0_D,I_D,\Lambda_D,\rightarrow_D>$ derived from $R(\EuScript{S}_i^{N})$ such that:
 \begin{itemize}
-    \item $L_D=L_{R}, l0_D=l0_{R}, I_D=I_{R}, \Lambda_D=\Lambda_{R}$,
+    \item $L_D=L_{R}, l0_D=l0_{R}, I_D=I_{R},
+        \Lambda_D=\Lambda_{R}$;
     \item $V_D, V0_D$ and $\rightarrow_D$ are given by the following inference rule:
 
 				$\frac{
