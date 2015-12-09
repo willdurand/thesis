@@ -33,21 +33,21 @@ production systems. From the literature (cf. Chapter
 \TODO{exact: link to def "as defined in ..."}
 
 \begin{itemize}
-    \item model inference approaches give approximate models
-    capturing the behaviors of a system and more. In our
-    context, we want exact models that could be used for
-    regression test case generation and fault diagnosis,
+    \item Model inference approaches give approximate models
+        capturing the behaviors of a system and more. In our
+        context, we want exact models that could be used for
+        regression test case generation and fault diagnosis;
 
-    \item most of these approaches perform active testing on
-    systems to learn models. Applying active testing on running
-    systems is complicated since these must not be disrupted
-    (otherwise it may lead to severe damages on the production
-     machines),
+    \item Most of these approaches perform active testing on
+        systems to learn models. Applying active testing on
+        running systems is complicated since these must not be
+        disrupted (otherwise it may lead to severe damages on the
+        production machines);
 
-    \item production systems exchange thousands and thousands of
-    events a day. Most of the model inference approaches cannot
-    take such a huge amount of information to build models.
-    \TODO{scalability issue}
+    \item Production systems exchange thousands and thousands of
+        events a day. Most of the model inference approaches
+        cannot take such a huge amount of information to build
+        models. We need a solution that is scalable.
 \end{itemize}
 
 Based on these observations, we propose a pragmatic model
@@ -66,8 +66,8 @@ consideration the knowledge of human experts captured by expert
 systems. A part of our approach is based upon this notion of
 knowledge implemented with inference rules. We reuse what worked
 well for web applications and enhance many parts of our framework
-to come up with a better version of our \textit{Autofunk}
-framework that is presented in this thesis.
+to come up with a better version of our Autofunk framework, which
+is presented in this thesis.
 
 In the following section, we describe the context in which this
 work has been conducted. In Section
@@ -146,28 +146,28 @@ This context leads to some assumptions that have been considered
 to design our framework:
 
 \begin{itemize}
-    \item Black-box systems: production systems are seen as
-    black-boxes from which a large set of production events can
-    be passively collected. Such systems are compound of
-    production lines fragmented into several devices and sensors.
-    Hence, a production system can have several entry and exit
-    points. We denote such a system by $\mathit{Sua}$ (system
-    under analysis),
+    \item \textbf{Black-box systems:} production systems are seen as
+        black-boxes from which a large set of production events can
+        be passively collected. Such systems are compound of
+        production lines fragmented into several devices and sensors.
+        Hence, a production system can have several entry and exit
+        points. We denote such a system by $\mathit{Sua}$ (system
+        under analysis);
 
-    \item Production events: an event of the form $a(\alpha)$
-    must include a distinctive label $a$ along with a parameter
-    assignment $\alpha$. Two events $a(\alpha_1)$ and
-    $a(\alpha_2)$ having the same label $a$ must own assignments
-    over the same parameter set. The events are ordered and
-    processed with respect to this order,
+    \item \textbf{Production events:} an event of the form
+        $a(\alpha)$ must include a distinctive label $a$ along with a
+        parameter assignment $\alpha$. Two events $a(\alpha_1)$ and
+        $a(\alpha_2)$ having the same label $a$ must own assignments
+        over the same parameter set. The events are ordered and
+        processed with respect to this order;
 
-    \item Traces identification: traces are sequences of events
-    $a_1(\alpha_1)$...$a_n(\alpha_n)$. A trace is identified by a
-    specific parameter that is included in all event assignments
-    of the same trace. This identifier is denoted by $pid$ and
-    identifies products, e.g., tires at Michelin.  Besides this,
-    event assignments include a timestamp to sort them into
-    traces.
+    \item \textbf{Traces identification:} traces are sequences of events
+        $a_1(\alpha_1)$...$a_n(\alpha_n)$. A trace is identified by a
+        specific parameter that is included in all event assignments
+        of the same trace. This identifier is denoted by $pid$ and
+        identifies products, e.g., tires at Michelin.  Besides this,
+        event assignments include a timestamp to sort them into
+        traces.
 \end{itemize}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -185,7 +185,9 @@ derive more abstract and readable models.
 \begin{figure}[ht]
 \includegraphics[width=1.0\linewidth]{figures/autofunk.png}
 
-\caption{Overview of Autofunk revisited}
+\caption{Overview of Autofunk revisited with the different
+modules in grey along with their corresponding steps. The last
+module (STS abstraction) is optional.}
 \label{fig:prodsystems:autofunk-overview}
 \end{figure}
 
@@ -231,7 +233,9 @@ included in the traces of $\mathit{Sua}$.
 \end{BVerbatim}
 \end{framed}
 
-\caption{Production events}
+\caption{An example of some production events. Each event is
+timestamped, has a label (e.g., $17011$), and may own
+assignments of variables (e.g., $nsys$).}
 \label{fig:rawdatum}
 \end{figure}
 
@@ -239,7 +243,7 @@ To explain how Autofunk works with production systems, we
 consider a case study based upon the example of Figure
 \ref{fig:rawdatum}. It depicts simplified production events
 similar to those extracted from Michelin's logging system.
-\textit{INFO}, \textit{7011}, and \textit{17021} are labels along
+$INFO$, $17011$, and $17021$ are labels along
 with assignments of variables e.g., $nsys$, which indicates an
 industrial device number, and $point$, which gives the product
 position.  Real events own around 20 parameters in average. Such
@@ -271,23 +275,21 @@ manner.
 In this set, some of these valued events may be irrelevant.  For
 instance, some events may capture logging information and are not
 part of the functioning of the system. In Figure
-\ref{fig:rawdatum}, the event having the type \textit{INFO}
+\ref{fig:rawdatum}, the event having the type $INFO$
 belongs to this category and can be safely removed. Filtering is
 achieved by an expert system and inference rules. Here again, a
 human expert knows which events should be filtered out, and
 inference rules offer a natural way to express his knowledge. On
 top of that, expert systems also offer fast processing in this
-situation. We use inference rules of the form:\\
+situation. We use inference rules of the form:
 
 \textit{When $a(\alpha)$, condition on $a(\alpha)$, then
 retract($a(\alpha)$)}.
 
-The remaining valued events are ordered to produce an initial set
-of traces denoted by $Traces(Sua)$. Figure \ref{fig:tsua}
-illustrates this set obtained from the events of Figure
-\ref{fig:rawdatum}.
-
-\TODO{ordered: how?}
+The remaining valued events are time-ordered to produce an
+initial set of traces denoted by $Traces(Sua)$. Figure
+\ref{fig:tsua} illustrates this set obtained from the events of
+Figure \ref{fig:rawdatum}.
 
 \begin{figure}[ht]
 \begin{framed}
@@ -298,14 +300,15 @@ illustrates this set obtained from the events of Figure
     17021(nsys:=1,nsec:=8,point:=4,tpoint:=8,pid:=2)) \}$
 \end{framed}
 
-\caption{Initial trace set $Traces(Sua)$}
+\caption{Initial trace set $Traces(Sua)$ based on the events
+given in Figure \ref{fig:rawdatum}.}
 \label{fig:tsua}
 \end{figure}
 
 Figure \ref{fig:removalrules} shows two concrete rules applied on
 Michelin systems. These two rules are written with the Drools
 formalism, already introduced in the previous chapter. The first
-rule removes valued events including the \textit{INFO} parameter,
+rule removes valued events including the $INFO$ parameter,
 which do not contain any business value. The variable
 $\$valued\_event$ is a valued event (instance of $ValuedEvent$),
 containing parameter assignments ($Assign$ attribute) that can be
@@ -347,7 +350,10 @@ end
 \end{BVerbatim}
 \end{framed}
 
-\caption{An example of inference rules used for filtering purpose}
+\caption{An example of inference rules used for filtering
+purpose. It contains two rules: the first one is used to remove
+events including the $INFO$ label, the second one is used to omit
+events that are repeated.}
 \label{fig:removalrules}
 \end{figure}
 
@@ -583,14 +589,13 @@ events:
 
 	\begin{itemize}
     \item $L_{\EuScript{S}_i}= \{l_i \mid \exists r\in Runs_i,
-      (li,v_\emptyset)$ is a state found in $r\}$,
+      (li,v_\emptyset)$ is a state found in $r\}$;
 
     \item $l0_{\EuScript{S}_i} = l_0$ is the initial location
       such that $\forall r \in Runs_i$, $r$ starts with
-      $(l_0,v_\emptyset)$,
+      $(l_0,v_\emptyset)$;
 
-    \item $V_{\EuScript{S}_i}=\emptyset$,
-      $V0_{\EuScript{S}_i}=v_\emptyset$,
+    \item $V_{\EuScript{S}_i}=\emptyset$, $V0_{\EuScript{S}_i}=v_\emptyset$;
 
     \item $\rightarrow_{\EuScript{S}_i}$ and
       $\Lambda_{\EuScript{S}_i}$ are defined by the following
@@ -625,7 +630,8 @@ with constraints over transitions, called \textit{guards}.
 \begin{figure}[ht]
   \includegraphics[width=1.0\linewidth]{figures/STS1.png}
 
-  \caption{First generated model (STS)}
+  \caption{First generated Symbolic Transition System model,
+  based on the traces given in Figure \ref{fig:tsua}.}
   \label{fig:firstmodel}
 \end{figure}
 
@@ -696,9 +702,10 @@ approach gives good results in terms of STS reduction and
 requires low processing time, even with millions of transitions.
 
 \begin{figure}[h]
-  \includegraphics[width=0.5\linewidth]{figures/STS2.png}
+    \includegraphics[width=0.5\linewidth]{figures/STS2.png}
 
-	\caption{Reduced model (STS)}
+	\caption{Reduced Symbolic Transition System model obtained
+    from the model depicted in Figure \ref{fig:firstmodel}.}
 	\label{fig:reduced-model}
 \end{figure}
 
@@ -725,10 +732,10 @@ the definition of the STS operator $Mat$:
   $\rightarrow_{Mat(\EuScript{S}_i)}>$ where:
 
 	\begin{itemize}
-    \item $L_{Mat(\EuScript{S}_i)}=L_{\EuScript{S}_i}$,
-    \item $l0_{Mat(\EuScript{S}_i)}=l0_{\EuScript{S}_i}$,
-    \item $I_{Mat(\EuScript{S}_i)}=I_{\EuScript{S}_i}$,
-    \item $\Lambda_{Mat(\EuScript{S}_i)} = \Lambda_{\EuScript{S}_i}$,
+    \item $L_{Mat(\EuScript{S}_i)}=L_{\EuScript{S}_i}$;
+    \item $l0_{Mat(\EuScript{S}_i)}=l0_{\EuScript{S}_i}$;
+    \item $I_{Mat(\EuScript{S}_i)}=I_{\EuScript{S}_i}$;
+    \item $\Lambda_{Mat(\EuScript{S}_i)} = \Lambda_{\EuScript{S}_i}$;
 
     \item $V_{Mat(\EuScript{S}_i)}$, $V0_{Mat(\EuScript{S}_i)}$
       and $\rightarrow_{Mat(\EuScript{S}_i)}$ are given by the
@@ -819,7 +826,9 @@ second one.
 \begin{figure}[ht]
   \includegraphics[width=1.0\linewidth]{figures/STSfinal.png}
 
-	\caption{Final model (STS)}
+    \caption{The construction of the final Symbolic Transition
+    System model. The final model is on the right, obtained after
+    having applied all abstraction rules.}
 	\label{fig:finalmodel}
 \end{figure}
 
@@ -855,7 +864,8 @@ consider the same two types of rules as in
     Transition $l_1 \xrightarrow{a(p),G,A}_{R(\EuScript{S}_i)}
     l_2$, condition on $a(p),G,A$, Then add $l_1
     \xrightarrow{a'(p'),G',A'}_{\EuScript{S}_i^\uparrow} l_2$ and
-    retract $l_1 \xrightarrow{a(p),G,A}_{R(\EuScript{S}_i)} l_2$}.
+    retract $l_1 \xrightarrow{a(p),G,A}_{R(\EuScript{S}_i)}
+l_2$};
 
     \item the rules that aggregate some successive transitions
     to a single transition compound of a more abstract action.
@@ -897,7 +907,9 @@ end
 \end{BVerbatim}
 \end{framed}
 
-  \caption{Two rules adding value to existing transitions}
+  \caption{Two rules adding value to existing transitions by
+  replacing their actions by more intelligible ones. These names
+  are part of the domain language used by Michelin experts.}
   \label{rule:rename-tr}
 \end{figure}
 
@@ -928,14 +940,16 @@ end
 \end{BVerbatim}
 \end{framed}
 
-  \caption{STS transition aggregation rule}
+  \caption{An inference rule that aggregates two transitions of a
+  Symbolic Transition System into a single transition. An example
+  of its application is given in Figure \ref{fig:finalmodel}.}
   \label{rule:aggregate-tr}
 \end{figure}
 
 If we take back our example, the actions of the STS of Figure
 \ref{fig:reduced-model} are replaced with the rules of Figure
-\ref{rule:rename-tr} that change the labels \textit{17011} and
-\textit{17021} to more intelligible ones. The third rule of
+\ref{rule:rename-tr} that change the labels $17011$ and
+$17021$ to more intelligible ones. The third rule of
 Figure \ref{rule:aggregate-tr} aggregates the two transitions
 into a unique transition indicating the movement of a product in
 its production line. $Transition$ are facts modelling STS
@@ -1014,7 +1028,7 @@ to the inference rule given in Section
 \ref{sec:modelinf:prodsystems:reduction}.
 
 At the time of writing, we are working on the architecture
-depicted in Figure \ref{fig:autofunk_branded}. It shows how we
+depicted in Figure \ref{fig:autofunk_gen_branded}. It shows how we
 plan to integrate Autofunk with any Michelin production system.
 Events are collected on the fly from a system under analyis, and
 sent to a database
@@ -1028,10 +1042,11 @@ events, and finally build models. This approach also solves the
 issue mentioned previously.
 
 \begin{figure}[ht]
-\includegraphics[width=1.0\linewidth]{figures/model-gen-branded.png}
+    \includegraphics[width=1.0\linewidth]{figures/model-gen-branded.png}
 
-  \caption{}
-  \label{fig:autofunk_branded}
+    \caption{The overall architecture built at Michelin to use
+    Autofunk in a production environment.}
+    \label{fig:autofunk_gen_branded}
 \end{figure}
 
 \TODO{fix figure}
@@ -1091,7 +1106,8 @@ $F_2$ &       &           &         &   &   & 43,536 & 1,585 &    \\
 \end{tabular}
 \end{center}
 
-\caption{Results of 6 experiments on a Michelin industrial system}
+\caption{This table shows the results of 6 experiments on a
+Michelin industrial system with different event sets.}
 \label{fig:results}
 \end{sidewaystable}
 
@@ -1107,7 +1123,7 @@ branches. As mentioned in Section \ref{sec:impl-exp-collect}, the
 parsing process is not parallelized yet, and it took up to 20
 minutes to open and parse around 1,000 files (number of Michelin
 log files for this experiment). This issue is solved by the
-architecture presented in Figure \ref{fig:autofunk_branded}.
+architecture presented in Figure \ref{fig:autofunk_gen_branded}.
 The graph shown in Figure \ref{fig:time-vs-messages} summarises
 the performances of our framework and how fast it is at
 transforming production events into models (experiments $B$, $C$
@@ -1130,7 +1146,8 @@ The reduction ratio may vary with other systems.
 \begin{figure}[ht]
   \includegraphics[width=1.0\linewidth]{figures/time-vs-messages.png}
 
-  \caption{Execution time vs events}
+  \caption{Execution time vs events. According to the exponential
+  trend, we can state that our framework scales well.}
   \label{fig:time-vs-messages}
 \end{figure}
 
@@ -1151,7 +1168,10 @@ phenomenon is limited because we absorb these storage delays.
 \begin{figure}[ht]
   \includegraphics[width=1.0\linewidth]{figures/proportions.png}
 
-  \caption{Proportions of complete traces}
+  \caption{Proportions of complete traces for the different
+  experiments. This chart shows that Autofunk considers a lot of
+  traces to infer models, but there is still room for
+  improvement.}
   \label{fig:proportions}
 \end{figure}
 
@@ -1178,7 +1198,9 @@ removed, which is close to the reality.
 \begin{figure}[ht]
   \includegraphics[width=1.0\linewidth]{figures/memory-time.png}
 
-  \caption{Memory consumption vs execution time}
+  \caption{Memory consumption vs execution time. This version of
+  Autofunk is still a prototype, and memory consumption remains
+  an issue.}
   \label{fig:memory-time}
 \end{figure}
 
@@ -1198,7 +1220,8 @@ related to the generation of more abstract models.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\section{A better solution to trace segmentation and filtering}
+\section{A better solution to the trace segmentation and
+filtering problem with machine learning}
 \label{sec:testing:segmentation}
 
 In Section \ref{sec:modelinf:prodsystems:segmentation}, we
@@ -1217,13 +1240,6 @@ starting from an entry point and ending to an exit point. These
 can be extracted by analysing the traces and the variable
 $point$, which captures the product physical location.
 
-\begin{figure}[ht]
-    \includegraphics[width=1.0\linewidth]{figures/kmeans.png}
-
-    \caption{k-means clustering explained}
-    \label{fig:kmeans}
-\end{figure}
-
 In order to determine both entry and exit points of
 $\mathit{Sua}$, we rely on an outlier detection approach
 \cite{1695852}. An outlier is an observation that deviates so
@@ -1236,6 +1252,15 @@ being effectively used (that is called unsupervised learning, and
 it is well-known in the machine learning field). \textit{k-means
 clustering} aims to partition $n$ observations into $k$ clusters
 as shown in Figure \ref{fig:kmeans}.
+
+\begin{figure}[ht]
+    \includegraphics[width=1.0\linewidth]{figures/kmeans.png}
+
+    \caption{k-means clustering explained: the intuition is to
+    partition $n$ observations into $k$ clusers in which each
+    observation belongs to the cluster with the nearest mean.}
+    \label{fig:kmeans}
+\end{figure}
 
 In our context, observations are represented by the variable
 $point$ present in each trace of $Traces({Sua})$, which captures
@@ -1260,14 +1285,25 @@ obtain the reduced model $R(\EuScript{S}) =
 
 In this chapter, we presented our revisited framework Autofunk,
 combining model inference, machine learning, and expert systems
-to generate models from production systems. Given a large set of
-production events, our framework infers exact models whose traces
-are included in the initial trace set of a system under analysis.
-We chose to design Autofunk for targeting high performance. Our
-evaluation shows that this approach is suitable in the context of
-production systems since we quickly obtain STS trees reduced by
-90\% against the original trace sets of the system under
-analysis.
+to generate models from production systems. Figure
+\ref{fig:autofunk_branded} shows the final architecture of our
+revisited version of Autofunk along with the technologies used in
+each module. Given a large set of production events, our
+framework infers exact models whose traces are included in the
+initial trace set of a system under analysis.  We chose to design
+Autofunk for targeting high performance. Our evaluation shows
+that this approach is suitable in the context of production
+systems since we quickly obtain STS trees reduced by 90\% against
+the original trace sets of the system under analysis.
+
+\begin{figure}[h]
+    \includegraphics[width=1.0\linewidth]{figures/autofunk_branded.png}
+
+    \caption{Final architecture of our framework Autofunk,
+    designed for quickly inferring models of Michelin's
+    production systems.}
+    \label{fig:autofunk_branded}
+\end{figure}
 
 While there is still room for improvement on how we generate
 exact models, we decided to go deeper and use such models for

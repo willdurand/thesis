@@ -23,19 +23,19 @@ well-established: we have a web server that runs the application,
 no matter its underlying programming language, and a client (a
 web browser most of the time) that connects to the web server so
 that it can talk to the application. \textit{HyperText Transfer
-Protocol} (HTTP) is the protocol that allows such a discussion by
-means of HTTP requests and HTTP responses. Usually, the client
-initiates a request, and the server responds to it. That is why
-we consider web applications as event-driven applications: they
-react to events. Requests embed HTTP verbs (or methods),
-\textit{Unique Resource Identifiers} (URIs also known as the "web
-links"), and sometimes parameters along with their values. When
-one submits a registration form on a web page, it is likely that
-the HTTP verb is $POST$, and that there are at least as many
-parameters and values as fields in the form. By clicking on the
-"submit" button (or "save", "register", etc.), the web browser
-crafts an HTTP request containing all the information, and sends
-it to the web server that delivers the request to the
+Protocol} (HTTP)  is the protocol that allows such a discussion by
+means of HTTP requests and HTTP responses \cite{RFC7230}.
+Usually, the client initiates a request, and the server responds
+to it. That is why we consider web applications as event-driven
+applications: they react to events. Requests embed HTTP verbs (or
+methods), \textit{Unique Resource Identifiers} (URIs also known
+as the "web links"), and sometimes parameters along with their
+values. When one submits a registration form on a web page, it is
+likely that the HTTP verb is $POST$, and that there are at least
+as many parameters and values as fields in the form. By clicking
+on the "submit" button (or "save", "register", etc.), the web
+browser crafts an HTTP request containing all the information,
+and sends it to the web server that delivers the request to the
 application. When the application sends back the appropriate
 response, it also goes through the web server. By hooking between
 the web brower and the web server, we are able to read both HTTP
@@ -97,8 +97,10 @@ finite.
     \begin{center}
         \includegraphics[width=0.8\linewidth]{figures/soict-framework.png}
     \end{center}
-    \caption{Model generation framework for web applications}
 
+    \caption{Very first overall architecture of Autofunk, our
+    model generation framework for web applications. It is split
+    in different modules.}
     \label{fig:soict-framework}
 \end{figure}
 
@@ -121,27 +123,27 @@ Monitor or by the Robot explorer which returns them to the Models
 generator. The advantages of this approach are manifold:
 
 \begin{itemize}
-\item it takes a predefined set of traces collected from any kind
+\item It takes a predefined set of traces collected from any kind
 of applications producing traces. In the context of web
-applications, traces can be produced using automatic testing,
+applications, traces can be produced using automatic testing;
 
-\item the application exploration is guided with a strategy which
+\item The application exploration is guided with a strategy which
 can be modified according to the type of application being
 analysed. This strategy offers the advantage of directly targeting
 some states of the application when its state number is too large
-for being traversed in a reasonable processing time,
+for being traversed in a reasonable processing time;
 
-\item the knowledge encapsulated in the expert system can be used
+\item The knowledge encapsulated in the expert system can be used
 to cover trace sets of several applications thanks to generic
 rules. For instance, the same rules can be applied on the
 applications developed with the same framework or programming
-language,
+language;
 
-\item but, the rules can also be specialised and refined for one
+\item But, the rules can also be specialised and refined for one
 application to yield more precise models. This is interesting for
-application comprehension,
+application comprehension;
 
-\item our approach is both flexible and scalable. It does not
+\item Our approach is both flexible and scalable. It does not
 produce one model but several ones, depending on the number of
 layers of the Models generator, which is not limited and may
 evolve in accordance to the application's type. Each model,
@@ -163,8 +165,11 @@ In the following section, we describe our model inference method.
     \begin{center}
         \includegraphics[width=1.0\linewidth]{figures/soict_se.png}
     \end{center}
-    \caption {Models generator}
 
+    \caption {The Models generator stack. Each layer yields a
+    model that is reused by the next layer to yield another
+    model, and so on. An orthogonal layer describes any kind of
+    exploration strategy by means of rules.}
     \label{fig:se}
 \end{figure}
 
@@ -224,14 +229,14 @@ time and in a deterministic way. To reach that purpose, we
 formulate the following hypotheses on the inference rules:
 
 \begin{enumerate}
-\item (finite complexity): a rule can only be applied a limited
-number of times on the same knowledge base,
+\item Finite complexity: a rule can only be applied a limited
+number of times on the same knowledge base;
 
-\item (soundness): the inference rules are Modus Ponens (simple
+\item Soundness: the inference rules are Modus Ponens (simple
 implications that lead to sound facts if the original facts are
-true: If P, then Q. P. Therefore, Q.),
+true: If P, then Q. P. Therefore, Q.);
 
-\item (no implicit knowledge elimination): after the application
+\item No implicit knowledge elimination: after the application
 of a rule $r$ expressed by the relation $r: T_i \rightarrow
 T_{i+1} (i\geq 2)$, with $T_i$ a transition base, for all
 transition $t=(l_n,l_m,a(p),G,A)$ extracted from $T_{i+1}$, $l_n$
@@ -281,7 +286,8 @@ Hello, World!
 \end{BVerbatim}
 \end{framed}
 
-\caption{HTTP request/response example}
+\caption{An example of HTTP request and response. HTTP messages
+are sent in plain text, according to RFC 7230 \cite{RFC7230}.}
 \label{fig:httpexample}
 \end{figure}
 
@@ -304,9 +310,9 @@ HTTP response $resp_i$. The structured HTTP trace $\sigma$ of $t$
 is the sequence $(a_1(p),\theta_1) \dots (a_n(p),\theta_n)$ where:
 
 \begin{itemize}
-\item $a_i$ is the HTTP verb used to make the request in $req_i$,
+\item $a_i$ is the HTTP verb used to make the request in $req_i$;
 
-\item $p$ is the parameter set $\{URI, request, response\}$,
+\item $p$ is the parameter set $\{URI, request, response\}$;
 
 \item $\theta_i$ is a valuation $p \rightarrow D_p$ that assigns
 a value to each variables of $p$.  $\theta$ is deduced from the
@@ -529,15 +535,16 @@ that:
 \begin{itemize}
 
 \item $L_{\EuScript{S}_1}= \{l_i \mid \exists r\in SR, (li,v_\emptyset)$ is
-a state found in $r\}$,
+a state found in $r\}$;
 
 \item $l0_{\EuScript{S}_1}$ is the initial location such that $\forall r \in
-SR$, $r$ starts with $(l0_{\EuScript{S}_1},v_\emptyset)$,
+SR$, $r$ starts with $(l0_{\EuScript{S}_1},v_\emptyset)$;
 
-\item $V_{\EuScript{S}_1}=\emptyset$, $V0_{\EuScript{S}_1}=v_\emptyset$,
+\item $V_{\EuScript{S}_1}=\emptyset$,
+    $V0_{\EuScript{S}_1}=v_\emptyset$;
 
 \item $\Lambda_{\EuScript{S}_1}= \{a_i(p) \mid \exists r\in SR,
-(a_i(p),\theta_i)$ is a valued action in $r\}$,
+(a_i(p),\theta_i)$ is a valued action in $r\}$;
 
 \item $\rightarrow_{\EuScript{S}_1}$ is defined by the following
     inference rule applied on every run $r\in SR$:
@@ -546,8 +553,10 @@ SR$, $r$ starts with $(l0_{\EuScript{S}_1},v_\emptyset)$,
     s_i=(l_i,v_\emptyset),$ $s_{i+1}=(l_{i+1},v_\emptyset),$
 
     \begin{center}
+    {\Large
         $\frac{G_i=\displaystyle \bigwedge_{(x_i=vi)\in \theta_i} x_i==vi}
         {l_i \xrightarrow{a_i(p),G_i,(x:=x)_{x\in V}}_{\EuScript{S}_1} l_{i+1}}$
+    }
     \end{center}
 
 \end{itemize}
@@ -652,12 +661,12 @@ $\EuScript{S}_1$, every next layer carries out the following
 steps:
 
 \begin{enumerate}
-\item apply the rules of the layer and infer a new knowledge base
-(new IOSTS $\EuScript{S}_i$, $i\geq 2$),
+\item Apply the rules of the layer and infer a new knowledge base
+(new IOSTS $\EuScript{S}_i$, $i\geq 2$);
 
-\item apply a bisimulation minimisation,
+\item Apply a bisimulation minimisation;
 
-\item store the resulting IOSTS.
+\item Store the resulting IOSTS.
 \end{enumerate}
 
 Without loss of generality, we now restrict the rule structure to
@@ -715,7 +724,7 @@ similiarities, e.g., applications written with the same framework
 or same programming language.  This layer has two roles:
 
 \begin{itemize}
-\item the \textbf{enrichment of the meaning captured in
+\item The \textbf{enrichment of the meaning captured in
     transitions}. In this step, we chose to mark the transitions
     with new internal variables. These shall help deduce more
     abstract actions in the upper layers. These rules are of the
@@ -741,9 +750,9 @@ aims at recognising the receipt of a login or logout page. The
 first rule means that if the response content, which is received
 after a request sent with the $GET$ method, contains a login
 form, then this transition is marked as a "login page" with the
-assignment on the variable $isLoginPage$,
+assignment on the variable $isLoginPage$;
 
-\item the \textbf{generic aggregation of some successive
+\item The \textbf{generic aggregation of some successive
     transitions}. Here, some transitions (two or more) are
     analysed in the conditional part of the rule. When the rule
     condition is met, then the successive transitions are replaced
@@ -885,16 +894,16 @@ more expressive actions and whose size should be reduced. Its
 rules may have different forms:
 
 \begin{itemize}
-\item they can be applied on a single transition only. In this
+\item They can be applied on a single transition only. In this
 case, the rule replaces the transition action to add more sense
 to the action. The rule given in Figure \ref{fig:rule:deauth} is
 an example, which recognises a user de-authentication, and adds a
 new action $Deauthentication$. This rule means that if a
 $PostRedirection$ action is triggered against a "Logout" endpoint
 (given by the variable \textit{isLogout} added by Layer 3), then
-this is a deauthentication,
+this is a deauthentication;
 
-\item the rules can also aggregate several successive transitions
+\item The rules can also aggregate several successive transitions
 up to complete paths into one transition labelled by a more
 abstract action. For instance, the rule illustrated in Figure
 \ref{fig:rule:auth} recognises a user authentication thanks to
@@ -1107,7 +1116,7 @@ The rules of the Strategy layer can encode different strategies.
 We propose two examples below:
 
 \begin{itemize}
-    \item \textbf{classical traversal strategies} (Depth-first
+    \item \textbf{Classical traversal strategies} (Depth-first
         search, Breadth-first search) can still be established.
         For example, Figure \ref{fig:rule:bfs} depicts two rules
         expressing the choice the next location to explore in a
@@ -1121,9 +1130,9 @@ We propose two examples below:
         allows to operate on sets of data, which we used to
         transcribe the previous sentence.  The selected locations
         are marked as explored in the IOSTS $\EuScript{S}_i$ with
-        the method $SetExplored$ in the "then" part of the rule,
+        the method $SetExplored$ in the "then" part of the rule;
 
-    \item \textbf{semantic-driven strategies} could also be
+    \item \textbf{Semantic-driven strategies} could also be
         applied, when the meaning of some actions is
         recognisable. For instance, for e-commerce applications,
         the login step and the term "buy" are usually important.
