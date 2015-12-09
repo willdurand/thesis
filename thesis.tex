@@ -98,13 +98,11 @@ des C\'ezeaux - 1 rue de la Chebarde}
 \usepackage{stmaryrd} % for \llbracket
 \usepackage{framed}   % for \begin{framed}
 \usepackage{fancyvrb} % for \begin{BVerbatim}
-\usepackage{hyperref} % for clickable refs
 \usepackage{rotating} % for \begin{sidewaystable}
 \usepackage{thmtools}
 \usepackage{amssymb}  % for \Leftrightarrow
-\usepackage{amssymb}  % for \mathbf
-\usepackage{afterpage} % for new page
-\usepackage{minitoc}
+                      %for \mathbf
+\usepackage{afterpage}% for new page
 
 % My commands
 \newcommand{\R}{\mathbb{R}}
@@ -129,6 +127,9 @@ des C\'ezeaux - 1 rue de la Chebarde}
 \newcommand\blankpage{%
     \null
     \newpage}
+
+% https://tex.stackexchange.com/questions/166910/what-are-these-warnings-for-minitoc-package
+\usepackage{minitoc}
 
 % **************************************************
 % Document CONTENT
@@ -167,6 +168,7 @@ des C\'ezeaux - 1 rue de la Chebarde}
 \blankpage
 
 \setcounter{tocdepth}{3}		% define depth of toc
+\dominitoc
 \tableofcontents				% display table of contents
 
 \cleardoublepage
@@ -176,19 +178,25 @@ des C\'ezeaux - 1 rue de la Chebarde}
 % List of ...
 % --------------------------
 
-\phantomsection\addcontentsline{toc}{chapter}{List of Definitions}
+% See on why "\addstarredchapter" instead of "\addcontentsline":
+% http://www.latex-community.org/forum/viewtopic.php?f=44&t=24170
+
+\phantomsection
+\addstarredchapter{List of Definitions}
 \listoftheorems[ignoreall,show={definition}]
 \cleardoublepage
 
 \blankpage
 
-\phantomsection\addcontentsline{toc}{chapter}{\listfigurename}
+\phantomsection
+\addstarredchapter{\listfigurename}
 \listoffigures
 \cleardoublepage
 
 \blankpage
 
-\phantomsection\addcontentsline{toc}{chapter}{\listtablename}
+\phantomsection
+\addstarredchapter{\listtablename}
 \listoftables
 \cleardoublepage
 
@@ -200,7 +208,6 @@ des C\'ezeaux - 1 rue de la Chebarde}
 \pagenumbering{arabic}			% arabic page numbering
 \setcounter{page}{1}			% set page counter
 \pagestyle{maincontentstyle} 	% fancy header and footer
-\dominitoc
 
 \input{src/introduction/0_introduction}
 \input{src/related-work/0_related-work}
