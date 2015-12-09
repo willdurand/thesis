@@ -59,7 +59,10 @@ in the rest of this thesis.
     \includegraphics[width=1.0\linewidth]{figures/sorts-of-testing.png}
     \end{center}
 
-    \caption{Sorts of testing}
+    \caption{Sorts of testing. We can sort testing techniques by
+    aspect (characteristics of quality), by phase (related to the
+    target of the test), and by accessibility (related to the
+    information available to construct the test cases).}
 \end{figure}
 
 Nowadays, software testing, if not always applied, is well-known
@@ -122,7 +125,7 @@ cases:
         of Control and Observation} (PCOs). Such a technique is also
         known as functional testing;
 
-    \item \textbf{grey-box:} the combination of white-box testing and
+    \item \textbf{Grey-box:} the combination of white-box testing and
         black-box testing. One has access to the relevant internal
         parts of a SUT.
 \end{itemize}
@@ -189,7 +192,8 @@ more reliable by means of Model-based Testing.
     \includegraphics[width=1.0\linewidth]{figures/mbt.png}
     \end{center}
 
-    \caption{A simplified diagram showing how MBT works}
+    \caption{A simplified diagram showing how MBT works. This is
+    a three-step process.}
     \label{fig:mbt}
 \end{figure}
 
@@ -418,9 +422,11 @@ with parameter assignments.
         \Sigma \times Q$ deduced by the following rule:\\
 	\end{itemize}
 	\begin{center}
+    {\Large
     $\frac{l_1 \xrightarrow{a(p),G,A}l_2,\alpha \in D_p, v \in D_V, v'
         \in D_V, v \cup \alpha \models G, v'=A(v \cup \alpha))}{(l_1,v)
             \xrightarrow{a(p),\alpha} (l_2,v') }$
+    }
 	\end{center}
 
 	\label{def:semantics}
