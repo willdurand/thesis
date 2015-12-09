@@ -286,9 +286,9 @@ Hello, World!
 \end{BVerbatim}
 \end{framed}
 
-\caption{An example of HTTP request and response. HTTP messages
-are sent in plain text, according to RFC 7230 \cite{RFC7230}.}
-\label{fig:httpexample}
+    \caption{An example of HTTP request and response. HTTP messages
+    are sent in plain text, according to RFC 7230 \cite{RFC7230}.}
+    \label{fig:httpexample}
 \end{figure}
 
 For a couple \textit{(HTTP request, HTTP response)}, we extract
@@ -372,9 +372,10 @@ end
 \end{BVerbatim}
 \end{framed}
 
-\caption{Filtering rule example that retracts the valued actions
-related to PNG images}
-\label{fig:layer1:filter}
+    \caption{Filtering rule example that retracts the valued actions
+    related to PNG images based on the request's mime type or
+    file extension.}
+    \label{fig:layer1:filter}
 \end{figure}
 
 After the instantiation of the Layer 1 rules, we obtain a
@@ -499,7 +500,7 @@ $SR:=SR \cup \{r\}$
 
 END\;
 
-    \caption{Traces to Runs Algorithm}
+    \caption{Traces to runs algorithm}
     \label{traces_to_runs}
 \end{algorithm}
 
@@ -704,17 +705,18 @@ transition. The application of these layers ends in a finite time
 \begin{minipage}{.5\textwidth}
     \includegraphics[width=0.8\linewidth]{figures/gh-iosts-1.png}
 
-    \caption{IOSTS $\EuScript{S}_1$}
+    \caption{IOSTS $\EuScript{S}_1$ obtained after the
+    application of Layer 2.}
     \label{fig:github:iosts:1}
 \end{minipage}
 \begin{minipage}{.5\textwidth}
     \includegraphics[width=1.0\linewidth]{figures/gh-iosts-2.png}
 
-    \caption{IOSTS $\EuScript{S}_2$}
+    \caption{IOSTS $\EuScript{S}_2$ obtained after the
+    application of Layer 3.}
     \label{fig:github:iosts:2}
 \end{minipage}
 \end{figure}
-
 
 \subsubsection{Layer 3}
 
@@ -842,8 +844,13 @@ end
 \end{BVerbatim}
 \end{framed}
 
-\caption {Login page and logout action recognition rules}
-\label{fig:rule:login}
+    \caption{Login page and logout action recognition rules. The
+    first rule adds a new assignment to any transition having a
+    response's content containing a login form. The second
+    transition adds a new assignment to all transitions where
+    the $uri$ (guard) matches $/logout$, identifying logout
+    actions.}
+    \label{fig:rule:login}
 \end{figure}
 
 \begin{figure}[h]
@@ -873,7 +880,9 @@ end
 \end{BVerbatim}
 \end{framed}
 
-\caption{Simple aggregation to identify a redirection after a POST request}
+\caption{An inference rule that represents a simple aggregation
+identifying a redirection after a $POST$ request, leading to the
+creation of a new $PostRedirection$ transition.}
 \label{fig:rule:redirect}
 \end{figure}
 
@@ -931,8 +940,9 @@ end
 \end{BVerbatim}
 \end{framed}
 
-\caption{Deauthentication recognition rule}
-\label{fig:rule:deauth}
+    \caption{This rule recognises an action that we call
+    "deauthentication", i.e. when a user logs out.}
+    \label{fig:rule:deauth}
 \end{figure}
 
 \begin{figure}[h]
@@ -963,8 +973,12 @@ end
 \end{BVerbatim}
 \end{framed}
 
-\caption{Authentication recognition}
-\label{fig:rule:auth}
+    \caption{Authentication recognition by leveraging information
+    carried by the rule given in Figure \ref{fig:rule:redirect}.
+    When a user browses a web page containing a login form,
+    following by a $PostRedirection$, this is an $Authentication$
+    action.}
+    \label{fig:rule:auth}
 \end{figure}
 
 Other rules can also be application-specific, so that these bring
@@ -998,8 +1012,10 @@ end
 \end{BVerbatim}
 \end{framed}
 
-\caption{User profile recognition}
-\label{fig:rule:gh-profile}
+    \caption{User profile recognition. This rule is specific to the
+    application under analysis, and works because profile pages are
+    anything but \textit{/edu} and \textit{/explore}.}
+    \label{fig:rule:gh-profile}
 \end{figure}
 
 \begin{figure}
@@ -1022,7 +1038,10 @@ end
 \end{BVerbatim}
 \end{framed}
 
-\caption{Project choice recognition}
+\caption{Project choice recognition. Here again, this is a
+specific rule for the application under analysis that works
+because the routing of this application defines projects at URIs
+matching \textit{/\{username\}/\{project name\}}.}
 \label{fig:rule:gh-project}
 \end{figure}
 
@@ -1037,7 +1056,8 @@ behaviors.
 \begin{figure}[ht]
     \begin{center}
     \includegraphics[width=0.6\linewidth]{figures/gh-iosts-41.png}
-    \caption {IOSTS $\EuScript{S}_3$}
+    \caption{The final IOSTS $\EuScript{S}_3$ obtained after the
+    application of Layer 4.}
     \label{fig:github:iosts:4}
     \end{center}
 \end{figure}
@@ -1177,7 +1197,8 @@ end
 \end{BVerbatim}
 \end{framed}
 
-\caption{BFS strategy}
+\caption{Two rules used to implement a Breadth-first search (BFS)
+exploration strategy.}
 \label{fig:rule:bfs}
 \end{figure}
 
@@ -1198,7 +1219,9 @@ end
 \end{BVerbatim}
 \end{framed}
 
-\caption{Semantic-driven strategy}
+\caption{A semantic-driven exploration strategy that focuses on
+the term "buy" in the HTTP responses, i.e. displayed the web
+pages.}
 \label{fig:rule:semdriven}
 \end{figure}
 
