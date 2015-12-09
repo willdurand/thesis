@@ -10,7 +10,7 @@
 	11pt,						% font size
 	headings=normal,			% size of headings
 	bibliography=totoc,			% include bib in toc
-	listof=totoc,				% include listof entries in toc
+    listof=totoc,				% include listof entries in toc
 	titlepage=on,				% own page for each title page
 	captions=tableabove,		% display table captions above the float env
 	draft=false,				% value for draft version
@@ -30,6 +30,8 @@ for production systems in a Model-based Testing approach.}
 \newcommand{\thesisSubject}{Documentation}
 \newcommand{\thesisDate}{\today}
 \newcommand{\thesisVersion}{draft}
+
+% TODO: reviewers
 
 \newcommand{\thesisFirstReviewer}{Jane Doe}
 \newcommand{\thesisFirstReviewerUniversity}{\protect{Clean Thesis Style University}}
@@ -136,8 +138,6 @@ des C\'ezeaux - 1 rue de la Chebarde}
 % --------------------------
 % rename document parts
 % --------------------------
-%\renewcaptionname{ngerman}{\figurename}{Abb.}
-%\renewcaptionname{ngerman}{\tablename}{Tab.}
 \renewcaptionname{english}{\figurename}{Fig.}
 \renewcaptionname{english}{\tablename}{Tab.}
 
@@ -160,9 +160,11 @@ des C\'ezeaux - 1 rue de la Chebarde}
 \pagestyle{plain}				% display just page numbers
 \input{src/abstract}		    % INCLUDE: the abstracts
 \cleardoublepage
+\blankpage
 
 \input{src/acknowledgement}     % INCLUDE: acknowledgement
 \cleardoublepage
+\blankpage
 
 \setcounter{tocdepth}{3}		% define depth of toc
 \dominitoc
@@ -172,18 +174,22 @@ des C\'ezeaux - 1 rue de la Chebarde}
 \blankpage
 
 % --------------------------
-%
+% List of ...
 % --------------------------
+
+\phantomsection\addcontentsline{toc}{chapter}{List of Definitions}
 \listoftheorems[ignoreall,show={definition}]
 \cleardoublepage
 
 \blankpage
 
+\phantomsection\addcontentsline{toc}{chapter}{\listfigurename}
 \listoffigures
 \cleardoublepage
 
 \blankpage
 
+\phantomsection\addcontentsline{toc}{chapter}{\listtablename}
 \listoftables
 \cleardoublepage
 
