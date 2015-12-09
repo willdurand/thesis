@@ -13,15 +13,91 @@ from this tweet:
 \url{https://twitter.com/hipsterhacker/status/396352411754717184}.}.
 Indeed, almost a decade ago, quality assurance was not a common
 practice, and researchers had to prove what the benefits of, for
-instance, testing could be.
+instance, testing could be. Generally speaking, quality assurance
+is a way of preventing faults in manufactured products, which is
+defined in ISO 9000 as "part of quality management focused on
+providing confidence that quality requirements will be fulfilled"
+\cite{iso20059000}. Software testing provides information about
+the quality of software. For instance, testing can prove
+confidence of a software system by executing a program with the
+intent of finding errors, also known as "bugs"
+\cite{Myers:1979:AST:539883}.
 
 Nowadays, quality assurance and software testing are well-known
 in the Industry, and everyone understands the need for them.
+However, testing is often performed by hand, which is complicated
+and far from perfect. Software testing can be seen as a sequence
+of three major steps:
+
+\begin{enumerate}
+    \item The design of test cases that are good at revealing
+        faults, according to a certain level of requirement;
+
+    \item The execution of these test cases;
+
+    \item The determination of whether the output produced is
+        correct.
+\end{enumerate}
+
+Sadly, the test case exection is often the only fully automated
+aspect of this activity in the Industry. Continuous Integration
+(CI) \cite{booch1991object} is now associated with the automation
+of the execution of test cases and quick feedback, often received
+by email. There are countless tools and services
+\footnote{For example, Travis CI: https://travis-ci.org/.} to
+automate this process, but too few tools have emerged to tackle
+the problem of test case generation for instance. Fortunately, in
+Academia, researchers have studied such a problem for decades.
+
+A relatively recent field to automate testing is Model-based
+Testing (MbT). MbT is application of (formal) Model-based design
+for designing and optionally also executing artifacts to perform
+software testing \cite{Jorgensen:1995:STC:526521}. To make a long
+story short, the use of a model allows to formally describe the
+expected behaviors of a software, from which it is possible to
+automatically generate test cases, and then to execute them.
+Nonetheless, writing such models is tedious and error-prone,
+which is a drawback and can also explain the slow adoption of MbT
+in the Industry.
+
+Model inference is a research field that aims at automatically
+deriving models, expressing functional behaviors of existing
+software for example. These models, even if incomplete, help
+understand how a software behaves. That is why model inference is
+interesting to solve the limitation of MbT mentioned previously.
+Most of the model inference techniques that are used for testing
+purpose are not designed to infer large models or to test large
+software systems.
+
+Michelin, one of the three largest tire manufacturers in the
+world, is our industrial partner for the last three years. The
+company designs most of its factories, production machines, and
+software itself. In a factory, there are several workshops (for
+the different parts of the manufacturing process). From our
+perspective, a workshop is seen as a set of production machines
+controlled by a software. That is what we call a production
+system. Such systems deal with many physical devices, databases,
+and human interactions. In this thesis, we propose a solution to
+the problem of testing such systems: \textit{Autofunk}, a
+framework combining different techniques to: (i) infer formal
+models from large software systems, and (ii) perform passive
+testing.
+
+The next section discusses in detail the problems this thesis
+adresses. Section \ref{sec:intro:contrib} presents the
+contributions of this thesis. Section \ref{sec:intro:overview}
+gives the overview of this thesis.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\section{The problem of the thesis}
 
 \TODO{...}
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \section{Contributions}
+\label{sec:intro:contrib}
 
 The contributions of this thesis are:
 
@@ -60,8 +136,10 @@ The contributions of this thesis are:
         of production systems.
 \end{enumerate}
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \section{Overview}
+\label{sec:intro:overview}
 
 \textbf{Chapter \ref{sec:related}} surveys the literature in
 software testing first, and then in model inference applied to
