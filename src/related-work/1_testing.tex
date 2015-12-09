@@ -19,8 +19,8 @@ Testing is a verification and validation (V\&V) process
 terms with the following questions \cite{Boehm1979}:
 
 \begin{itemize}
-\item \textbf{Validation:} are we building the right software?
-\item \textbf{Verification:} are we building the software right?
+    \item \textbf{Validation:} are we building the right software?
+    \item \textbf{Verification:} are we building the software right?
 \end{itemize}
 
 In other words, formal verification is the act of proving or
@@ -76,12 +76,12 @@ ISO 9126 \cite{iso9126}, replaced by ISO/IEC 25010:2011
 be used to sort these testing techniques into six testing types:
 
 \begin{itemize}
-\item efficiency testing,
-\item functionality testing,
-\item maintainability testing,
-\item portability testing,
-\item reliability testing,
-\item usability testing.
+\item Efficiency testing;
+\item Functionality testing;
+\item Maintainability testing;
+\item Portability testing;
+\item Reliability testing;
+\item Usability testing.
 \end{itemize}
 
 However, this classification can not be generally accepted as
@@ -93,11 +93,11 @@ detail):
 \begin{itemize}
 \item \textbf{Unit Testing:} units (e.g., functions, methods,
 modules) of the system are tested in isolation. Typically this
-testing type implies access to the source code being tested,
+testing type implies access to the source code being tested;
 
 \item \textbf{Integration Testing:} interactions between software
 components are tested. This testing type is a continuous task,
-hence the \textit{continous integration} (CI) practice,
+hence the \textit{continous integration} (CI) practice;
 
 \item \textbf{System Testing:} the whole system is taken into
 consideration. This testing type is appropriate for validating
@@ -112,19 +112,19 @@ depending on the information available to construct the test
 cases:
 
 \begin{itemize}
-\item \textbf{white-box:} a method that tests the internal
-    structure of a SUT. It is usually done at the unit level;
+    \item \textbf{White-box:} a method that tests the internal
+        structure of a SUT. It is usually done at the unit level;
 
-\item \textbf{black-box:} a method that tests the functionalities
-    of a SUT without knowing its internal structure. The behavior
-    of the \textit{implementation under test} (IUT) is only
-    visible through a restricted interface called \textit{Points
-    of Control and Observation} (PCOs). Such a technique is also
-    known as functional testing;
+    \item \textbf{Black-box:} a method that tests the functionalities
+        of a SUT without knowing its internal structure. The behavior
+        of the \textit{implementation under test} (IUT) is only
+        visible through a restricted interface called \textit{Points
+        of Control and Observation} (PCOs). Such a technique is also
+        known as functional testing;
 
-\item \textbf{grey-box:} the combination of white-box testing and
-    black-box testing. One has access to the relevant internal
-    parts of a SUT.
+    \item \textbf{grey-box:} the combination of white-box testing and
+        black-box testing. One has access to the relevant internal
+        parts of a SUT.
 \end{itemize}
 
 \subsubsection{Test selection}
@@ -202,9 +202,9 @@ Model-based Testing can be summarized as a three-step process,
 which is extended in Figure \ref{fig:mbt}:
 
 \begin{enumerate}
-\item Formally modelling the requirements (specification),
+\item Formally modelling the requirements (specification);
 
-\item Generating test cases from the model,
+\item Generating test cases from the model;
 
 \item Running these test cases against an actual SUT and
 evaluating the results.
@@ -237,27 +237,27 @@ We can classify models that can be employed for testing into two
 categories (these lists are not exhaustive):
 
 \begin{itemize}
-\item \textbf{Behavior/Control oriented:} Finite Automata (like
-Finite State Machines, Symbolic Transition Systems, and Labelled
-Transition Systems) are well-known in software testing. They are
-very generic and flexible, and are a good fit when it comes to
-model software systems. For real-time and/or safety-critical
-systems, we often rely on Synchronous Languages such as Lustre
-\cite{lustre:ieee} and SCADE
-\cite{LeSergent:2011:SCF:2188575.2188578}. We can also mention
-Petri Nets, Finite State Machines, and timed automata
-\cite{Alur94atheory},
+    \item \textbf{Behavior/Control oriented:} Finite Automata (like
+        Finite State Machines, Symbolic Transition Systems, and Labelled
+        Transition Systems) are well-known in software testing. They are
+        very generic and flexible, and are a good fit when it comes to
+        model software systems. For real-time and/or safety-critical
+        systems, we often rely on Synchronous Languages such as Lustre
+        \cite{lustre:ieee} and SCADE
+        \cite{LeSergent:2011:SCF:2188575.2188578}. We can also mention
+        Petri Nets, Finite State Machines, and timed automata
+        \cite{Alur94atheory};
 
-\item \textbf{Data oriented (pre/post):} often using annotation
-languages originating from the \textit{Design-By-Contract}
-paradigm \cite{Meyer:1992:ADC:618974.619797}. These languages
-make it possible to express formal properties (invariants,
-pre/post-conditions) that directly annotate program entities
-(such as classes, methods, attributes) in the source code. Many
-annotation languages exist, such as the Java Modeling Language
-\cite{jml}, Spec\# \cite{117852}, the Object Constraint Language
-\cite{Warmer:1998:OCL:291202}, the B-Method
-\cite{Lano:1996:BLM:525749}, and Praspel
+    \item \textbf{Data oriented (pre/post):} often using annotation
+        languages originating from the \textit{Design-By-Contract}
+        paradigm \cite{Meyer:1992:ADC:618974.619797}. These languages
+        make it possible to express formal properties (invariants,
+        pre/post-conditions) that directly annotate program entities
+        (such as classes, methods, attributes) in the source code. Many
+        annotation languages exist, such as the Java Modeling Language
+        \cite{jml}, Spec\# \cite{117852}, the Object Constraint Language
+        \cite{Warmer:1998:OCL:291202}, the B-Method
+        \cite{Lano:1996:BLM:525749}, and Praspel
 \cite{Enderlin:2011:PSL:2075545.2075551}.
 \end{itemize}
 
@@ -341,30 +341,31 @@ is the empty assignment.
 	\begin{itemize}
         \item STSs do not have \textbf{states but locations}
         (a.k.a. symbolic states), and $L$ is the finite location
-        set, with $l_0$ being the initial one,
+        set, with $l_0$ being the initial one;
 
         \item $V$ is the finite set of internal variables, while
         $I$ is the finite set of parameters. The internal
         variables are initialised with the condition $V_0$ on
-        $V$,
+        $V$;
 
         \item $\Lambda$ is the finite set of symbolic actions
         $a(p)$ ($a$ being a symbol), with $p=(p_1,\dots ,p_k)$ a
-        finite set of parameters in $I^{k} (k \in \mathbb{N})$,
+        finite set of parameters in $I^{k} (k \in \mathbb{N})$;
 
-        \item $\rightarrow$ is the
-        finite set of symbolic transitions. A symbolic transition
-        $t = (l_i,l_j,a(p),G,\\A)$,
-        from the location $l_i \in L$ to $l_j \in L$, also
-        denoted by $l_i \xrightarrow{a(p),G,A} l_j$, is labelled by:
+        \item $\rightarrow$ is the finite set of symbolic
+            transitions. A symbolic transition $t =
+            (l_i,l_j,a(p),G,\\A)$, from the location $l_i \in L$
+            to $l_j \in L$, also denoted by $l_i
+            \xrightarrow{a(p),G,A} l_j$, is labelled by:
 
 		\begin{itemize}
-            \item an action $a(p) \in \Lambda$,
+            \item an action $a(p) \in \Lambda$;
 
             \item a guard $G$ over $(p \cup V)$, which
             restricts the firing of the transition. We consider
             guards written as conjunctions of equalities:
-            $\displaystyle \bigwedge_{x \in I \cup V} (x == val)$,
+            $\displaystyle \bigwedge_{x \in I \cup V} (x ==
+            val)$;
 
             \item an assignment $A$ which defines the evolution
             of the proper variables, $A_x$ being the function in
@@ -406,12 +407,12 @@ with parameter assignments.
 
 	\begin{itemize}
 
-		\item $Q=L \times D_V$ is the set of states,
+		\item $Q=L \times D_V$ is the set of states;
 
-        \item $q_0=(l_0,V_0)$ is the initial state,
+        \item $q_0=(l_0,V_0)$ is the initial state;
 
 		\item $\sum=\{(a(p),\alpha)  \mid  a(p)\in\Lambda, \alpha \in
-		D_p\}$ is the set of valued events,
+		D_p\}$ is the set of valued events;
 
         \item $\rightarrow$ is the transition relation $Q \times
         \Sigma \times Q$ deduced by the following rule:\\
@@ -466,18 +467,18 @@ is a tuple $< L,l0,V,V0,I,\Lambda,\rightarrow>$, where:
 
 \begin{itemize}
 \item $L$ is the finite set of locations, $l0$ the initial
-location,
+location;
 
 \item $V$ is the finite set of internal variables, $I$ is the
 finite set of parameters. The internal variables are initialised
-with the assignment $V0$ on $V$, which is assumed to be unique,
+with the assignment $V0$ on $V$, which is assumed to be unique;
 
 \item $\Lambda$ is a finite set of symbolic actions $a(p)$, with
 $p = (p_1,\dots,p_k)$ a finite list of parameters in $I^k(k \in
 \mathbb{N})$. $p$ is assumed unique. $\Lambda= \Lambda^I  \cup
 \Lambda^O \cup \{!\delta \}$: $\Lambda^I$ represents the set of
 input actions, $\Lambda^O$ the set of output actions, and
-$\delta$ the quiescence,
+$\delta$ the quiescence;
 
 \item $\rightarrow$ is the finite transition set. A transition
 $(l_i,l_j,a(p),G,A)$, from the location $l_i \in L$ to $l_j \in
@@ -524,17 +525,19 @@ relations in the literature, which we can organize in three
 categories:
 
 \begin{itemize}
-\item \textbf{Equivalence relations:} Isomorphism, Bisimulation
-\cite{Abdulla06,Fernandez89animplementation}, Trace Equivalence,
-Testing Equivalence \cite{Abramsky1987225}, Refusal Equivalence
-\cite{DBLP:conf/icalp/Phillips86},
+    \item \textbf{Equivalence relations:} Isomorphism,
+        Bisimulation
+        \cite{Abdulla06,Fernandez89animplementation}, Trace
+        Equivalence, Testing Equivalence \cite{Abramsky1987225},
+        Refusal Equivalence \cite{DBLP:conf/icalp/Phillips86};
 
-\item \textbf{Preorder relations:} Observation Preorder, Trace
-Preorder, Testing Preorder \cite{Beohar2015}, Refusal Preorder,
+    \item \textbf{Preorder relations:} Observation Preorder,
+        Trace Preorder \cite{DNH84}, Testing Preorder
+        \cite{Beohar2015}, Refusal Preorder;
 
-\item \textbf{Input-Output relations:} Input-Output Testing,
-Input-Output Refusal, ioconf \cite{tretmans1996conformance}, ioco
-\cite{Tre96}.
+    \item \textbf{Input-Output relations:} Input-Output Testing,
+        Input-Output Refusal, ioconf
+        \cite{tretmans1996conformance}, ioco \cite{Tre96}.
 \end{itemize}
 
 \paragraph{Conformance testing} Conformance Testing assesses
@@ -557,11 +560,11 @@ This leads to three properties on the test suite $TS$:
 \begin{itemize}
 \item \textbf{Soundness:} $\forall \text{ } iut \in IMPS, iut$
 conforms to $spec \implies iut \text{ } \mathbf{passes} \text{ }
-TS$,
+TS$;
 
 \item \textbf{Exhaustiveness:} $\forall \text{ } iut \in IMPS,
 iut \text{ } \mathbf{passes} \text{ } TS \implies iut$ conforms
-to $spec$,
+to $spec$;
 
 \item \textbf{Completeness:} $\forall \text{ } iut \in IMPS, iut$
 conforms to $spec \Leftrightarrow iut \text{ } \mathbf{passes}
@@ -589,6 +592,7 @@ how we apply the test cases to the system under test:
         in which a tester examines the functionality of a unit
         under test before that unit is being deployed, i.e.
         during its development;
+
     \item \textbf{Passive testing}, which takes place after the
         deployment of that unit, and requires, for instance, the
         presence of a \textit{monitor}. Passive testing is also
