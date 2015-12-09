@@ -101,16 +101,28 @@ building process. At a workshop level, we observe a continuous
 stream of products from specific entry points to a finite set of
 exit points, i.e. where products go to reach the next step of the
 manufacturing process, and disappear of the workshop frame in the
-meantime. Depending on the workshops, products can stay in this
-frame for days up to several weeks. Indeed, a workshop may
-contain storage areas where products can stay for a while,
-depending on the production campaigns or needs for instance.
-Millions of \emph{production events} are exchanged among the
-industrial devices of the same workshop every day, allowing some
-factories to build over 30,000 tires a day.
+meantime, as shown in Figure \ref{fig:workshop-annotated}.
+Depending on the workshops, products can stay in this frame for
+days up to several weeks.  Indeed, a workshop may contain storage
+areas where products can stay for a while, depending on the
+production campaigns or needs for instance.  Millions of
+\emph{production events} are exchanged among the industrial
+devices of the same workshop every day, allowing some factories
+to build over 30,000 tires a day.
 
-\TODO{figure?}
-\TODO{entry/exit points}
+\begin{figure}[ht]
+    \includegraphics[width=1.0\linewidth]{figures/workshop-annotated.png}
+
+    \caption{A workshop owns a set of known entry and exit
+    points.  A continuous stream of products starts from known
+    entry points and ends at known exit points. This figure
+    shows two production lines: the pink line having two exit
+    points, and the blue one having only one real exit point,
+    not two. The red line represents a false-positive here,
+    which is a problem we have to take into account while
+    detecting (entry and) exit points.}
+    \label{fig:workshop-annotated}
+\end{figure}
 
 Although there is a finite number of applications, each has
 different versions deployed in factories all over the world,
@@ -183,12 +195,12 @@ are dedicated to build models, and an optional one can be used to
 derive more abstract and readable models.
 
 \begin{figure}[ht]
-\includegraphics[width=1.0\linewidth]{figures/autofunk.png}
+    \includegraphics[width=1.0\linewidth]{figures/autofunk.png}
 
-\caption{Overview of Autofunk revisited with the different
-modules in grey along with their corresponding steps. The last
-module (STS abstraction) is optional.}
-\label{fig:prodsystems:autofunk-overview}
+    \caption{Overview of Autofunk revisited with the different
+    modules in grey along with their corresponding steps. The last
+    module (STS abstraction) is optional.}
+    \label{fig:prodsystems:autofunk-overview}
 \end{figure}
 
 We consider \textit{Symbolic Transition Systems} (STSs) as models
@@ -775,16 +787,15 @@ l_{nj}(j\geq 1) \mid b=l0_{\EuScript{S}_i}
 l_n\}.$
 \end{definition}
 
-\TODO{impl. with smart algo based on hashes}
-
-The reduced STS denoted by $R(\EuScript{S}_i)$ of $\EuScript{S}_i$
-is obtained by concatenating all the branches of each equivalence
-class $[b]$ found in $Mat(\EuScript{S}_i)$ into one branch. The
-vectors found in the branches of $[b]$ are concatenated as well
-into the same unique matrix $M_{[b]}$. A column of this matrix
-represents a complete and ordered sequence of guards found in one
-initial branch of $\EuScript{S}_i$. $R(\EuScript{S}_i)$ is
-defined as follow:
+The reduced STS denoted by $R(\EuScript{S}_i)$ of
+$\EuScript{S}_i$ is obtained by concatenating all the branches of
+each equivalence class $[b]$ found in $Mat(\EuScript{S}_i)$ into
+one branch. This is achieved by an algorithm based on hashes (cf.
+Section \ref{sec:impl-exp-collect}). The vectors found in the
+branches of $[b]$ are concatenated as well into the same unique
+matrix $M_{[b]}$. A column of this matrix represents a complete
+and ordered sequence of guards found in one initial branch of
+$\EuScript{S}_i$. $R(\EuScript{S}_i)$ is defined as follow:
 
 \begin{definition}[Reduced STS $R(\EuScript{S}_i)$]
 	\label{rule:min}
@@ -795,6 +806,7 @@ defined as follow:
 	$\rightarrow_R>$ where:
 
   \begin{center}
+      {\Large
   $\frac{\begin{matrix}
       [b]=\{b_1,...,b_m\},
       b=l0_{\EuScript{S}_i} \xRightarrow{(a_1(p_1),G_{1},A_{1})...(a_n(p_n),G_{n},A_{n})}_{Mat(\EuScript{S}_i)} l_{n}\\
@@ -805,6 +817,7 @@ defined as follow:
       l0_R \xRightarrow{(a_1(p_1),M_{[b]}[1,c_{[b]}],id_V)... (a_n(p_n),M_{[b]}[n,c_{[b]}],id_V)}_{\rightarrow_R}\\  (l_{n1}...l_{nm})
     \end{matrix}
   }$
+  }
   \end{center}
 \end{definition}
 
@@ -988,12 +1001,21 @@ objects such as: Events, Trace sets $ST_i$, Runs, Transitions,
 and STSs. We chose to target performance and simplicity while
 implementing Autofunk. That is why most of the steps are
 implemented with parallel algorithms (except the production event
-parsing). Figure \ref{} shows the initial setup of Autofunk. We
-have sets of log files to parse coming from Michelin's logging
-system. Autofunk reads these files, and transforms them into
-traces, that are then used to build models.
+parsing). Figure \ref{fig:autofunk_initial_setup} shows the
+initial setup of Autofunk. We have sets of log files to parse
+coming from Michelin's logging system. Autofunk reads these
+files, and transforms them into traces, that are then used to
+build models.
 
-\TODO{add figure}
+\begin{figure}[ht]
+    \includegraphics[width=1.0\linewidth]{figures/autofunk_1.png}
+
+    \caption{The architecture of Autofunk that has been used to
+    conduct our first experiments with Michelin log files. A
+    newer (and better) architecture is given in Figure
+    \ref{fig:autofunk_gen_branded}.}
+    \label{fig:autofunk_initial_setup}
+\end{figure}
 
 The input trace collection is constructed with a classical
 parser, which returns $Event$ Java objects. By now, we are not
@@ -1048,8 +1070,6 @@ issue mentioned previously.
     Autofunk in a production environment.}
     \label{fig:autofunk_gen_branded}
 \end{figure}
-
-\TODO{fix figure}
 
 \subsection{Evaluation}
 
