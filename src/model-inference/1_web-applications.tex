@@ -575,9 +575,9 @@ with the classical learning algorithms based upon
 $\EuScript{L}^*$ \cite{Angluin198787,lambeau08}. Nonetheless,
 these methods would create an extrapolation of this IOSTS. We
 prefer rejecting such solutions to preserve the trace equivalence
-of the IOSTS $\EuScript{S}_1$ against the structured trace set
-$ST$ before applying inference rules. Instead, we propose to use
-a minimisation technique.
+\cite{petrenko06} of the IOSTS $\EuScript{S}_1$ against the
+structured trace set $ST$ before applying inference rules.
+Instead, we propose to use a minimisation technique.
 
 This IOSTS tree can be reduced in term of location size by
 applying a bisimulation minimisation technique which still
@@ -598,8 +598,6 @@ the resulting IOSTS is minimised.
 
 \paragraph{Completeness, soundness, complexity.}
 
-\TODO{to rewrite with Petrenko ref.}
-
 Layer 2 takes any structured trace set obtained from HTTP traces.
 If the trace set is empty then the resulting IOSTS
 $\EuScript{S}_1$ has a single location $l_0$. A structured trace
@@ -612,9 +610,9 @@ complexity is proportional to $\EuScript{O}(mlog (m+1))$ with $m$
 the number of valued actions. The soundness of Layer 2 is based
 upon the notion of traces: an IOSTS $\EuScript{S}_1$ is composed
 of transition sequences derived from runs in $SR$, itself
-obtained from the structured trace set $ST$. As defined, the
-behaviors encoded in $ST$ and $\EuScript{S}_1$ are equivalent
-since ordered runs are transformed into ordered IOSTS sequences.
+obtained from the structured trace set $ST$. $\EuScript{S}_1$ is
+a reduction of $ST$ (trace inclusion) as defined in
+\cite{petrenko06}, i.e. $Traces(\EuScript{S}_1) \subseteq Traces(ST)$.
 
 \begin{example}
 We take as example a trace obtained from the GitHub website
@@ -651,6 +649,23 @@ the next layers.
 \end{example}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{figure}[H]
+\begin{minipage}{.5\textwidth}
+    \includegraphics[width=0.8\linewidth]{figures/gh-iosts-1.png}
+
+    \caption{IOSTS $\EuScript{S}_1$ obtained after the
+    application of Layer 2.}
+    \label{fig:github:iosts:1}
+\end{minipage}
+\begin{minipage}{.5\textwidth}
+    \includegraphics[width=1.0\linewidth]{figures/gh-iosts-2.png}
+
+    \caption{IOSTS $\EuScript{S}_2$ obtained after the
+    application of Layer 3.}
+    \label{fig:github:iosts:2}
+\end{minipage}
+\end{figure}
 
 \subsection{Layers 3-N: IOSTS abstraction}
 \label{sec:modelinf:webapps:L4}
@@ -700,23 +715,6 @@ implicit knowledge elimination) hypothesis and to Proposition
 either unchanged, enriched or combined together into a new
 transition. The application of these layers ends in a finite time
 (finite complexity hypothesis).
-
-\begin{figure}[H]
-\begin{minipage}{.5\textwidth}
-    \includegraphics[width=0.8\linewidth]{figures/gh-iosts-1.png}
-
-    \caption{IOSTS $\EuScript{S}_1$ obtained after the
-    application of Layer 2.}
-    \label{fig:github:iosts:1}
-\end{minipage}
-\begin{minipage}{.5\textwidth}
-    \includegraphics[width=1.0\linewidth]{figures/gh-iosts-2.png}
-
-    \caption{IOSTS $\EuScript{S}_2$ obtained after the
-    application of Layer 3.}
-    \label{fig:github:iosts:2}
-\end{minipage}
-\end{figure}
 
 \subsubsection{Layer 3}
 

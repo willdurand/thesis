@@ -30,13 +30,13 @@ we noticed that these approaches were not tailored to support
 production systems. From the literature (cf. Chapter
 \ref{sec:related}), we deduced the following key observations:
 
-\TODO{exact: link to def "as defined in ..."}
-
 \begin{itemize}
     \item Model inference approaches give approximate models
         capturing the behaviors of a system and more. In our
         context, we want exact models that could be used for
-        regression test case generation and fault diagnosis;
+        regression test case generation and fault diagnosis. We
+        define exactness with the trace-inclusion and
+        trace-equivalence relations given in \cite{petrenko06};
 
     \item Most of these approaches perform active testing on
         systems to learn models. Applying active testing on
@@ -54,20 +54,19 @@ Based on these observations, we propose a pragmatic model
 inference approach that aims at building formal models describing
 functional behaviors of a system. Our goal is to quickly build
 exact models from large amounts of production events.
-Furthermore, execution
-speed takes an important place for building up to date models.
-Such models could also be used for diagnosis every time an issue
-would be experienced in production. The strong originality of our
-approach lies in the combination of two domains for model
-inference: model-driven engineering and expert systems. We
-consider formal models and their definitions to infer models by
-means of different transformations. But we also take into
-consideration the knowledge of human experts captured by expert
-systems. A part of our approach is based upon this notion of
-knowledge implemented with inference rules. We reuse what worked
-well for web applications and enhance many parts of our framework
-to come up with a better version of our Autofunk framework, which
-is presented in this thesis.
+Furthermore, execution speed takes an important place for
+building up to date models. Such models could also be used for
+diagnosis every time an issue would be experienced in production.
+The strong originality of our approach lies in the combination of
+two domains for model inference: model-driven engineering and
+expert systems. We consider formal models and their definitions
+to infer models by means of different transformations. But we
+also take into consideration the knowledge of human experts
+captured by expert systems. A part of our approach is based upon
+this notion of knowledge implemented with inference rules. We
+reuse what worked well for web applications and enhance many
+parts of our framework to come up with a better version of our
+Autofunk framework, which is presented in this thesis.
 
 In the following section, we describe the context in which this
 work has been conducted. In Section
@@ -151,8 +150,9 @@ behaves in production. All these events are collected
 synchronously through a (centralised) logging system. Such a
 system logs all events with respect to their order, and does not
 miss any event.  From these, we chose not to use extrapolation
-techniques to infer models, meaning our proposal generates exact
-models, exclusively describing what really happens in production.
+techniques to infer models, meaning our proposal generates
+exact models, exclusively describing what really happens
+in production.
 
 This context leads to some assumptions that have been considered
 to design our framework:
@@ -221,8 +221,8 @@ consequence, the data collections handled by Autofunk are always
 expressed with knowledge bases (Events, Actions, Traces, STS,
 etc.) on which rules are applied to infer models. Given a system
 $\mathit{Sua}$ and a set of production events, Autofunk builds
-exact models, i.e. the traces of a model $\EuScript{S}$ are
-included in the traces of $\mathit{Sua}$.
+trace-included models, i.e. the traces of a model $\EuScript{S}$
+are included in the traces of $\mathit{Sua}$.
 
 \begin{figure}[ht]
 \begin{framed}
@@ -384,10 +384,9 @@ set $Traces(Sua)$:
 	\label{def:structuredtrace}
 \end{definition}
 
-We can now state that a STS model $\EuScript{S}$ is said exact
-iff. $Traces(\EuScript{S}) \subseteq Traces(Sua)$.
-
-\TODO{preorder?}
+We can now state that a STS model $\EuScript{S}$ is said
+trace-included iff. $Traces(\EuScript{S}) \subseteq Traces(Sua)$
+as defined in \cite{petrenko06}.
 
 \subsection{Trace segmentation and filtering}
 \label{sec:modelinf:prodsystems:segmentation}
@@ -428,9 +427,9 @@ Traces({Sua})$.
 
 We also chose to split $Traces(Sua)$ constructed in the previous step
 into subsets $ST_i$, one for each entry point of the system under
-analysis $\mathit{Sua}$. Later, every trace set $ST_i$ shall give birth to
-one model, describing all possible behaviors starting from its
-corresponding entry point.
+analysis $\mathit{Sua}$. Later, every trace set $ST_i$ shall give
+birth to one model, describing all possible behaviors starting
+from its corresponding entry point.
 
 This module performs these two steps, which are summarised in
 Algorithm \ref{algo_traces}. It starts by splitting $Traces(Sua)$
@@ -474,11 +473,11 @@ this pattern $p$ once, then $t$ is removed since we suppose that
 $t$ does not express a new and interesting behavior. Here, traces
 are removed rather than deleting the repetitive patterns to
 prevent from modifying traces and to keep the trace inclusion
-property between $CTraces(Sua)$ and $Traces(Sua)$.
-In Algorithm \ref{algo_traces}, two traces $t=\sigma_1 p,...,p
-\sigma_n$ and $t'=\sigma_1 p' \sigma_n$ are said equivalent if
-the patterns $p$, $p'$ and the sub-sequences are equivalent,
-denoted by the $\sim_{(pid)}$ notation:
+\cite{petrenko06} property between $CTraces(Sua)$ and
+$Traces(Sua)$.  In Algorithm \ref{algo_traces}, two traces
+$t=\sigma_1 p,...,p \sigma_n$ and $t'=\sigma_1 p' \sigma_n$ are
+said equivalent if the patterns $p$, $p'$ and the sub-sequences
+are equivalent, denoted by the $\sim_{(pid)}$ notation:
 
 \begin{definition}[The $\sim_{(pid)}$ relation]
     Let $p$ be a pattern of a trace $t$ and $p'$ be a pattern of
@@ -489,7 +488,7 @@ denoted by the $\sim_{(pid)}$ notation:
     variable $pid$.
 \end{definition}
 
-At the end we obtain the complete trace sets $CTraces(Sua)$.
+At the end we obtain the complete trace set $CTraces(Sua)$.
 
 
 \TODO{complexité, sound, complete?}
@@ -541,11 +540,11 @@ END\;
 \subsection{STS generation}
 \label{sec:modelinf:prodsystems:generation}
 
-One model is then built for each trace set $ST_i$ in
-$CTraces(Sua)$ by reusing the technique introduced in
+One model is then built for each trace set $ST_i \in
+CTraces(Sua)$ by reusing the technique introduced in
 \crossref{sec:modelinf:webapps}{sec:iosts-gen}. Given a set
 $ST_i$, a first STS, denoted by $\EuScript{S}_i$, is built in a
-simple but quick manner. Each trace of $ST_i$ is completed to
+simple yet quick manner. Each trace of $ST_i$ is completed to
 derive a set of runs. A run is an alternate sequence of states
 and events. Given a trace $t$ in $ST_i$, states, which are
 unique, are injected before and after each event of $t$. States
@@ -574,9 +573,10 @@ $Runs_i$ is formally given by the following definition:
   \end{center}
 \end{definition}
 
-The above definition preserves trace inclusion between $Runs_i$
-and $Traces(Sua)$ because we only inject states between valued
-events, and we can deduce the following proposition:
+The above definition preserves trace inclusion \cite{petrenko06}
+between $Runs_i$ and $Traces(Sua)$ because we only inject states
+between valued events, and we can deduce the following
+proposition:
 
 \begin{proposition}
 Let $ST_i$ be a trace set obtained from $\mathit{Sua}$. We have
@@ -627,12 +627,23 @@ events:
 \end{definition}
 
 We obtain a model having a tree structure and whose traces are
-equivalent to those of $CTraces(Sua)$ because each run is
-transformed into a unique STS path, only sharing a common initial
-location $l0$. At this point, production events are called
-actions of the STS.
+equivalent \cite{petrenko06} to those of $CTraces(Sua)$ because
+each run is transformed into a unique STS path, only sharing a
+common initial location $l0$, and for each path, the guard
+corresponds to the conjunction of the assignments of the
+variables found in the corresponding trace, which is important to
+avoid over-approximation This is captured by the proposition
+below. At this point, production events are called actions of the
+STS.
 
-\TODO{ask sebastien}
+\begin{proposition}
+    Let $ST_i$ be a complete trace set obtained from
+    $\mathit{Sua}$, and $Runs_i$ the set of runs derived from
+    $ST_i$.
+    We have $Traces(Runs_i) = CTraces(Sua) \subseteq Traces(Sua)$.
+
+    \label{}
+\end{proposition}
 
 Figure \ref{fig:firstmodel} depicts the model obtained from the
 traces given in Figure \ref{fig:tsua}. Every initial trace is now
@@ -648,20 +659,19 @@ with constraints over transitions, called \textit{guards}.
 \end{figure}
 
 This STS expresses the behaviors found in $Traces(Sua)$ but in a
-slightly different manner. More generally, trace inclusion
-between an inferred STS and $Traces(Sua)$ is captured by the
-following proposition:
+slightly different manner. Trace inclusion \cite{petrenko06}
+between an inferred STS and $Traces(Sua)$, and trace equivalence
+\cite{petrenko06} between an inferred STS and $CTraces(Sua)$ are
+captured by the following proposition:
 
 \begin{proposition}
-  Let $\mathit{Sua}$ be a system under analysis and $Traces(Sua)$ be its
-  trace set. $\EuScript{S}_i$ is an inferred STS from
-  $Traces(Sua)$.
-  We have $Traces(\EuScript{S}_i) = CTraces(Sua) \subseteq Traces(Sua)$.
+    Let $\mathit{Sua}$ be a system under analysis and $Traces(Sua)$ be its
+    trace set. $\EuScript{S}_i$ is an inferred STS from
+    $Traces(Sua)$.
+    We have $Traces(\EuScript{S}_i) = CTraces(Sua) \subseteq Traces(Sua)$.
 
 	\label{def:equivtraces_IOSTS}
 \end{proposition}
-
-\TODO{proof}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
@@ -847,15 +857,16 @@ second one.
 
 The STS $R(\EuScript{S}_i)$ has less branches but still expresses
 the initial behaviors described by the STS $\EuScript{S}_i$.
-This is captured with the following proposition:
+$R(\EuScript{S}_i)$ and $\EuScript{S}_i$ are said trace
+equivalent \cite{petrenko06}.  This is captured by the following
+proposition:
 
 \begin{proposition}
   Let $\mathit{Sua}$ be a system under analysis and $Traces(Sua)$ be its traces
   set. $R(\EuScript{S}_i)$ is a STS derived from $Traces(Sua)$.
-  We have $Traces(R(\EuScript{S}_i)) = CTraces(Sua) \subseteq Traces(Sua)$.
+  We have $Traces(R(\EuScript{S}_i)) = Traces(\EuScript{S}_i) =
+  CTraces(Sua) \subseteq Traces(Sua)$.
 \end{proposition}
-
-\TODO{proof}
 
 \subsection{STS abstraction}
 
@@ -1310,11 +1321,12 @@ to generate models from production systems. Figure
 revisited version of Autofunk along with the technologies used in
 each module. Given a large set of production events, our
 framework infers exact models whose traces are included in the
-initial trace set of a system under analysis.  We chose to design
-Autofunk for targeting high performance. Our evaluation shows
-that this approach is suitable in the context of production
-systems since we quickly obtain STS trees reduced by 90\% against
-the original trace sets of the system under analysis.
+initial trace set of a system under analysis \cite{petrenko06}.
+We chose to design Autofunk for targeting high performance. Our
+evaluation shows that this approach is suitable in the context of
+production systems since we quickly obtain STS trees reduced by
+90\% against the original trace sets of the system under
+analysis.
 
 \begin{figure}[h]
     \includegraphics[width=1.0\linewidth]{figures/autofunk_branded.png}
