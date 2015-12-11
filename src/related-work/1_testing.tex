@@ -339,16 +339,16 @@ is the empty assignment.
 \begin{definition}[Symbolic Transition System]
 	A Symbolic Transition System (STS) consists of locations and
     transitions between locations. It is defined as a tuple $<
-    L,l_0,V,V_0,I,\Lambda,$ $\rightarrow>$, where:
+    L,l0,V,V0,I,\Lambda,$ $\rightarrow>$, where:
 
 	\begin{itemize}
         \item STSs do not have \textbf{states but locations}
         (a.k.a. symbolic states), and $L$ is the finite location
-        set, with $l_0$ being the initial one;
+        set, with $l0$ being the initial one;
 
         \item $V$ is the finite set of internal variables, while
         $I$ is the finite set of parameters. The internal
-        variables are initialised with the condition $V_0$ on
+        variables are initialised with the condition $V0$ on
         $V$;
 
         \item $\Lambda$ is the finite set of symbolic actions
@@ -365,10 +365,10 @@ is the empty assignment.
             \item an action $a(p) \in \Lambda$;
 
             \item a guard $G$ over $(p \cup V)$, which
-            restricts the firing of the transition. We consider
-            guards written as conjunctions of equalities:
-            $\displaystyle \bigwedge_{x \in I \cup V} (x ==
-            val)$;
+            restricts the firing of the transition. Throughout
+            this thesis, we consider guards written as
+            conjunctions of equalities: $\displaystyle
+            \bigwedge_{x \in I \cup V} (x == val)$;
 
             \item an assignment $A$ which defines the evolution
             of the proper variables, $A_x$ being the function in
@@ -389,7 +389,7 @@ For readability purpose, if $A$ is the identity function $id_V$,
 we denote a transition by $l_i \xrightarrow{a(p),G} l_j$. We
 also use the generalised transition relation $\Rightarrow$ to
 represent STS paths: $l \xRightarrow{(a_1,G_1,A_1)\dots
-(a_n,G_n,A_n)} l' =_{def} \exists l_0\dots l_n, l=l_0
+(a_n,G_n,A_n)} l' =_{def} \exists l0\dots l_n, l=l0
 \xrightarrow{a_1,G_1,A_1} l_1\dots
 l_{n-1}\xrightarrow{a_n,G_n,A_n}l_n=l'$.
 
@@ -404,7 +404,7 @@ assignments while transitions are labelled by actions combined
 with parameter assignments.
 
 \begin{definition}[Labelled Transition System semantics]
-    The semantics of a STS $\EuScript{S}=<L,l_0,$ $V,$ $V_0,$
+    The semantics of a STS $\EuScript{S}=<L,l0,$ $V,$ $V0,$
     $I,\Lambda,\rightarrow>$ is the LTS
     $||\EuScript{S}||=<Q,q_0,\sum,\rightarrow>$ where:
 
@@ -412,7 +412,7 @@ with parameter assignments.
 
 		\item $Q=L \times D_V$ is the set of states;
 
-        \item $q_0=(l_0,V_0)$ is the initial state;
+        \item $q_0=(l0,V0)$ is the initial state;
 
 		\item $\sum=\{(a(p),\alpha)  \mid  a(p)\in\Lambda, \alpha \in
 		D_p\}$ is the set of valued events;
@@ -444,7 +444,7 @@ In addition, runs and traces, which represent executions and
 event sequences, can also be derived from LTS semantics:
 
 \begin{definition}[Runs and traces]
-    Given a STS $\EuScript{S}=$ $<L,l_0,V,V_0,I,\Lambda,
+    Given a STS $\EuScript{S}=$ $<L,l0,V,V0,I,\Lambda,
 	\rightarrow>$, interpreted by its LTS semantics
 	$||\EuScript{S}||=<Q,q_0,\sum,\rightarrow>$, a run $q_0
 	\alpha_0 \dots \alpha_{n-1} q_n$ is an alternate sequence of states
@@ -489,9 +489,9 @@ $\delta$ the quiescence;
 $(l_i,l_j,a(p),G,A)$, from the location $l_i \in L$ to $l_j \in
 L$, denoted by $l_i \xrightarrow{a(p),G,A} l_j$ is labelled by: an
 action $a(p) \in \Lambda$, a guard  $G$ over $(p \cup V \cup T(p
-\cup V))$ which restricts the firing of the transition. $T(p \cup
+\cup V))$ that restricts the firing of the transition. $T(p \cup
 V)$ is a set of functions that return boolean values only (a.k.a.
-predicates) over $p \cup V$, an assignment function $A$ which
+predicates) over $p \cup V$, an assignment function $A$ that
 updates internal variables. $A$ is on of the form $(x:=A_x)_{x\in
 V}$, where $A_x$ is an expression over $V \cup p \cup T(p \cup
 V)$.

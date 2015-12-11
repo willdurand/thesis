@@ -119,7 +119,7 @@ cover the application in blind mode or with a static traversal
 strategy.  Instead, it is cleverly guided by the Models
 generator, which applies an exploration strategy carried out by
 inference rules.  This involves the capture of new traces by the
-Monitor or by the Robot explorer which returns them to the Models
+Monitor or by the Robot explorer that returns them to the Models
 generator. The advantages of this approach are manifold:
 
 \begin{itemize}
@@ -127,7 +127,7 @@ generator. The advantages of this approach are manifold:
 of applications producing traces. In the context of web
 applications, traces can be produced using automatic testing;
 
-\item The application exploration is guided with a strategy which
+\item The application exploration is guided with a strategy that
 can be modified according to the type of application being
 analysed. This strategy offers the advantage of directly targeting
 some states of the application when its state number is too large
@@ -240,7 +240,7 @@ true: If P, then Q. P. Therefore, Q.);
 of a rule $r$ expressed by the relation $r: T_i \rightarrow
 T_{i+1} (i\geq 2)$, with $T_i$ a transition base, for all
 transition $t=(l_n,l_m,a(p),G,A)$ extracted from $T_{i+1}$, $l_n$
-is reachable from $l_0$.
+is reachable from $l0$.
 \end{enumerate}
 
 In the following, we illustrate each layer with examples.
@@ -293,8 +293,8 @@ Hello, World!
 
 For a couple \textit{(HTTP request, HTTP response)}, we extract
 the following information: the HTTP verb, the target URI, the
-request content which is a collection of data (headers, content)
-and the response content which is the collection (HTTP status,
+request content that is a collection of data (headers, content),
+and the response content that is the collection (HTTP status,
 headers, response content). A header may also be a collection of
 data or may be null. Contents are textual, e.g., HTML. Since
 we wish to translate such traces into IOSTSs, we turn these
@@ -402,9 +402,9 @@ semantics correspond to valued automata without symbolic
 variable, which are often infinite. IOLTS states are labelled by
 internal variable valuations while transitions are labelled by
 actions and parameter valuations. The semantics of an IOSTS
-$\EuScript{S}=<L,l_0,V,V_0,I,\Lambda,\rightarrow>$ is the IOLTS
+$\EuScript{S}=<L,l0,V,V0,I,\Lambda,\rightarrow>$ is the IOLTS
 $\llbracket \EuScript{S}\rrbracket = <Q,q_0,\Sigma,\rightarrow>$
-composed of valued states in $Q = L \times D_V$, $q_0=(l_0,V_0)$
+composed of valued states in $Q = L \times D_V$, $q_0=(l0,V0)$
 is the initial one, $\Sigma$ is the set of valued symbols, and
 $\rightarrow$ is the transition relation. A more complete
 definition of IOLTS semantics can be found in \cite{FTW05}.
@@ -520,8 +520,8 @@ in $r$.
 The first IOSTS $\EuScript{S}_1$ is now derived from the run set
 $SR$ in which runs are disjoint except for the initial state
 $(l0,v_\emptyset)$. Traces are translated into IOSTS paths that
-are assembled together by means of IOSTS disjoint unions. The
-IOSTS forms a tree composed of paths, each expressing one trace,
+are assembled together by means of a disjoint union. The IOSTS
+forms a tree compound of paths, each expressing one trace, and
 starting from the same initial location.
 
 \begin{definition}[IOSTS tree]
@@ -547,11 +547,10 @@ SR$, $r$ starts with $(l0_{\EuScript{S}_1},v_\emptyset)$;
 \item $\Lambda_{\EuScript{S}_1}= \{a_i(p) \mid \exists r\in SR,
 (a_i(p),\theta_i)$ is a valued action in $r\}$;
 
-\item $\rightarrow_{\EuScript{S}_1}$ is defined by the following
-    inference rule applied on every run $r\in SR$:
-
+\item $\rightarrow_{\EuScript{S}_1}$ is defined by the
+    inference rule given below, applied on every run $r\in SR$.
     $s_i (a_i(p),\theta_i) s_{i+1} \text{ is a term of } r,
-    s_i=(l_i,v_\emptyset),$ $s_{i+1}=(l_{i+1},v_\emptyset),$
+    s_i=(l_i,v_\emptyset),$ $s_{i+1}=(l_{i+1},v_\emptyset)$, and:
 
     \begin{center}
     {\Large
@@ -563,7 +562,11 @@ SR$, $r$ starts with $(l0_{\EuScript{S}_1},v_\emptyset)$;
 \end{itemize}
 \end{definition}
 
-\TODO{explain formula}
+The inference rule given in the definition above states that each
+run $r \in SR$ is transformed into a unique IOSTS path, only
+sharing a common initial location $l0$. And for each path, the
+guard is defined as the conjunction of the assignments of the
+variables found in the corresponding trace.
 
 \subsubsection{IOSTS minimisation}
 
@@ -580,14 +583,15 @@ structured trace set $ST$ before applying inference rules.
 Instead, we propose to use a minimisation technique.
 
 This IOSTS tree can be reduced in term of location size by
-applying a bisimulation minimisation technique which still
-preserves the functional behaviors expressed in the original
-model.  Intuitively, this minimisation constructs the state sets
-(blocks) that are bisimilar equivalent. Two states are said
-bisimilar equivalent, denoted by $q \sim q'$ iff they simulate each
-other and go to states from where they can simulate each other
-again. Due to lack of room, we only refer to the bisimulation
-minimisation algorithm of \cite{Fernandez89animplementation}.
+applying a bisimulation minimisation technique
+\cite{Park:1981:CAI:647210.720030} that still preserves the
+functional behaviors expressed in the original model.
+Intuitively, this minimisation constructs the state sets (blocks)
+that are bisimilar equivalent. Two states are said bisimilar
+equivalent, denoted by $q \sim q'$ iff they simulate each other
+and go to states from where they can simulate each other again.
+A great bisimulation minimisation algorithm is given in
+\cite{Fernandez89animplementation}.
 
 When receiving new traces from the Monitor, the model yield by
 this layer is not fully regenerated, but rather completed on the
@@ -600,7 +604,7 @@ the resulting IOSTS is minimised.
 
 Layer 2 takes any structured trace set obtained from HTTP traces.
 If the trace set is empty then the resulting IOSTS
-$\EuScript{S}_1$ has a single location $l_0$. A structured trace
+$\EuScript{S}_1$ has a single location $l0$. A structured trace
 set is translated into an IOSTS in finite time: every valued
 action of a trace is covered once to construct states, then every
 run is lifted to the level of one IOSTS path starting from the
