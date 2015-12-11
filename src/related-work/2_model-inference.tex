@@ -985,3 +985,16 @@ specification template. Such specifications do not reflect the
 implementation behaviors though. Furthermore, this method can be
 applied only if the API documentation is available in a readable
 format, and if a specific template is provided.
+
+In the sequel, we present two approaches combining model
+inference and expert systems to infer models from traces for web
+applications (Chapter \ref{sec:modelinf:webapps}) and industrial
+systems (Chapter \ref{sec:modelinf:prodsystems}). The state
+merging is replaced with a context-specific state reduction based
+on an event sequence abstraction. This state reduction can be
+seen as the kTail algorithm introduced previously where $k$ is
+the highest as possible. Furthermore, our work focus on both
+speed and scalability to be able to construct models of
+Michelin's production systems in an efficient manner. Among all
+potential use cases, we need such models to perform passive
+testing on these production systems.

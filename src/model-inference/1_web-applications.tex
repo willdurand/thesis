@@ -568,7 +568,7 @@ sharing a common initial location $l0$. And for each path, the
 guard is defined as the conjunction of the assignments of the
 variables found in the corresponding trace.
 
-\subsubsection{IOSTS minimisation}
+\subsubsection{IOSTS minimization}
 
 Methods such as gkTail and KLFA could be applied to reduce the
 previous inferred IOSTS tree, however due to the way these
@@ -580,17 +580,17 @@ these methods would create an extrapolation of this IOSTS. We
 prefer rejecting such solutions to preserve the trace equivalence
 \cite{petrenko06} of the IOSTS $\EuScript{S}_1$ against the
 structured trace set $ST$ before applying inference rules.
-Instead, we propose to use a minimisation technique.
+Instead, we propose to use a minimization technique.
 
 This IOSTS tree can be reduced in term of location size by
-applying a bisimulation minimisation technique
+applying a bisimulation minimization technique
 \cite{Park:1981:CAI:647210.720030} that still preserves the
 functional behaviors expressed in the original model.
-Intuitively, this minimisation constructs the state sets (blocks)
+Intuitively, this minimization constructs the state sets (blocks)
 that are bisimilar equivalent. Two states are said bisimilar
 equivalent, denoted by $q \sim q'$ iff they simulate each other
 and go to states from where they can simulate each other again.
-A great bisimulation minimisation algorithm is given in
+A great bisimulation minimization algorithm is given in
 \cite{Fernandez89animplementation}.
 
 When receiving new traces from the Monitor, the model yield by
@@ -684,7 +684,7 @@ steps:
 \item Apply the rules of the layer and infer a new knowledge base
 (new IOSTS $\EuScript{S}_i$, $i\geq 2$);
 
-\item Apply a bisimulation minimisation;
+\item Apply a bisimulation minimization;
 
 \item Store the resulting IOSTS.
 \end{enumerate}
@@ -1284,7 +1284,7 @@ websites, these rules cannot be reused and have to be rewritten.
 In this chapter, we presented an original approach combining
 model inference, expert systems, and automatic testing to derive
 IOSTSs models by means of a model transformation using inference
-rules.  We chose a minimisation technique over existing
+rules.  We chose a minimization technique over existing
 algorithms such as gkTail and KLFA to keep exactness of the
 inferred models. Our proposal yields several models, reflecting
 different levels of abstraction of the same application with the
