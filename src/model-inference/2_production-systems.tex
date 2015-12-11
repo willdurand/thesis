@@ -466,16 +466,16 @@ entry points of the system $\mathit{Sua}$.
 In our straightforward example, we obtain one trace set
 $ST_1=Traces(Sua)$.
 
-Thereafter, \textit{Autofunk} scans the traces in $ST$ and tries to detect
-repetitive patterns $p,\dots,p$. If it finds a trace $t$ having a
-repetitive pattern $p$ and another equivalent trace including
-this pattern $p$ once, then $t$ is removed since we suppose that
-$t$ does not express a new and interesting behavior. Here, traces
-are removed rather than deleting the repetitive patterns to
-prevent from modifying traces and to keep the trace inclusion
-\cite{petrenko06} property between $CTraces(Sua)$ and
+Thereafter, \textit{Autofunk} scans the traces in $ST$ and tries
+to detect repetitive patterns $p,\dots,p$. If it finds a trace
+$t$ having a repetitive pattern $p$ and another equivalent trace
+including this pattern $p$ once, then $t$ is removed since we
+suppose that $t$ does not express a new and interesting behavior.
+Here, traces are removed rather than deleting the repetitive
+patterns to prevent from modifying traces and to keep the trace
+inclusion \cite{petrenko06} property between $CTraces(Sua)$ and
 $Traces(Sua)$.  In Algorithm \ref{algo_traces}, two traces
-$t=\sigma_1 p,...,p \sigma_n$ and $t'=\sigma_1 p' \sigma_n$ are
+$t=\sigma_1 p,\dots,p \sigma_n$ and $t'=\sigma_1 p' \sigma_n$ are
 said equivalent if the patterns $p$, $p'$ and the sub-sequences
 are equivalent, denoted by the $\sim_{(pid)}$ notation:
 
@@ -489,9 +489,6 @@ are equivalent, denoted by the $\sim_{(pid)}$ notation:
 \end{definition}
 
 At the end we obtain the complete trace set $CTraces(Sua)$.
-
-
-\TODO{complexité, sound, complete?}
 
 \begin{algorithm}[h]
 	\SetKwInOut{Input}{input}
