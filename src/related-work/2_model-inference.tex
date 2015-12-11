@@ -63,9 +63,9 @@ inference techniques are extensively described in Section
 event sequence-based abstraction in Section
 \ref{sec:passive-fsa}, using state-based abstraction in Section
 \ref{sec:passive-spec}. Then, we present some white-box
-approaches in Section \ref{sec:passive-white}, and we add a few
-techniques taking other kinds of documentation in Section
-\ref{sec:passive-others}.
+approaches in Section \ref{sec:passive-white}, and we also
+mention a few techniques that leverage documentation to infer
+models in Section \ref{sec:passive-others}.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
@@ -115,11 +115,11 @@ automatic testing. We introduce some of them in Section
 
 The $\EuScript{L}^*$ algorithm by Angluin \cite{Angluin198787} is
 one of the most widely used active learning algorithm for
-learning Deterministic Finite Automata (DFA). The algorithm has
-indeed been applied to various problem domains, e.g., protocol
-inference or the testing of circuits. It is designed to learn a
-regular language $\EuScript{L}$ by inferring a minimal DFA
-$\EuScript{A}$ such that
+learning \textit{Deterministic Finite Automata} (DFA). The
+algorithm has indeed been applied to various problem domains,
+e.g., protocol inference or the testing of circuits. It is
+designed to learn a regular language $\EuScript{L}$ by inferring
+a minimal DFA $\EuScript{A}$ such that
 $\EuScript{L}(\EuScript{A})=\EuScript{L}$, with
 $\EuScript{L}(\EuScript{A})$ the set of strings of $\EuScript{A}$
 leading to one of its states from its initial one. The algorithm,
@@ -182,7 +182,7 @@ Raffelt et al. introduced \textit{LearnLib}
 \cite{Raffelt:2005:LLA:1081180.1081189}, a library for learning
 both DFA and Mealy machines. It implements the $\EuScript{L}^*$
 \cite{Angluin198787} learning algorithm, which is optimized with
-\textit{approximative equivalence queries}. Furthermore, the
+\textit{approximate equivalence queries}. Furthermore, the
 notion of teacher is replaced with conformance testing
 techniques. The query optimization is mainly based on
 \textit{filters}, which are specific properties of reactive
@@ -586,8 +586,13 @@ different viewpoints. We chose to summarize them in Table
 	others.
 \end{itemize}
 
-In the next section, we introduce our second category of model
-inference techniques, called passive model inference.
+Active inference approaches repeatedly query systems or humans to
+collect positive or negative observations. However, this can lead
+to some issues like disturbing the system for instance. This is
+not always suitable, and that is why another category of methods
+infer models in a passive manner, i.e. without stimulating the
+software system.  In the next section, we introduce some of these
+passive model inference techniques.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
@@ -599,256 +604,384 @@ inference techniques, called passive model inference.
         \includegraphics[width=0.9\linewidth]{figures/passive.png}
     \end{center}
 
-    \caption{Passive learning big picture.}
+    \caption{Passive model inference principle. The learner does
+    not interact with the software system but rather relies on
+    a fixed set of information (knowledge).}
     \label{fig:passive}
 \end{figure}
 
-Active inference approaches repeatedly query systems or humans to
-collect positive or negative observations. This active
-functioning may give rise to some inconvenient though. For
-instance, the receipt of queries or the use of active testing
-techniques may lead the system to abnormal functioning. The
-Passive inference category includes the techniques that infer
-models from a fixed set of samples, such as a set of execution
-traces, source code, or even documentation, as shown in Figure
-\ref{fig:passive}. Since there is no interaction with the system
-to model, theses techniques are said passive or offline. In
-contrast to active inference, the samples are usually considered
-as  positive elements. Models are often constructed by initially
-representing sample sets with automata whose equivalent states
-are later merged. The following section presents an overview of
-these techniques.
+The passive model inference category includes all techniques that
+infer models from a fixed set of samples, such as a set of
+execution traces, source code, or even documentation, as shown in
+Figure \ref{fig:passive}. Since there is no interaction with the
+system to model, theses techniques are said passive or offline.
+In contrast to active model inference, the samples are usually
+considered as positive elements. Also, models are often
+constructed by initially representing sample sets with automata
+whose equivalent states are merged. This section presents an
+overview of these techniques.
 
 A substantial part of the papers covering this topic proposes
 approaches either based upon event sequence abstraction or
 state-based abstraction to infer models. We introduce them in
 Sections \ref{sec:passive-fsa} and \ref{sec:passive-spec}.
-Afterwards, we present some white-box techniques, which retrieve
-models from source code, in Section \ref{sec:passive-white} and a
-few alternative works in Section \ref{sec:passive-others}.
+We present some white-box techniques, which retrieve
+models from source code, in Section \ref{sec:passive-white}, as
+well as a few alternative works leveraging documentation in
+Section \ref{sec:passive-others}.
 
 \subsubsection{Passive inference using event sequence abstraction}
 \label{sec:passive-fsa}
 
-Most of the following approaches, which build models from execution traces bu means of event sequence abstraction, stand on two algorithms: \textit{ktail} \cite{5009015} and \textit{kbehavior} \cite{mariani2007dynamic}.
+Most of the following approaches, which build models from
+execution traces by means of event sequence abstraction, are
+build on-top of these two algorithms: \textit{kTail}
+\cite{5009015} and \textit{kBehavior} \cite{mariani2007dynamic}.
 
-Ktail generates Finite State Automata (FSA) from trace sets in two steps. First, it builds a
-Prefix Tree Acceptor (PTA), which is a tree whose edges are
-labelled with the event names found in traces. Then, kTail transforms the PTA into a FSA by merging every pairs of states if they exhibit the same future of length $k$, i.e. if they have the same set of event sequences having the maximum length $k$, which are all accepted by the two states.
-%%weaker than bissimilation minimisation
-%
-%*******However, kTail for complex software systems can produce imprecise
-This state merging step often yields over-generalized models containing undesirable behaviors \cite{4023976}.
+kTail generates \textit{Finite State Automata} (FSA) from trace
+sets in two steps. First, it builds a \textit{Prefix Tree
+Acceptor} (PTA), which is a tree whose edges are labelled with
+the event names found in traces. Then, kTail transforms the PTA
+into a FSA by merging each pair of states as far as they exhibit
+the same future of length $k$, i.e. if they have the same set of
+event sequences having the maximum length $k$, which are all
+accepted by the two states. This state merging step often yields
+over-generalized models containing undesirable behaviors though
+\cite{4023976}.
 
-Reiss and Renieris modified the kTail algorithm to reduce the size of the final FSA.
-Indeed, their algorithm merges two states if they
-share at least one \textit{k-future} \cite{919096}. By using a
-merging criterion that is weaker, their variant hence merges more states than kTail. However, the resulting FSA express much more behaviors than those possible in the real system. They are usually more approximative than the models obtained with kTail. Lo et al. \cite{Lo:2009:ASB:1595696.1595761} also enhanced the
-kTail algorithm to lower over-approximation. Traces are mined to extract temporal properties that statistically hold in most of the traces. Such temporal properties aim at capturing relations between non consecutive events. The kTail algorithm is then upgraded to prevent the merging of states, with the same k-future, that would produce FSA that violate the inferred properties.
+Reiss and Renieris modified the kTail algorithm to reduce the
+size of the final FSA.  Indeed, their algorithm merges two states
+if they share at least one \textit{k-future} \cite{919096}. By
+using a merging criterion that is weaker, their variant actually
+merges more states than kTail. However, the resulting FSA
+express much more behaviors than those possible in the real
+system. They are usually more approximate than the models
+obtained with kTail. Lo et al. \cite{Lo:2009:ASB:1595696.1595761}
+also enhanced the kTail algorithm to lower over-approximation.
+Traces are mined to extract temporal properties that
+statistically hold in most of the traces. Such temporal
+properties aim at capturing relations between non consecutive
+events. The kTail algorithm is then upgraded to prevent the
+merging of states with the same k-future, which would produce FSA
+that violate the inferred properties.
 
-Lorenzoli et al. extended kTail to produce Extended Finite State Machines (EFSM), which are FSMs extended with parameters and algebraic constraints on transitions \cite{Lorenzoli2008}. Their technique, called \textit{gkTail},
+Lorenzoli et al. extended kTail to produce \textit{Extended
+Finite State Machines} (EFSMs), which are FSMs extended with
+parameters and algebraic constraints on transitions
+\cite{Lorenzoli2008}. Their technique, called \textit{gkTail},
 generates an EFSM from a set of traces, which incorporates
 information about both the event sequences and the values of the
-parameters associated with event sequences. gkTail starts by combining the traces that share the same event sequence, each event being associated with the set of values obtained as the union of every value assigned to this same event in every merged trace. gkTail infers a constraint from the values associated with each event and combines this constraint with the associated event. Finally, the kTail algorithm is applied on these traces.
+parameters associated with the event sequences. gkTail starts by
+combining the traces that share the same event sequence, each
+event being associated with the set of values obtained as the
+union of all value assigned to this same event in each merged
+trace. gkTail infers a constraint from the values associated with
+each event, and combines this constraint with the associated
+event. Finally, the kTail algorithm is applied on these traces.
 
-\textit{kBehavior} \cite{mariani2007dynamic} is another algorithm, which works quite differently than \textit{kTail}. It generates a FSA from a set of traces by taking every trace one after one and by completing the FSA such that it accepts the trace. More precisely, whenever a new trace is submitted to kBehavior, it first identifies the sub-traces that are
-accepted by sub-automata in the current FSA (the sub-traces
-must have a minimal length \textit{k}, otherwise they are
-considered too short to be relevant). Then, kBehavior extends the model  with the addition of new branches that suitably connect
-the identified sub-automata, producing a new version of the
-model  that accepts the entire trace. They successfully
-applied this algorithm to automatically analyze log files and
-retrieved important information to identify failure causes
-\cite{4700316}. They also automatically analyzed logs obtained
-from workloads to highlight useful information that can relate
-the failure to its cause \cite{cotroneo2007investigation}. Actually, both papers \cite{4700316,cotroneo2007investigation} use an extended version of kBehavior, called \textit{kLFA}, which supports events combined with data values. KLFA performs a preliminary step by analyzing the traces to infer parameter constraints. It encodes these constraints in the event names with specific symbols to yield new traces. kBehavior is then called to infer a FSA whose transitions are still labelled with an event and a symbol representing a data constraint.
+\textit{kBehavior} \cite{mariani2007dynamic} is another
+algorithm, which works quite differently than kTail. It generates
+a FSA from a set of traces by taking every trace one after one,
+and by completing the FSA such that it accepts the trace. More
+precisely, whenever a new trace is submitted to kBehavior, it
+first identifies the sub-traces that are accepted by sub-automata
+in the current FSA (the sub-traces must have a minimal length
+$k$, otherwise they are considered too short to be relevant).
+Then, kBehavior extends the model with the addition of new
+branches that connect the identified sub-automata,
+producing a new version of the model that accepts the entire
+trace. They successfully applied this algorithm to automatically
+analyze log files and retrieved important information to identify
+failure causes \cite{4700316}. They also automatically analyzed
+logs obtained from workloads to highlight useful information that
+can relate the failure to its cause
+\cite{cotroneo2007investigation}. Both works
+\cite{4700316,cotroneo2007investigation} use an extended version
+of kBehavior, called \textit{kLFA}, that supports events
+combined with data values. kLFA performs a preliminary step by
+analyzing the traces to infer parameter constraints. It encodes
+these constraints in the event names with specific symbols to
+yield new traces. kBehavior is then called to infer a FSA whose
+transitions are still labelled with an event and a symbol
+representing a data constraint.
 
-Lo et al. presented an empirical comparative study of  kTail, kBehavior, gkTail, and kLFA with a set
-of 10 case studies extracted from real software systems in
-\cite{Lo20122063}. This study quantifies
-both the effect of adding data flow information within automata
-and the effectiveness of the techniques when varying sparseness
-of traces. One of the main conclusions is that adding algebraic
-constraints to FSAs does not compromise quality but negatively
-affects performance. This is the case for gkTail for instance,
-which becomes extremely slow. The study also revealed that increasing the trace set, improves the rate of correct behaviors in models especially for kTail and kBehavior. But increasing the trace set does not particularly affect illegal behavior rates, i.e. the number of behaviors found in models but in traces. This is due to the difficulty of these algorithms in controlling over-generalization when only positive samples are available. A comparison has also be made between the kTail and kBehavior based methods. In short, kTail provides low illegal behavior rate but also low correct behavior rate. In contrast, kBehavior has higher illegal behavior rate but good correct behavior rate.
+Lo et al. presented an empirical comparative study of kTail,
+kBehavior, gkTail, and kLFA with a set of 10 case studies
+extracted from real software systems in \cite{Lo20122063}. This
+study quantifies both the effect of adding data flow information
+within automata and the effectiveness of the techniques when
+varying sparseness of traces. One of the main conclusions is that
+adding algebraic constraints to FSA does not compromise quality
+but negatively affects performance. This is the case for gkTail
+for instance, which becomes extremely slow. The study also
+revealed that increasing the trace set improves the rate of
+correct behaviors in models, especially for kTail and kBehavior.
+But increasing the trace set does not particularly affect illegal
+behavior rates, i.e. the number of behaviors found in the models
+but not in the traces. This can be explained by the fact that
+these algorithms are not really able to control
+over-generalization when only positive samples are available. A
+comparison has also be made between the kTail- and
+kBehavior-based methods. In short, kTail provides low illegal
+behavior rate, but also low correct behavior rate. On the other
+hand, kBehavior has higher illegal behavior rate, but good
+correct behavior rate.
 
-
-We proposed two approaches combining model inference and expert systems to infer, from traces, exact models for web applications \cite{DBLP:conf/soict/DurandS14} and industrial systems \cite{DBLP:conf/debs/SalvaD15} (workshops composed of several production lines). The expert system is composed of rules used either to filter the trace set to remove the undesired ones, or to infer Input Output Symbolic Transition Systems (IOSTS) or to build other more abstract IOSTS. In \cite{DBLP:conf/debs/SalvaD15}, the state merging is here replaced with a context-specific state reduction based on an event sequence abstraction. In short, this state reduction can be seen as the kTail algorithm where k is the highest as possible. This state reduction first ensures that the resulting models do not over-approximate the system under analysis. But it is also very context-specific and cannot be generalized. A second more abstract model is inferred by means of rules of the expert system capturing the knowledge of a human expert. These rules aim to replace several IOSTS transition labels by others having more meaning and to replace transition sequences by a unique transition. Nevertheless, it is a prerequisite to manually write these rules before generating models. And writing these rules can become as difficult as writing models.
-We also showed that our approach is scalable: it can take thousands and thousands of traces and can still build models quickly (less than half an hour) thanks to our specific state merging process.
-
-The next section gathers the approaches that also build models from traces but that have considered invariants to merge states.
-
-%%%%%over -under approximations weaker than bisimulation
+The next section gathers the approaches building models from
+traces that also consider invariants to merge states.
 
 \subsubsection{Passive inference using state-based abstraction}
 \label{sec:passive-spec}
 
-The next approaches adopted the generation of state invariants to define equivalence classes of states that are combined together to form final models. The \textit{Daikon} tool \cite{Ernst:1999:DDL:302405.302467} were originally proposed to infer invariants composed of data values and variables found in execution traces. An invariant is a property that holds at a
+The approaches presented in this section rely on the generation
+of state invariants to define equivalence classes of states that
+are combined together to form final models. The \textit{Daikon}
+tool \cite{Ernst:1999:DDL:302405.302467} was originally proposed
+to infer invariants composed of data values and variables found
+in execution traces. An invariant is a property that holds at a
 certain point or points in a software. These are often used in
-assert statements, documentation, and formal specifications.
-An invariant generator mines the
-data found in traces that a system produces, and then reports properties that are \textit{true} over the observed executions.  This is a
-machine learning technique that can be applied to arbitrary data.
-Daikon is used in many different kinds of works, e.g. for generating test cases,
+assert statements, documentation, and formal specifications. An
+invariant generator mines the data found in the traces that a
+software system produces, and then reports properties that are
+$true$ over the observed executions.  This is a machine learning
+technique that can be applied to arbitrary data. Daikon is used
+in many different kinds of works, e.g., for generating test cases,
 predicting incompatibilities in component integration, automating
 theorem proving, repairing inconsistent data structures, and
 checking the validity of data streams, among other tasks
 \cite{Ernst200735}.
 
-Krka et al. inferred object level behavioral models (FSA) from object executions, by using both invariants representing object states and dynamic invocation sequences expressing object method invocation methods \cite{Krka:2010:UDE:1810295.1810324}. Invariants are still generated with Daikon. The authors show that their FSA inference technique offers more precise models than those obtained with kTail, which means that the rate of over-approximation is lower. These results are not surprising since they use a state merging technique combining event sequence abstraction and state abstraction. Hence, state merging is here done with more precision.
+Krka et al. inferred object-level behavioral models (FSA) from
+object executions, by using both invariants, representing object
+states, and dynamic invocation sequences, expressing method
+invocations \cite{Krka:2010:UDE:1810295.1810324}.
+Invariants are still generated with Daikon. The authors show that
+their FSA inference technique offers more precise models than
+those obtained with kTail, which means that the rate of
+over-approximation is lower. These results are not surprising
+since they use a state merging technique combining event sequence
+abstraction and state abstraction. Hence, state merging is here
+done with more precision.
 
 In \cite{Ghezzi:2009:SIB:1555001.1555057}, Ghezzi et al.
-described an approach called (\textit{SPY}) to recover a specification
-of a software component from its traces. They infer a formal specification of stateful black-box
-components (Java classes that behave as data containers with their own states). Model inference is performed in two main steps. It firstly build a Deterministic Finite Automaton (DFA) that models the partial behavior of instances of the classes. Then, the DFA is generalized via graph transformation rules, which are based upon the following assumption: the behavior observed during the partial model inference process enjoys the so called "continuity property" (i.e., a class instance has a kind of “uniform” behavior). Transformation rules generates data constraints which hold for every encountered data value found in the instance pools. These constraints add over-approximations to the model though.
+described an approach called \textit{SPY} to recover a
+specification of a software component from its traces. They infer
+a formal specification of stateful black-box components (Java
+classes that behave as data containers with their own states).
+Model inference is performed in two main steps. It starts by
+building a DFA that models the partial behavior of the instances
+of the classes. Then, the DFA is generalized via graph
+transformation rules that are based upon the following
+assumption: the behavior observed during the partial model
+inference process benefits from the so called "continuity
+property" (i.e. a class instance has a sort of "uniform"
+behavior). Transformation rules generate data constraints that
+hold for each encountered data value found in the instance pools.
+Such constraints add over-approximation to the model though.
 
-Walkinshaw et al. presented the \textit{Query-driven State Merging} (QSM) algorithm in
+Walkinshaw et al. presented the \textit{Query-driven State
+Merging} (QSM) algorithm in
 \cite{Walkinshaw07reverseengineering}, an \textit{interactive}
 grammar inference technique to infer the underlying state machine
-representation of software. The QSM algorithm does not infer invariants but uses the Price’s ‘Blue Fringe’ state
-merging algorithm \cite{Lang:1998:RAO:645517.655780}, which is mainly based upon fixed invariants defining order relations over states.
-QSM generalizes a supplied trace set obtained from an application with two main steps. Firstly, a trace abstraction is performed with functions given by a user. Secondly, states are merged with the Price’s ‘Blue Fringe’ state
-merging algorithm. But, to avoid over-generalization, the algorithm queries the user  whenever the
-resulting machine may accept or reject sequences that have
-not been ratified. This approach ca be compared to the work done by Hungar in \cite{hungar},
-who used the $\EuScript{L}^*$ algorithm instead. But the QSM
-algorithm presumes that the input sequences offer some basic
-coverage of the essential functionality of the system, in which
-case the machine can be inferred relatively cheaply by a process
-of state merging, compared to the $\EuScript{L}^*$ technique that
-systematically and comprehensively explores the state space of the
-target machine. Some tools such as \textit{Synapse}
+representation of software. The QSM algorithm does not infer
+invariants but uses the Price's "blue-fringe" state merging
+algorithm \cite{Lang:1998:RAO:645517.655780}, which is mainly
+based upon fixed invariants defining order relations over states.
+QSM generalizes a supplied trace set obtained from an application
+by applying two steps: (i) a trace abstraction is performed
+with functions given by a user, and (ii) states are merged with
+the Price's "blue-fringe" state merging algorithm. To avoid
+over-generalization, the algorithm queries the user whenever the
+resulting machine accept or reject sequences that have not
+been ratified. This approach can be compared to the work done by
+Hungar in \cite{hungar}, who used the $\EuScript{L}^*$ algorithm
+instead. But the QSM algorithm presumes that the input sequences
+offer some basic coverage of the essential functionality of the
+system, in which case the machine can be inferred relatively
+cheaply by a process of state merging, compared to the
+$\EuScript{L}^*$ technique that systematically and
+comprehensively explores the state space of the target machine.
+Some tools such as \textit{Synapse}
 \cite{LamelaSeijas:2014:SAB:2633448.2633457} implement the QSM
 algorithm to perform automatic behavior inference and
 implementation comparison for the programming language Erlang.
 
 Taking another direction by leveraging genetic algorithms,
 Tonella et al. \cite{TonellaNMLH13} applied a data-clustering
-algorithm to infer FSM from traces. Traces are firstly transformed into a first FSM, where every state is considered as one distinct equivalence class, called cluster. Then, invariants are generated with Daikon for each cluster to group states. The clustering is  iteratively improved by using a genetic algorithm, which randomly change the clusters. But the clustering is yet guided with the computation of quality attributes on the current FSM model. Each distinct set of
-invariants produced for each cluster at the end of the
-optimization represents an abstract state and is used as the
-abstraction function that maps states to more abstract ones. Even though this approach offers originality, the approach is particularly time consuming especially with a large set of traces.
+algorithm to infer FSMs from traces. Traces are transformed into a
+first FSM where every state is considered as one distinct
+equivalence class, called cluster. Then, invariants are generated
+with Daikon for each cluster in order to group states. The
+clustering is iteratively improved by using a genetic algorithm
+that randomly update the clusters. But the clustering is yet
+guided with the computation of quality attributes on the current
+FSM model. Each distinct set of invariants produced for each
+cluster at the end of the optimization represents an abstract
+state, and is used as the abstraction function that maps states
+to more abstract ones. Even though this approach offers
+originality, it is time consuming, especially with a large set of
+traces.
 
-
-
-The works presented in this section  adopted a black-box perspective are either grey- or black-box
-techniques. The next section introduces some white-box techniques.
-
+The works presented in this section adopted either a grey- or
+black-box approach. The next section introduces some white-box
+techniques.
 
 \subsubsection{White-box techniques}
 \label{sec:passive-white}
 
-The works presented in this section adopt a white-box perspective. Models are built by following two different procedures, which often take back one of the previous techniques. 1) The source code is instrumented and the system is executed or tested to collect traces from which specifications can be generated. 2) Source codes are statically analyzed to  directly infer models.
+The works presented in this section adopt a white-box
+perspective. Models are built by following two different
+procedures: (i) the source code is instrumented and the system is
+executed or tested to collect traces from which a specification
+can be generated, and (ii) the source code is statically analyzed
+to directly infer models.
 
-In the first category, Ammons et al. reuse the kTail algorithm to produce non deterministic automata from source code. The latter is instrumented to collect the function calls and parameters. Application traces are collected and  scenarios (small sets of interdependent interactions) are then derived. kTail is finally called to build automata. Several automata are generated from the scenarios (up to 16 for one application in the experimental results).
+Ammons et al. reuse the kTail algorithm to produce
+non-deterministic automata from source code
+\cite{Ammons:2002:MS:565816.503275}. The latter is instrumented
+to collect the function calls and parameters.  Application traces
+are collected and scenarios (small sets of interdependent
+interactions) are then derived. kTail is finally employed to
+build automata. Several automata are generated from the different
+scenarios.
 
-Whaley et al. proposed using multiple FSM submodels to model Object-oriented Component Interfaces \cite{Whaley:2002:AEO:566171.566212}. A FSM is built for each field of a class, with one state for each method that writes that field. The FSM are reduced with restrictions on methods: a distinction is made on side-effect-free methods, i.e. those that do not advance the object state, to the others. The first ones are ignored to build FSM. The latter are then completed with dotted transitions to represent the states from which it is possible to call these side-effect-free methods. Two
-techniques are given to automatically construct such models: a
-dynamic instrumentation technique that records real method call sequences and a static analysis that
-infers pairs of methods that cannot be called consecutively. The work described in \cite{Alur:2005:SIS:1047659.1040314}
-generates behavioral interface specifications from Java classes by
-means of predicate abstraction and active learning. This is a
-white-box approach inspired by
-\cite{Whaley:2002:AEO:566171.566212} that, first, uses \textit{predicate abstraction} to generate an abstract version of the considered
-class. Afterwards, a minimal version (interface) of this
-abstraction is constructed by leveraging the $\EuScript{L}^*$
-algorithm. The tool \textit{Java Interface Synthesis Tool} (JIST)
-is the resulting implementation of such a technique. It takes
-Java classes as input, and generates useful and safe interfaces
-automatically.
-%Another more general and formal solution to interface synthesis is given in
-%\cite{Alur:2005:SIS:1047659.1040314} (and covered in Section
-%\ref{sec:active-letoile}).
+Whaley et al. suggested to use multiple FSM submodels to model
+object-oriented component interfaces
+\cite{Whaley:2002:AEO:566171.566212}. A FSM is built for each
+attribute of a class, with one state per method that writes that
+attribute. The FSMs are reduced with restrictions on the methods:
+a distinction is made between side-effect-free methods, i.e. those
+that do not change the object state, and the others. The
+side-effect-free methods are ignored to build FSMs. The others are
+completed with dotted transitions to represent the states
+from which it is possible to call these side-effect-free methods.
+Two techniques are given to automatically construct such models:
+(i) a dynamic instrumentation technique that records real method call
+sequences, and (ii) a static analysis that infers pairs of
+methods that cannot be called consecutively. The work described
+in \cite{Alur:2005:SIS:1047659.1040314} generates behavioral
+interface specifications from Java classes by means of predicate
+abstraction and active learning. This is a white-box approach
+inspired by \cite{Whaley:2002:AEO:566171.566212} that, first,
+uses \textit{predicate abstraction} to generate an abstract
+version of the considered class. Afterwards, a minimal version
+(interface) of this abstraction is constructed by leveraging the
+$\EuScript{L}^*$ algorithm. The tool \textit{Java Interface
+Synthesis Tool} (JIST) is the resulting implementation of such a
+technique. It takes Java classes as input, and generates useful
+and safe interfaces automatically.
 
+Still in the purpose of modeling object invocation, Salah et al.
+proposed \textit{Scenariographer} \cite{Salah05scenariographer},
+an algorithm and a tool to estimate the usage scenarios of a
+class from its execution profiles. The results are quite
+different than the above approaches tough, since Scenariographer
+infers a set of regular expressions expressing the generalized
+usage scenarios of the class over its methods. The source code is
+still instrumented to collect method calls, but this approach
+employs the notion of canonical sets to categorize method
+sequences into groups of similar sequences, where each group
+represents a usage scenario for a given class.
 
-Still in the purpose of modeling object invocation, Salah et al. proposed \textit{Scenariographer}
-\cite{Salah05scenariographer}, an algorithm and a tool to
-estimate the usage scenarios of a class from its execution
-profile. The results are quite different than the above approaches tough, since Scenariographer infers a set of regular expressions expressing the generalized usage scenarios of the class over its methods. The source code is still instrumented to collect method calls. But this approach employs the notion of canonical sets to categorize method sequences into groups of similar sequences,
-where each group represents a usage scenario for a given class.%runtime
-
-Yang et al. \cite{Yang:2006:PMT:1134285.1134325} also  focused on the model inference of Java programs but use a state abstraction technique generating temporal invariants. The source code is instrumented to collect method invocation. Then, temporal invariants are extracted to capture relations among several consecutive or non-consecutive events. The resulting tool \textit{Perracotta} infers temporal invariants and FSM from traces. It is able to scale to large software systems since it can infer models from millions of events. Additionally, it works
+Yang et al. \cite{Yang:2006:PMT:1134285.1134325} also focused on
+the model inference of Java programs but they use a state
+abstraction technique generating temporal invariants. The source
+code is instrumented to collect method invocations. Then,
+temporal invariants are extracted to capture relations among
+several consecutive or non-consecutive events. The resulting tool
+\textit{Perracotta} infers temporal invariants and FSMs from
+traces. It is able to scale to large software systems since it
+can infer models from millions of events. Additionally, it works
 effectively with incomplete trace sets typically available in
-industrial scenarios. Scalability is here obtained by the use of heuristics   for
-pruning the set of inferred invariants.
+industrial scenarios. Scalability is here obtained by the use of
+heuristics to prune the set of inferred invariants.
 
-%runtime
 In \cite{Pradel:2009}, Pradel and Gross presented a scalable
 dynamic analysis that infers extremely detailed specifications of
-correct method call sequences on multiple related objects. Again, Java applications are executed to collect with debuggers methods calls. This produces a large set of traces. Assuming that methods generally implement small and coherent pieces
-of functionality, the source code is statically analyzed to identify small sets of
-related objects (object collaborations) and method calls which
-can be analyzed separately. Then, they derive FSM that model
-legal sequences of method calls on a set of related objects. This work has been extended in
-\cite{Dallmeier_generatingtest} by means of active testing. The inference engine generates test cases that cover previously unobserved behavior, systematically extending the execution space and enriching the models, while detecting bugs. Actually, this approach is similar to the crawling techniques, presented in Section \ref{sec:active-crawling} except that crawlers take GUI applications as inputs.
+correct method call sequences on multiple related objects. Again,
+Java applications are executed to collect with debuggers methods
+calls. This produces a large set of traces. Assuming that methods
+generally implement small and coherent pieces of functionality,
+the source code is statically analyzed to identify small sets of
+related objects (object collaborations), and method calls that
+can be analyzed separately. Then, they derive FSMs that model
+legal sequences of method calls on a set of related objects. This
+work has been extended in \cite{Dallmeier_generatingtest} by
+means of active testing. The inference engine generates the test
+cases that cover previously unobserved behaviors, systematically
+extending the execution space and enriching the models while
+detecting bugs. Such an approach is similar to the crawling
+techniques presented in Section \ref{sec:active-crawling} except
+that crawlers take GUI applications as input.
 
-
-\begin{comment}
-The methods described in \cite{concolicandroid12,5416728} rely
-upon concolic testing to explore symbolic execution paths of applications and to detect bugs. In \cite{concolicandroid12},
-Anand et al. presented an algorithm for generating input events
-to exercise smartphone applications, symbolically tracking events
-from the point where they originate to the point where they are
-ultimately handled. In \cite{5416728}, Artzi et al. proposed a
-technique to generate tests for web applications, relying on both
-combined concrete and symbolic execution and explicit state model
-checking. These white-box approaches theoretically offer a better
-code coverage than black-box automatic testing. However, the
-number of paths being explored concretely limits to short paths
-only, and the constraints have not to be too complex for being
-solved.
-\end{comment}
-
-Even though the remaining papers are oriented towards the same purpose, i.e model inference from source code, they do not collect traces from executions but perform static analysis only.
-%source code
-Shoham et al. introduced an approach to infer finite automata describing method calls of API from source code, but source code of the client side, i.e. code that call the API \cite{Shoham:2007:SSM:1273463.1273487}. Finite automata are obtained with two main steps: (i) abstract-traces are collected with a static analysis of the source code and spitted into sets called \textit{abstract histories}. These give birth the several finite automata, and (ii) a summarization
-phase to filter out noise. This last step is done by two available criteria: either all the histories are considered (no filter)  or those having the same k-future (as with kTail) are assembled together. Despite encouraging results, the authors also show that the obtained specifications are often too
-detailed, and their solution does not scale well.
+Even though the remaining papers are oriented towards the same
+purpose, that is model inference from source code, they do not
+collect traces from executions but perform static analysis only.
+Shoham et al. introduced an approach to infer finite automata
+describing method calls of API from source code of the client
+side, i.e. the code that calls the API
+\cite{Shoham:2007:SSM:1273463.1273487}. Finite automata are
+constructed with two main steps: (i) abstract-traces are
+collected with a static analysis of the source code and split
+into sets called abstract histories that give birth to several
+finite automata, and (ii) a summarization phase filters out
+noise. This step is done thanks to two available criteria: either
+all the histories are considered (no filter) or the histories
+having the same k-future (as with kTail) are assembled together.
+Despite encouraging results, the inferred specifications are
+often too detailed, and their solution does not scale well.
 
 In \cite{Wasylkowski07detectingobject}, Wasylkowski et al.
-proposed \textit{JADET}, a Java code analyzer to infer method models. One finite state automaton is built for every class to express the method calls. JADET then infers temporal properties grouped into patterns that can be used to automatically find locations in programs that deviate from normal object
-usage. Temporal properties are obtained by the use of the data mining technique \textit{frequent itemset mining}  which is applied on the source code. These properties are fed into a classifier which detects and removes the abnormal properties. It finally identifies the methods that violate the remaining ones.
+proposed \textit{JADET}, a Java code analyzer to infer method
+models. One finite state automaton is built for every class to
+express the method calls. JADET then infers temporal properties
+grouped into patterns that can be used to automatically find
+locations in programs that deviate from normal object usage.
+Temporal properties are obtained by the use of the data mining
+technique frequent itemset mining, which is applied on the source
+code. These properties are fed into a classifier that detects and
+removes the abnormal properties. It then identifies the methods
+that violate the remaining ones.
 
-%limitation,
-%instrumentation donne bq de traces, exploration of source code, long These white-box approaches theoretically offer a better
-%code coverage than black-box automatic testing. However, the
-%number of paths being explored concretely limits to short paths
-%only, and the constraints have not to be too complex for being
-%solved.
+The next section introduces a few other works leveraging
+documentation to infer models.
+
 \subsubsection{Model inference from documentation}
 \label{sec:passive-others}
 
-We present in this section some other passive inference techniques that rely on other sets of
-knowledge to infer models. Their main disadvantage lies in the use of external documentations that can be outdated leading to models exhibiting over-approximations. Furthermore, the resulting models are often under-approximated since these documentation are usually not complete. Thy is why there are few approaches, in the literature, based on documentation mining.
-
-
-% for instance,
-%and a few others leverage different techniques altogether to
-%construct models. In this section, we present some of these
-%works.
+We present in this section some other passive inference
+techniques that rely on other sets of knowledge to infer models.
+Their main disadvantage lies in the use of external documentation
+that can be outdated, leading to models describing incorrect
+behaviors (over-approximation). Furthermore, the resulting models
+are often under-approximated since documentation is usually not
+complete. That is probably why there are few works based on
+documentation mining in the literature.
 
 Bertolino et al. presented \textit{StrawBerry} in
 \cite{Bertolino:2009:ASB:1595696.1595719}, a method that infers a
-\textit{Behavior Protocol} automaton from a web Service
-Description Language (WSDL) documents.  WSDL is a format for
-documenting web Service interactions, containing information
-about the inputs, outputs and available methods. StrawBerry
-automatically derives a partial ordering relation among the
-invocations of the different WSDL operations, that is represented
-as an automaton called Behavior Protocol automaton.  This
-automaton models the interaction protocol that a client has to
-follow in order to correctly interact with a web Service.  The
-states of the behavior protocol automaton are web Service
-execution states and the transitions, labelled with operation
-names and input/ouput data, model possible operation invocations
-from the client to the web Service.
+Behavior Protocol automaton from a Web Service Description
+Language (WSDL) document.  WSDL is a format for documenting web
+service interactions, containing information about the inputs,
+outputs, and available methods. StrawBerry automatically derives a
+partial ordering relation among the invocations of the different
+WSDL operations, that is represented as an automaton called
+Behavior Protocol automaton.  This automaton models the
+interaction protocol that a client has to follow in order to
+correctly interact with a web service.  The states of the
+behavior protocol automaton are web service execution states, and
+the transitions, labelled with operation names and input/ouput
+data, model possible operation invocations from the client to the
+web service.
 
 Later, Zong et al. \cite{ZhongZXM11} proposed to infer
-specifications from API documentations to check whether
-implementations match these documentations. A linguistic analysis is here applied since API documentations are written in natural languages. Its results in a set of methods that are linked together with action-resource
-pairs that  denote what action
-the method takes on what resource. Then, a graph is built from these methods and a predefined specification template. Such specifications do not reflect the
-implementation behavior though. Furthermore, this method can be
-applied only if these API documentations are available in a
-readable format and if a specific template is available.
+specifications from API documentation to check whether
+implementations match it. A linguistic analysis is applied as API
+documentation is written in a natural language. It results in a
+set of methods that are linked together with action-resource
+pairs that denote what action the method takes on which resource.
+Then, a graph is built from these methods and a predefined
+specification template. Such specifications do not reflect the
+implementation behaviors though. Furthermore, this method can be
+applied only if the API documentation is available in a readable
+format, and if a specific template is provided.

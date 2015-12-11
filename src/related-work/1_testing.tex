@@ -110,9 +110,9 @@ not-only-functional requirements, such as security, performance
 
 These requirements are sometimes seen as \textit{objectives} of
 testing, leading to even more different testing types as listed
-before. There are also different approaches to perform testing,
-depending on the information available to construct the test
-cases:
+before. There are also different approaches (or perspectives) to
+perform testing, depending on the information available to
+construct the test cases, i.e. accessibility:
 
 \begin{itemize}
     \item \textbf{White-box:} a method that tests the internal
@@ -207,7 +207,7 @@ Model-based Testing can be summarized as a three-step process,
 which is extended in Figure \ref{fig:mbt}:
 
 \begin{enumerate}
-\item Formally modelling the requirements (specification);
+\item Formally modeling the requirements (specification);
 
 \item Generating test cases from the model;
 
@@ -650,7 +650,7 @@ given set of timed extended invariants are satisfied. As in
 and traces are collected with network sniffers. Cavalli et al.
 propose an approach for testing the security of web service
 compositions in \cite{cavalli2009passive}. Security rules are
-here modelled with the Nomad language \cite{cuppens2005nomad},
+here modeled with the Nomad language \cite{cuppens2005nomad},
 which expresses authorizations or prohibitions by means of
 deontic and temporal logics. Preliminary, a rule set is manually
 constructed from a specification. Traces of the implementation
@@ -671,7 +671,7 @@ Implementation reactions are given on the fly to an algorithm
 that detects incorrect behaviours by covering the specification
 transitions with these reactions. Lee et al. proposed a passive
 testing method dedicated to wired protocols \cite{1621118}.
-Protocols are modelled with \textit{Event-driven Extended Finite
+Protocols are modeled with \textit{Event-driven Extended Finite
 State Machines} (EEFSM), compound of variables.  Several
 algorithms on the EEFSM model and their applications to the OSPF
 protocol and TCP state machines are presented. Algorithms check
@@ -679,7 +679,7 @@ whether partial traces, composed of actions and parameters, meet
 a given symbolic specification on the fly. The analysis of the
 symbolic specification is performed by means of configuration. A
 configuration represents a tuple gathering the current state
-label, and a set of assignments and guards modelling the variable
+label, and a set of assignments and guards modeling the variable
 state.
 
 \subsubsection{Backward checking}
