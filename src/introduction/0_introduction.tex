@@ -5,7 +5,7 @@
 
 \minitoc
 
-\TODO{title?}
+\section{General context and motivations}
 
 I am studying Computer Science for more than 8 years now. I
 remember my first lectures on quality assurance (QA) and software
@@ -100,14 +100,13 @@ techniques to: (i) infer formal models from large (legacy)
 software systems, and (ii) perform passive testing in order to
 detect potential regressions.
 
-\TODO{section on which problems this thesis adresses?}
-
-The next presents the contributions of this thesis. Section
-\ref{sec:intro:overview} gives the overview of this thesis.
+The next section presents the contributions of this thesis.
+Then, Section \ref{sec:intro:overview} gives the overview of this
+thesis.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\section{Contributions}
+\section{Contributions of the thesis}
 \label{sec:intro:contrib}
 
 The contributions of this thesis are:
@@ -117,47 +116,86 @@ The contributions of this thesis are:
         techniques originating from different fields such as
         expert systems, machine learning and model inference, for
         inferring formal models of legacy software systems.
-        Autofunk's modular architecture allows multiple
+        \textit{Autofunk}'s modular architecture allows multiple
         extensions;
 
-    \item An empirical study that evaluates Autofunk on web
-        applications for inferring models. Here, Autofunk is
-        combined with an automatic testing technique to interact
-        with web applications in order to improve the
-        completeness of the inferred models. Several models can
-        be built at different levels of abstraction, allowing to
-        create, for instance, human-readable documentation;
+    \item An empirical study that evaluates \textit{Autofunk} on
+        web applications for inferring models. Here,
+        \textit{Autofunk} is combined with an automatic testing
+        technique to interact with web applications in order to
+        improve the completeness of the inferred models. Several
+        models can be built at different levels of abstraction,
+        allowing to create, for instance, human-readable
+        documentation;
 
-    \item An empirical study that evaluates Autofunk on
+    \item An empirical study that evaluates \textit{Autofunk} on
         Michelin's production systems, proving that it is able to
         build exact models in an efficient manner, based on large
-        sets of traces (for now, we can define a set of traces as
+        sets of traces. For now, we can define a set of traces as
         information collected from a software system, and
-        describing its behaviors). Exactness is defined by the
-        trace-equivalence and trace-inclusion relations defined
-        in \cite{petrenko06};
+        describing its behaviors. A more formal definition will
+        be given in the sequel of this thesis. Exactness of our
+        inferred models is defined by the trace-equivalence and
+        trace-inclusion relations proposed in \cite{petrenko06};
 
     \item A reduction technique for symbolic transition systems
         that is both fast and efficient, keeping the exactness of
-        the models, and targetting large models;
+        the models, and targetting large models. This technique
+        has successfully been applied to large Michelin
+        production systems;
 
     \item An offline passive testing technique leveraging the
         inferred models for testing production systems, along
-        with a case study. This work is an extension of Autofunk;
+        with a case study. This work is an extension of
+        \textit{Autofunk} introducing two implementation
+        relations: (i) the first relation refers to the trace
+        preorder relation \cite{DNH84}, and (ii) the second
+        relation is used to overcome a limitation caused by the
+        partialness of the inferred models;
 
     \item An online passive testing technique similar to the
         offline passive testing, but enabling on the fly testing
         of production systems.
 \end{enumerate}
 
-\TODO{more on each item}
+\paragraph{Publications.} Most of these contributions have been
+published in the following international conference proceedings:
 
-\TODO{add publications here, new section}
+\begin{itemize}
+    \item Actes de la 13eme {\'e}dition d’AFADL, atelier
+        francophone sur les Approches Formelles dans l’Assistance au
+        D{\'e}veloppement de Logiciels (AFADL'14)
+        \cite{durand2014inference};
+
+    \item Proceedings of the Fifth Symposium on Information and
+        Communication Technology (SoICT'14)
+        \cite{DBLP:conf/soict/DurandS14};
+
+    \item Proceedings of Formal Methods 2015 (FM'15)
+        \cite{DBLP:conf/fm/DurandS15};
+
+    \item Proceedings of the 9th International Conference on
+        Distributed Event-Based Systems (DEBS'15)
+        \cite{DBLP:conf/debs/SalvaD15};
+
+    \item Proceedings of the 13th International Conference on Formal
+        Methods and Models for Co-Design (MEMOCODE'15)
+        \cite{7340480}.
+\end{itemize}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\section{Overview}
+\section{Overview of the thesis}
 \label{sec:intro:overview}
+
+The work presented in this thesis deals with two main research
+fields: (i) (software) model inference, and (ii) software
+testing. Hence, Chapter \ref{sec:related} is split into two main
+sections. Chapters \ref{sec:modelinf:webapps} and
+\ref{sec:modelinf:prodsystems} are dedicated to the model
+inference of software systems (web applications first, and
+production systems then). Chapter \ref{sec:testing} is dedicated
+to the testing of production systems.
 
 \textbf{Chapter \ref{sec:related}} surveys the literature in
 software testing first, and then in model inference applied to
@@ -175,26 +213,26 @@ techniques.
 model inference applied to web applications, a preliminary work
 that gave birth to \textit{Autofunk}, our modular framework for
 inferring models (and later, performing testing). This chapter
-gives an overview of Autofunk's very first architecture. It then
-presents how Autofunk relies on an automatic testing technique to
+gives an overview of \textit{Autofunk}'s very first architecture. It then
+presents how \textit{Autofunk} relies on an automatic testing technique to
 improve the completeness of the inferred models. A note on its
 implementation is then given, following by an experimentation.
 
 
 \textbf{Chapter \ref{sec:modelinf:prodsystems}} introduces our
-framework Autofunk revisited to target production systems. This
+framework \textit{Autofunk} revisited to target production systems. This
 chapter gives the context that led to our choices regarding the
-edesign of Autofunk. Our reduction technique that heavily reduces
+edesign of \textit{Autofunk}. Our reduction technique that heavily reduces
 models is then presented, along with the results of a case study
 on Michelin's production systems. A whole section is dedicated to
-the implementation of Autofunk for Michelin. Last significant
+the implementation of \textit{Autofunk} for Michelin. Last significant
 part of this chapter is the use of a machine learning technique
 to maximize one part of our model inference technique.
 
 \textbf{Chapter \ref{sec:testing}} tackles the problem of testing
 production systems, without disturbing them, and without having
 any specification. It presents our work on both offline and
-online passive testing, by extending Autofunk's model inference
+online passive testing, by extending \textit{Autofunk}'s model inference
 ramework. After having presented the overall idea, two algorithms
 are given and explained. The results of a case study on
 Michelin's production systems is given. Such results are related

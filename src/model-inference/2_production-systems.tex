@@ -66,11 +66,11 @@ captured by expert systems. A part of our approach is based upon
 this notion of knowledge implemented with inference rules. We
 reuse what worked well for web applications and enhance many
 parts of our framework to come up with a better version of our
-Autofunk framework, which is presented in this thesis.
+\textit{Autofunk} framework, which is presented in this thesis.
 
 In the following section, we describe the context in which this
 work has been conducted. In Section
-\ref{sec:modelinf:prodsystems:autofunk}, we present Autofunk for
+\ref{sec:modelinf:prodsystems:autofunk}, we present \textit{Autofunk} for
 Michelin's production systems along with a case study. Section
 \ref{sec:modelinf:usability} highlights our work on improving
 usability of the generated models.  We give our results in
@@ -184,10 +184,10 @@ to design our framework:
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\section{Autofunk's models generator revisited}
+\section{\textit{Autofunk}'s models generator revisited}
 \label{sec:modelinf:prodsystems:autofunk}
 
-In this section, we introduce our revisited framework Autofunk,
+In this section, we introduce our revisited framework \textit{Autofunk},
 whose main architecture is depicted in Figure
 \ref{fig:prodsystems:autofunk-overview}. This new version also
 contains different modules (in grey in the figure): four modules
@@ -197,7 +197,7 @@ derive more abstract and readable models.
 \begin{figure}[ht]
     \includegraphics[width=1.0\linewidth]{figures/autofunk.png}
 
-    \caption{Overview of Autofunk revisited with the different
+    \caption{Overview of \textit{Autofunk} revisited with the different
     modules in grey along with their corresponding steps. The last
     module (STS abstraction) is optional.}
     \label{fig:prodsystems:autofunk-overview}
@@ -215,12 +215,12 @@ combination of the notion of expert systems with the STS
 formalism: the STS representation, operators and transformations,
 can be expressed with deduction rules, and the knowledge of a
 human expert of a system can be transcribed with inference rules.
-Autofunk combines both domains in such a way that each model
+\textit{Autofunk} combines both domains in such a way that each model
 modification can be expressed and implemented with a rule.  As a
-consequence, the data collections handled by Autofunk are always
+consequence, the data collections handled by \textit{Autofunk} are always
 expressed with knowledge bases (Events, Actions, Traces, STS,
 etc.) on which rules are applied to infer models. Given a system
-$\mathit{Sua}$ and a set of production events, Autofunk builds
+$\mathit{Sua}$ and a set of production events, \textit{Autofunk} builds
 trace-included models, i.e. the traces of a model $\EuScript{S}$
 are included in the traces of $\mathit{Sua}$.
 
@@ -251,7 +251,7 @@ assignments of variables (e.g., $nsys$).}
 \label{fig:rawdatum}
 \end{figure}
 
-To explain how Autofunk works with production systems, we
+To explain how \textit{Autofunk} works with production systems, we
 consider a case study based upon the example of Figure
 \ref{fig:rawdatum}. It depicts simplified production events
 similar to those extracted from Michelin's logging system.
@@ -260,7 +260,7 @@ with assignments of variables e.g., $nsys$, which indicates an
 industrial device number, and $point$, which gives the product
 position.  Real events own around 20 parameters in average. Such
 a format is specific to Michelin but other kinds of events could
-be considered by updating the first module of Autofunk.  In this
+be considered by updating the first module of \textit{Autofunk}.  In this
 example, each line represents an event that happened in the
 system. This format has been borrowed from Michelin's logging
 system, hence its special formatting. It is worth mentioning that
@@ -270,7 +270,7 @@ logging system, not the production system we are interested in.
 \subsection{Production events and traces}
 \label{part3:collecting}
 
-Autofunk takes production events as input from a system under
+\textit{Autofunk} takes production events as input from a system under
 analysis $\mathit{Sua}$. To avoid disrupting the (running) system $\mathit{Sua}$,
 we do not instrument the industrial equipments composing the
 whole system. Everything is done offline with a logging system or
@@ -466,7 +466,7 @@ entry points of the system $\mathit{Sua}$.
 In our straightforward example, we obtain one trace set
 $ST_1=Traces(Sua)$.
 
-Thereafter, Autofunk scans the traces in $ST$ and tries to detect
+Thereafter, \textit{Autofunk} scans the traces in $ST$ and tries to detect
 repetitive patterns $p,\dots,p$. If it finds a trace $t$ having a
 repetitive pattern $p$ and another equivalent trace including
 this pattern $p$ once, then $t$ is removed since we suppose that
@@ -873,7 +873,7 @@ proposition:
 Given the trace set $ST_i \in CTraces(Sua)$, the generated STS
 $R(\EuScript{S}_i)$ can be used for analysis purpose but is still
 difficult to manually interpret, even for experts.  This fifth
-Autofunk module aims to analyse $R(\EuScript{S}_i)$ in order to
+\textit{Autofunk} module aims to analyse $R(\EuScript{S}_i)$ in order to
 produce a new STS $\EuScript{S}_i^\uparrow$ whose level of
 abstraction is lifted by using more intelligible actions. This
 process is performed with inference rules, which encode the
@@ -1005,23 +1005,23 @@ evaluation on real production systems.
 \subsection{Implementation}
 \label{sec:impl-exp-collect}
 
-Our framework Autofunk is developed in Java and leverages Drools.
+Our framework \textit{Autofunk} is developed in Java and leverages Drools.
 In our industrial context, we have several bases of facts used
-throughout the different Autofunk modules, represented as Java
+throughout the different \textit{Autofunk} modules, represented as Java
 objects such as: Events, Trace sets $ST_i$, Runs, Transitions,
 and STSs. We chose to target performance and simplicity while
-implementing Autofunk. That is why most of the steps are
+implementing \textit{Autofunk}. That is why most of the steps are
 implemented with parallel algorithms (except the production event
 parsing). Figure \ref{fig:autofunk_initial_setup} shows the
-initial setup of Autofunk. We have sets of log files to parse
-coming from Michelin's logging system. Autofunk reads these
+initial setup of \textit{Autofunk}. We have sets of log files to parse
+coming from Michelin's logging system. \textit{Autofunk} reads these
 files, and transforms them into traces, that are then used to
 build models.
 
 \begin{figure}[ht]
     \includegraphics[width=1.0\linewidth]{figures/autofunk_1.png}
 
-    \caption{The architecture of Autofunk that has been used to
+    \caption{The architecture of \textit{Autofunk} that has been used to
     conduct our first experiments with Michelin log files. A
     newer (and better) architecture is given in Figure
     \ref{fig:autofunk_gen_branded}.}
@@ -1062,7 +1062,7 @@ to the inference rule given in Section
 
 At the time of writing, we are working on the architecture
 depicted in Figure \ref{fig:autofunk_gen_branded}. It shows how we
-plan to integrate Autofunk with any Michelin production system.
+plan to integrate \textit{Autofunk} with any Michelin production system.
 Events are collected on the fly from a system under analyis, and
 sent to a database
 (Elasticsearch\footnote{\url{https://www.elastic.co/products/elasticsearch}}
@@ -1070,7 +1070,7 @@ here) thanks to a message broker (namely
 RabbitMQ\footnote{\url{https://www.rabbitmq.com/}}). Initial benchmarks
 revealed that such an infrastructure allows to collect up to
 10,000 events per second with a negligible overhead on the
-system. Autofunk then queries the database to fetch product
+system. \textit{Autofunk} then queries the database to fetch product
 events, and finally build models. This approach also solves the
 issue mentioned previously.
 
@@ -1078,7 +1078,7 @@ issue mentioned previously.
     \includegraphics[width=1.0\linewidth]{figures/model-gen-branded.png}
 
     \caption{The overall architecture built at Michelin to use
-    Autofunk in a production environment.}
+    \textit{Autofunk} in a production environment.}
     \label{fig:autofunk_gen_branded}
 \end{figure}
 
@@ -1146,7 +1146,7 @@ First, these results show that our framework can take millions
 of production events and still builds models quickly (20
 minutes). With sets collected during one day up to one week
 (experiments $A$, $B$, $C$, and $D$), models are inferred in less
-than 10 minutes. Hence, Autofunk can be used to quickly infer
+than 10 minutes. Hence, \textit{Autofunk} can be used to quickly infer
 models for analysis purpose or to help diagnose faults in a
 system. Experiment $F$ handled almost 10 million events in less
 than half an hour to build two models including around 1,600
@@ -1185,9 +1185,9 @@ The reduction ratio may vary with other systems.
 We also extracted the values of columns 4 and 7 in Figure
 \ref{fig:results} to depict the stacked bar chart illustrated in
 Figure \ref{fig:proportions}. This chart shows, for each
-experiment, the proportion of complete traces kept by Autofunk to
+experiment, the proportion of complete traces kept by \textit{Autofunk} to
 build models, over the initial number of traces in $Traces(Sua)$.
-Autofunk has kept only 37\% of the initial traces in Experiment
+\textit{Autofunk} has kept only 37\% of the initial traces in Experiment
 $A$ because its initial trace set is too small and contains many
 incomplete behaviors. During a day, most of the recorded traces
 do not start or end at entry or exit points, but rather start or
@@ -1200,7 +1200,7 @@ phenomenon is limited because we absorb these storage delays.
   \includegraphics[width=1.0\linewidth]{figures/proportions.png}
 
   \caption{Proportions of complete traces for the different
-  experiments. This chart shows that Autofunk considers a lot of
+  experiments. This chart shows that \textit{Autofunk} considers a lot of
   traces to infer models, but there is still room for
   improvement.}
   \label{fig:proportions}
@@ -1230,7 +1230,7 @@ removed, which is close to the reality.
   \includegraphics[width=1.0\linewidth]{figures/memory-time.png}
 
   \caption{Memory consumption vs execution time. This version of
-  Autofunk is still a prototype, and memory consumption remains
+  \textit{Autofunk} is still a prototype, and memory consumption remains
   an issue.}
   \label{fig:memory-time}
 \end{figure}
@@ -1242,7 +1242,7 @@ with millions of Java objects requires a lot of memory, i.e.
 memory consumption depends on the amount of initial traces. We
 compared execution time and memory consumption in Figure
 \ref{fig:memory-time}, showing that memory consumption tends to
-follow a logarithmic trend. In the next version of Autofunk, we
+follow a logarithmic trend. In the next version of \textit{Autofunk}, we
 plan to work on improving memory consumption even if it has been
 considered acceptable as is by Michelin.
 
@@ -1314,15 +1314,15 @@ obtain the reduced model $R(\EuScript{S}) =
 \section{Conclusion}
 \label{sec:modelinf:prodsystems:conclusion}
 
-In this chapter, we presented our revisited framework Autofunk,
+In this chapter, we presented our revisited framework \textit{Autofunk},
 combining model inference, machine learning, and expert systems
 to generate models from production systems. Figure
 \ref{fig:autofunk_branded} shows the final architecture of our
-revisited version of Autofunk along with the technologies used in
+revisited version of \textit{Autofunk} along with the technologies used in
 each module. Given a large set of production events, our
 framework infers exact models whose traces are included in the
 initial trace set of a system under analysis \cite{petrenko06}.
-We chose to design Autofunk for targeting high performance. Our
+We chose to design \textit{Autofunk} for targeting high performance. Our
 evaluation shows that this approach is suitable in the context of
 production systems since we quickly obtain STS trees reduced by
 90\% against the original trace sets of the system under
@@ -1331,7 +1331,7 @@ analysis.
 \begin{figure}[h]
     \includegraphics[width=1.0\linewidth]{figures/autofunk_branded.png}
 
-    \caption{Final architecture of our framework Autofunk,
+    \caption{Final architecture of our framework \textit{Autofunk},
     designed for quickly inferring models of Michelin's
     production systems.}
     \label{fig:autofunk_branded}

@@ -49,7 +49,7 @@ be performed in either online or offline mode, as defined below:
 \end{itemize}
 
 We collect the traces of the system under test by reusing
-Autofunk's Models generator. In offline mode, we build a set of
+\textit{Autofunk}'s Models generator. In offline mode, we build a set of
 traces with the same level of abstraction as those considered for
 inferring models. In online mode, we apply the same process for
 each new incoming trace. Then, we use these traces to check if
@@ -107,7 +107,7 @@ Methods and Models for Co-Design (MEMOCODE'15) \cite{7340480}.
 
 In order to perform testing, we reuse the reduced model
 $R(\EuScript{S}) = \{R(\EuScript{S}_1),\dots,R(\EuScript{S}_n)\}$
-inferred with Autofunk that we \textit{normalise} to get rid of
+inferred with \textit{Autofunk} that we \textit{normalise} to get rid of
 some runtime-dependent information.  Indeed, both models
 $\EuScript{S}$ and $R(\EuScript{S})$ include parameters that are
 dependent to the products being manufactured.  That is a
@@ -134,7 +134,7 @@ traces \textit{possibly fail traces}.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\section{Passive testing with Autofunk}
+\section{Passive testing with \textit{Autofunk}}
 \label{sec:testing:passive}
 
 We consider both models $\EuScript{S}^{N}$ and
@@ -147,8 +147,8 @@ test $\mathit{Sut}$.
 \begin{figure}[ht]
 \includegraphics[width=0.85\linewidth]{figures/passive_autofunk.png}
 
-\caption{The architecture of Autofunk with the passive testing
-extension. Whil the previous Autofunk's architecture has been
+\caption{The architecture of \textit{Autofunk} with the passive testing
+extension. Whil the previous \textit{Autofunk}'s architecture has been
 kept, there is two new modules: STS Normalisation and "check",
 representing the passive conformance testing part.}
 \label{fig:passive-autofunk}

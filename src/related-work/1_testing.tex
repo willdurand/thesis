@@ -4,19 +4,19 @@
 Software testing is the process of executing a program or system
 with the intent of finding errors \cite{Myers:1979:AST:539883}.
 However, testing shows the presence, not the absence of bugs as
-Edsger Wybe Dijkstra used to say.
+Edsger Wybe Dijkstra used to say \cite{Buxton:1970:SET:1102021}.
 
 Testing is achieved by analysing a software to detect the
 differences between existing and required conditions (that is,
-bugs) and to evaluate the features of this software. As Meyers
-said, testing is used to find faults, but it is also useful to
-provide confidence of reliability, correctness, and absence of
-particular faults on software we develop. This does not mean that
-the software is completely free of defects. Rather, it must be
-good enough for its intended use.
-Testing is a verification and validation (V\&V) process
-\cite{wallace1989software}. I use to (informally) explain both
-terms with the following questions \cite{Boehm1979}:
+bugs) and to evaluate the features of this software. As Myers
+said \cite{Myers:1979:AST:539883}, testing is used to find
+faults, but it is also useful to provide confidence of
+reliability, correctness, and absence of particular faults on
+software we develop. This does not mean that the software is
+completely free of defects. Rather, it must be good enough for
+its intended use.  Testing is a verification and validation
+(V\&V) process \cite{wallace1989software}. I use to (informally)
+explain both terms with the following questions \cite{Boehm1979}:
 
 \begin{itemize}
     \item \textbf{Validation:} are we building the right software?
@@ -196,6 +196,7 @@ more reliable by means of Model-based Testing.
     a three-step process.}
     \label{fig:mbt}
 \end{figure}
+\TODO{Figure: test oracle => tester}
 
 \textit{Model-based Testing} (MbT) is application of Model-based
 design for designing and optionally also executing artifacts to
@@ -216,8 +217,6 @@ evaluating the results.
 
 \subsubsection{What is a model?}
 \label{sec:related:testing:model}
-
-\TODO{Figure: test oracle => tester}
 
 Generally speaking, a model is a representation of a thing that
 allows for investigation of its properties, and most of the time,
