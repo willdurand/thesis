@@ -1,4 +1,4 @@
-\section{Model inference}
+\section{New challenges for model inference}
 \label{sec:conclusion:modelinf}
 
 Model inference is a research field that has received a lot of
@@ -13,8 +13,9 @@ inference has a few drawbacks, which require further
 investigation, and we believe that three major directions could
 be very beneficial.
 
-\paragraph{Building exact, or rather, more precise models.} When
-the inferred models are used for analysis, they must be as
+\subsection{Building exact, or rather, more precise models}
+
+When the inferred models are used for analysis, they must be as
 precise as possible. Nonetheless, we observed that the main
 feature leading to over-approximation is the state merging
 process. A trivial solution would be to use minimization
@@ -75,25 +76,27 @@ to guide the generation of observations. At the time of writing,
 it is often assumed that the user either gives all the system
 paths to explore or does nothing.
 
-\paragraph{Scalability as a first-class citizen.} Building models
-from large sets of observations in a reasonable amount of time is
-a goal that is not yet met by most of the existing model
-inference methods. To our knowledge, too few papers
-\cite{Yang:2006:PMT:1134285.1134325,Pradel:2009} take scalability
-into account. That is also why we have proposed techniques that
-scale well in this thesis. The use of specific parallel
-programming paradigms and heuristics would be an interesting
-research direction. These can be used to quickly build models or
-to find state equivalence classes. In this thesis, we tackled the
-problem of inferring models from production systems. Such systems
-are distributed over several devices, and generate millions of
-events a day. Collecting, storing, and analyzing such amount of
-data becomes more and more complicated, and model inference
-algorithms have to take these points into account. Such
-challenges are close to those of what we now call "big data"
-\cite{bigdata14}. Big data not only defines the large volume of
-data but also new processing algorithms and applications since
-the traditional ones are inadequate.
+\subsection{Scalability as a first-class citizen}
+
+Building models from large sets of observations in a reasonable
+amount of time is a goal that is not yet met by most of the
+existing model inference methods. To our knowledge, too few
+papers \cite{Yang:2006:PMT:1134285.1134325,Pradel:2009} take
+scalability into account. That is also why we have proposed
+techniques that scale well in this thesis. The use of specific
+parallel programming paradigms and heuristics would be an
+interesting research direction. These can be used to quickly
+build models or to find state equivalence classes. In this
+thesis, we tackled the problem of inferring models from
+production systems. Such systems are distributed over several
+devices, and generate millions of events a day. Collecting,
+storing, and analyzing such amount of data becomes more and more
+complicated, and model inference algorithms have to take these
+points into account. Such challenges are close to those of what
+we now call "big data" \cite{bigdata14}. Big data not only
+defines the large volume of data but also new processing
+algorithms and applications since the traditional ones are
+inadequate.
 
 To pursue in this path, applications in the Industry become more
 and more complex with the rise of Service-Oriented Architectures
@@ -113,9 +116,11 @@ and software, but this could be a path to follow if one would
 want to infer models of microservices as each service owns its
 data.
 
-\paragraph{Bringing together different approaches and research
-fields.} Some papers chose to combine different algorithms for
-optimizing model inference. For instance, several works
+\subsection{Bringing together different approaches and research
+fields}
+
+Some papers chose to combine different algorithms for optimizing
+model inference. For instance, several works
 \cite{Alur:2005:SIS:1047659.1040314,Raffelt:2005:LLA:1081180.1081189,ngll11}
 replaced teachers and oracles with testers to answer queries.
 Other works \cite{Azim13,WPX13} combined static analyses of

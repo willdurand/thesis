@@ -42,7 +42,7 @@ searching for features in execution traces that allow to
 distinguish browsers from other software systems. A prominent use
 of model inference also concerns Model-based Testing
 \cite{Lorenzoli2008,tap2011,MobiGUITARIEEESoftware2014} and
-verification \cite{Ammons:2002:MS:565816.503275,5416728}.
+verification \cite{Ammons:2002:MS:565816.503275}.
 
 In the literature, we can find different techniques to infer
 models that can be organized in two main categories. In the first
@@ -57,9 +57,10 @@ In the following section, we give an overview of prominent active
 inference approaches: we introduce $\EuScript{L}^*$-based
 techniques in Section \ref{sec:active-letoile}, incremental
 learning techniques in Section \ref{sec:active-increment}, and
-the model generation by means of automatic testing of Graphical
-User Interface in Section \ref{sec:active-crawling}. Passive
-inference techniques are extensively described in Section
+the model generation by means of automatic testing of
+event-driven applications providing Graphical User Interfaces
+GUIs) in Section \ref{sec:active-crawling}. Passive inference
+techniques are extensively described in Section
 \ref{sec:passive}. We cover passive inference techniques using
 event sequence-based abstraction in Section
 \ref{sec:passive-fsa}, using state-based abstraction in Section
@@ -85,19 +86,19 @@ models in Section \ref{sec:passive-others}.
 \end{figure}
 
 Active inference refers to algorithms that actively interact with
-systems or people to extract knowledge about a (software) system,
-which is then expressed in a model. Interactions are performed
-with kinds of queries, which are sometimes replaced by testing
-techniques. A model generator or learner then uses this feedback
-to incrementally build several models, or to refine the model
-under generation. Many existing active inference techniques have
-been initially conceived upon two concepts: the $\EuScript{L}^*$
-algorithm, presented in Section \ref{sec:active-letoile}, and
-incremental learning, presented in Section
-\ref{sec:active-increment}. Several more recent papers also
-proposed crawling techniques of Graphical User Interface (GUI)
-applications, i.e. exploring them through their GUIs with
-automatic testing. We introduce some of them in Section
+black-box systems or people to extract knowledge about a
+(software) system, which is then expressed in a model.
+Interactions are performed with kinds of queries, which are
+sometimes replaced by testing techniques. A model generator or
+learner then uses this feedback to incrementally build several
+models, or to refine the model under generation. Many existing
+active inference techniques have been initially conceived upon
+two concepts: the $\EuScript{L}^*$ algorithm, presented in
+Section \ref{sec:active-letoile}, and incremental learning,
+presented in Section \ref{sec:active-increment}. Several more
+recent papers also proposed crawling techniques of Graphical User
+Interface (GUI) applications, i.e. exploring them through their
+GUIs with automatic testing. We introduce some of them in Section
 \ref{sec:active-crawling}.
 
 \subsubsection{$\EuScript{L}^*$-based techniques and related}
@@ -348,8 +349,8 @@ generated from them.
 
 Combining incremental model inference with testing has also been
 studied with applications providing Graphical User Interfaces
-(GUIs). We present some works related to the model inference of
-GUI applications in the next section.
+(GUIs), which are event-driven. We present some works related to
+the model inference of GUI applications in the next section.
 
 \subsubsection{Model inference of GUI applications}
 \label{sec:active-crawling}
@@ -396,7 +397,8 @@ the application).
 
 		%\cite{monkey}                           &mobile                 &B  &  &IM &Random   & Yes	\\
 
-		\cite{hungar2002}                       &distributed systems   &B  &  &FM&L*       & \\
+		\cite{hungar2002}                       &distributed
+        systems   &B  &  &FM&$\EuScript{L}^*$       & \\
 
 		%\cite{Memon:2003}                        &desktop                &B  &  &M &DFS      &  \\
 
