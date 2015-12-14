@@ -228,7 +228,6 @@
 % **************************************************
 % Load Packages
 % **************************************************
-\RequirePackage{fixltx2e}			% packages provides fixes to LaTeX2e
 \RequirePackage{microtype}			% typographic tuning
 \RequirePackage{setspace}			% for line spacing, e.g. \onehalfspacing
 \RequirePackage[]{graphicx}			% graphics import features
@@ -626,6 +625,11 @@
 % The tocloft package enables us to control the typographic design of the
 % table of contents, list of figures and list of tables
 \RequirePackage{tocloft}
+% - fixes wrong fonts in the toc, thanks to magnucki
+\renewcommand{\cftchapfont}{\usefont{T1}{bch}{b}{n}\selectfont}
+\renewcommand{\cfttoctitlefont}{\thesischapterfont}
+\renewcommand{\cftloftitlefont}{\thesischapterfont}
+\renewcommand{\cftlottitlefont}{\thesischapterfont}
 %
 % > adjusts the indention for figure and table entries (lof and lot)
 %   -- \cftsetindents{entry}{indent}{numwidth} sets the entry's indent to
