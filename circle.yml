@@ -14,4 +14,5 @@ dependencies:
 
 test:
   override:
-    - docker run -v $(pwd):/data willdurand/latex make pdf
+    - docker run -v $(pwd):/data willdurand/latex make clean pdf
+    - cat thesis.log | grep "Output written on thesis.pdf"
