@@ -1,0 +1,17 @@
+machine:
+  services:
+    - docker
+
+dependencies:
+  # https://willdurand.com/docs/docker
+  cache_directories:
+    - "~/docker"
+
+  override:
+    - if [[ -e ~/docker/image.tar ]]; then docker load -i ~/docker/image.tar; fi
+    - docker build -t willdurand/latex .
+    - mkdir -p ~/docker; docker save willdurand/latex > ~/docker/image.tar
+
+test:
+  override:
+    - docker run -v $(pwd):/data willdurand/latex pdflatex /data/thesis.tex
