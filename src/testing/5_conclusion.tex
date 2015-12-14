@@ -13,11 +13,10 @@ of a system under analysis. Such models are then reused as
 specifications to perform: (i) offline passive testing using a
 second set of traces recorded on a system under test, (ii) online
 passive testing by taking new traces of a system under test
-on-the-fly.
-Using two implementation relations, Autofunk is able to determine
-what has changed between the two systems. This is particularly
-useful for our industrial partner Michelin since potential
-regressions can be detected while deploying changes in
+on-the-fly. Using two implementation relations, Autofunk is able
+to determine what has changed between the two systems. This is
+particularly useful for our industrial partner Michelin since
+potential regressions can be detected while deploying changes in
 production. Initial results on the offline method are
 encouraging, and Michelin engineers see a real potential in this
 framework.
@@ -25,11 +24,6 @@ framework.
 We know that 2\% of a large trace set (as mentioned in the
 results) can represent many traces, which can still be difficult
 to analyze. In a manufacturing context, this is valuable although
-we would like to reduce such false negatives.
-Another interesting improvement to this framework, directly
-related to our industrial partner Michelin, would be to be able
-to focus on specific locations of a workshop, rather than on the
-whole workshop, since some parts are more critical than others.
-This should bring significant improvements to the end users of
-Autofunk. Finally, a different direction that will be discussed
-in the next chapter is to perform \textit{active} testing.
+we would like to reduce such false negatives. In the next
+chapter, we give our thoughts on how to improve \textit{Autofunk}
+as well as perspectives to leverage our work.

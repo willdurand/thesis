@@ -70,12 +70,15 @@ parts of our framework to come up with a better version of our
 
 In the following section, we describe the context in which this
 work has been conducted. In Section
-\ref{sec:modelinf:prodsystems:autofunk}, we present \textit{Autofunk} for
-Michelin's production systems along with a case study. Section
-\ref{sec:modelinf:usability} highlights our work on improving
-usability of the generated models.  We give our results in
-Section \ref{sec:modelinf:prodsystems:results}, and we conclude
-on this work in Section \ref{sec:modelinf:prodsystems:conclusion}.
+\ref{sec:modelinf:prodsystems:autofunk}, we present
+\textit{Autofunk} for Michelin's production systems along with a
+case study. Section \ref{sec:modelinf:usability} highlights our
+work on improving usability of the generated models.  We give our
+results in Section \ref{sec:modelinf:prodsystems:results}. We
+highlight an improvement made on our framework in Section
+\label{sec:modelinf:prodsystems:better-segmentation}, and we
+conclude on this work in Section
+\ref{sec:modelinf:prodsystems:conclusion}.
 
 \textbf{Publications.} This work has been published in the
 Proceedings of Formal Methods 2015 (FM'15)
@@ -132,8 +135,8 @@ languages and different frameworks are used by development
 teams, making difficult to focus on a single technology. Last
 but not least, the average lifetime of these applications is 20
 years. This set is large and too disparate to apply conventional
-testing techniques, however most of the applications exchange
-events using dedicated custom internal protocols.
+testing techniques, yet most of the applications exchange events
+using dedicated custom internal protocols.
 
 Our industrial partner needs a safe way to infer up to date
 models, independent of the underlying technical details, and
@@ -204,7 +207,7 @@ derive more abstract and readable models.
 \end{figure}
 
 We consider \textit{Symbolic Transition Systems} (STSs) as models
-for representing industrial system behaviors. As reminder, STSs
+for representing production system behaviors. As reminder, STSs
 are state machines incorporating actions (i.e. events in this
 context), labeled on transitions, that show what can be given to
 and observed on the system. In addition, actions are tied to an
@@ -898,9 +901,9 @@ The generated STSs represent recorded scenarios modeled at a
 higher level of abstraction. These can be particularly useful for
 generating documentation or better understanding how the system
 behaves, especially when issues are experienced in production.
-However, it is manifest that the trace inclusion property is lost
-with the STSs constructed by this module since sequences are
-modified.
+On the other hand, it is manifest that the trace inclusion
+property is lost with the STSs constructed by this module since
+sequences are modified.
 
 \begin{figure}[ht]
 \begin{framed}
@@ -1058,7 +1061,7 @@ to the inference rule given in Section
 At the time of writing, we are working on the architecture
 depicted in Figure \ref{fig:autofunk_gen_branded}. It shows how we
 plan to integrate \textit{Autofunk} with any Michelin production system.
-Events are collected on the fly from a system under analysis, and
+Events are collected on-the-fly from a system under analysis, and
 sent to a database
 (Elasticsearch\footnote{\url{https://www.elastic.co/products/elasticsearch}}
 here) thanks to a message broker (namely
@@ -1133,7 +1136,7 @@ $F_2$ &       &           &         &   &   & 43,536 & 1,585 &    \\
 \end{center}
 
 \caption{This table shows the results of 6 experiments on a
-Michelin industrial system with different event sets.}
+Michelin production system with different event sets.}
 \label{fig:results}
 \end{sidewaystable}
 
@@ -1232,7 +1235,7 @@ removed, which is close to the reality.
 
 Another potential issue with our parsing implementation is that
 every event has to be loaded in memory, so that we can perform
-computation and apply our algorithms on them. However working
+computation and apply our algorithms on them. But working
 with millions of Java objects requires a lot of memory, i.e.
 memory consumption depends on the amount of initial traces. We
 compared execution time and memory consumption in Figure
@@ -1248,7 +1251,7 @@ related to the generation of more abstract models.
 
 \section{A better solution to the trace segmentation and
 filtering problem with machine learning}
-\label{sec:testing:segmentation}
+\label{sec:modelinf:prodsystems:better-segmentation}
 
 In Section \ref{sec:modelinf:prodsystems:segmentation}, we
 presented a statistical analysis to segment and filter the

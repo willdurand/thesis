@@ -1,0 +1,55 @@
+\section{Summary of achievements}
+
+This thesis has proposed a novel approach to infer small models
+of software systems in order to perform Model-based Testing of
+production systems. In addition, it has provided a conformance
+testing technique that leverages such models, along with two
+different implementation relations. The original aims and
+objectives of the thesis were as follows:
+
+\begin{itemize}
+    \item To infer partial yet exact models of production systems
+        in a fast and efficient manner, based on the data
+        exchanged in a (production) environment;
+
+    \item To generate test cases based on these models in order
+        to perform conformance testing of production systems. The
+        main idea was to detect regressions across similar
+        production systems (e.g., a software update or a hardware
+        upgrade).
+\end{itemize}
+
+Chapters \ref{sec:modelinf:webapps} and
+\ref{sec:modelinf:prodsystems} addressed the first of the
+objectives by proposing two approaches combining model inference
+and expert systems to infer exact models for web applications and
+industrial systems, wrapped into the \textit{Autofunk} framework.
+The expert system is composed of rules used either to filter the
+trace set to remove the undesired ones, to infer Input Output
+Symbolic Transition Systems (IOSTS) or to build more abstract
+IOSTSs. In Chapter \ref{sec:modelinf:prodsystems}, the state
+merging is replaced with a context-specific state reduction based
+on an event sequence abstraction. This state reduction can be
+seen as the kTail algorithm \cite{5009015} where $k$ is as high
+as possible.  This state reduction first ensures that the
+resulting models do not over-approximate the system under
+analysis but it is also very context-specific, and cannot be
+generalized. We also showed that our approach is scalable: it can
+take thousands and thousands of traces and can still build models
+quickly thanks to our specific state merging process.
+
+The second objective was achieved by enhancing \textit{Autofunk}
+with a passive testing technique as presented in Chapter
+\ref{sec:testing}. Given a large set of production events,
+\textit{Autofunk} reuses the inferred models as specification to
+perform offline passive testing, using a second set of traces
+recorded on a system under test, and two implementation relations
+to determine what has changed between the two systems. This is
+particularly useful for our industrial partner Michelin since
+potential regressions can be detected while deploying changes in
+production.
+
+Next section introduces some perspectives for future work on
+model inference, while Section \ref{sec:conclusion:testing} is
+dedicated to future work on the testing part of our work. Section
+\ref{sec:conclusion:final-thoughts} closes this thesis.

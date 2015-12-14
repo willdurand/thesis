@@ -1,0 +1,141 @@
+\section{Model inference}
+\label{sec:conclusion:modelinf}
+
+Model inference is a research field that has received a lot of
+attention over the past three decades, and it is still gaining
+ground with the emergence of new kinds of applications, e.g., web
+services and mobile applications. Many recent papers consider
+model inference to later perform analyses of the models or
+automatic testing in order to check different aspects of the
+software system such as robustness, security, and even regression
+testing, as presented in this thesis. Nonetheless, model
+inference has a few drawbacks, which require further
+investigation, and we believe that three major directions could
+be very beneficial.
+
+\paragraph{Building exact, or rather, more precise models.} When
+the inferred models are used for analysis, they must be as
+precise as possible. Nonetheless, we observed that the main
+feature leading to over-approximation is the state merging
+process. A trivial solution would be to use minimization
+techniques instead, e.g., a bisimulation minimization as
+described in Chapter \ref:{sec:modelinf:webapps} of this thesis.
+As a reminder, the bisimulation relation associated with a
+minimization technique merges the state sets that are bisimilar
+equivalent. This relation is stronger than a classical trace
+equivalence relation, but it may be even too strong since the
+bisimulation minimization usually does not merge enough states,
+and thus may still produce large models. If another more suitable
+relation can be used, and if verification or testing techniques
+can work well with larger yet more precise models, which results
+can we expect? In this thesis, we provided a preliminary answer
+to this question, but there is still a lot of work to do.
+
+Many model inference techniques rely on the notion of abstraction
+level to reduce the size of the inferred models. Nevertheless,
+this process implies over-approximation. A solution to limit it
+is to define and estimate quality metrics
+\cite{tonella2012finding,Lo20122063} to guide the model
+construction. In \cite{tonella2012finding}, three metrics,
+related to over- and under-approximation rates and model size,
+are measured to balance over-approximation and
+under-approximation of the inferred models with two search-based
+algorithms: (i) a multi-objective genetic algorithm, and (ii) the
+non-dominated sorting genetic algorithm \textit{NSGA-II}. But
+this process is time-consuming and can only be applied on small
+systems since the complete models, i.e. the models compound of
+all the observations, are incrementally re-generated from scratch
+to improve the metrics.  An iterative process performed by adding
+the observations one after one in the model could also be
+considered. For instance, with crawling techniques, every time a
+new state is explored, these metrics could refine the state
+merging on-the-fly. Other metrics could also be chosen depending
+on the context of the software system. In \textit{Autofunk}, a
+similar improvement would be to build submodels of a production
+system. By now, we consider a whole workshop as a production
+system to infer models, i.e. we don't make any distinction among
+the different parts of the workshop. Nonetheless, there are parts
+that are more critical than others, at least in Michelin's
+workshops. Being able to focus on specific locations of a
+workshop would be interesting to build smaller models. This
+should bring significant improvements to the end users of
+\textit{Autofunk}.
+
+It has been argued with active and incremental learning
+techniques that negative observations strongly help in the
+inference of more precise models. But negative observations are
+usually not taken into account in crawling techniques and passive
+inference. When the system is available, a solution to collect
+negative observations would be to exercise the system with fuzzy
+testing. An execution ended by a crash or the raise of an
+exception could then be qualified as a negative observation.
+Another solution, sometimes considered with crawling techniques,
+would be to (re) incorporate users in the model inference process
+to guide the generation of observations. At the time of writing,
+it is often assumed that the user either gives all the system
+paths to explore or does nothing.
+
+\paragraph{Scalability as a first-class citizen.} Building models
+from large sets of observations in a reasonable amount of time is
+a goal that is not yet met by most of the existing model
+inference methods. To our knowledge, too few papers
+\cite{Yang:2006:PMT:1134285.1134325,Pradel:2009} take scalability
+into account. That is also why we have proposed techniques that
+scale well in this thesis. The use of specific parallel
+programming paradigms and heuristics would be an interesting
+research direction. These can be used to quickly build models or
+to find state equivalence classes. In this thesis, we tackled the
+problem of inferring models from production systems. Such systems
+are distributed over several devices, and generate millions of
+events a day. Collecting, storing, and analyzing such amount of
+data becomes more and more complicated, and model inference
+algorithms have to take these points into account. Such
+challenges are close to those of what we now call "big data"
+\cite{bigdata14}. Big data not only defines the large volume of
+data but also new processing algorithms and applications since
+the traditional ones are inadequate.
+
+To pursue in this path, applications in the Industry become more
+and more complex with the rise of Service-Oriented Architectures
+(SOA), distributed systems, and more recently
+microservices\footnote{\url{http://martinfowler.com/articles/microservices.html}}
+\cite{thones2015microservices}.  For instance, microservices are
+emerging as a new architectural style, aiming at creating
+software systems as a set of small services, i.e. small
+applications, each developed and deployed on its own. This
+package of services form the complete software system. Inferring
+models of such systems is not doable with most of the existing
+model inference techniques. On the other hand, \textit{Autofunk}
+can use many data sources to infer models, because of our use
+case with Michelin's production systems. Indeed, we chose such an
+approach to gather heterogeneous events between different devices
+and software, but this could be a path to follow if one would
+want to infer models of microservices as each service owns its
+data.
+
+\paragraph{Bringing together different approaches and research
+fields.} Some papers chose to combine different algorithms for
+optimizing model inference. For instance, several works
+\cite{Alur:2005:SIS:1047659.1040314,Raffelt:2005:LLA:1081180.1081189,ngll11}
+replaced teachers and oracles with testers to answer queries.
+Other works \cite{Azim13,WPX13} combined static analyses of
+source code with crawlers to increase code coverage rates, and
+reduce exploration time. Other  research domains, such as machine
+learning and data mining, have also been considered to avoid the
+classical state merging stage. Ammons et al.
+\cite{Ammons:2002:MS:565816.503275} developed a machine learning
+approach, called specification mining to infer state machines.
+The authors focused on the most frequent interaction patterns
+found in a scenario set. In this thesis, we also adopted machine
+learning to automatically slice a trace set into several subsets
+so that we can infer several models of a production system in a
+workshop (cf.
+\crossref{sec:modelinf:prodsystems}{sec:modelinf:prodsystems:better-segmentation}).
+Leveraging different domains such as the ones mentioned here
+sounds promising for optimizing model inference. As an example,
+state merging might be replaced with a kind of mechanism that
+would be automatically extracted from the characteristics or the
+context of the software system.
+
+In the next section, we give our perspectives related to the
+testing part of our work.
