@@ -16,5 +16,4 @@
 *.mtc*
 *.maf
 *.bak
-README.html
-CHANGELOG.html
+revision.tex
