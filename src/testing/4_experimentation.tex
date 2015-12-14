@@ -14,7 +14,7 @@ sets, recorded at different periods of time. The first column
 shows the experiment number, columns 2 and 3 respectively give
 the sizes of the trace sets of the system under analysis
 $\mathit{Sua}$ and of the system under test $\mathit{Sut}$. The
-two next columns show the percentage of pass traces w.r.t the
+two next columns show the percentage of pass traces with respect to the
 relations $\leq_{ct}$ and $\leq_{mct}$. The last column indicates
 the execution time for the testing phase.
 
@@ -50,7 +50,7 @@ are older than those of $\mathit{Sua}$, which is unusual as the
 de facto usage of our framework is to build specifications from a
 production system $\mathit{Sua}$, and to take a newer or updated
 system as $\mathit{Sut}$.  Here, only 30\% of the traces of
-$\mathit{Sut}$ are pass traces w.r.t.  the second implementation
+$\mathit{Sut}$ are pass traces with respect to the second implementation
 relation (same sequence of symbols with different values). There
 are two explanations: the system has been updated between the two
 periods of record (4 months), and production campaigns, i.e.
@@ -66,7 +66,7 @@ experiment is a typical usage of our framework at Michelin.  The
 traces of $\mathit{Sut}$ have been collected for 5 days, and it
 took only 10 minutes to check conformance. While 98\% of the
 traces are pass traces, the remaining 2\% are new behaviours that
-never occured before. Such information is essential for Michelin
+never occurred before. Such information is essential for Michelin
 engineers to determine the root causes. Even though 2\% may
 represent a large set to analyse, \textit{Autofunk} improves
 their work by highlighting the traces to focus on.  Such subset

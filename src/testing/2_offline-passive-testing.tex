@@ -104,11 +104,11 @@ such that $t$ is also a trace of $R(\EuScript{S}_i^{N})$ with
 $check(t, R(\EuScript{S}_i^{N}))$.  If no model
 $R(\EuScript{S}_i^{N})$ has been found, the trace $t$ is placed
 into the set $T_1$. $T_1$ gathers the possibly fail traces
-w.r.t. $\leq_{ct}$. Thereafter, the algorithm performs the same
+with respect to $\leq_{ct}$. Thereafter, the algorithm performs the same
 step but on the STS $D(\EuScript{S}^{N})$. One more time, if no
 model $D(\EuScript{S}_i^{N})$ has been found, the trace $t$ is placed
 into the set $T_2$.  The latter gathers the possibly fail traces,
-w.r.t. the relation $\leq_{mct}$.
+with respect to the relation $\leq_{mct}$.
 
 Finally, if $T_1$ is empty, the verdict "Pass$\leq_{ct}$" is
 returned, which means that the first implementation relation holds.

@@ -25,8 +25,8 @@ one wants to maintain because of lack of understanding.
 In this chapter, we focus on this problem for production systems
 that exchange thousands of events a day. Several approaches have
 already been proposed for different types of systems, usually for
-GUI applications, e.g., desktop or mobile applications. However,
-we noticed that these approaches were not tailored to support
+GUI applications, e.g., desktop or mobile applications. Yet, we
+noticed that these approaches were not tailored to support
 production systems. From the literature (cf. Chapter
 \ref{sec:related}), we deduced the following key observations:
 
@@ -178,7 +178,7 @@ to design our framework:
         specific parameter that is included in all event assignments
         of the same trace. This identifier is denoted by $pid$ and
         identifies products, e.g., tires at Michelin.  Besides this,
-        event assignments include a timestamp to sort them into
+        event assignments include a time stamp to sort them into
         traces.
 \end{itemize}
 
@@ -385,8 +385,8 @@ set $Traces(Sua)$:
 \end{definition}
 
 We can now state that a STS model $\EuScript{S}$ is said
-trace-included iff $Traces(\EuScript{S}) \subseteq Traces(Sua)$
-as defined in \cite{petrenko06}.
+trace-included if and only if $Traces(\EuScript{S}) \subseteq
+Traces(Sua)$ as defined in \cite{petrenko06}.
 
 \subsection{Trace segmentation and filtering}
 \label{sec:modelinf:prodsystems:segmentation}
@@ -417,9 +417,9 @@ of the known exit points.
 \begin{definition}[Complete traces]
 Let $\mathit{Sua}$ be a system under analysis and $Traces({Sua})$
 be its trace set. A trace $t=a_1(\alpha_1) \dots a_n(\alpha_n) \in
-Traces({Sua})$ is said complete iff $\alpha_1$ includes an
-assignment $point=val1$, which denotes an entry point of
-$\mathit{Sua}$, and $\alpha_n$ includes an assignment
+Traces({Sua})$ is said complete if and only if $\alpha_1$
+includes an assignment $point=val1$, which denotes an entry point
+of $\mathit{Sua}$, and $\alpha_n$ includes an assignment
 $point=val2$, which denotes an exit point.  The complete traces
 of $\mathit{Sua}$ are denoted by $CTraces({Sua}) \subseteq
 Traces({Sua})$.
@@ -483,9 +483,9 @@ are equivalent, denoted by the $\sim_{(pid)}$ notation:
     Let $p$ be a pattern of a trace $t$ and $p'$ be a pattern of
     a trace $t'$. We denote by $\sim{(pid)}$ the relation that
     defines the equivalence between $t$ and $t'$, and we write
-    $t \sim_{(pid)} t'$ iff $t$ and $t'$ have the same succesive
-    valued events after having removed the assignments of the
-    variable $pid$.
+    $t \sim_{(pid)} t'$ if and only if $t$ and $t'$ have the same
+    successive valued events after having removed the assignments
+    of the variable $pid$.
 \end{definition}
 
 At the end we obtain the complete trace set $CTraces(Sua)$.
@@ -1024,7 +1024,7 @@ build models.
 
 The input trace collection is constructed with a classical
 parser, which returns $Event$ Java objects. By now, we are not
-able to parallelise this part because of an issue we faced with
+able to parallelize this part because of an issue we faced with
 Michelin's logging system. The resulting drawback is that the
 time to parse traces is longer than expected and heavily depends
 on the size of data to parse. The $Event$ base is then filtered
@@ -1043,7 +1043,8 @@ of STS branches equivalence classes, has been implemented with a
 specific algorithm for better performance. Indeed, comparing
 every action in STS branches in order to aggregate them is time
 consuming.  Given a STS $\EuScript{S}$, this algorithm generates
-a signature for each branch $b$, i.e. a hash (SHA1 algorithm) of
+a signature for each branch $b$, i.e. a hash
+(SHA1\footnote{Secure Hash Algorithm 1} algorithm) of
 the concatenation of the signatures of the actions of $b$. The
 branches which have the same signature are gathered together and
 establish branch equivalence classes (as described in Section
@@ -1057,7 +1058,7 @@ to the inference rule given in Section
 At the time of writing, we are working on the architecture
 depicted in Figure \ref{fig:autofunk_gen_branded}. It shows how we
 plan to integrate \textit{Autofunk} with any Michelin production system.
-Events are collected on the fly from a system under analyis, and
+Events are collected on the fly from a system under analysis, and
 sent to a database
 (Elasticsearch\footnote{\url{https://www.elastic.co/products/elasticsearch}}
 here) thanks to a message broker (namely
@@ -1210,7 +1211,7 @@ The workshop we analysed has three entry points whose two are
 mainly used. The third entry point is employed to equilibrate the
 production load between this workshop and a second one located
 close to it in the same factory. Depending on the period, this
-entry point may be more or less sollicitated, hence the
+entry point may be more or less solicited, hence the
 difference between experiments $B$, $C$ and experiment $D$.
 Increasing the limit of 10\% to a higher value would change the value
 of $N$ for experiments $B$ and $C$, but would also impact
@@ -1251,11 +1252,11 @@ filtering problem with machine learning}
 
 In Section \ref{sec:modelinf:prodsystems:segmentation}, we
 presented a statistical analysis to segment and filter the
-initial trace set used to infer models. However, experiments (as
-seen in the previous section) revealed that this empirical method
-was not stable, in other words the use of a configurable minimum
-limit was not accurate enough. That is why we chose to work on a
-new solution to segment and filter traces.
+initial trace set used to infer models. Nevertheless, experiments
+(as seen in the previous section) revealed that this empirical
+method was not stable, in other words the use of a configurable
+minimum limit was not accurate enough. That is why we chose to
+work on a new solution to segment and filter traces.
 
 We now rely on a machine learning technique to segment a trace
 set into several subsets, one per entry point of the system
@@ -1282,7 +1283,7 @@ as shown in Figure \ref{fig:kmeans}.
     \includegraphics[width=1.0\linewidth]{figures/kmeans.png}
 
     \caption{k-means clustering explained: the intuition is to
-    partition $n$ observations into $k$ clusers in which each
+    partition $n$ observations into $k$ clusters in which each
     observation belongs to the cluster with the nearest mean.}
     \label{fig:kmeans}
 \end{figure}

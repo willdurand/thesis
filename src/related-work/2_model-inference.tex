@@ -31,7 +31,8 @@ kinds of data samples such as affirmative and negative answers
 \cite{Krka:2010:UDE:1810295.1810324}, documentation
 \cite{ZhongZXM11}, source code
 \cite{Salah05scenariographer,Pradel:2009}, network traces
-\cite{6079839} or from more abstract documentation such as WSDL
+\cite{6079839} or from more abstract documentation such as Web
+Service Description Language (WSDL)
 description \cite{Bertolino:2009:ASB:1595696.1595719}.  Model
 inference is employed for different purposes. One can infer
 models from log files in order to retrieve important information
@@ -40,7 +41,7 @@ successfully been applied to intrusion detection \cite{debar00},
 searching for features in execution traces that allow to
 distinguish browsers from other software systems. A prominent use
 of model inference also concerns Model-based Testing
-\cite{Lorenzoli2008, Meinke11,MobiGUITARIEEESoftware2014} and
+\cite{Lorenzoli2008,tap2011,MobiGUITARIEEESoftware2014} and
 verification \cite{Ammons:2002:MS:565816.503275,5416728}.
 
 In the literature, we can find different techniques to infer
@@ -247,7 +248,7 @@ A common problem to the algorithms presented above is the time
 spent querying the oracle or the teacher, and several
 competitions, e.g., the ZULU challenge \cite{zulu} have been
 proposed to optimize the learning task by trying to make easier
-queries, or queries for which the Oracle’s answer is simpler.
+queries, or queries for which the oracle's answer is simpler.
 Concretely, the purpose of such competitions is to optimize the
 learning algorithm with heuristics to reduce the number of
 equivalence and membership queries. But having an oracle knowing
@@ -299,10 +300,10 @@ version called \textit{Incremental Distinguishing Sequences}
 (IDS) \cite{journals/corr/abs-1206-2691}. The state merging is
 here performed by generating the distinguishing sequence set $DS$
 of every state and by refining blocks of states such that two
-blocks of states are distinct iff they do not have the same $DS$
-sets. IDS also has polynomial time and space complexities. In
-contrast with IID, the IDS algorithm solves some technical errors
-and its proof of correctness is much simpler.
+blocks of states are distinct if and only if they do not have the
+same $DS$ sets. IDS also has polynomial time and space
+complexities. In contrast with IID, the IDS algorithm solves some
+technical errors and its proof of correctness is much simpler.
 
 Meinke introduced the \textit{Congruence Generator Extension}
 (CGE) algorithm in \cite{meinkeCGE} to infer Mealy automata by
@@ -322,8 +323,8 @@ and can be directly analyzed (e.g, for verification purpose). CGE
 has some features in common with the RPNII algorithm mentioned
 previously: both RPNII and CGE perform a recursive depth-first
 search of a lexicographically ordered state set with
-backtracking. However, RPNII is designed for Moore machines while
-CGE is designed for Mealy machines. RPNII represents the
+backtracking. Nevertheless, RPNII is designed for Moore machines
+while CGE is designed for Mealy machines. RPNII represents the
 hypothesis automaton state set by computing an equivalence
 relation on input strings whereas CGE relies on finite congruence
 generator sets represented as string rewriting systems that are
@@ -464,11 +465,11 @@ different viewpoints. We chose to summarize them in Table
 	systematic test generation technique, also known as concolic
 	testing, to explore symbolic execution paths. These white-box
 	approaches should theoretically offer a better code coverage
-	than black-box automatic testing. However, the number of
-	paths being explored concretely often limits to short paths
-	only. Furthermore, the constraints have not to be too
-	complex for being solved. As a consequence, the code coverage
-	of these approaches is lower in practice.
+    than black-box automatic testing. In spite of that, the
+    number of paths being explored concretely often limits to
+    short paths only. Furthermore, the constraints have not to be
+    too complex for being solved. As a consequence, the code
+    coverage of these approaches is lower in practice.
 	A few other works consider a grey-box perspective to reduce
 	the exploration complexity. Azim et al. chose to apply static
 	analyses on Android application source code to guide the
@@ -485,8 +486,9 @@ different viewpoints. We chose to summarize them in Table
 	with system events to improve code coverage. Examining
 	application environments while testing is more complicated in
 	practice, and it requires more assumptions on the
-	applications. However, considering the application environment
-	helps build more complete and accurate models \cite{SP15};
+    applications. On the other hand, considering the application
+    environment helps build more complete and accurate models
+    \cite{SP15};
 
 
 	\item \textbf{Model generation (col. 5):} all the approaches
@@ -587,12 +589,12 @@ different viewpoints. We chose to summarize them in Table
 \end{itemize}
 
 Active inference approaches repeatedly query systems or humans to
-collect positive or negative observations. However, this can lead
-to some issues like disturbing the system for instance. This is
-not always suitable, and that is why another category of methods
-infer models in a passive manner, i.e. without stimulating the
-software system.  In the next section, we introduce some of these
-passive model inference techniques.
+collect positive or negative observations. Nonetheless, this can
+lead to some issues like disturbing the system for instance. This
+is not always suitable, and that is why another category of
+methods infer models in a passive manner, i.e. without
+stimulating the software system.  In the next section, we
+introduce some of these passive model inference techniques.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
@@ -653,7 +655,7 @@ Reiss and Renieris modified the kTail algorithm to reduce the
 size of the final FSA.  Indeed, their algorithm merges two states
 if they share at least one \textit{k-future} \cite{919096}. By
 using a merging criterion that is weaker, their variant actually
-merges more states than kTail. However, the resulting FSA
+merges more states than kTail. Yet, the resulting FSA
 express much more behaviors than those possible in the real
 system. They are usually more approximate than the models
 obtained with kTail. Lo et al. \cite{Lo:2009:ASB:1595696.1595761}
@@ -900,7 +902,7 @@ In \cite{Pradel:2009}, Pradel and Gross presented a scalable
 dynamic analysis that infers extremely detailed specifications of
 correct method call sequences on multiple related objects. Again,
 Java applications are executed to collect with debuggers methods
-calls. This produces a large set of traces. Assuming that methods
+calls. This produces a large set of traces. Given that methods
 generally implement small and coherent pieces of functionality,
 the source code is statically analyzed to identify small sets of
 related objects (object collaborations), and method calls that
@@ -918,7 +920,7 @@ Even though the remaining papers are oriented towards the same
 purpose, that is model inference from source code, they do not
 collect traces from executions but perform static analysis only.
 Shoham et al. introduced an approach to infer finite automata
-describing method calls of API from source code of the client
+describing method calls of an API from source code of the client
 side, i.e. the code that calls the API
 \cite{Shoham:2007:SSM:1273463.1273487}. Finite automata are
 constructed with two main steps: (i) abstract-traces are
@@ -970,7 +972,7 @@ Behavior Protocol automaton.  This automaton models the
 interaction protocol that a client has to follow in order to
 correctly interact with a web service.  The states of the
 behavior protocol automaton are web service execution states, and
-the transitions, labelled with operation names and input/ouput
+the transitions, labelled with operation names and input/output
 data, model possible operation invocations from the client to the
 web service.
 

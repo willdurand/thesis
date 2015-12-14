@@ -41,7 +41,7 @@ be performed in either online or offline mode, as defined below:
     \item \textbf{Online testing:} sometimes called on-the-fly
         testing, it is a technique in which test case generation
         and test execution are combined into a single algorithm.
-        The tester gives a verdict everytime a trace incomes;
+        The tester gives a verdict every time a trace incomes;
 
     \item \textbf{Offline testing:} it means that a set of traces
         has been collected while the system is running. Then, the
@@ -56,7 +56,7 @@ each new incoming trace. Then, we use these traces to check if
 the system under test conforms to the inferred models.
 Conformance is defined with two implementation relations, which
 express precisely what the system under test should do. The first
-relation corresponds to the trace preoder \cite{DNH84}, which is
+relation corresponds to the trace preorder \cite{DNH84}, which is
 a well-known relation based upon trace inclusion, and heavily
 used with passive testing.  Nevertheless, our inferred models are
 partials, i.e.  they do not necessarily capture all the possible
@@ -84,7 +84,7 @@ analysis introduced in
 \crossref{sec:modelinf:prodsystems}{sec:modelinf:prodsystems:segmentation},
 we hit several problems, mainly because our algorithm was not
 stable, in other words the use of a configurable minimum limit
-was not accurate enough. We simply could not rely on it for
+was not accurate enough. We could not rely on it for
 testing purpose.  In Section \ref{sec:testing:normal}, we
 introduce a new step of the model inference method described in
 Chapter \ref{sec:modelinf:prodsystems} that is required to enable
@@ -148,7 +148,7 @@ test $\mathit{Sut}$.
 \includegraphics[width=0.85\linewidth]{figures/passive_autofunk.png}
 
 \caption{The architecture of \textit{Autofunk} with the passive testing
-extension. Whil the previous \textit{Autofunk}'s architecture has been
+extension. While the previous \textit{Autofunk}'s architecture has been
 kept, there is two new modules: STS Normalisation and "check",
 representing the passive conformance testing part.}
 \label{fig:passive-autofunk}
@@ -209,16 +209,16 @@ $\EuScript{S}^{N}$ and $R(\EuScript{S}^{N})$ are trace equivalent:
 
 \begin{proposition}
 \label{rel:impl12}
-${Sut} \leq_{ct} \EuScript{S}^{N} \text{ iff } CTraces({Sut})
+${Sut} \leq_{ct} \EuScript{S}^{N} \text{ if and only if } CTraces({Sut})
 \subseteq  Traces_{Pass}(R(\EuScript{S}^{N}))$.
 \end{proposition}
 
 As stated previously, the inferred model $\EuScript{S}^{N}$ of
 $\mathit{Sua}$ is partial, and might not capture all the
 behaviours that should happen on $\mathit{Sut}$. Consequently,
-our partner wants a weaker implementation relation, which is less
+our partner wants a weaker implementation relation that is less
 restrictive on the traces that should be observed from
-$\mathit{Sut}$.  Intuitively, this second relation aims to check
+$\mathit{Sut}$.  In other words, this second relation aims to check
 that, for every complete trace $t=a_1(\alpha_1)...a_m(\alpha_m)$
 of $\mathit{Sut}$, we also have a set of traces of
 $Traces_{Pass}(\EuScript{S}^{N})$ having the same sequence of
@@ -231,12 +231,12 @@ trace $t=(17011(nsys:=1,nsec:=8,point:=1,pid:=1)\text{ }
 of $\EuScript{S}^{N}$ because this trace cannot be extracted from
 one of the paths of the STS of Figure \ref{fig:firstmodel}, on
 account of the variables $point$ and $tpoint$, which do not take
-the expected values. However, both variables are assigned with
-$point:=4,tpoint:=9$ in the second path. This is interesting as it
-indicates that such values may be correct since they are actually
-used in a similar action in a similar path. Here, the second
-implementation relation aims at expressing that this trace $t$
-captures a correct behaviour as well.
+the expected values. Nonetheless, both variables are assigned
+with $point:=4,tpoint:=9$ in the second path. This is interesting
+as it indicates that such values may be correct since they are
+actually used in a similar action in a similar path. Here, the
+second implementation relation aims at expressing that this trace
+$t$ captures a correct behaviour as well.
 
 \TODO{first model?}
 
@@ -311,9 +311,9 @@ matrix $M_{[b]}$.
 If, we take back the trace example
 $t=(17011(nsys:=1,nsec:=8,point:=1,pid:=1)\text{ }
 17021(nsys:=1,nsec:=8,point:=4,tpoint:=9,pid:=1))$, and the STS of
-Figure \ref{fig:reduced-model}, $t$ is a pass trace w.r.t.
-$\leq_{mct}$ because each assignment $\alpha_j(x)$ satisfies at
-least one guard of the matrix line $j$. For instance, the
+Figure \ref{fig:reduced-model}, $t$ is a pass trace with respect
+to $\leq_{mct}$ because each assignment $\alpha_j(x)$ satisfies
+at least one guard of the matrix line $j$. For instance, the
 assignment $point:=4$, which is given with the second valued
 action of $t$, satisfies one of the guards of the second line of
 the matrix $M_{[b]}$.
@@ -328,7 +328,7 @@ one of the guards of the matrix line $j$ in $M_{[b]}[j,*]$.
 The implementation relation $\leq_{mct}$ can then be written with:
 
 \begin{proposition}
-	${Sut} \leq_{mct} \EuScript{S}^{N} \text{ iff } \forall t=
+	${Sut} \leq_{mct} \EuScript{S}^{N} \text{ if and only if } \forall t=
 	a_1(\alpha_1) \dots a_m(\alpha_m) \in CTraces({Sut}), \exists
 	R(\EuScript{S}_i^{N}) \in R(\EuScript{S}^{N)} \text{ and }
 	b=l0_{R(\EuScript{S}_i^{N})} \xRightarrow{(a_1(p_1),M_{[b]}[1,c_{[b]}]),\dots,(a_j(p_j),M_{[b]}[j,c_{[b]}])} l_m$ with $(1 \leq c_{[b]} \leq k)$ such that $\forall \alpha_j(x) (1 \leq j \leq m), \alpha_j(x) \models M_{[b]}[j,1] \vee \dots \vee  M_{[b]}[j,k]$ and $l_m \in Pass$.
@@ -423,7 +423,7 @@ The second implementation relation $\leq_{mct}$ can now be
 expressed by:
 
 \begin{proposition}
-    ${Sut} \leq_{mct} \EuScript{S}^{N} \text{ iff }\forall t=
+    ${Sut} \leq_{mct} \EuScript{S}^{N} \text{ if and only if }\forall t=
     a_1(\alpha_1) \dots a_m(\alpha_m) \in CTraces({Sut}), \exists
     D(\EuScript{S}_i^{N}) \in D(\EuScript{S}^{N}) \text{ and }
     l0_{D(\EuScript{S}_i^{N})}
@@ -441,7 +441,7 @@ with the first implementation relation $\leq_{ct}$ as follows:
 
 \begin{proposition}
 	\label{rel:impl2}
-${Sut} \leq_{mct} \EuScript{S}^{N} \text{ iff } CTraces({Sut})\subseteq Traces_{Pass}(D(\EuScript{S}^{N}))$
+${Sut} \leq_{mct} \EuScript{S}^{N} \text{ if and only if } CTraces({Sut})\subseteq Traces_{Pass}(D(\EuScript{S}^{N}))$
 
 ${Sut} \leq_{mct} \EuScript{S}^{N}\Leftrightarrow {Sut} \leq_{ct} D(\EuScript{S}^{N})$
 
