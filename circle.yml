@@ -14,4 +14,4 @@ dependencies:
 
 test:
   override:
-    - docker run -v $(pwd):/data willdurand/latex pdflatex /data/thesis.tex
+    - docker run -v $(pwd):/data willdurand/latex make pdf
