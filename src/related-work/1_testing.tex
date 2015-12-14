@@ -6,7 +6,7 @@ with the intent of finding errors \cite{Myers:1979:AST:539883}.
 , testing shows the presence, not the absence of bugs as
 Edsger Wybe Dijkstra used to say \cite{Buxton:1970:SET:1102021}.
 
-Testing is achieved by analysing a software to detect the
+Testing is achieved by analyzing a software to detect the
 differences between existing and required conditions (that is,
 bugs) and to evaluate the features of this software. As Myers
 said \cite{Myers:1979:AST:539883}, testing is used to find
@@ -241,7 +241,7 @@ categories (these lists are not exhaustive):
 
 \begin{itemize}
     \item \textbf{Behavior/Control oriented:} Finite Automata (like
-        Finite State Machines, Symbolic Transition Systems, and Labelled
+        Finite State Machines, Symbolic Transition Systems, and Labeled
         Transition Systems) are well-known in software testing. They are
         very generic and flexible, and are a good fit when it comes to
         model software systems. For real-time and/or safety-critical
@@ -275,19 +275,19 @@ modeling both web applications and production systems behaviors.
 
 \subsubsection{Model definitions}
 
-\paragraph{Labelled Transition Systems}
+\paragraph{Labeled Transition Systems}
 \label{sec:definitions:lts}
 
-A \textit{Labelled Transition System} is a model compound of
-states with transitions, labelled with actions, between them.
-The states model the system states and the labelled transitions
+A \textit{Labeled Transition System} is a model compound of
+states with transitions, labeled with actions, between them.
+The states model the system states and the labeled transitions
 model the actions that a system can perform.
 
 We give the definition of the LTS model below, but we refer to
 \cite{ltsTretmans} for a more detailed description.
 
 \begin{definition}[Labelled Transition System]
-    A labelled transition system is a 4-tuple $<Q,L,T,q_0>$ where:
+    A labeled transition system is a 4-tuple $<Q,L,T,q_0>$ where:
 
     \begin{itemize}
     \item $Q$ is a countable, non-empty set of state;
@@ -302,7 +302,7 @@ We give the definition of the LTS model below, but we refer to
     \end{itemize}
 
     We write $q \xrightarrow[]{t} q'$ if there is a transition
-    labelled $t$ from state $q$ to state $q'$ , i.e., $(q, t, q')
+    labeled $t$ from state $q$ to state $q'$ , i.e., $(q, t, q')
     \in T$.
 
 	\label{def:lts}
@@ -316,8 +316,8 @@ The \textit{Symbolic Transition System} (STS) is known as a very
 general and powerful model for describing several aspects of
 event-based systems. The use of symbolic variables
 helps describe infinite state machines in a finite manner. This
-potentially infinite behaviour is represented by the semantics of
-a STS, given in terms of \textit{Labelled Transition System}
+potentially infinite behavior is represented by the semantics of
+a STS, given in terms of \textit{Labeled Transition System}
 (LTS). STS operations and transformations are often given with
 inference rules.
 
@@ -348,7 +348,7 @@ is the empty assignment.
 
         \item $V$ is the finite set of internal variables, while
         $I$ is the finite set of parameters. The internal
-        variables are initialised with the condition $V0$ on
+        variables are initialized with the condition $V0$ on
         $V$;
 
         \item $\Lambda$ is the finite set of symbolic actions
@@ -359,7 +359,7 @@ is the empty assignment.
             transitions. A symbolic transition $t =
             (l_i,l_j,a(p),G,\\A)$, from the location $l_i \in L$
             to $l_j \in L$, also denoted by $l_i
-            \xrightarrow{a(p),G,A} l_j$, is labelled by:
+            \xrightarrow{a(p),G,A} l_j$, is labeled by:
 
 		\begin{itemize}
             \item an action $a(p) \in \Lambda$;
@@ -387,20 +387,20 @@ $(x==val)$ from $G$. For example, given the guard $G_1 = [nsys==1
 
 For readability purpose, if $A$ is the identity function $id_V$,
 we denote a transition by $l_i \xrightarrow{a(p),G} l_j$. We
-also use the generalised transition relation $\Rightarrow$ to
+also use the generalized transition relation $\Rightarrow$ to
 represent STS paths: $l \xRightarrow{(a_1,G_1,A_1)\dots
 (a_n,G_n,A_n)} l' =_{def} \exists l0\dots l_n, l=l0
 \xrightarrow{a_1,G_1,A_1} l_1\dots
 l_{n-1}\xrightarrow{a_n,G_n,A_n}l_n=l'$.
 
-\paragraph{Labelled Transition System semantics}
+\paragraph{Labeled Transition System semantics}
 \label{sec:definitions:lts-semantics}
 
-A STS is associated with a Labelled Transition System (LTS) to
+A STS is associated with a Labeled Transition System (LTS) to
 formulate its semantics. Intuitively, a LTS semantics corresponds
 to a valued state machine, without symbolic variables, which is
-often infinite: the LTS states are labelled by internal variable
-assignments while transitions are labelled by actions combined
+often infinite: the LTS states are labeled by internal variable
+assignments while transitions are labeled by actions combined
 with parameter assignments.
 
 \begin{definition}[Labelled Transition System semantics]
@@ -475,7 +475,7 @@ is a tuple $< L,l0,V,V0,I,\Lambda,\rightarrow>$, where:
 location;
 
 \item $V$ is the finite set of internal variables, $I$ is the
-finite set of parameters. The internal variables are initialised
+finite set of parameters. The internal variables are initialized
 with the assignment $V0$ on $V$, which is assumed to be unique;
 
 \item $\Lambda$ is a finite set of symbolic actions $a(p)$, with
@@ -487,7 +487,7 @@ $\delta$ the quiescence;
 
 \item $\rightarrow$ is the finite transition set. A transition
 $(l_i,l_j,a(p),G,A)$, from the location $l_i \in L$ to $l_j \in
-L$, denoted by $l_i \xrightarrow{a(p),G,A} l_j$ is labelled by: an
+L$, denoted by $l_i \xrightarrow{a(p),G,A} l_j$ is labeled by: an
 action $a(p) \in \Lambda$, a guard  $G$ over $(p \cup V \cup T(p
 \cup V))$ that restricts the firing of the transition. $T(p \cup
 V)$ is a set of functions that return boolean values only (a.k.a.
@@ -615,7 +615,7 @@ frameworks
 \footnote{\url{http://www.martinfowler.com/bliki/Xunit.html}}.
 
 Passive testing rather examines the input/output behavior of an
-implementation without predefining the input. One advantage of
+implementation without preordaining the input. One advantage of
 passive testing is that it does not disturb the system, and it
 can be applied on large (distributed) systems. While most of the
 works on passive testing are related to networks, protocols, and
@@ -668,7 +668,7 @@ invariant.
 \subsubsection{Forward checking}
 
 Implementation reactions are given on the fly to an algorithm
-that detects incorrect behaviours by covering the specification
+that detects incorrect behaviors by covering the specification
 transitions with these reactions. Lee et al. proposed a passive
 testing method dedicated to wired protocols \cite{1621118}.
 Protocols are modeled with \textit{Event-driven Extended Finite

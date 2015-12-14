@@ -153,7 +153,7 @@ is equivalent to the black-box. The $\EuScript{L}^*$ algorithm
 uses an observation table to classify the strings given in
 membership queries as members or non-members of the unknown
 regular language. In an observation table, the rows are fulfilled
-by prefix-closed strings, the columns are labelled by
+by prefix-closed strings, the columns are labeled by
 suffix-closed strings. The algorithm gradually fills the entry
 $(u,v)$ for row $u$ and column $v$ by a boolean value after
 receiving a reply for a membership query for $uv$. Once the
@@ -163,7 +163,7 @@ algorithm has also be applied on Mealy machines as shown in
 \cite{DBLP:phd/de/Niese2003,steffen11}. With Mealy machines, the
 event set is segmented into inputs and outputs. The rows of the
 table are filled with prefix-closed input sequences. The columns
-of the table are labelled with input suffix sequences, which
+of the table are labeled with input suffix sequences, which
 represent the distinguishing sequences of the states of the
 upcoming Mealy machine. The table cells are completed by the last
 outputs given by the teacher after receiving the concatenations
@@ -221,7 +221,7 @@ machines.
 Berg et al. also revisited the $\EuScript{L}^*$ algorithm in
 \cite{regularinfBerg06} to infer parameterized systems, which are
 kinds of automata composed of parameters and guards over
-parameters (boolean expressions) labelled on transitions. The
+parameters (boolean expressions) labeled on transitions. The
 approach completes the  $\EuScript{L}^*$ algorithm with guard
 inference. This algorithm is intended to infer parameterized
 systems where guards of transitions use only a small subset of
@@ -432,7 +432,7 @@ the application).
 	\caption{An overview of some works on GUI application
 	crawling. Column 2 represents the type of application under
 	analysis. Column 3 indicated the accessibility (black-box
-	(B), white-box (W), grey-box (G)). Column 4 gives whether the
+	(B), white-box (W), gray-box (G)). Column 4 gives whether the
 	technique requires an external environment. Column 5
 	indicates whether the technique builds formal models (FM) or
 	non-formal models (IM). Column 6 gives the strategy or
@@ -457,7 +457,7 @@ different viewpoints. We chose to summarize them in Table
 	The accessibility refers to the information available and
 	considered by a technique. Applications are often seen as
 	black-boxes even though some authors prefer to consider
-	white- or grey-boxes Column 3 in Table
+	white- or gray-boxes Column 3 in Table
 	\ref{table:gui_works} indicates the accessibility chosen
 	for each technique. For instance,
 	\cite{concolicandroid12,5416728} present testing frameworks
@@ -470,7 +470,7 @@ different viewpoints. We chose to summarize them in Table
     short paths only. Furthermore, the constraints have not to be
     too complex for being solved. As a consequence, the code
     coverage of these approaches is lower in practice.
-	A few other works consider a grey-box perspective to reduce
+	A few other works consider a gray-box perspective to reduce
 	the exploration complexity. Azim et al. chose to apply static
 	analyses on Android application source code to guide the
 	application exploration \cite{Azim13}. Yang et al.
@@ -509,7 +509,7 @@ different viewpoints. We chose to summarize them in Table
 	presented an Android application testing method that
 	constructs graphs expressing the called methods. Salva and
 	Laurençot proposed in \cite{SP15} a crawler of Android
-	applications that infers Parameterized Labelled Transition
+	applications that infers Parameterized Labeled Transition
 	Systems (PLTSs) capturing the UI events, the parameters used
 	to fulfill screens, and the screen contents (widget
 	properties).
@@ -642,7 +642,7 @@ build on-top of these two algorithms: \textit{kTail}
 
 kTail generates \textit{Finite State Automata} (FSA) from trace
 sets in two steps. First, it builds a \textit{Prefix Tree
-Acceptor} (PTA), which is a tree whose edges are labelled with
+Acceptor} (PTA), which is a tree whose edges are labeled with
 the event names found in traces. Then, kTail transforms the PTA
 into a FSA by merging each pair of states as far as they exhibit
 the same future of length $k$, i.e. if they have the same set of
@@ -704,7 +704,7 @@ combined with data values. kLFA performs a preliminary step by
 analyzing the traces to infer parameter constraints. It encodes
 these constraints in the event names with specific symbols to
 yield new traces. kBehavior is then called to infer a FSA whose
-transitions are still labelled with an event and a symbol
+transitions are still labeled with an event and a symbol
 representing a data constraint.
 
 Lo et al. presented an empirical comparative study of kTail,
@@ -824,7 +824,7 @@ to more abstract ones. Even though this approach offers
 originality, it is time consuming, especially with a large set of
 traces.
 
-The works presented in this section adopted either a grey- or
+The works presented in this section adopted either a gray- or
 black-box approach. The next section introduces some white-box
 techniques.
 
@@ -972,7 +972,7 @@ Behavior Protocol automaton.  This automaton models the
 interaction protocol that a client has to follow in order to
 correctly interact with a web service.  The states of the
 behavior protocol automaton are web service execution states, and
-the transitions, labelled with operation names and input/output
+the transitions, labeled with operation names and input/output
 data, model possible operation invocations from the client to the
 web service.
 

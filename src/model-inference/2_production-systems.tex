@@ -17,7 +17,7 @@ pointed out by our industrial partner that production systems
 have a life span of many years, up to 20 years, and are often
 incrementally updated, but their corresponding models are not.
 This leads to a major issue which is to keep these models up to
-date and synchronised with the respective systems. This is a
+date and synchronized with the respective systems. This is a
 common problem with documentation in general, and it often
 implies rather under-specified or not documented systems that no
 one wants to maintain because of lack of understanding.
@@ -147,7 +147,7 @@ would be the best solution, as it would not be tied to any
 programming language or framework, and these events contain all
 information needed to understand how a whole industrial system
 behaves in production. All these events are collected
-synchronously through a (centralised) logging system. Such a
+synchronously through a (centralized) logging system. Such a
 system logs all events with respect to their order, and does not
 miss any event.  From these, we chose not to use extrapolation
 techniques to infer models, meaning our proposal generates
@@ -190,7 +190,7 @@ to design our framework:
 In this section, we introduce our revisited framework \textit{Autofunk},
 whose main architecture is depicted in Figure
 \ref{fig:prodsystems:autofunk-overview}. This new version also
-contains different modules (in grey in the figure): four modules
+contains different modules (in gray in the figure): four modules
 are dedicated to build models, and an optional one can be used to
 derive more abstract and readable models.
 
@@ -198,7 +198,7 @@ derive more abstract and readable models.
     \includegraphics[width=1.0\linewidth]{figures/autofunk.png}
 
     \caption{Overview of \textit{Autofunk} revisited with the different
-    modules in grey along with their corresponding steps. The last
+    modules in Gray along with their corresponding steps. The last
     module (STS abstraction) is optional.}
     \label{fig:prodsystems:autofunk-overview}
 \end{figure}
@@ -206,7 +206,7 @@ derive more abstract and readable models.
 We consider \textit{Symbolic Transition Systems} (STSs) as models
 for representing industrial system behaviors. As reminder, STSs
 are state machines incorporating actions (i.e. events in this
-context), labelled on transitions, that show what can be given to
+context), labeled on transitions, that show what can be given to
 and observed on the system. In addition, actions are tied to an
 explicit notion of data. A more formal definition can be found
 in \crossref{sec:related}{sec:definitions:sts}.
@@ -246,7 +246,7 @@ are included in the traces of $\mathit{Sua}$.
 \end{framed}
 
 \caption{An example of some production events. Each event is
-timestamped, has a label (e.g., $17011$), and may own
+time-stamped, has a label (e.g., $17011$), and may own
 assignments of variables (e.g., $nsys$).}
 \label{fig:rawdatum}
 \end{figure}
@@ -371,7 +371,7 @@ events that are repeated.}
 
 From this filtered valued event base, we reconstruct the
 corresponding traces from the trace identifier $pid$, present in
-each valued event, and timestamps. We call the resulting trace
+each valued event, and time stamps. We call the resulting trace
 set $Traces(Sua)$:
 
 \begin{definition}[$Traces(Sua)$]
@@ -431,7 +431,7 @@ analysis $\mathit{Sua}$. Later, every trace set $ST_i$ shall give
 birth to one model, describing all possible behaviors starting
 from its corresponding entry point.
 
-This module performs these two steps, which are summarised in
+This module performs these two steps, which are summarized in
 Algorithm \ref{algo_traces}. It starts by splitting $Traces(Sua)$
 into several trace sets $ST_i$, one for each entry point of the
 system $\mathit{Sua}$, and then removes incomplete traces. Since
@@ -452,8 +452,8 @@ we observed that the traces collected during one or two days are
 not sufficient because they do not provide enough differences
 between the ratios. In this case, we assume that the number of
 entry and exit points, $N$ and $M$, are given and we keep the
-first $N$ and $M$ ratios only. On the other hand, a week seems to
-offer good results. We chose to set a fixed yet configurable
+first $N$ and $M$ ratios only. On the other hand, a week offers
+good results. We chose to set a fixed yet configurable
 minimum limit to 10\%. Assignments $(point:=val)$ having a ratio
 below this limit are not retained. Then, for each assignment
 $\alpha_i=(point:=val)$ in $POINT_{init}$, we construct a trace
@@ -714,7 +714,7 @@ these ones, and we still preserve trace inclusion between the
 reduced STS and $Traces(Sua)$.
 The use of matrices offers here another advantage: the parameter
 assignments are now packed into a structure that can be more
-easily analysed later. As described in Section
+easily analyzed later. As described in Section
 \ref{sec:modelinf:prodsystems:results}, this straightforward
 approach gives good results in terms of STS reduction and
 requires low processing time, even with millions of transitions.
@@ -867,7 +867,7 @@ proposition:
 Given the trace set $ST_i \in CTraces(Sua)$, the generated STS
 $R(\EuScript{S}_i)$ can be used for analysis purpose but is still
 difficult to manually interpret, even for experts.  This fifth
-\textit{Autofunk} module aims to analyse $R(\EuScript{S}_i)$ in order to
+\textit{Autofunk} module aims to analyze $R(\EuScript{S}_i)$ in order to
 produce a new STS $\EuScript{S}_i^\uparrow$ whose level of
 abstraction is lifted by using more intelligible actions. This
 process is performed with inference rules, which encode the
@@ -1150,7 +1150,7 @@ parsing process is not parallelized yet, and it took up to 20
 minutes to open and parse around 1,000 files (number of Michelin
 log files for this experiment). This issue is solved by the
 architecture presented in Figure \ref{fig:autofunk_gen_branded}.
-The graph shown in Figure \ref{fig:time-vs-messages} summarises
+The graph shown in Figure \ref{fig:time-vs-messages} summarizes
 the performances of our framework and how fast it is at
 transforming production events into models (experiments $B$, $C$
 and $D$ run in about 9 minutes). It also demonstrates that
@@ -1207,8 +1207,8 @@ than experiment $D$ by 12\%, which is significant. Furthermore, experiments
 $B$ and $C$ take 3 entry points into account while the others only
 take 2 of them. This is related to the fixed limit of 10\% we
 chose to ensure truly entry points to be automatically selected.
-The workshop we analysed has three entry points whose two are
-mainly used. The third entry point is employed to equilibrate the
+The workshop we analyzed has three entry points whose two are
+mainly used. The third entry point is employed to balance the
 production load between this workshop and a second one located
 close to it in the same factory. Depending on the period, this
 entry point may be more or less solicited, hence the
@@ -1263,7 +1263,7 @@ set into several subsets, one per entry point of the system
 $\mathit{Sua}$. We leverage this process to also remove
 incomplete traces, i.e. traces that do not express an execution
 starting from an entry point and ending to an exit point. These
-can be extracted by analysing the traces and the variable
+can be extracted by analyzing the traces and the variable
 $point$, which captures the product physical location.
 
 In order to determine both entry and exit points of

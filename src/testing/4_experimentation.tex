@@ -42,12 +42,12 @@ $3$ & 53,996 & 25,047 & 98\% & 98\% & 10\\
 In Experiment $1$, we decided to use the same production events
 for both inferring models, i.e. specifications, and testing. This
 experiment shows that our implementation behaves correctly when
-trace sets are similar, i.e. when behaviours of both
+trace sets are similar, i.e. when behaviors of both
 $\mathit{Sua}$ and $\mathit{Sut}$ are equivalent.
 
 Experiment $2$ has been run with traces of $\mathit{Sut}$ that
 are older than those of $\mathit{Sua}$, which is unusual as the
-de facto usage of our framework is to build specifications from a
+defacto usage of our framework is to build specifications from a
 production system $\mathit{Sua}$, and to take a newer or updated
 system as $\mathit{Sut}$.  Here, only 30\% of the traces of
 $\mathit{Sut}$ are pass traces with respect to the second implementation
@@ -65,10 +65,10 @@ models are rich enough, i.e.  built from a larger set of traces
 experiment is a typical usage of our framework at Michelin.  The
 traces of $\mathit{Sut}$ have been collected for 5 days, and it
 took only 10 minutes to check conformance. While 98\% of the
-traces are pass traces, the remaining 2\% are new behaviours that
+traces are pass traces, the remaining 2\% are new behaviors that
 never occurred before. Such information is essential for Michelin
 engineers to determine the root causes. Even though 2\% may
-represent a large set to analyse, \textit{Autofunk} improves
+represent a large set to analyze, \textit{Autofunk} improves
 their work by highlighting the traces to focus on.  Such subset
 may contain false positives depending on the richness of the
 models, but using large sets of traces to build the models

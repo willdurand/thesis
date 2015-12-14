@@ -24,7 +24,7 @@ and a passive testing engine that is presented in this chapter.
 Both parts have to be fast and scalable to be used in practice.
 The main idea of our proposal is that, given a running production
 system, we extract knowledge and models by passively monitoring
-it. Such models describe the functional behaviours of the system,
+it. Such models describe the functional behaviors of the system,
 and may serve for different purposes, e.g., testing of a second
 production system. The latter can be a new system roughly
 comparable to the first one in terms of features, but it can also
@@ -60,7 +60,7 @@ relation corresponds to the trace preorder \cite{DNH84}, which is
 a well-known relation based upon trace inclusion, and heavily
 used with passive testing.  Nevertheless, our inferred models are
 partials, i.e.  they do not necessarily capture all the possible
-behaviours that should happen. That is why we propose a second
+behaviors that should happen. That is why we propose a second
 implementation relation, less restrictive on the traces that
 should be observed from the system under test.
 
@@ -102,30 +102,30 @@ Methods and Models for Co-Design (MEMOCODE'15) \cite{7340480}.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\section{Extending inferred models with normalisation}
+\section{Extending inferred models with normalization}
 \label{sec:testing:normal}
 
 In order to perform testing, we reuse the reduced model
 $R(\EuScript{S}) = \{R(\EuScript{S}_1),\dots,R(\EuScript{S}_n)\}$
-inferred with \textit{Autofunk} that we \textit{normalise} to get rid of
+inferred with \textit{Autofunk} that we \textit{normalize} to get rid of
 some runtime-dependent information.  Indeed, both models
 $\EuScript{S}$ and $R(\EuScript{S})$ include parameters that are
 dependent to the products being manufactured.  That is a
-consequence of generating models that describe behaviours of a
+consequence of generating models that describe behaviors of a
 continuous stream of products which are strictly identified, i.e.
 for each action in a given sequence, we have the assignment $(pid
 = val)$ ($pid$ stands for product identifier).  Here, we
-normalise these models before using them for testing.  The
+normalize these models before using them for testing.  The
 resulting models are denoted by $\EuScript{S}^{N}$ and
 $R(\EuScript{S}^{N})$.
 
 We remove the assignments relative to product identifiers and
-timestamps. Furthermore, we label all the final locations with
+time stamps. Furthermore, we label all the final locations with
 "Pass". We flag these locations as verdict locations and gather
 them in the set $Pass \subseteq L_{\EuScript{S_i}^{N}}$. Both
 $\EuScript{S}^{N}$ and $R(\EuScript{S}^{N})$ represent more
 generic models, i.e.  they express \textit{some possible
-behaviours that should happen}. These behaviours are represented
+behaviors that should happen}. These behaviors are represented
 by the traces $Traces_{Pass} (\EuScript{S}^{N})=\displaystyle
 \bigcup_{1 \leq i \leq n} Traces_{Pass}
 (\EuScript{S}_i^{N})=Traces_{Pass} (R(\EuScript{S}^{N}))$. We
@@ -149,7 +149,7 @@ test $\mathit{Sut}$.
 
 \caption{The architecture of \textit{Autofunk} with the passive testing
 extension. While the previous \textit{Autofunk}'s architecture has been
-kept, there is two new modules: STS Normalisation and "check",
+kept, there is two new modules: STS Normalization and "check",
 representing the passive conformance testing part.}
 \label{fig:passive-autofunk}
 \end{figure}
@@ -169,13 +169,13 @@ $\EuScript{S}^{N}$.
 \TODO{figure? maybe 2?}
 
 Our industrial partner wishes to check whether every complete
-execution trace of $\mathit{Sut}$ matches a behaviour captured by
+execution trace of $\mathit{Sut}$ matches a behavior captured by
 $\EuScript{S}^{N}$. In this case, the test verdict must reflect a
 successful result. On the contrary, if an execution of
 $\mathit{Sut}$ is not captured by $\EuScript{S}^{N}$, one cannot
 conclude that $\mathit{Sut}$ is faulty because $\EuScript{S}^{N}$
 is a partial model, and it does not necessarily includes all the
-correct behaviours. Below, we formalise theses verdict notions
+correct behaviors. Below, we formalize theses verdict notions
 with two implementation relations. Such relations between models
 can only be written by assuming the following classical test
 assumption: the black-box system $\mathit{Sut}$ can be described
@@ -215,7 +215,7 @@ ${Sut} \leq_{ct} \EuScript{S}^{N} \text{ if and only if } CTraces({Sut})
 
 As stated previously, the inferred model $\EuScript{S}^{N}$ of
 $\mathit{Sua}$ is partial, and might not capture all the
-behaviours that should happen on $\mathit{Sut}$. Consequently,
+behaviors that should happen on $\mathit{Sut}$. Consequently,
 our partner wants a weaker implementation relation that is less
 restrictive on the traces that should be observed from
 $\mathit{Sut}$.  In other words, this second relation aims to check
@@ -236,7 +236,7 @@ with $point:=4,tpoint:=9$ in the second path. This is interesting
 as it indicates that such values may be correct since they are
 actually used in a similar action in a similar path. Here, the
 second implementation relation aims at expressing that this trace
-$t$ captures a correct behaviour as well.
+$t$ captures a correct behavior as well.
 
 \TODO{first model?}
 
@@ -303,7 +303,7 @@ $R(\EuScript{S}_i^{N})$ was previously constructed to capture
 all these traces in $Traces_{Pass}(\EuScript{S}_i^{N})$, having
 the same sequence of symbols. Indeed, given a STS
 $\EuScript{S}_i^{N}$, all the STS paths of $\EuScript{S}_i^{N}$,
-which have the same sequence of symbols labelled on the
+which have the same sequence of symbols labeled on the
 transitions, are compacted into one STS path $b$ in
 $R(\EuScript{S}_i^{N})$ whose transition guards are stored into a
 matrix $M_{[b]}$.
