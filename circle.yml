@@ -16,3 +16,5 @@ test:
   override:
     - docker run -v $(pwd):/data willdurand/latex make clean pdf
     - cat thesis.log | grep "Output written on thesis.pdf"
+  post:
+    - mv thesis.pdf "$CIRCLE_ARTIFACTS/thesis-$CIRCLE_SHA1.pdf"
