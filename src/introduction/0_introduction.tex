@@ -91,20 +91,76 @@ point of view, a workshop is seen as a set of production machines
 controlled by a software. That is what we call a production
 system. Such systems deal with many physical devices, databases,
 and also human interactions. Most of these systems run for years,
-up to 20 years. Maintaining and updating such legacy software is
-complicated as documentation is often outdated, and the
-developers who wrote these software are not available anymore.
-In this thesis, we propose a solution to the problem of testing
-such systems: \textit{Autofunk}, a framework combining different
-techniques to: (i) infer formal models from large (legacy)
-software systems, and (ii) perform passive testing in order to
-detect potential regressions.
+up to 20 years according to our partner. Maintaining and updating
+such legacy software is complicated as documentation is often
+outdated, and the developers who wrote these software are not
+available anymore.  In this thesis, we propose a solution to the
+problem of testing such systems: \textit{Autofunk}, a framework
+(and a tool) combining different techniques to: (i) infer formal
+models from large (legacy) production systems, and (ii) perform
+passive testing in order to detect potential regressions.
 
-\TODO{section on which problems this thesis adresses?}
 
-The next section presents the contributions of this thesis.
-Then, Section \ref{sec:intro:overview} gives the overview of this
-thesis.
+The next section discusses in detail the problems this thesis
+addresses. Section \ref{sec:intro:contrib} presents the
+contributions of this thesis. Finally, Section
+\ref{sec:intro:overview} gives the overview of this thesis.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\section{Problems and objectives}
+\label{sec:intro:problems}
+
+Michelin is a tire manufacturer since 1889. With a strong but old
+culture of secret, the company uses to design most of its
+factories, production machines, and software itself. The
+engineering department is dedicated to the construction of these
+items, and gathers embedded software engineers, control
+engineers, mechanical engineers, and also software engineers. The
+computing sub-department deals with software that have been built
+for decades, and we can count about 50 different applications,
+and even more when we consider the different versions with
+customization made for the different factories. For the record,
+Michelin owns factories in more than 70 countries.
+
+Different programming languages have been used for building such
+software, as well as different development frameworks, and
+various paradigms. This context leads to a large and disparate
+set of legacy applications that have to be maintained, but also
+updated with new features. As most of these software are built
+for controlling and supervising a set of production machines in a
+factory, they are considered critical in the sense that they can
+break the production flow. The main issue faced by the software
+engineers is the introduction of regressions. A regression is a
+software fault that makes a feature stop functioning as intended
+after a certain event, for instance, the deployment of a new
+version of a software.
+
+The general intention of this thesis is to help Michelin's
+engineers by preventing such regressions with testing. We want to
+determine, by means of passive testing, whether a change in one
+part of a software affects other parts of it. The main assumption
+in this work is that we choose to consider a running production
+system in a production environment (that is, a factory) as a
+fully operational system, i.e. a system that behaves correctly.
+Such an hypothesis has been expressed by our partner.
+
+In this thesis, we propose a solution for making Michelin's
+production systems more reliable by means of testing, to ease
+software engineers' work, thanks to two main lines:
+
+\begin{itemize}
+    \item The inference of partial yet exact models of production
+        systems in a fast and efficient manner, based on the data
+        exchanged in a (production) environment. A method to
+        extract knowledge from data available in a production
+        environment has to be defined before inferring models;
+
+    \item The generation of the test cases based on these models
+        in order to perform conformance testing of production
+        systems. Due to the nature of these systems, the testing
+        method should scale.
+\end{itemize}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
@@ -134,7 +190,7 @@ The contributions of this thesis are:
         Michelin's production systems, proving that it is able to
         build exact models in an efficient manner, based on large
         sets of traces. For now, we can define a set of traces as
-        information collected from a software system, and
+        information collected from a production system, and
         describing its behaviors. A more formal definition will
         be given in the sequel of this thesis. Exactness of our
         inferred models is defined by the trace-equivalence and
