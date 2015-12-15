@@ -1,11 +1,23 @@
-\section{Testing}
+\section{Testing and beyond}
 \label{sec:conclusion:testing}
 
 Despite the promising results obtained by \textit{Autofunk} in
-Chapter \ref{sec:testing}, there is room for improvement. We
-chose to present our ideas for future work in two sections. The
-first section is focused on \textit{Autofunk}'s usability, and
-the second one is \TODO{...}.
+Chapter \ref{sec:testing}, there is room for improvement. The
+next section is focused on \textit{Autofunk}'s usability, i.e.
+how, we think, \textit{Autofunk} could be enhanced to be more
+widely used. Furthermore, in this thesis, we only covered passive
+testing of production systems, but it would be interesting to see
+how active testing could be integrated with \textit{Autofunk}.
+This will be discussed in Section
+\ref{sec:conclusion:testing:active}. Section
+\ref{sec:conclusion:testing:data} introduces our thoughts on data
+mining, which are semi-related to the previous section on active
+testing. Finally, Section \ref{sec:conclusion:testing:valid}
+discusses our main assumption used thorough this thesis, i.e. we
+infer models of systems that behave correctly, and what we could
+do to reject it.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \subsection{Improving usability}
 
@@ -13,10 +25,121 @@ Our implementation of \textit{Autofunk} has been built to
 validate our work, but also to bridge the gap between research
 and industrial applicability, thanks to our partner Michelin.
 Nevertheless, it is clear that this tool is still a prototype,
-and not a production-ready tool.
+and not a production-ready tool. As pointed out in this thesis,
+memory consumption remains an issue. With the rise of big data
+technologies and tools, it should be relatively simple to solve
+this issue.
 
-\TODO{}
+To go further, \TODO{...}
 
-\subsection{...}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-We focused mainly on a single type of data
+\subsection{Performing active testing}
+\label{sec:conclusion:testing:active}
+
+Active testing, as defined in
+\crossref{sec:related:testing}{sec:related:testing:active-passive},
+works by stimulating a system under test. We chose not to take
+this direction because stimulating a production system might
+break it if one sends incorrect data. Indeed, as there are
+physical devices behind software, it could lead to severe
+damages.  Nonetheless, and according to our partner Michelin, it
+should be possible to reproduce a production environment in a
+simulation room, and thus to simulate a whole production system
+without the physical devices (only the logical controllers). We
+could then leverage our inferred models, which contain the data
+collected from a real environment, to construct the test cases,
+and execute them in an active testing approach.
+
+The main benefit of active testing would be to avoid collecting
+traces of the system under test, and directly testing this system
+instead. We believe that adding active testing to
+\textit{Autofunk} would speed up the testing process
+significantly, and it would also make its adoption easier as
+active testing is more often known than passive testing in the
+Industry.
+
+A simplistic way to perform active testing would be to "replay"
+the data previously "recorded", i.e. the data available in the
+inferred models. Nevertheless, this would mean assuming that the
+initial conditions are exactly the same between the system under
+analysis and the system under test. This is a strong assumption
+that we would like to omit. Rather, we could leverage our
+inferred models to extract test data, for instance, by mining
+realistic domains as defined in
+\cite{Enderlin:2011:PSL:2075545.2075551}. Realistic domains are
+data domains found in concrete implementations. A data domain
+should come with a practical way to generate values in it. This
+would be particularly useful to actively test a system as it
+would ease the process of generating test data by means of a
+sampler for instance, i.e. a value generator.
+
+Mining realistic domains for testing purpose is not the only use
+case in which we believe. Indeed, our inferred models own a lot
+of interesting information related to the behaviors of a
+production system running in production, and it could be
+interesting to apply data mining techniques on them.
+
+\subsection{Data mining}
+\label{sec:conclusion:testing:data}
+
+Data mining \cite{chakrabarti2006data} is an interdisciplinary
+research domain whose goal is to extract information from a data
+set.
+
+A side project we quickly set up with Michelin engineers was to
+visualize the data collected by \textit{Autofunk}. We relied on a
+tool\footnote{\url{https://www.elastic.co/products/kibana}} that
+allowed to show different business metrics, such as the usage
+rates of some stores in a workshop, the number of manufactured
+products per day, but also the usage rates of the production
+machines themselves. Such information could be used to create
+models that might predict maintenance operations for instance.
+
+\TODO{...}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\subsection{Refuting our main hypothesis}
+\label{sec:conclusion:testing:valid}
+
+As stated in the introduction of this thesis (cf.
+\crossref{sec:intro}{sec:intro:problems}), we consider a system
+under analysis as a system whose behaviors are correct. In other
+words, such a system does not produce any fault. It is not
+entirely unrealistic since this assumption has been validated
+with our industrial partner Michelin. In fact, Michelin's
+production systems run continuously with only a few scheduled
+downtimes, i.e. periods when either the whole factory or only a
+workshop is unavailable, e.g., for maintenance. Otherwise systems
+are fully operational.
+
+That being said, their need for a reliable method to perform
+upgrades, which led to the work presented in this thesis,
+demonstrates that such systems are not error-proof. Putting it
+differently, inferring models representing behaviors of a
+software under analysis from production data is compelling, but
+it comes at a price: it is likely that \textit{Autofunk} will
+infer erroneous behaviors due to a fault that happened in a
+production environment, which will not be revealed by our testing
+module. It is not an issue when performing, for instance,
+robustness testing, but it should not be used for conformance
+testing. We were able to perform conformance testing only because
+of Michelin's conditions, which we could extend to most of the
+existing industrial and manufacturing contexts. Nevertheless, it
+cannot be applied generally. To quote
+
+Based on this state, we would like to reject such a hypothesis to
+perform conformance testing based on our inferred models, but
+also to make the models more accurate. We already highlighted a
+few paths to improve the accuracy of the inferred models in
+Section \ref{sec:conclusion:modelinf:exact}. To go a step
+further, we could apply model checking \cite{baier2008principles}
+if we consider our inferred models as the system models. Model
+checking is a verification technique that explores all possible
+system states, described in a \textit{system model}, in a
+brute-force manner thanks to a model checker. It is useful to
+show whether a given system model truly satisfies a certain
+property.  Nonetheless, such properties have to be provided, and
+we hit a known issue again: the lack of up-to-date documentation
+and/or specification of legacy systems.

@@ -143,7 +143,10 @@ part of a software affects other parts of it. The main assumption
 in this work is that we choose to consider a running production
 system in a production environment (that is, a factory) as a
 fully operational system, i.e. a system that behaves correctly.
-Such an hypothesis has been expressed by our partner.
+Such a hypothesis has been expressed by our partner. The
+inferred models can be employed for different purposes, e.g.,
+testing, but it is manifest that they should not be used for
+conformance testing in general.
 
 In this thesis, we propose a solution for making Michelin's
 production systems more reliable by means of testing, to ease
@@ -158,8 +161,10 @@ software engineers' work, thanks to two main lines:
 
     \item The generation of the test cases based on these models
         in order to perform conformance testing of production
-        systems. Due to the nature of these systems, the testing
-        method should scale.
+        systems. It is worth mentioning that it is possible to
+        perform conformance testing here thanks to the assumption
+        introduced previously. Finally, due to the nature of
+        these systems, the testing method should scale.
 \end{itemize}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
