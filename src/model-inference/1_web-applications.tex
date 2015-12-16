@@ -11,7 +11,7 @@ physical devices involved, a well-known client-server
 architecture, and a well-defined protocol to exchange
 information. The purpose of this chapter is to present the
 premises of our work on model inference (of production systems)
-applied on web applications.\\
+applied to web applications.\\
 
 \minitoc
 
@@ -136,7 +136,7 @@ for being traversed in a reasonable processing time;
 
 \item The knowledge encapsulated in the expert system can be used
 to cover trace sets of several applications thanks to generic
-rules. For instance, the same rules can be applied on the
+rules. For instance, the same rules can be applied to the
 applications developed with the same framework or programming
 language;
 
@@ -178,7 +178,7 @@ The Models generator is mainly composed of a rule-based expert
 system, adopting a forward chaining. Such a system separates the
 knowledge base from the reasoning: the former is expressed with
 data also known as facts and the latter is realized with
-inference rules that are applied on the facts. Our Models
+inference rules that are applied to the facts. Our Models
 generator initially takes traces as an initial knowledge base and
 owns inference rules organized into layers for trying to fit the
 human expert behavior. These layers are depicted in Figure
@@ -231,7 +231,7 @@ formulate the following hypotheses on the inference rules:
 
 \begin{enumerate}
 \item Finite complexity: a rule can only be applied a limited
-number of times on the same knowledge base;
+number of times to the same knowledge base;
 
 \item Soundness: the inference rules are Modus Ponens (simple
 implications that lead to sound facts if the original facts are
@@ -550,7 +550,7 @@ SR$, $r$ starts with $(l0_{\EuScript{S}_1},v_\emptyset)$;
 (a_i(p),\theta_i)$ is a valued action in $r\}$;
 
 \item $\rightarrow_{\EuScript{S}_1}$ is defined by the
-    inference rule given below, applied on every run $r\in SR$.
+    inference rule given below, applied to every run $r\in SR$.
     $s_i (a_i(p),\theta_i) s_{i+1} \text{ is a term of } r,
     s_i=(l_i,v_\emptyset),$ $s_{i+1}=(l_{i+1},v_\emptyset)$, and:
 
@@ -725,7 +725,7 @@ transition. The application of these layers ends in a finite time
 \subsubsection{Layer 3}
 
 This layers includes a (potentially empty) set of generic rules
-that can be applied on a large set of applications sharing
+that can be applied to a large set of applications sharing
 similarities, e.g., applications written with the same framework
 or same programming language.  This layer has two roles:
 
@@ -907,7 +907,7 @@ more expressive actions and whose size should be reduced. Its
 rules may have different forms:
 
 \begin{itemize}
-\item They can be applied on a single transition only. In this
+\item They can be applied to a single transition only. In this
 case, the rule replaces the transition action to add more sense
 to the action. The rule given in Figure \ref{fig:rule:deauth} is
 an example, which recognizes a user de-authentication, and adds a
@@ -1259,7 +1259,7 @@ this work).
 The GitHub website \footnote{\url{https://github.com/}} is an example
 of application giving significant results. We recorded a trace
 set composed of 840 HTTP requests / responses. Then, we applied
-\textit{Autofunk} on them with a Models generator composed of 5 layers
+\textit{Autofunk} to them with a Models generator composed of 5 layers
 gathering 18 rules whose 3 are specialized to GitHub. After
 having performed trace filtering (Layer 1), we obtained a first
 IOSTS tree composed of 28 transitions. The next 4 layers
@@ -1292,13 +1292,13 @@ inferred models. Our proposal yields several models, reflecting
 different levels of abstraction of the same application with the
 use of inference rules that capture the knowledge of an expert.
 The first contribution lies in the flexibility and scalability
-brought by the inference rules since they can be applied on
+brought by the inference rules since they can be applied to
 several applications or on a single application only when the
 rules are specific. The whole framework has not to be
 re-implemented for each application, but inference rules have to.
-Our approach can be applied on event-driven applications since
+Our approach can be applied to event-driven applications since
 our framework supports their exploration. Furthermore, it can
-also be applied on other kinds of application as far as they
+also be applied to other kinds of application as far as they
 produce traces.
 
 Combining expert systems (gathering knowledge) and formal models
