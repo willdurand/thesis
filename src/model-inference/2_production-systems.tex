@@ -1018,15 +1018,13 @@ files, and transforms them into traces, that are then used to
 build models.
 
 \begin{figure}[ht]
-    \includegraphics[width=1.0\linewidth]{figures/autofunk_1.png}
+    \includegraphics[width=1.0\linewidth]{figures/autofunk_initial_setup.png}
 
-    \caption{The architecture of \textit{Autofunk} that has been used to
-    conduct our first experiments with Michelin log files. A
-    newer (and better) architecture is given in Figure
-    \ref{fig:autofunk_gen_branded}.}
+    \caption{The architecture of \textit{Autofunk} that has been
+        used to conduct our first experiments with Michelin log
+        files. A newer (and better) architecture is given in
+        Figure \ref{fig:autofunk_gen_branded}.}
     \label{fig:autofunk_initial_setup}
-
-    \TODO{to redraw}
 \end{figure}
 
 The input trace collection is constructed with a classical
@@ -1063,27 +1061,31 @@ to the inference rule given in Section
 \ref{sec:modelinf:prodsystems:reduction}.
 
 At the time of writing, we are working on the architecture
-depicted in Figure \ref{fig:autofunk_gen_branded}. It shows how we
-plan to integrate \textit{Autofunk} with any Michelin production system.
-Events are collected on-the-fly from a system under analysis, and
-sent to a database
+depicted in Figure \ref{fig:autofunk_gen_branded}. It shows how
+we plan to integrate \textit{Autofunk} with any Michelin
+production system.  Events are collected on-the-fly from a system
+under analysis, and sent to a database
 (Elasticsearch\footnote{\url{https://www.elastic.co/products/elasticsearch}}
 here) thanks to a message broker (namely
-RabbitMQ\footnote{\url{https://www.rabbitmq.com/}}). Initial benchmarks
-revealed that such an infrastructure allows to collect up to
-10,000 events per second with a negligible overhead on the
-system. \textit{Autofunk} then queries the database to fetch product
-events, and finally build models. This approach also solves the
-issue mentioned previously.
+RabbitMQ\footnote{\url{https://www.rabbitmq.com/}}). Initial
+benchmarks revealed that such an infrastructure allows to collect
+up to 10,000 events per second with a negligible overhead on the
+system. \textit{Autofunk} then queries the database to fetch
+product events, and finally build models. This approach also
+solves the issue mentioned previously. Furthermore, it allows to
+leverage the data for other purposes, e.g., visualization or more
+extensive analyses.
 
 \begin{figure}[ht]
     \includegraphics[width=1.0\linewidth]{figures/model-gen-branded.png}
 
     \caption{The overall architecture built at Michelin to use
-    \textit{Autofunk} in a production environment.}
+    \textit{Autofunk} in a production environment. Events are
+    sent over RabbitMQ to another server in order to minimize
+    the overhead. Collected events are stored in a database.
+    \textit{Autofunk} can then fetch these events, and build
+    the models.}
     \label{fig:autofunk_gen_branded}
-
-    \TODO{to redraw}
 \end{figure}
 
 \subsection{Evaluation}
