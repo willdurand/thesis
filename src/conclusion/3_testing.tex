@@ -52,23 +52,47 @@ collected from a real environment, to construct the test cases,
 and execute them in an active testing approach.
 
 The main benefit of active testing would be to avoid collecting
-traces of the system under test, and directly testing this system
-instead. We believe that adding active testing to
-\textit{Autofunk} would speed up the testing process
+traces of the system under test for a long period, and directly
+test this system instead. We believe that adding active testing
+to \textit{Autofunk} would speed up the testing process
 significantly, and it would also make its adoption easier as
 active testing is more often known than passive testing in the
 Industry.
 
+\begin{figure}[ht]
+    \begin{center}
+        \includegraphics[width=0.8\linewidth]{figures/autofunk_active.png}
+    \end{center}
+
+    \caption{Insight of an approach discussed with Michelin to
+    use a replay technique with \textit{Autofunk} in order to
+    track what has changed between two versions of a production
+    system.}
+    \label{fig:autofunk_active}
+\end{figure}
+
 A simplistic way to perform active testing would be to "replay"
 the data previously "recorded", i.e. the data available in the
-inferred models. Nevertheless, this would mean assuming that the
-initial conditions are exactly the same between the system under
-analysis and the system under test. This is a strong assumption
-that we would like to omit. Rather, we could leverage our
-inferred models to extract test data, for instance, by mining
-realistic domains as defined in
-\cite{Enderlin:2011:PSL:2075545.2075551}. Realistic domains are
-data domains found in concrete implementations. A data domain
+inferred models. This is a path Michelin would like to explore.
+Figure \ref{fig:autofunk_active} gives the insight of their use
+case. A system under analysis $Sua$ in a production environment
+is used to build a first set of models. A system under test
+$Sut$, which is likely a different version of the system under
+analysis, is set up in a simulation environment (as already
+mentioned before). Replaying the data from $Sua$ in $Sut$ should
+produce new events that would be used to infer models of $Sut$.
+At this point, it should be possible to reuse the passive testing
+technique described in this thesis. Nevertheless, the main
+unanswered question is how to replay the data in a safe manner?
+Such an approach also implies that the initial conditions are
+exactly the same between the system under analysis and the system
+under test. This is yet another strong assumption we would prefer
+not to make.
+
+Instead, we would like to leverage our inferred models to extract
+test data, for instance, by mining realistic domains as defined
+in \cite{Enderlin:2011:PSL:2075545.2075551}. Realistic domains
+are data domains found in concrete implementations. A data domain
 should come with a practical way to generate values in it. This
 would be particularly useful to actively test a system as it
 would ease the process of generating test data by means of a
