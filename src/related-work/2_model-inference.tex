@@ -136,7 +136,7 @@ two kinds of queries, as depicted in Figure \ref{fig:angluin}:
 \begin{itemize}
     \item A \textbf{membership query}, consisting in asking the
         teacher whether a word is contained in the regular
-        language.  If the word is accepted, it is considered as a
+        language.  If the word is accepted, it is considered a
         \textit{positive} example, otherwise it represents a
         negative example;
 
@@ -159,14 +159,14 @@ suffix-closed strings. The algorithm gradually fills the entry
 $(u,v)$ for row $u$ and column $v$ by a boolean value after
 receiving a reply for a membership query for $uv$. Once the
 oracle answers $yes$, the minimal DFA for the language is derived
-from this observation table. The $\EuScript{L}^*$
-algorithm has also been applied to Mealy machines as shown in
-\cite{DBLP:phd/de/Niese2003,steffen11}. With Mealy machines, the
-event set is segmented into inputs and outputs. The rows of the
-table are filled with prefix-closed input sequences. The columns
-of the table are labeled with input suffix sequences, which
-represent the distinguishing sequences of the states of the
-upcoming Mealy machine. The table cells are completed by the last
+from this observation table. The $\EuScript{L}^*$ algorithm has
+also been applied to Mealy machines as shown in
+\cite{DBLP:phd/de/Niese2003,steffen11}.  With Mealy machines, the
+alphabet is segmented into input and output events. The rows of
+the table are filled with prefix-closed input sequences. The
+columns of the table are labeled with input suffix sequences,
+which represent the distinguishing sequences of the states of the
+future Mealy machine. The table cells are completed by the last
 outputs given by the teacher after receiving the concatenations
 of prefixes and suffixes.
 
@@ -538,7 +538,7 @@ different viewpoints. We chose to summarize them in Table
 	\item \textbf{Exploration strategy (col. 6):} many
 	papers propose at least one strategy to explore GUI
 	applications. The Depth-First Search (DFS) is often
-	considered since this strategy offers the advantage of
+	considered because this strategy offers the advantage of
 	resetting the application under test fewer time than any other
 	strategy. Nonetheless, some works proposed different strategies
 	\cite{Amalfitano:2012:UGR:2351676.2351717,5954416,crawljax:tweb12,WPX13}
@@ -620,7 +620,7 @@ execution traces, source code, or even documentation, as shown in
 Figure \ref{fig:passive}. Since there is no interaction with the
 system to model, theses techniques are said passive or offline.
 In contrast to active model inference, the samples are usually
-considered as positive elements. Also, models are often
+considered positive elements. Also, models are often
 constructed by initially representing sample sets with automata
 whose equivalent states are merged. This section presents an
 overview of these techniques.
