@@ -153,8 +153,8 @@ hypothesized DFA $\EuScript{M}$, until it gets an automaton that
 is equivalent to the black-box. The $\EuScript{L}^*$ algorithm
 uses an observation table to classify the strings given in
 membership queries as members or non-members of the unknown
-regular language. In an observation table, the rows are fulfilled
-by prefix-closed strings, the columns are labeled by
+regular language. In an observation table, the rows are filled
+with prefix-closed strings, the columns are labeled by
 suffix-closed strings. The algorithm gradually fills the entry
 $(u,v)$ for row $u$ and column $v$ by a boolean value after
 receiving a reply for a membership query for $uv$. Once the
@@ -200,7 +200,7 @@ application, including the tool \textit{LearnLib Studio}, a
 graphical interface for designing and executing learning and
 experimentation setups, plus a set of Java libraries. Howar et
 al. pursued the inference of models  and proposed a technique and
-an implementation on top of \textit{LearnLib} to actively learn
+an implementation on-top of \textit{LearnLib} to actively learn
 register automata in \cite{howarRA2012}. Register automata, also
 known as \textit{Finite Memory Automata} \cite{Kaminski1994329},
 are models that are capable of expressing the influence of data
@@ -242,7 +242,7 @@ to its columns and rows. In short, the algorithm only keeps the
 distinguishing input sequences and their suffixes in the columns
 of the observation table, and the access sequences, i.e. the
 input sequences allowing to reach a state, in the rows. These
-improvements reduce the table size and the worst case time
+improvements reduce the table size, and lower the worst case time
 complexity.
 
 A common problem to the algorithms presented above is the time
@@ -262,29 +262,29 @@ learning.
 
 Instead of querying teachers and oracles to check whether strings
 and models are correct, incremental learning techniques assumes
-receiving successively positive or negative samples, also called
-observations. Several models are incrementally built in such a
-way that if a new observation $\alpha$ is not consistent with the
-current model, the latter is modified such that $\alpha$ becomes
-consistent with the resulting new model.  In general, a learning
-algorithm is said incremental if: (i) it constructs a sequence of
-hypothesis automata $H_0, \dots, H_n$ from a sequence of
-observations $o_0, \dots, o_n$  about an unknown automaton $A$,
-and (ii) the construction of hypothesis $H_i$ can reuse aspects
-of the construction of the previous hypothesis $H_{i-1}$.
+receiving positive or negative samples, also called observations,
+one after another.  Several models are incrementally built in
+such a way that if a new observation $\alpha$ is not consistent
+with the current model, the latter is modified such that $\alpha$
+becomes consistent with the resulting new model.  In general, a
+learning algorithm is said incremental if: (i) it constructs a
+sequence of hypothesis automata $H_0, \dots, H_n$ from a sequence
+of observations $o_0, \dots, o_n$  about an unknown automaton
+$A$, and (ii) the construction of hypothesis $H_i$ can reuse
+aspects of the construction of the previous hypothesis $H_{i-1}$.
 
 Dupont proposed an incremental extension of the Regular Positive
 and Negative Inference (RPNI) algorithm, called \textit{Regular
-Positive and Negative Incremental Inference} (RPNI2)
+Positive and Negative Incremental Inference} (RPNII)
 \cite{Dupont96incrementalregular}. In short, RPNI requires
-positive and negative samples as a whole and builds DFAs. It
+positive and negative samples as a whole and builds DFA. It
 merges the blocks of states having the same prefixes (words
 accepted from a state leading to all the other states) and such
 that the prefixes augmented by one symbol are not in the negative
 samples. The inference process of the RPNI algorithm can be seen
 as a passive approach that is not incremental since it has to
 be restarted from scratch when new learning data are available.
-The RPNI2 algorithm overcomes this limitation by dealing with
+The RPNII algorithm overcomes this limitation by dealing with
 sequential presentation, i.e. the learning data are presented one
 at a time in a random order.
 
@@ -292,7 +292,7 @@ Parekh et al. \cite{parekh98} proposed an incremental extension
 of Angluin's \textit{ID} algorithm \cite{ANGLUIN198176}, the
 latter being not incremental since only a single model is
 ever produced. This extension called \textit{Incremental ID}
-(IID) constructs DFAs from observation sets. Membership queries
+(IID) constructs DFA from observation sets. Membership queries
 are sent to an oracle to check whether the current DFA is
 correct. IID is guaranteed to converge to the target DFA, and has
 polynomial time and space complexities. Sindhu et al. also
@@ -318,7 +318,7 @@ sequence of information (queries and results) about
 $\EuScript{A}$. CGE is incremental because the computation
 of a new hypothesis automaton $\EuScript{A}_i$ is based upon the
 previous $\EuScript{A}_{i-1}$. Meinke shows here that using
-finitely generated congruences increases the efficiency of
+finite generated congruences increases the efficiency of
 hypothesis automaton representation, which are deterministic
 and can be directly analyzed (e.g, for verification purpose). CGE
 has some features in common with the RPNII algorithm mentioned
@@ -367,14 +367,17 @@ the model inference of GUI applications in the next section.
     \label{fig:crawler}
 \end{figure}
 
-The works presented in this section originate from the automatic
-testing of GUI applications, e.g., desktop, web, and more recently
-mobile applications. As depicted in Figure \ref{fig:crawler},
-models are generated by a learner that updates the model under
-generation using events and states given by an automatic test
-engine. This test engine stimulates the application through its
-GUI (by triggering events, e.g., clicking on a button or a link),
-and collects all the observed screens.  Screen after screen, the
+The works presented in this section originate from the testing of
+GUI applications, i.e. event-driven applications offering a
+Graphical User Interface (GUI) to interact with, and which
+respond to a sequence of events sent by a user. Partial models
+can be inferred by exploring interfaces with automatic testing
+techniques. As depicted in Figure \ref{fig:crawler}, models are
+generated by a learner that updates the model under generation
+using events and states given by an automatic test engine. This
+test engine stimulates the application through its GUI (by
+triggering events, e.g., clicking on a button or a link), and
+collects all the observed screens.  Screen after screen, the
 application is explored (the technical term is: crawled) until
 there is no more new screen to explore or until some conditions
 (e.g., based on the processing time or the code coverage rate)
@@ -512,28 +515,28 @@ different viewpoints. We chose to summarize them in Table
 	constructs graphs expressing the called methods. Salva and
 	Laurençot proposed in \cite{SP15} a crawler of Android
 	applications that infers Parameterized Labeled Transition
-	Systems (PLTSs) capturing the UI events, the parameters used
-	to fulfill screens, and the screen contents (widget
+    Systems (PLTSs) capturing the UI events, the parameters used
+    to fill the screens, and the screen contents (widget
 	properties).
 
-	These models, and specifically the formal ones, offer the
-	advantage to be reusable for Model-based methods
-	(e.g., Model-based Testing and Verification methods).
-	However, the model inference of GUI applications is often
-	paired with the state space explosion problem. To limit the
-	state space, these approaches
-	\cite{MobiGUITARIEEESoftware2014,guitar,5954416,WPX13,SP15}
-	require state-abstractions specified by users, given in a
-	high level of abstraction. This choice is particularly
-	suitable for comprehension aid, but it often implies a lack
-	of information when it comes to generate test cases.
-	Alternatively, some approaches try to reduce the model on
-	the fly. The algorithms introduced in
-	\cite{crawljax:tweb12,4656395} reduce the model size by
-	concatenating identical states of the model under
-	construction.  But this cannot be  applied to all
-	applications in a generic manner since a state abstraction
-	definition has to be (manually) given;
+    These models, and specifically the formal ones, offer the
+    advantage to be reusable for Model-based methods
+    (e.g., Model-based Testing and Verification methods).
+    Nevertheless, the model inference of GUI applications is often
+    paired with the state space explosion problem. To limit the
+    state space, these approaches
+    \cite{MobiGUITARIEEESoftware2014,guitar,5954416,WPX13,SP15}
+    require state-abstractions specified by users, given in a
+    high level of abstraction. This choice is particularly
+    suitable for comprehension aid, but it often implies a lack
+    of information when it comes to generate test cases.
+    Alternatively, some approaches try to reduce the model
+    on-the-fly. The algorithms introduced in
+    \cite{crawljax:tweb12,4656395} reduce the model size by
+    concatenating identical states of the model under
+    construction.  But this cannot be applied to all
+    applications in a generic manner because a state abstraction
+    definition has to be (manually) given;
 
 	\item \textbf{Exploration strategy (col. 6):} many
 	papers propose at least one strategy to explore GUI
@@ -543,7 +546,7 @@ different viewpoints. We chose to summarize them in Table
 	strategy. Nonetheless, some works proposed different strategies
 	\cite{Amalfitano:2012:UGR:2351676.2351717,5954416,crawljax:tweb12,WPX13}
 	and demonstrated that it can either reduce the exploration
-	time or help increase code coverage. In \cite{SP15}, Salva
+    time or help increase code coverage. In \cite{SP15}, Salva
 	and Laurençot combined the Ant colony optimization heuristic
 	with a model inference engine to support different kinds of
 	exploration strategies. For instance, their algorithm
@@ -794,9 +797,9 @@ based upon fixed invariants defining order relations over states.
 QSM generalizes a supplied trace set obtained from an application
 by applying two steps: (i) a trace abstraction is performed
 with functions given by a user, and (ii) states are merged with
-the Price's "blue-fringe" state merging algorithm. To avoid
+the Price's blue-fringe state merging algorithm. To avoid
 over-generalization, the algorithm queries the user whenever the
-resulting machine accept or reject sequences that have not
+resulting machine accepts or rejects sequences that have not
 been ratified. This approach can be compared to the work done by
 Hungar in \cite{hungar}, who used the $\EuScript{L}^*$ algorithm
 instead. But the QSM algorithm presumes that the input sequences
