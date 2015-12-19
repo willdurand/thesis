@@ -10,7 +10,7 @@
 I have been studying Computer Science for more than 8 years now.
 I remember my first lectures on quality assurance (QA) and
 software testing, how pointless it seemed to all of us, students
-who don't write bugs \footnote{The last part of this sentence is
+who do not write bugs \footnote{The last part of this sentence is
 adapted from this tweet:
 \url{https://twitter.com/hipsterhacker/status/396352411754717184}.}.
 Indeed, almost a decade ago, quality assurance was not a common
@@ -58,7 +58,7 @@ around for decades \cite{moore56}, there has been a growing
 interest over the last few years.  MbT is application of (formal)
 Model-based design for designing and optionally also executing
 artifacts to perform software testing
-\cite{Jorgensen:1995:STC:526521}. To make a long story short, the
+\cite{Jorgensen:1995:STC:526521}. The
 use of a model allows to formally describe the expected behaviors
 of a software, from which it is possible to automatically
 generate the test cases, and then to execute them.  Nonetheless,
@@ -68,7 +68,7 @@ Industry.
 
 Model inference is a research field that aims at automatically
 deriving models, expressing functional behaviors of existing
-software for example. These models, even if incomplete, help
+software. These models, even if incomplete, help
 understand how a software behaves. That is why model inference is
 interesting to solve the limitation of MbT mentioned previously.
 Most of the model inference techniques that are used for testing
@@ -79,7 +79,7 @@ is more about using testing to reverse-engineer a model, and then
 check such a model to detect whether the software behaves
 correctly. In this thesis, reverse-engineering of a model is
 achieved by monitoring the system without disturbing it or even
-stimulating it, i.e. we don't rely on testing during model
+stimulating it, \emph{i.e.} we do not rely on testing during model
 inference.
 
 Michelin, one of the three largest tire manufacturers in the
@@ -88,17 +88,18 @@ The company designs most of its factories, production machines,
 and software itself. In a factory, there are several workshops
 for the different parts of the manufacturing process. From our
 point of view, a workshop is seen as a set of production machines
-controlled by a software. That is what we call a production
-system. Such systems deal with many physical devices, databases,
+controlled by a software. That is what we call a \emph{production
+system}. Such systems deal with many physical devices, databases,
 and also human interactions. Most of these systems run for years,
 up to 20 years according to our partner. Maintaining and updating
 such legacy software is complicated as documentation is often
 outdated, and the developers who wrote these software are not
 available anymore.  In this thesis, we propose a solution to the
-problem of testing such systems: \textit{Autofunk}, a framework
-(and a tool) combining different techniques to: (i) infer formal
-models from large (legacy) production systems, and (ii) perform
-passive testing in order to detect potential regressions.
+problem of testing such systems called \textit{Autofunk}, a
+framework (and a tool) combining different techniques to: (i)
+infer formal models from large (legacy) production systems, and
+(ii) perform passive testing in order to detect potential
+regressions.
 
 
 The next section discusses in detail the problems this thesis
@@ -136,15 +137,15 @@ software fault that makes a feature stop functioning as intended
 after a certain event, for instance, the deployment of a new
 version of a software.
 
-The general intention of this thesis is to help Michelin's
+The goal of this thesis is to help Michelin's
 engineers by preventing such regressions with testing. We want to
 determine, by means of passive testing, whether a change in one
 part of a software affects other parts of it. The main assumption
 in this work is that we choose to consider a running production
 system in a production environment (that is, a factory) as a
-fully operational system, i.e. a system that behaves correctly.
+fully operational system, \emph{i.e.} a system that behaves correctly.
 Such a hypothesis has been expressed by our partner. The
-inferred models can be employed for different purposes, e.g.,
+inferred models can be employed for different purposes, \emph{e.g.},
 testing, but it is manifest that they should not be used for
 conformance testing in general.
 

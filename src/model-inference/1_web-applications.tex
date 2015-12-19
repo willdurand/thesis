@@ -41,13 +41,13 @@ response, it also goes through the web server. By hooking between
 the web browser and the web server, we are able to read both HTTP
 requests and responses as far as there is no \textit{Secure
 Socket Layer} (SSL) or \textit{Transport Layer Security} (TLS)
-involved, i.e. the communication channel should not be encrypted.
+involved, \emph{i.e.} the communication channel should not be encrypted.
 
 The information collected by reading HTTP requests and HTTP
 responses are known as (HTTP) \textit{traces}. We use such traces
 (and the underlying knowledge) to infer raw models of the
 behaviors of a web application. We then construct more abstract
-models that can be used for different purposes, e.g.,
+models that can be used for different purposes, \emph{e.g.},
 documentation or test case generation. We chose to work on this
 to explore different options for production systems in the
 future. We present an active technique that uses automatic
@@ -192,7 +192,7 @@ into sequences of valued actions and to delete those considered
 as unnecessary. The rules of this layer depends on the nature of
 the input traces. The resulting structured trace set, denoted by
 $ST$, is then given to the next layer. This process is
-incrementally done, i.e. every time new traces are given to the
+incrementally done, \emph{i.e.} every time new traces are given to the
 Models generator, these are formatted and filtered before being
 given to Layer 2. The remaining layers yield an IOSTS each
 $\EuScript{S}_i (i\geq 1)$, which has a tree structure derived
@@ -261,7 +261,7 @@ An HTTP request is a textual message containing an HTTP verb
 (URI). It may also contain header sections such as Host,
 Connection, or Accept. The corresponding HTTP response is also a
 textual message containing at least a status code. It may
-encompass headers (e.g.,  Content-Type, Content-Length) and a
+encompass headers (\emph{e.g.},  Content-Type, Content-Length) and a
 content. All these notions can be easily identified. For
 instance, Figure \ref{fig:httpexample} depicts an HTTP request
 followed by its response. This is a $GET$ HTTP request, meaning a
@@ -297,7 +297,7 @@ the following information: the HTTP verb, the target URI, the
 request content that is a collection of data (headers, content),
 and the response content that is the collection (HTTP status,
 headers, response content). A header may also be a collection of
-data or may be null. Contents are textual, e.g., HTML. Since
+data or may be null. Contents are textual, \emph{e.g.}, HTML. Since
 we wish to translate such traces into IOSTSs, we turn these
 textual items into a structured valued action $(a(p),\theta)$
 with $a$ the HTTP verb and $\theta$ a valuation over the variable
@@ -339,7 +339,7 @@ JavaScript files.  Generally speaking, these do not enlighten a
 peculiar functional behavior of the application. This is why we
 propose to add rules in Layer 1 to filter these sub-requests out
 from the traces. Such sub-requests can be identified by different
-ways, e.g., by focusing on the file extension found at the end of
+ways, \emph{e.g.}, by focusing on the file extension found at the end of
 the URI or on the content-type value of the request headers.
 Consequently, this layer includes a set of rules, constituted of
 conditions on the HTTP content found in an action, that remove
@@ -618,7 +618,7 @@ upon the notion of traces: an IOSTS $\EuScript{S}_1$ is composed
 of transition sequences derived from runs in $SR$, itself
 obtained from the structured trace set $ST$. $\EuScript{S}_1$ is
 a reduction of $ST$ (trace inclusion) as defined in
-\cite{petrenko06}, i.e. $Traces(\EuScript{S}_1) \subseteq Traces(ST)$.
+\cite{petrenko06}, \emph{i.e.} $Traces(\EuScript{S}_1) \subseteq Traces(ST)$.
 
 \begin{example}
 We take as example a trace obtained from the GitHub website
@@ -726,7 +726,7 @@ transition. The application of these layers ends in a finite time
 
 This layers includes a (potentially empty) set of generic rules
 that can be applied to a large set of applications sharing
-similarities, e.g., applications written with the same framework
+similarities, \emph{e.g.}, applications written with the same framework
 or same programming language.  This layer has two roles:
 
 \begin{itemize}
@@ -790,7 +790,7 @@ guards ($Guard$ attribute), assignments ($Assign$ attribute), but
 also two locations: $Linit$ and $Lfinal$. In order to aggregate
 two consecutive transitions, we have to add a condition on the
 initial location of the second transition ($Linit == \$lfinal$),
-i.e. the final location of the first transition must be the
+\emph{i.e.} the final location of the first transition must be the
 initial location of the second transition, otherwise these two
 transitions are not consecutive. The $insert$ keyword in the
 $then$ part is used to add a new fact to the knowledge base.
@@ -945,7 +945,7 @@ end
 \end{framed}
 
     \caption{This rule recognizes an action that we call
-    "deauthentication", i.e. when a user logs out.}
+    "deauthentication", \emph{i.e.} when a user logs out.}
     \label{fig:rule:deauth}
 \end{figure}
 
@@ -991,7 +991,7 @@ application has a dedicated URL grammar (a.k.a. routing system).
 GitHub users own a profile page that is available at:
 \textit{https://github.com/\{username\}} where \textit{\{username\}}
 is the nickname of the user. However, some items are reserved,
-e.g., \textit{edu} and \textit{explore}. The rule given in Figure
+\emph{e.g.}, \textit{edu} and \textit{explore}. The rule given in Figure
 \ref{fig:rule:gh-profile} is based upon this structure and
 produces a new action $ShowProfile$ offering more sense.
 Similarly, a GitHub page describing a project has a URL that
@@ -1224,14 +1224,14 @@ end
 \end{framed}
 
 \caption{A semantic-driven exploration strategy that focuses on
-the term "buy" in the HTTP responses, i.e. displayed the web
+the term "buy" in the HTTP responses, \emph{i.e.} displayed the web
 pages.}
 \label{fig:rule:semdriven}
 \end{figure}
 
 Many other strategies could be defined in relation to the desired
 result in terms of model generation and application coverage.
-Other criteria, e.g., the number of UI elements per Graphical User
+Other criteria, \emph{e.g.}, the number of UI elements per Graphical User
 Interface (GUI) or the number of observed crashes could also be
 taken into consideration.
 
@@ -1307,7 +1307,7 @@ writing rules is still an heavy task, and thus not suitable as
 is. It can be as difficult as writing a formal model, hence the
 need for an automated way to write the rules of Layers 3 to N.
 Ideally, the framework itself should generate a set of rules,
-e.g., using a machine learning technique.
+\emph{e.g.}, using a machine learning technique.
 
 The first results on model inference were very encouraging, so we
 decided to rework our architecture to build a better framework on

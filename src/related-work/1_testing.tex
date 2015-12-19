@@ -3,19 +3,19 @@
 
 Software testing is the process of executing a program or system
 with the intent of finding errors \cite{Myers:1979:AST:539883}.
-, testing shows the presence, not the absence of bugs as
-Edsger Wybe Dijkstra used to say \cite{Buxton:1970:SET:1102021}.
+Testing shows the presence, not the absence of bugs as Edsger
+Wybe Dijkstra used to say \cite{Buxton:1970:SET:1102021}.
 
 Testing is achieved by analyzing a software to detect the
 differences between existing and required conditions (that is,
 bugs) and to evaluate the features of this software. As Myers
-said \cite{Myers:1979:AST:539883}, testing is used to find
+explained \cite{Myers:1979:AST:539883}, testing is used to find
 faults, but it is also useful to provide confidence of
 reliability, correctness, and absence of particular faults on
 software we develop. This does not mean that the software is
 completely free of defects. Rather, it must be good enough for
 its intended use.  Testing is a verification and validation
-(V\&V) process \cite{wallace1989software}. I use to (informally)
+(V\&V) process \cite{wallace1989software}. We use to (informally)
 explain both terms with the following questions \cite{Boehm1979}:
 
 \begin{itemize}
@@ -36,14 +36,14 @@ word "testing" in the sequel of this thesis. Testing involves a
 (software) \textit{system under test} (SUT). The prevailing
 intuition of testing is reflected in its operational
 characterization as an activity in which a \textit{tester} first
-generates and sends stimuli, i.e. \textit{test input} data, to a
+generates and sends stimuli, \emph{i.e.} \textit{test input} data, to a
 system under test in order to observe phenomena (mainly
 behaviors). Such phenomena can be represented by the existence of
 \textit{test outputs} for instance. We then have to decide on a
 suitable \textit{verdict}, which expresses the assessment made.
 The two most well-known verdicts are $Pass$ and $Fail$.
 We call \textit{test case} (TC), a structure that is compound of
-\textit{test data}, i.e.  inputs which have been devised to test
+\textit{test data}, \emph{i.e.}  inputs which have been devised to test
 the system, an expected behavior, and an expected output. A set
 of test cases is called a \textit{test suite} (TS).
 
@@ -54,17 +54,6 @@ in the rest of this thesis.
 
 \subsection{Types of testing}
 
-\begin{figure}[ht]
-    \begin{center}
-    \includegraphics[width=1.0\linewidth]{figures/sorts-of-testing.png}
-    \end{center}
-
-    \caption{Sorts of testing. We can sort testing techniques by
-    aspect (characteristics of quality), by phase (related to the
-    target of the test), and by accessibility (related to the
-    information available to construct the test cases).}
-\end{figure}
-
 Nowadays, software testing, if not always applied, is well-known
 in the Industry. It is considered a good practice and many
 techniques and tools have been developed over the last 10 years.
@@ -73,6 +62,8 @@ There are a lot of new terms that all end with "Testing" such as:
 Unit Testing, Integration Testing, Functional Testing, System
 Testing, Stress Testing, Performance Testing, Usability Testing,
 Acceptance Testing, Regression Testing, Beta Testing, and so on.
+
+\TODO{link between two paragraphs}
 
 ISO 9126 \cite{iso9126}, replaced by ISO/IEC 25010:2011
 \cite{10951538}, provides six characteristics of quality that can
@@ -87,14 +78,15 @@ be used to sort these testing techniques into six testing types:
 \item Usability testing.
 \end{itemize}
 
-However, this classification can not be generally accepted as
+Yet, this classification can not be generally accepted as
 single or complete. In \cite{4425813}, authors suggested to
 classify the different techniques based on the target of the
 test (sometimes we refer to this classification as level of
-detail):
+detail or \emph{phase} as shown in Figure
+\ref{fig:sorts-of-testing}):
 
 \begin{itemize}
-\item \textbf{Unit Testing:} units (e.g., functions, methods,
+\item \textbf{Unit Testing:} units (\emph{e.g.}, functions, methods,
 modules) of the system are tested in isolation. Typically this
 testing type implies access to the source code being tested;
 
@@ -108,11 +100,27 @@ not-only-functional requirements, such as security, performance
 (speed), accuracy, and reliability (fault tolerance).
 \end{itemize}
 
+\begin{figure}[ht]
+    \begin{center}
+    \includegraphics[width=1.0\linewidth]{figures/sorts-of-testing.png}
+    \end{center}
+
+    \caption{Sorts of testing. We can sort testing techniques by
+    aspect (characteristics of quality), by phase (related to the
+    target of the test), and by accessibility (related to the
+    information available to construct the test cases).}
+    \label{fig:sorts-of-testing}
+
+    \TODO{add grey-box, add arrows}
+\end{figure}
+
 These requirements are sometimes seen as \textit{objectives} of
 testing, leading to even more different testing types as listed
 before. There are also different approaches (or perspectives) to
 perform testing, depending on the information available to
-construct the test cases, i.e. accessibility:
+construct the test cases, \emph{i.e.} accessibility:
+
+\TODO{ref for each W,G,B}
 
 \begin{itemize}
     \item \textbf{White-box:} a method that tests the internal
@@ -128,6 +136,7 @@ construct the test cases, i.e. accessibility:
     \item \textbf{Grey-box:} the combination of white-box testing and
         black-box testing. One has access to the relevant internal
         parts of a SUT.
+        \TODO{more on this}
 \end{itemize}
 
 \subsubsection{Test selection}
@@ -137,9 +146,9 @@ challenge is to select subset of test cases from all possible
 test cases with a high chance of detecting most faults. A lot of
 research on \textit{test selection} (or strategies) has been
 done, and there are numerous existing methods for both black-box
-and white-box approaches.
+and white-box approaches.\TODO{grey-box?}
 
-\paragraph{Black-box strategies} Combinatorial Testing (also
+\paragraph{Black-box strategies.} Combinatorial Testing (also
 known as Pairwise) \cite{Tai98atest} is based on the observation
 that most faults are caused by interactions of at most two
 factors. Here we test all the possible discrete combinations of
@@ -155,12 +164,12 @@ Coverage (also known as Inductive Testing)
 \cite{Walkinshaw:2010:IFC:1928028.1928038} where a test set is
 good enough when it achieves a given level of coverage.
 
-\paragraph{White-box strategies} Fuzz Testing also known as
+\paragraph{White-box strategies.} Fuzz Testing also known as
 Random Testing
 \cite{Duran:1981:RRT:800078.802530,Godefroid08automatedwhitebox}
 is a method that applies random mutations to well-formed inputs
 of a program, and test the resulting values. Such a technique can
-also be applied using a black-box approach though, e.g.,
+also be applied using a black-box approach though, \emph{e.g.},
 \cite{5387827}.  Statistical Testing
 \cite{Walton:1995:STS:210453.210458} is a technique where test
 data is generated by sampling from a probability distribution
@@ -169,7 +178,7 @@ exercised with a high probability. We can also mention all
 techniques related to the code structure, such as Statement
 Testing, Path Testing, Branch Testing, Condition Testing,
 Multiple Condition (MC) Testing, and Loop Testing.  Another
-technique acts on the source code by mutating it, i.e.  seeding
+technique acts on the source code by mutating it, \emph{i.e.}  seeding
 the implementation with a fault by applying a mutation operator,
 and then determining whether testing identifies this fault. This
 is known as Mutation Testing \cite{1702444}.
@@ -187,19 +196,6 @@ more reliable by means of Model-based Testing.
 \subsection{Model-based Testing}
 \label{sec:related:testing:mbt}
 
-\begin{figure}[ht]
-    \begin{center}
-    \includegraphics[width=1.0\linewidth]{figures/mbt.png}
-    \end{center}
-
-    \caption{A simplified diagram showing how MBT works. This is
-    a three-step process: (i) we model the requirements (1 and
-    2), (ii) we generate the test cases (3), and (iii) we run the
-    test cases (4 and 5) that produce verdicts (6), which we can
-    evaluate (7 and 8).}
-    \label{fig:mbt}
-\end{figure}
-
 \textit{Model-based Testing} (MbT) is application of Model-based
 design for designing and optionally also executing artifacts to
 perform software testing \cite{Jorgensen:1995:STC:526521}.
@@ -216,6 +212,19 @@ which is extended in Figure \ref{fig:mbt}:
 \item Running these test cases against an actual SUT and
 evaluating the results.
 \end{enumerate}
+
+\begin{figure}[ht]
+    \begin{center}
+    \includegraphics[width=1.0\linewidth]{figures/mbt.png}
+    \end{center}
+
+    \caption{A simplified diagram showing how MBT works. This is
+    a three-step process: (i) we model the requirements (1 and
+    2), (ii) we generate the test cases (3), and (iii) we run the
+    test cases (4 and 5) that produce verdicts (6), which we can
+    evaluate (7 and 8).}
+    \label{fig:mbt}
+\end{figure}
 
 \subsubsection{What is a model?}
 \label{sec:related:testing:model}
@@ -304,7 +313,7 @@ We give the definition of the LTS model below, but we refer to
     \end{itemize}
 
     We write $q \xrightarrow[]{t} q'$ if there is a transition
-    labeled $t$ from state $q$ to state $q'$ , i.e., $(q, t, q')
+    labeled $t$ from state $q$ to state $q'$ , \emph{i.e.}, $(q, t, q')
     \in T$.
 
 	\label{def:lts}
@@ -523,7 +532,7 @@ an implementation under test $imp$ and a specification $spec$, we
 use the notion of an \textit{implementation relation}: $imp
 \subseteq MODS \times SPECS$, with $SPECS$ the set of
 specifications. We can find different implementation relations,
-e.g., \cite{Bri88,phalippou94}.
+\emph{e.g.}, \cite{Bri88,phalippou94}.
 
 \paragraph{Conformance} An implementation $iut$ conforms to a
 specification $spec$ if the existing model $I_{iut}$ of $iut$ is
@@ -578,7 +587,7 @@ conforms to $spec \Leftrightarrow iut \text{ } \mathbf{passes}
 \text{ } TS$.
 \end{itemize}
 
-We rely on a \textit{test architecture}, i.e. an abstract
+We rely on a \textit{test architecture}, \emph{i.e.} an abstract
 description of the \textit{environment} in which an
 implementation under test $iut$ is embedded, and where it
 communicates with a \textit{tester}.
@@ -598,7 +607,7 @@ how we apply the test cases to the system under test:
 \begin{itemize}
     \item \textbf{Active testing}, which is the classical process
         in which a tester examines the functionality of a unit
-        under test before that unit is being deployed, i.e.
+        under test before that unit is being deployed, \emph{i.e.}
         during its development;
 
     \item \textbf{Passive testing}, which takes place after the
@@ -611,9 +620,9 @@ how we apply the test cases to the system under test:
 While active testing can take place as black- or white-box
 testing, passive testing is often a special form of black-box
 testing. Active testing works by stimulating the system under
-test, i.e. observing outputs of an implementation for predefined
+test, \emph{i.e.} observing outputs of an implementation for predefined
 inputs. Most of the classical testing techniques and tools found
-in the Industry perform active testing, e.g., \textit{xUnit}
+in the Industry perform active testing, \emph{e.g.}, \textit{xUnit}
 frameworks
 \footnote{\url{http://www.martinfowler.com/bliki/Xunit.html}}.
 
@@ -629,78 +638,79 @@ Several works, dealing with passive testing of protocols or
 components, have been proposed over the last decade. For all of
 these, the tester is made up of a module, located in the
 implementation environment, which collects trace sets. These
-works can be grouped in three different categories.
+works can be grouped in three different categories:
 
-\subsubsection{Invariant satisfiability}
+\begin{itemize}
 
-Invariants represent properties that are always true. They are
-constructed by hand from a specification, and later checked on
-the collected traces. Similarly to runtime verification
-\cite{Leucker2009293}, this approach allows to test complex
-properties on an implementation. It gave birth to several works
-in the literature. For instance, the passive testing method,
-presented in \cite{CMdO09}, aims to test the satisfiability of
-invariants on Mobile ad hoc network (MANET) routing protocols.
-Different steps are required: definition of invariants from the
-specification, extraction of execution traces with sniffers,
-verification of the invariants on the trace set. Other works
-focus on component-based system testing: in this case, passive
-methods are usually used to check conformance or security. For
-instance, the \textit{TIPS} tool \cite{5552735} performs an
-automated analysis of the captured trace sets to determine if a
-given set of timed extended invariants are satisfied. As in
-\cite{CMdO09}, invariants are constructed from the specification
-and traces are collected with network sniffers. Cavalli et al.
-propose an approach for testing the security of web service
-compositions in \cite{cavalli2009passive}. Security rules are
-here modeled with the Nomad language \cite{cuppens2005nomad},
-which expresses authorizations or prohibitions by means of
-time constraints. Preliminary, a rule set is manually
-constructed from a specification. Traces of the implementation
-are extracted with modules that are placed at each workflow
-engine layer that executes web services. Then, the method checks,
-with the collected traces, that the implementation does not
-contradict security rules. Andrés et al. presented a methodology
-to perform passive testing of timed systems in
-\cite{andres2012formal}. The paper gives two algorithms to decide
-the correctness of proposed invariants with respect to a given
-specification and algorithms to check the correctness of a log,
-recorded from the implementation under test, with respect to an
-invariant.
+    \item \textbf{Invariant satisfiability.}
+    Invariants represent properties that are always true. They are
+    constructed by hand from a specification, and later checked on
+    the collected traces. Similarly to runtime verification
+    \cite{Leucker2009293}, this approach allows to test complex
+    properties on an implementation. It gave birth to several works
+    in the literature. For instance, the passive testing method,
+    presented in \cite{CMdO09}, aims to test the satisfiability of
+    invariants on Mobile ad hoc network (MANET) routing protocols.
+    Different steps are required: definition of invariants from the
+    specification, extraction of execution traces with sniffers,
+    verification of the invariants on the trace set. Other works
+    focus on component-based system testing: in this case, passive
+    methods are usually used to check conformance or security. For
+    instance, the \textit{TIPS} tool \cite{5552735} performs an
+    automated analysis of the captured trace sets to determine if a
+    given set of timed extended invariants are satisfied. As in
+    \cite{CMdO09}, invariants are constructed from the specification
+    and traces are collected with network sniffers. Cavalli \emph{et al.}
+    propose an approach for testing the security of web service
+    compositions in \cite{cavalli2009passive}. Security rules are
+    here modeled with the Nomad language \cite{cuppens2005nomad},
+    which expresses authorizations or prohibitions by means of
+    time constraints. Preliminary, a rule set is manually
+    constructed from a specification. Traces of the implementation
+    are extracted with modules that are placed at each workflow
+    engine layer that executes web services. Then, the method checks,
+    with the collected traces, that the implementation does not
+    contradict security rules. Andrés \emph{et al.} presented a methodology
+    to perform passive testing of timed systems in
+    \cite{andres2012formal}. The paper gives two algorithms to decide
+    the correctness of proposed invariants with respect to a given
+    specification and algorithms to check the correctness of a log,
+    recorded from the implementation under test, with respect to an
+    invariant;
 
-\subsubsection{Forward checking}
+    \item \textbf{Forward checking:}
+    Implementation reactions are given on-the-fly to an algorithm
+    that detects incorrect behaviors by covering the specification
+    transitions with these reactions. Lee \emph{et al.} proposed a passive
+    testing method dedicated to wired protocols \cite{1621118}.
+    Protocols are modeled with \textit{Event-driven Extended Finite
+    State Machines} (EEFSM), compound of variables.  Several
+    algorithms on the EEFSM model and their applications to the OSPF
+    protocol and TCP state machines are presented. Algorithms check
+    whether partial traces, composed of actions and parameters, meet
+    a given symbolic specification on-the-fly. The analysis of the
+    symbolic specification is performed by means of configuration. A
+    configuration represents a tuple gathering the current state
+    label, and a set of assignments and guards modeling the variable
+    state;
 
-Implementation reactions are given on-the-fly to an algorithm
-that detects incorrect behaviors by covering the specification
-transitions with these reactions. Lee et al. proposed a passive
-testing method dedicated to wired protocols \cite{1621118}.
-Protocols are modeled with \textit{Event-driven Extended Finite
-State Machines} (EEFSM), compound of variables.  Several
-algorithms on the EEFSM model and their applications to the OSPF
-protocol and TCP state machines are presented. Algorithms check
-whether partial traces, composed of actions and parameters, meet
-a given symbolic specification on-the-fly. The analysis of the
-symbolic specification is performed by means of configuration. A
-configuration represents a tuple gathering the current state
-label, and a set of assignments and guards modeling the variable
-state.
+    \item \textbf{Backward checking:}
+    Alcalde \emph{et al.} proposed an approach that processes a partial
+    trace backward to narrow down the possible specifications in
+    \cite{alcalde2004network}. The algorithm performs two steps. It
+    first follows a given trace backward, from the current
+    configuration to a set of starting ones, according to the
+    specification. With this step, the algorithm finds the possible
+    starting configurations of the trace, which lead to the current
+    configuration. Then, it analyses the past of this set of starting
+    configurations, also in a backward manner, seeking for
+    configurations in which the variables are determined.  When such
+    configurations are reached, a decision is taken on the validity
+    of the studied paths (traces are completed). Such an approach is
+    usually applied as a complement to forward checking to detect
+    more errors.
 
-\subsubsection{Backward checking}
-
-Alcalde et al. proposed an approach that processes a partial
-trace backward to narrow down the possible specifications in
-\cite{alcalde2004network}. The algorithm performs two steps. It
-first follows a given trace backward, from the current
-configuration to a set of starting ones, according to the
-specification. With this step, the algorithm finds the possible
-starting configurations of the trace, which lead to the current
-configuration. Then, it analyses the past of this set of starting
-configurations, also in a backward manner, seeking for
-configurations in which the variables are determined.  When such
-configurations are reached, a decision is taken on the validity
-of the studied paths (traces are completed). Such an approach is
-usually applied as a complement to forward checking to detect
-more errors.
+\end{itemize}
 
 \subsubsection{Why passive testing?}
 
@@ -719,7 +729,7 @@ still presents interesting advantages:
 
     \item Passive testing can be applied to large systems where
         active testing is not even feasible, such as systems with
-        many different components, e.g., software oriented
+        many different components, \emph{e.g.}, software oriented
         architectures, distributed systems, but also production
         systems.
 \end{itemize}
