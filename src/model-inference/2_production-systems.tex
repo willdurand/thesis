@@ -5,7 +5,7 @@
 
 \section{Introduction}
 
-In the industry, building models for production systems, i.e.
+In the industry, building models for production systems, \emph{i.e.}
 event-driven systems that run in production environments and are
 distributed over several devices and sensors, is frequent since
 these are valuable in many situations like testing and fault
@@ -25,7 +25,7 @@ one wants to maintain because of lack of understanding.
 In this chapter, we focus on this problem for production systems
 that exchange thousands of events a day. Several approaches have
 already been proposed for different types of systems, usually for
-GUI applications, e.g., desktop or mobile applications. Yet, we
+GUI applications, \emph{e.g.}, desktop or mobile applications. Yet, we
 noticed that these approaches were not tailored to support
 production systems. From the literature (cf. Chapter
 \ref{sec:related}), we deduced the following key observations:
@@ -95,13 +95,13 @@ many other industrial companies, Michelin follows the Computer
 Integrated Manufacturing (CIM) approach \cite{rehg2004computer},
 using computers and software to control the entire manufacturing
 process. In this thesis, we focus on the Level 2 of the CIM
-approach, i.e. all the applications that monitor and control
-several production devices and points, i.e. locations where a
+approach, \emph{i.e.} all the applications that monitor and control
+several production devices and points, \emph{i.e.} locations where a
 production line branches into multiple lines, in a workshop. In a
 factory, there are different workshops for each step of the tire
 building process. At a workshop level, we observe a continuous
 stream of products from specific entry points to a finite set of
-exit points, i.e. where products go to reach the next step of the
+exit points, \emph{i.e.} where products go to reach the next step of the
 manufacturing process, and disappear of the workshop frame in the
 meantime, as shown in Figure \ref{fig:workshop-annotated}.
 Depending on the workshops, products can stay in this frame for
@@ -182,7 +182,7 @@ to design our framework:
         $a_1(\alpha_1)$...$a_n(\alpha_n)$. A trace is identified by a
         specific parameter that is included in all event assignments
         of the same trace. This identifier is denoted by $pid$ and
-        identifies products, e.g., tires at Michelin.  Besides this,
+        identifies products, \emph{e.g.}, tires at Michelin.  Besides this,
         event assignments include a time stamp to sort them into
         traces.
 \end{itemize}
@@ -210,7 +210,7 @@ derive more abstract and readable models.
 
 We consider \textit{Symbolic Transition Systems} (STSs) as models
 for representing production system behaviors. As reminder, STSs
-are state machines incorporating actions (i.e. events in this
+are state machines incorporating actions (\emph{i.e.} events in this
 context), labeled on transitions, that show what can be given to
 and observed on the system. In addition, actions are tied to an
 explicit notion of data. A more formal definition can be found
@@ -226,7 +226,7 @@ consequence, the data collections handled by \textit{Autofunk} are always
 expressed with knowledge bases (Events, Actions, Traces, STS,
 etc.) on which rules are applied to infer models. Given a system
 $\mathit{Sua}$ and a set of production events, \textit{Autofunk} builds
-trace-included models, i.e. the traces of a model $\EuScript{S}$
+trace-included models, \emph{i.e.} the traces of a model $\EuScript{S}$
 are included in the traces of $\mathit{Sua}$.
 
 \begin{figure}[ht]
@@ -251,8 +251,8 @@ are included in the traces of $\mathit{Sua}$.
 \end{framed}
 
 \caption{An example of some production events. Each event is
-time-stamped, has a label (e.g., $17011$), and may own
-assignments of variables (e.g., $nsys$).}
+time-stamped, has a label (\emph{e.g.}, $17011$), and may own
+assignments of variables (\emph{e.g.}, $nsys$).}
 \label{fig:rawdatum}
 \end{figure}
 
@@ -261,7 +261,7 @@ consider a case study based upon the example of Figure
 \ref{fig:rawdatum}. It depicts simplified production events
 similar to those extracted from Michelin's logging system.
 $INFO$, $17011$, and $17021$ are labels along
-with assignments of variables e.g., $nsys$, which indicates an
+with assignments of variables \emph{e.g.}, $nsys$, which indicates an
 industrial device number, and $point$, which gives the product
 position.  Real events own around 20 parameters in average. Such
 a format is specific to Michelin but other kinds of events could
@@ -332,7 +332,7 @@ containing parameter assignments ($Assign$ attribute) that can be
 accessed using the following notation: $Assign.foo$ where $foo$
 is a name and the result its corresponding value.\\The second
 rule removes valued events extracted from very specific events,
-i.e. those whose $key$ matches a pattern and having a $inc$ value
+\emph{i.e.} those whose $key$ matches a pattern and having a $inc$ value
 that is not equal to $1$.  To fully understand the syntax of this
 rule, one has to know that when there is no logical connective
 between the conditions, it defaults to a conjunction.  Such a
@@ -399,22 +399,22 @@ Traces(Sua)$ as defined in \cite{petrenko06}.
 In Section \ref{prodsys:context}, we indicated that products
 could stay in a workshop for days and even weeks. From our point
 of view, this means that we can likely collect partial
-executions, i.e. events belonging to products that were present
+executions, \emph{i.e.} events belonging to products that were present
 in the workshop we are observing before we start to collect any
 events. We can determine which product was present in the
 workshop before by retrieving the first event tied to it.
 If the physical location of this event is not one of the known
 entry points of the workshop, then the product was there before.
 In a similar manner, we are able to retrieve incomplete
-executions related to the end of the collection, i.e. the events
+executions related to the end of the collection, \emph{i.e.} the events
 tied to products that did not reach any of the known exit points
 of the workshop.
 
 We define a \textit{complete trace} as a trace containing all
 events expressing the path taken by a product in a production
-system, from the beginning, i.e. one of its entry points, to the
-end, i.e. one of its exit points. In the trace set $Traces(Sua)$,
-we do not want to keep incomplete traces, i.e.  traces related to
+system, from the beginning, \emph{i.e.} one of its entry points, to the
+end, \emph{i.e.} one of its exit points. In the trace set $Traces(Sua)$,
+we do not want to keep incomplete traces, \emph{i.e.}  traces related to
 products which did not pass through one of the known entry points
 or moved to the next step of the manufacturing process using one
 of the known exit points.
@@ -1048,7 +1048,7 @@ of STS branches equivalence classes, has been implemented with a
 specific algorithm for better performance. Indeed, comparing
 every action in STS branches in order to aggregate them is time
 consuming.  Given a STS $\EuScript{S}$, this algorithm generates
-a signature for each branch $b$, i.e. a hash
+a signature for each branch $b$, \emph{i.e.} a hash
 (SHA1\footnote{Secure Hash Algorithm 1} algorithm) of
 the concatenation of the signatures of the actions of $b$. The
 branches which have the same signature are gathered together and
@@ -1073,7 +1073,7 @@ up to 10,000 events per second with a negligible overhead on the
 system. \textit{Autofunk} then queries the database to fetch
 product events, and finally build models. This approach also
 solves the issue mentioned previously. Furthermore, it allows to
-leverage the data for other purposes, e.g., visualization or more
+leverage the data for other purposes, \emph{e.g.}, visualization or more
 extensive analyses.
 
 \begin{figure}[ht]
@@ -1248,7 +1248,7 @@ removed, which is close to the reality.
 Another potential issue with our parsing implementation is that
 every event has to be loaded in memory, so that we can perform
 computation and apply our algorithms on them. But working
-with millions of Java objects requires a lot of memory, i.e.
+with millions of Java objects requires a lot of memory, \emph{i.e.}
 memory consumption depends on the amount of initial traces. We
 compared execution time and memory consumption in Figure
 \ref{fig:memory-time}, showing that memory consumption tends to
@@ -1276,7 +1276,7 @@ work on a new solution to segment and filter traces.
 We now rely on a machine learning technique to segment a trace
 set into several subsets, one per entry point of the system
 $\mathit{Sua}$. We leverage this process to also remove
-incomplete traces, i.e. traces that do not express an execution
+incomplete traces, \emph{i.e.} traces that do not express an execution
 starting from an entry point and ending to an exit point. These
 can be extracted by analyzing the traces and the variable
 $point$, which captures the product physical location.

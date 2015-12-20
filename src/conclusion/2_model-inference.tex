@@ -3,7 +3,7 @@
 
 Model inference is a research field that has received a lot of
 attention over the past three decades, and it is still gaining
-ground with the emergence of new kinds of applications, e.g., web
+ground with the emergence of new kinds of applications, \emph{e.g.}, web
 services and mobile applications. Many recent papers consider
 model inference to later perform analyses of the models or
 automatic testing in order to check different aspects of the
@@ -20,7 +20,7 @@ When the inferred models are used for analysis, they must be as
 precise as possible. Nonetheless, we observed that the main
 feature leading to over-approximation is the state merging
 process. A trivial solution would be to use minimization
-techniques instead, e.g., a bisimulation minimization as
+techniques instead, \emph{e.g.}, a bisimulation minimization as
 described in Chapter \ref{sec:modelinf:webapps} of this thesis.
 As a reminder, the bisimulation relation associated with a
 minimization technique merges the state sets that are bisimilar
@@ -45,7 +45,7 @@ under-approximation of the inferred models with two search-based
 algorithms: (i) a multi-objective genetic algorithm, and (ii) the
 non-dominated sorting genetic algorithm \textit{NSGA-II}. But
 this process is time-consuming and can only be applied to small
-systems because the complete models, i.e. the models compound of
+systems because the complete models, \emph{i.e.} the models compound of
 all the observations, are incrementally re-generated from scratch
 to improve the metrics.  An iterative process performed by adding
 the observations one after one in the model could also be
@@ -55,7 +55,7 @@ merging on-the-fly. Other metrics could also be chosen depending
 on the context of the software system. In \textit{Autofunk}, a
 similar improvement would be to build submodels of a production
 system. By now, we consider a whole workshop as a production
-system to infer models, i.e. we do not make any distinction among
+system to infer models, \emph{i.e.} we do not make any distinction among
 the different parts of the workshop. Nonetheless, there are parts
 that are more critical than others, at least in Michelin's
 workshops. Being able to focus on specific locations of a
@@ -105,7 +105,7 @@ more complex with the rise of Service-Oriented Architectures
 microservices\footnote{\url{http://martinfowler.com/articles/microservices.html}}
 \cite{thones2015microservices}.  For instance, microservices are
 emerging as a new architectural style, aiming at creating
-software systems as a set of small services, i.e. small
+software systems as a set of small services, \emph{i.e.} small
 applications, each developed and deployed on its own. This
 package of services form the complete software system. Inferring
 models of such systems is not doable with most of the existing
@@ -128,7 +128,7 @@ Other works \cite{Azim13,WPX13} combined static analyses of
 source code with crawlers to increase code coverage rates, and
 reduce exploration time. Other  research domains, such as machine
 learning and data mining, have also been considered to avoid the
-classical state merging stage. Ammons et al.
+classical state merging stage. Ammons \emph{et al.}
 \cite{Ammons:2002:MS:565816.503275} developed a machine learning
 approach, called specification mining to infer state machines.
 The authors focused on the most frequent interaction patterns
