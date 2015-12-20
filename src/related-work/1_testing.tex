@@ -3,20 +3,22 @@
 
 Software testing is the process of executing a program or system
 with the intent of finding errors \cite{Myers:1979:AST:539883}.
-Testing shows the presence, not the absence of bugs as Edsger
-Wybe Dijkstra used to say \cite{Buxton:1970:SET:1102021}.
+Indeed, testing shows the presence, not the absence of
+\emph{bugs}, \emph{i.e.} faults or errors, as Edsger Wybe
+Dijkstra used to say \cite{Buxton:1970:SET:1102021}.
 
 Testing is achieved by analyzing a software to detect the
 differences between existing and required conditions (that is,
 bugs) and to evaluate the features of this software. As Myers
-explained \cite{Myers:1979:AST:539883}, testing is used to find
-faults, but it is also useful to provide confidence of
+explained in \cite{Myers:1979:AST:539883}, testing is used to
+find faults, but it is also useful to provide confidence of
 reliability, correctness, and absence of particular faults on
 software we develop. This does not mean that the software is
 completely free of defects. Rather, it must be good enough for
-its intended use.  Testing is a verification and validation
-(V\&V) process \cite{wallace1989software}. We use to (informally)
-explain both terms with the following questions \cite{Boehm1979}:
+its intended use. Testing is a \emph{verification and validation}
+(V\&V) process \cite{wallace1989software}. One uses to
+(informally) explain both terms with the following questions
+\cite{Boehm1979}:
 
 \begin{itemize}
     \item \textbf{Validation:} are we building the right software?
@@ -43,14 +45,15 @@ behaviors). Such phenomena can be represented by the existence of
 suitable \textit{verdict}, which expresses the assessment made.
 The two most well-known verdicts are $Pass$ and $Fail$.
 We call \textit{test case} (TC), a structure that is compound of
-\textit{test data}, \emph{i.e.}  inputs which have been devised to test
-the system, an expected behavior, and an expected output. A set
-of test cases is called a \textit{test suite} (TS).
+\textit{test data}, \emph{i.e.}  inputs which have been devised
+to test the system, an expected behavior, and an expected output
+\cite{5733835}. A set of test cases is called a \textit{test
+suite} (TS).
 
 In the following section, we introduce the software testing
-realm. We focus on Model-based Testing, presented in Section
-\ref{sec:related:testing:mbt} along with some definitions used
-in the rest of this thesis.
+realm. In Section \ref{sec:related:testing:mbt}, we focus on
+Model-based Testing along with some definitions used in the rest
+of this thesis.
 
 \subsection{Types of testing}
 
@@ -63,41 +66,91 @@ Unit Testing, Integration Testing, Functional Testing, System
 Testing, Stress Testing, Performance Testing, Usability Testing,
 Acceptance Testing, Regression Testing, Beta Testing, and so on.
 
-\TODO{link between two paragraphs}
+All these terms refer to different testing practices that can be
+sorted in three different manners as depicted in Figure
+\ref{fig:sorts-of-testing}: by \emph{aspect}, by \emph{phase},
+and/or by \emph{accessibility}.
 
-ISO 9126 \cite{iso9126}, replaced by ISO/IEC 25010:2011
-\cite{10951538}, provides six characteristics of quality that can
-be used to sort these testing techniques into six testing types:
+First, ISO 9126 \cite{iso9126}, replaced by ISO/IEC 25010:2011
+\cite{10951538}, provides six characteristics of quality (also
+called aspects) that can be used to sort these testing techniques
+into six testing types:
 
 \begin{itemize}
-\item Efficiency testing;
-\item Functionality testing;
-\item Maintainability testing;
-\item Portability testing;
-\item Reliability testing;
-\item Usability testing.
+    \item \textbf{Efficiency testing:} the capability of the
+        software product to provide appropriate performance,
+        relative to the amount of resources used, under stated
+        conditions \cite{iso9126};
+
+    \item \textbf{Functionality testing:} the capability of the
+        software product to provide functions which meet stated
+        and implied needs when the software is used under
+        specified conditions \cite{iso9126};
+
+    \item \textbf{Maintainability testing:} the capability of the
+        software product to be modified. Modifications may
+        include corrections, improvements or adaptation of the
+        software to changes in environment, and in requirements
+        and functional specifications \cite{iso9126};
+
+    \item \textbf{Portability testing:} the capability of the
+        software product to be transferred from one environment
+        to another \cite{iso9126};
+
+    \item \textbf{Reliability testing:} the capability of the
+        software product to maintain a specified level of
+        performance when used under specified conditions
+        \cite{iso9126};
+
+    \item \textbf{Usability testing:} capability of the software
+        product to be understood, learned, used and attractive to
+        the user, when used under specified conditions
+        \cite{iso9126}.
 \end{itemize}
 
-Yet, this classification can not be generally accepted as
-single or complete. In \cite{4425813}, authors suggested to
-classify the different techniques based on the target of the
-test (sometimes we refer to this classification as level of
-detail or \emph{phase} as shown in Figure
-\ref{fig:sorts-of-testing}):
+ISO/IEC 25010:2011 \cite{10951538}, which replaced ISO 9126
+\cite{iso9126}, counts eight product quality characteristics,
+including two new categories:
 
 \begin{itemize}
-\item \textbf{Unit Testing:} units (\emph{e.g.}, functions, methods,
-modules) of the system are tested in isolation. Typically this
-testing type implies access to the source code being tested;
+    \item \textbf{Security:} the degree to which a product or
+        system protects information and data so that persons or
+        other products or systems have the degree of data access
+        appropriate to their types and levels of authorization
+        \cite{10951538};
 
-\item \textbf{Integration Testing:} interactions between software
-components are tested. This testing type is a continuous task,
-hence the \textit{continuous integration} (CI) practice;
+    \item \textbf{Compatibility:} the degree to which a product,
+        system or component can exchange information with other
+        products, systems or components, and/or perform its
+        required functions, while sharing the same hardware or
+        software environment \cite{10951538}.
+\end{itemize}
 
-\item \textbf{System Testing:} the whole system is taken into
-consideration. This testing type is appropriate for validating
-not-only-functional requirements, such as security, performance
-(speed), accuracy, and reliability (fault tolerance).
+Yet, these classifications can not be generally accepted as
+single or complete. In \cite{4425813}, authors suggested to
+classify the different techniques based on the target of the test
+(sometimes we refer to this classification as level of detail or
+phase as shown in Figure \ref{fig:sorts-of-testing}):
+
+\begin{itemize}
+    \item \textbf{Unit testing:} individual units (\emph{e.g.},
+        functions, methods, modules) or groups of related units
+        of the system are tested in isolation
+        \cite{ieee610121990}. Typically this testing type implies
+        access to the source code being tested;
+
+    \item \textbf{Integration testing:} interactions between
+        software components are tested \cite{ieee610121990}. This
+        testing type is a continuous task, hence the continuous
+        integration (CI) practice;
+
+    \item \textbf{System Testing:} the whole system is taken into
+        consideration to evaluate the system's compliance with
+        its specified requirements \cite{ieee610121990}. This
+        testing type is also appropriate for validating
+        not-only-functional requirements, such as security,
+        performance (speed), accuracy, and reliability (fault
+        tolerance).
 \end{itemize}
 
 \begin{figure}[ht]
@@ -110,34 +163,39 @@ not-only-functional requirements, such as security, performance
     target of the test), and by accessibility (related to the
     information available to construct the test cases).}
     \label{fig:sorts-of-testing}
-
-    \TODO{add grey-box, add arrows}
 \end{figure}
 
 These requirements are sometimes seen as \textit{objectives} of
 testing, leading to even more different testing types as listed
-before. There are also different approaches (or perspectives) to
-perform testing, depending on the information available to
-construct the test cases, \emph{i.e.} accessibility:
-
-\TODO{ref for each W,G,B}
+before. There are also different test approaches \cite{5733835}
+(or perspectives) to perform testing, depending on the
+information available to construct the test cases, \emph{i.e.}
+accessibility:
 
 \begin{itemize}
-    \item \textbf{White-box:} a method that tests the internal
-        structure of a SUT. It is usually done at the unit level;
+    \item \textbf{White-box testing:} (also known as \emph{glass box}
+        \cite{5733835}) a method that tests the internal
+        structure of a SUT. It is usually done at the unit level.
+        This technique is also known as \emph{structural testing}
+        \cite{5733835};
 
-    \item \textbf{Black-box:} a method that tests the functionalities
-        of a SUT without knowing its internal structure. The behavior
-        of the \textit{implementation under test} (IUT) is only
-        visible through a restricted interface called \textit{Points
-        of Control and Observation} (PCOs). Such a technique is also
-        known as functional testing;
+    \item \textbf{Black-box testing:} a method that tests the
+        functionalities of a SUT without knowing its internal
+        structure. The behavior of the \textit{implementation
+        under test} (IUT) is only visible through a restricted
+        interface called \textit{Points of Control and
+        Observation} (PCOs). Such a technique is often known as
+        functional testing \cite{5733835};
 
-    \item \textbf{Grey-box:} the combination of white-box testing and
-        black-box testing. One has access to the relevant internal
-        parts of a SUT.
-        \TODO{more on this}
+    \item \textbf{Grey-box testing:} the combination of white-box testing
+        and black-box testing. One has access to the relevant
+        parts of a SUT such as limited knowledge of the internal
+        part of the SUT, and also knowledge of its fundamental
+        aspects \cite{khan2012comparative}. This technique is
+        sometimes called \emph{translucent testing}.
 \end{itemize}
+
+\TODO{link}
 
 \subsubsection{Test selection}
 
@@ -146,42 +204,54 @@ challenge is to select subset of test cases from all possible
 test cases with a high chance of detecting most faults. A lot of
 research on \textit{test selection} (or strategies) has been
 done, and there are numerous existing methods for both black-box
-and white-box approaches.\TODO{grey-box?}
+and white-box approaches:
 
-\paragraph{Black-box strategies.} Combinatorial Testing (also
-known as Pairwise) \cite{Tai98atest} is based on the observation
-that most faults are caused by interactions of at most two
-factors. Here we test all the possible discrete combinations of
-the parameters involved.  Because we cannot test all the possible
-input domain values for practical reasons, Equivalence
-Partitioning \cite{Huang13} is a technique that divides the test
-input data into a range of values, and selects one input value
-from each range. Similarly, Boundary Value Analysis
-\cite{Ramachandran:2003:TSC:942796.943301} is used to find the
-errors at boundaries of input domain rather than finding those
-errors in the center of input. We can also mention Functional
-Coverage (also known as Inductive Testing)
-\cite{Walkinshaw:2010:IFC:1928028.1928038} where a test set is
-good enough when it achieves a given level of coverage.
+\begin{itemize}
+    \item \textbf{Black-box strategies:} Combinatorial Testing
+        (also known as Pairwise) \cite{Tai98atest} is based on
+        the observation that most faults are caused by
+        interactions of at most two factors. Here we test all the
+        possible discrete combinations of the parameters
+        involved.  Because we cannot test all the possible input
+        domain values for practical reasons, Equivalence
+        Partitioning \cite{Huang13} is a technique that divides
+        the test input data into a range of values, and selects
+        one input value from each range. Similarly, Boundary
+        Value Analysis \cite{Ramachandran:2003:TSC:942796.943301}
+        is used to find the errors at boundaries of input domain
+        rather than finding those errors in the center of input.
+        We can also mention Functional Coverage (also known as
+        Inductive Testing)
+        \cite{Walkinshaw:2010:IFC:1928028.1928038} where a test
+        set is good enough when it achieves a given level of
+        coverage;
 
-\paragraph{White-box strategies.} Fuzz Testing also known as
-Random Testing
-\cite{Duran:1981:RRT:800078.802530,Godefroid08automatedwhitebox}
-is a method that applies random mutations to well-formed inputs
-of a program, and test the resulting values. Such a technique can
-also be applied using a black-box approach though, \emph{e.g.},
-\cite{5387827}.  Statistical Testing
-\cite{Walton:1995:STS:210453.210458} is a technique where test
-data is generated by sampling from a probability distribution
-chosen so that each element of the software's structure is
-exercised with a high probability. We can also mention all
-techniques related to the code structure, such as Statement
-Testing, Path Testing, Branch Testing, Condition Testing,
-Multiple Condition (MC) Testing, and Loop Testing.  Another
-technique acts on the source code by mutating it, \emph{i.e.}  seeding
-the implementation with a fault by applying a mutation operator,
-and then determining whether testing identifies this fault. This
-is known as Mutation Testing \cite{1702444}.
+    \item \textbf{White-box strategies:} Fuzz Testing also known
+        as Random Testing
+        \cite{Duran:1981:RRT:800078.802530,Godefroid08automatedwhitebox}
+        is a method that applies random mutations to well-formed
+        inputs of a program, and test the resulting values. Such
+        a technique can also be applied using a black-box
+        approach though, \emph{e.g.}, \cite{5387827}.
+        Statistical Testing \cite{Walton:1995:STS:210453.210458}
+        is a technique where test data is generated by sampling
+        from a probability distribution chosen so that each
+        element of the software's structure is exercised with a
+        high probability. We can also mention all techniques
+        related to the code structure, such as Statement Testing,
+        Path Testing, Branch Testing, Condition Testing, Multiple
+        Condition (MC) Testing, and Loop Testing.  Another
+        technique acts on the source code by mutating it,
+        \emph{i.e.}  seeding the implementation with a fault by
+        applying a mutation operator, and then determining
+        whether testing identifies this fault. This is known as
+        Mutation Testing \cite{1702444}.
+\end{itemize}
+
+The \textbf{grey-box} approach remains vague, and does not own
+any proper strategy \emph{per se}. Nonetheless, the main
+advantage of grey-box is to be able to combine the existing
+white- and black-box strategies.
 
 While the Industry created many different testing tools (often
 originating from Academia), they mostly perform testing by hand.
