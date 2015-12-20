@@ -7,22 +7,22 @@
 
 \section{General context and motivations}
 
-I have been studying Computer Science for more than 8 years now.
-I remember my first lectures on quality assurance (QA) and
-software testing, how pointless it seemed to all of us, students
-who do not write bugs \footnote{The last part of this sentence is
-adapted from this tweet:
-\url{https://twitter.com/hipsterhacker/status/396352411754717184}.}.
-Indeed, almost a decade ago, quality assurance was not a common
-practice, and researchers had to prove what the benefits of, for
-instance, testing could be. Generally speaking, quality assurance
-is a way of preventing faults in manufactured products, which is
-defined in ISO 9000 as "part of quality management focused on
-providing confidence that quality requirements will be fulfilled"
-\cite{iso20059000}. Software testing provides information about
-the quality of software. For instance, testing can prove
-confidence of a software system by executing a program with the
-intent of finding errors, also known as "bugs"
+%I have been studying Computer Science for more than 8 years now.
+%I remember my first lectures on quality assurance (QA) and
+%software testing, how pointless it seemed to all of us, students
+%who do not write bugs \footnote{The last part of this sentence is
+%adapted from this tweet:
+%\url{https://twitter.com/hipsterhacker/status/396352411754717184}.}.
+Almost a decade ago, \emph{quality assurance} (QA) was not a
+common practice, and researchers had to prove, for instance, what
+the benefits of testing could be. Generally speaking, quality
+assurance is a way of preventing faults in manufactured products,
+which is defined in ISO 9000 as "part of quality management
+focused on providing confidence that quality requirements will be
+fulfilled" \cite{iso20059000}. \emph{Software testing} provides
+information about the quality of software. For instance, testing
+can prove confidence of a software system by executing a program
+with the intent of finding errors, also known as "bugs"
 \cite{Myers:1979:AST:539883}.
 
 Nowadays, quality assurance and software testing are well-known
@@ -42,10 +42,10 @@ of three major steps:
 \end{enumerate}
 
 Sadly, the test case execution is often the only fully automated
-aspect of this activity in the Industry. Continuous Integration
-(CI) \cite{booch1991object} is now associated with the automation
-of the execution of test cases and quick feedback, often received
-by email. There are countless tools and services
+aspect of this activity in the Industry. \emph{Continuous
+Integration} (CI) \cite{booch1991object} is now associated with
+the automation of the execution of test cases and quick feedback,
+often received by email. There are countless tools and services
 \footnote{For example, Travis CI: \url{https://travis-ci.org/}.}
 to automate this process, but too few tools have emerged to
 tackle the problem of test case generation for instance.
@@ -53,22 +53,21 @@ Fortunately, in Academia, researchers have studied such a problem
 for decades \cite{4221614}.
 
 A relatively recent field to automate and improve testing is
-Model-based Testing (MbT). While the original idea has been
-around for decades \cite{moore56}, there has been a growing
+\emph{Model-based Testing} (MbT). While the original idea has
+been around for decades \cite{moore56}, there has been a growing
 interest over the last few years.  MbT is application of (formal)
 Model-based design for designing and optionally also executing
 artifacts to perform software testing
-\cite{Jorgensen:1995:STC:526521}. The
-use of a model allows to formally describe the expected behaviors
-of a software, from which it is possible to automatically
-generate the test cases, and then to execute them.  Nonetheless,
-writing such models is tedious and error-prone, which is a
-drawback and can also explain the slow adoption of MbT in the
-Industry.
+\cite{Jorgensen:1995:STC:526521}. The use of a model allows to
+formally describe the expected behaviors of a software, from
+which it is possible to automatically generate the test cases,
+and then to execute them.  Nonetheless, writing such models is
+tedious and error-prone, which is a drawback and can also explain
+the slow adoption of MbT in the Industry.
 
-Model inference is a research field that aims at automatically
-deriving models, expressing functional behaviors of existing
-software. These models, even if incomplete, help
+\emph{Model inference} is a research field that aims at
+automatically deriving models, expressing functional behaviors of
+existing software. These models, even if incomplete, help
 understand how a software behaves. That is why model inference is
 interesting to solve the limitation of MbT mentioned previously.
 Most of the model inference techniques that are used for testing
@@ -100,7 +99,6 @@ framework (and a tool) combining different techniques to: (i)
 infer formal models from large (legacy) production systems, and
 (ii) perform passive testing in order to detect potential
 regressions.
-
 
 The next section discusses in detail the problems this thesis
 addresses. Section \ref{sec:intro:contrib} presents the
@@ -135,21 +133,24 @@ break the production flow. The main issue faced by the software
 engineers is the introduction of regressions. A regression is a
 software fault that makes a feature stop functioning as intended
 after a certain event, for instance, the deployment of a new
-version of a software.
+version of a software. Regressions have to be revealed as soon as
+possible in order to avoid production downtimes.
 
-The goal of this thesis is to help Michelin's
-engineers by preventing such regressions with testing. We want to
-determine, by means of passive testing, whether a change in one
-part of a software affects other parts of it. The main assumption
-in this work is that we choose to consider a running production
-system in a production environment (that is, a factory) as a
-fully operational system, \emph{i.e.} a system that behaves correctly.
-Such a hypothesis has been expressed by our partner. The
-inferred models can be employed for different purposes, \emph{e.g.},
-testing, but it is manifest that they should not be used for
-conformance testing in general.
+The goal of this thesis is to propose technical solutions to
+Michelin's engineers to prevent such regressions with testing.
+We determine, by means of passive testing, whether a change in
+one part of a software affects other parts of it. The main
+assumption in this work is that we choose to consider a running
+production system in a production environment (that is, a
+factory) as a fully operational system, \emph{i.e.} a system that
+behaves correctly.  Such a hypothesis has been expressed by our
+partner. The inferred models can be employed for different
+purposes, \emph{e.g.}, testing, but it is manifest that they
+should not be used for conformance testing in general. Last but
+not least, we propose scalable techniques because production
+systems exchange thousands of \emph{production events} a day.
 
-In this thesis, we propose a solution for making Michelin's
+In this thesis, we provide solutions for making Michelin's
 production systems more reliable by means of testing, to ease
 software engineers' work, thanks to two main lines:
 
@@ -179,9 +180,17 @@ The contributions of this thesis are:
     \item \textit{Autofunk}, a framework, combining several
         techniques originating from different fields such as
         expert systems, machine learning and model inference, for
-        inferring formal models of legacy software systems.
-        \textit{Autofunk}'s modular architecture allows multiple
-        extensions;
+        inferring formal models of legacy software systems. Our
+        main goal is to infer models of Michelin's production
+        systems with a \emph{black-box} approach. We choose to
+        leverage the data exchanged among the devices and
+        software in order to target most of the existing Michelin
+        applications without having to consider the programming
+        languages or frameworks used to develop any of these
+        applications. \textit{Autofunk}'s modular architecture
+        allows multiple extensions so that we can take different
+        data sources as input, and perform various tasks based on
+        the inferred models, \emph{e.g.}, testing;
 
     \item An empirical study that evaluates \textit{Autofunk} on
         web applications for inferring models. Here,
@@ -190,23 +199,30 @@ The contributions of this thesis are:
         improve the completeness of the inferred models. Several
         models can be built at different levels of abstraction,
         allowing to create, for instance, human-readable
-        documentation;
+        documentation. This preliminary work targeting web
+        applications validates our ideas and concepts to infer
+        models from data recorded in a (production) environment;
 
     \item An empirical study that evaluates \textit{Autofunk} on
         Michelin's production systems, proving that it is able to
         build exact models in an efficient manner, based on large
-        sets of traces. For now, we can define a set of traces as
+        sets of traces. For now, we define a set of traces as
         information collected from a production system, and
         describing its behaviors. A more formal definition is
         given in the sequel of this thesis. Exactness of our
         inferred models is defined by the trace-equivalence and
-        trace-inclusion relations proposed in \cite{petrenko06};
+        trace-inclusion relations proposed in \cite{petrenko06}.
+        This study shows that our model inference technique
+        scales well;
 
     \item A reduction technique for symbolic transition systems
         that is both fast and efficient, keeping the exactness of
         the models, and targeting large models. This technique
         has successfully been applied to large Michelin
-        production systems;
+        production systems. This is a context-specific reduction
+        technique that improves the usability of the inferred
+        models, favouring the adoption of \emph{Autofunk} at
+        Michelin;
 
     \item An offline passive testing technique leveraging the
         inferred models for testing production systems, along
@@ -215,20 +231,26 @@ The contributions of this thesis are:
         relations: (i) the first relation refers to the trace
         preorder relation \cite{DNH84}, and (ii) the second
         relation is used to overcome a limitation caused by the
-        partialness of the inferred models;
+        partialness of the inferred models. This testing
+        extension detects differences between two production
+        systems, \emph{i.e.} potential regressions;
 
     \item An online passive testing technique similar to the
         offline passive testing, but enabling on-the-fly testing
-        of production systems.
+        of production systems. Even if the offline passive
+        testing technique introduced in the previous point is
+        able to quickly find regressions between two systems,
+        this online passive testing approach allows to detect
+        potential regressions faster.
 \end{enumerate}
 
 \paragraph{Publications.} Most of these contributions have been
 published in the following international conference proceedings:
 
 \begin{itemize}
-    \item Actes de la 13eme {\'e}dition d’AFADL, atelier
+    \item \emph{Actes de la 13eme {\'e}dition d’AFADL, atelier
         francophone sur les Approches Formelles dans l’Assistance au
-        D{\'e}veloppement de Logiciels (AFADL'14)
+        D{\'e}veloppement de Logiciels} (AFADL'14)
         \cite{durand2014inference};
 
     \item Proceedings of the Fifth Symposium on Information and
@@ -277,30 +299,44 @@ techniques.
 model inference applied to web applications, a preliminary work
 that gave birth to \textit{Autofunk}, our modular framework for
 inferring models (and later, performing testing). This chapter
-gives an overview of \textit{Autofunk}'s very first architecture. It then
-presents how \textit{Autofunk} relies on an automatic testing technique to
-improve the completeness of the inferred models. A note on its
-implementation is then given, following by an experimentation.
-
+gives an overview of \textit{Autofunk}'s very first architecture.
+It then presents how \textit{Autofunk} relies on an automatic
+testing technique to improve the completeness of the inferred
+models. A note on its implementation is then given, following by
+an experimentation. This work has been published in \emph{Actes
+de la 13eme {\'e}dition d’AFADL, atelier francophone sur les
+Approches Formelles dans l’Assistance au D{\'e}veloppement de
+Logiciels} (AFADL'14) \cite{durand2014inference}, and in the
+Proceedings of the Fifth Symposium on Information and
+Communication Technology (SoICT'14)
+\cite{DBLP:conf/soict/DurandS14}.
 
 \textbf{Chapter \ref{sec:modelinf:prodsystems}} introduces our
-framework \textit{Autofunk} revisited to target production systems. This
-chapter gives the context that led to our choices regarding the
-design of \textit{Autofunk}. Our reduction technique that heavily reduces
-models is then presented, along with the results of a case study
-on Michelin's production systems. A whole section is dedicated to
-the implementation of \textit{Autofunk} for Michelin. Last significant
-part of this chapter is the use of a machine learning technique
-to maximize one part of our model inference technique.
+framework \textit{Autofunk} revisited to target production
+systems. This chapter gives the context that led to our choices
+regarding the design of \textit{Autofunk}. Our reduction
+technique that heavily reduces models is then presented, along
+with the results of a case study on Michelin's production
+systems. A whole section is dedicated to the implementation of
+\textit{Autofunk} for Michelin. Last significant part of this
+chapter is the use of a machine learning technique to maximize
+one part of our model inference technique. This work has been
+published in the Proceedings of Formal Methods 2015 (FM'15)
+\cite{DBLP:conf/fm/DurandS15}, and in the Proceedings of the 9th
+International Conference on Distributed Event-Based Systems
+(DEBS'15) \cite{DBLP:conf/debs/SalvaD15}.
 
 \textbf{Chapter \ref{sec:testing}} tackles the problem of testing
 production systems, without disturbing them, and without having
 any specification. It presents our work on both offline and
-online passive testing, by extending \textit{Autofunk}'s model inference
-framework. After having presented the overall idea, two algorithms
-are given and explained. The results of a case study on
-Michelin's production systems is given. Such results are related
-to the offline passive testing technique.
+online passive testing, by extending \textit{Autofunk}'s model
+inference framework. After having presented the overall idea, two
+algorithms are given and explained. The results of a case study
+on Michelin's production systems is given. Such results are
+related to the offline passive testing technique. Part of this
+work has been published in the Proceedings of the 13th
+International Conference on Formal Methods and Models for
+Co-Design (MEMOCODE'15) \cite{7340480}.
 
 \textbf{Chapter \ref{sec:conclusion}} closes the main body of the
 thesis with concluding comments and proposals for future work.
