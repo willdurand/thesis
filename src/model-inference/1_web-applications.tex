@@ -1,19 +1,33 @@
 \chapter{Model inference for web applications}
 \label{sec:modelinf:webapps}
 
-Our target has always been to be able to construct models of
-(legacy) production systems in an automated fashion. But, before
-tackling the model inference of production systems, we chose to
-validate our initial ideas and concepts by applying them on web
+Our target has always been to construct models of (legacy)
+production systems in an automated fashion. But, before tackling
+the model inference of production systems, we chose to validate
+our initial ideas and concepts by applying them on web
 applications. Given a black-box approach, web applications are
 often smaller and less complex than production systems: no
 physical devices involved, a well-known client-server
 architecture, and a well-defined protocol to exchange
 information. The purpose of this chapter is to present the
 premises of our work on model inference (of production systems)
-applied to web applications.\\
+applied to web applications.
+
+In this chapter, we introduce the first version of
+\textit{Autofunk}, our modular framework for inferring models,
+\emph{i.e.} Input/Output Symbolic Transition Systems here, by
+using a rule-based expert system. A bisimulation minimization
+technique \cite{Park:1981:CAI:647210.720030} is applied to reduce
+the model size. We generate several models of a same application
+at different levels of abstraction. \textit{Autofunk} relies on
+an \emph{automatic testing} technique to improve the completeness
+of the inferred models. We evaluate our tool on the
+GitHub\footnote{\url{https://github.com/}} website, showing
+encouraging results.\\
 
 \minitoc
+
+\pagebreak
 
 \section{Introduction}
 
@@ -53,18 +67,19 @@ to explore different options for production systems in the
 future. We present an active technique that uses automatic
 testing to stimulate the web application in order to enhance the
 completeness of the inferred models.
-We start by giving an overview of this work in the next section,
-which we describe in Section \ref{sec:modelinf:webapps:contrib}.
-We present our results in Section \ref{sec:modelinf:webapps:exp},
-and we conclude on this work in Section
-\ref{sec:modelinf:webapps:conclusion}.
 
-\textbf{Publications.} This work has been published in Actes de
-la 13eme {\'e}dition d’AFADL, atelier francophone sur les
-Approches Formelles dans l’Assistance au D{\'e}veloppement de
-Logiciels (AFADL'14) \cite{durand2014inference}, and in the
-Proceedings of the Fifth Symposium on Information and
-Communication Technology (SoICT'14)
+We start by giving an overview of this framework called
+\emph{Autofunk} in the next section, which we describe in Section
+\ref{sec:modelinf:webapps:contrib}.  We present our results in
+Section \ref{sec:modelinf:webapps:exp}, and we conclude on this
+chapter in Section \ref{sec:modelinf:webapps:conclusion}.
+
+\textbf{Publications.} This work has been published in
+\emph{Actes de la 13eme {\'e}dition d’AFADL, atelier francophone
+sur les Approches Formelles dans l’Assistance au
+D{\'e}veloppement de Logiciels} (AFADL'14)
+\cite{durand2014inference}, and in the Proceedings of the Fifth
+Symposium on Information and Communication Technology (SoICT'14)
 \cite{DBLP:conf/soict/DurandS14}.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -99,8 +114,7 @@ finite.
     \end{center}
 
     \caption{Very first overall architecture of \textit{Autofunk}, our
-    model generation framework for web applications. It is split
-    in different modules.}
+    model generation framework for web applications.}
     \label{fig:soict-framework}
     \TODO{to redraw}
 \end{figure}
@@ -132,7 +146,8 @@ applications, traces can be produced using automatic testing;
 can be modified according to the type of application being
 analyzed. This strategy offers the advantage of directly targeting
 some states of the application when its state number is too large
-for being traversed in a reasonable processing time;
+for being traversed in a reasonable processing time. Strategies
+are defined by means of inference rules;
 
 \item The knowledge encapsulated in the expert system can be used
 to cover trace sets of several applications thanks to generic
@@ -189,7 +204,7 @@ application, he often filters them out to only keep those that
 make sense against the current application. This step is done by
 the first layer whose role is to format the received HTTP traces
 into sequences of valued actions and to delete those considered
-as unnecessary. The rules of this layer depends on the nature of
+as unnecessary. The rules of this layer depend on the nature of
 the input traces. The resulting structured trace set, denoted by
 $ST$, is then given to the next layer. This process is
 incrementally done, \emph{i.e.} every time new traces are given to the
@@ -217,31 +232,33 @@ layers should own the most precise rules that may be dedicated to
 one specific application.
 
 For readability purpose, we chose to represent inference rules
-with this format: \textit{When conditions on facts Then actions on
-facts}. This format has been borrowed to the Drools inference
-engine \footnote{\url{http://www.jboss.org/drools/}}). Independently
-on the application's type, Layers 2 to N handle the following
-fact types: \textit{Location}, which represents an IOSTS location,
-and \textit{Transition}, which represents an IOSTS transition,
-composed of two locations $Linit$, $Lfinal$, and two data
-collections \textit{Guard} and \textit{Assign}. Now, it is
-manifest that the inference of models has to be done in a finite
-time and in a deterministic way. To reach that purpose, we
+with this format: \textit{When conditions on facts Then actions
+on facts}. This format has been borrowed to the Drools inference
+engine \footnote{\url{http://www.jboss.org/drools/}}.
+Independently on the application's type, Layers 2 to N handle the
+following fact types: \textit{Location}, which represents an
+IOSTS location, and \textit{Transition}, which represents an
+IOSTS transition, composed of two locations $Linit$, $Lfinal$,
+and two data collections \textit{Guard} and \textit{Assign}. It
+is manifest that the inference of models has to be done in a
+finite time and in a deterministic way, otherwise our solution
+may not be usable in practice. To reach that purpose, we
 formulate the following hypotheses on the inference rules:
 
 \begin{enumerate}
-\item Finite complexity: a rule can only be applied a limited
-number of times to the same knowledge base;
+    \item \textbf{Finite complexity:} a rule can only be applied
+        a limited number of times to the same knowledge base;
 
-\item Soundness: the inference rules are Modus Ponens (simple
-implications that lead to sound facts if the original facts are
-true: If P, then Q. P. Therefore, Q.);
+    \item \textbf{Soundness:} the inference rules are Modus
+        Ponens, \emph{i.e.} simple implications that lead to
+        sound facts if the original facts are true (P implies Q;
+        P is asserted to be true, so therefore Q must be true.);
 
-\item No implicit knowledge elimination: after the application
-of a rule $r$ expressed by the relation $r: T_i \rightarrow
-T_{i+1} (i\geq 2)$, with $T_i$ a transition base, for all
-transition $t=(l_n,l_m,a(p),G,A)$ extracted from $T_{i+1}$, $l_n$
-is reachable from $l0$.
+    \item \textbf{No implicit knowledge elimination:} after the
+        application of a rule $r$ expressed by the relation $r:
+        T_i \rightarrow T_{i+1} (i\geq 2)$, with $T_i$ a
+        transition base, for $t=(l_n,l_m,a(p),G,A)$ extracted
+        from $T_{i+1}$, $l_n$ is reachable from $l0$.
 \end{enumerate}
 
 In the following, we illustrate each layer with examples.
@@ -297,27 +314,30 @@ the following information: the HTTP verb, the target URI, the
 request content that is a collection of data (headers, content),
 and the response content that is the collection (HTTP status,
 headers, response content). A header may also be a collection of
-data or may be null. Contents are textual, \emph{e.g.}, HTML. Since
-we wish to translate such traces into IOSTSs, we turn these
+data or may be null. Contents are textual, \emph{e.g.}, HTML.
+Since we wish to translate such traces into IOSTSs, we turn these
 textual items into a structured valued action $(a(p),\theta)$
 with $a$ the HTTP verb and $\theta$ a valuation over the variable
 set $p=\{URI,request,response\}$. This is captured by the
-following proposition:
+following definition:
 
 \begin{definition}[Structured HTTP traces] Let $t=
 req_1,resp_1$, \dots, $req_n,$ $resp_n$ be a raw HTTP trace
-composed of an alternate sequence of HTTP request $req_i$ and
-HTTP response $resp_i$. The structured HTTP trace $\sigma$ of $t$
-is the sequence $(a_1(p),\theta_1) \dots (a_n(p),\theta_n)$ where:
+composed of an alternate finite sequence of HTTP request $req_i$
+and HTTP response $resp_i$. The structured HTTP trace $\sigma$ of
+$t$ is the sequence $(a_1(p),\theta_1) \dots (a_n(p),\theta_n)$
+where:
 
 \begin{itemize}
-\item $a_i$ is the HTTP verb used to make the request in $req_i$;
+    \item $a_i$ is the HTTP verb used to make the request in
+        $req_i$;
 
-\item $p$ is the parameter set $\{URI, request, response\}$;
+    \item $p$ is the parameter set $\{URI, request, response\}$;
 
-\item $\theta_i$ is a valuation $p \rightarrow D_p$ that assigns
-a value to each variables of $p$.  $\theta$ is deduced from the
-values extracted from $req_i$ and $resp_i$.
+    \item $\theta_i$ is a valuation $p \rightarrow D_p$ that
+        assigns a value to each variables of $p$.  $\theta$ is
+        deduced from the values extracted from $req_i$ and
+        $resp_i$.
 \end{itemize}
 
 The resulting structured HTTP trace set derived from the raw HTTP
@@ -385,31 +405,41 @@ formatted and filtered trace set $ST$ composed of valued actions.
 At this point, we are ready to extract the first IOSTS.
 
 \paragraph{Completeness, soundness, and complexity of Layer 1.}
-
-HTTP traces are sequences of valued actions modeled with
-positive facts. Typically, they form Horn clauses. Furthermore,
-inference rules are Modus Ponens (soundness hypothesis).
-Consequently, Layer 1 is sound and complete \cite{logicreasoning}.
-Keeping in mind the finite complexity hypothesis, its complexity
-is proportional to $\EuScript{O}m(k+1)$ with $m$ the valued
-action number and $k$ the rule number. (at worst, every action is
-covered $k+1$ times).
+HTTP traces are sequences of valued actions modeled with positive
+facts, which form Horn clauses \cite{JSL:9106942}.  Furthermore,
+inference rules are Modus Ponens (soundness hypothesis introduced
+previously).  Consequently, Layer 1 is sound and complete
+\cite{logicreasoning}.  Keeping in mind the finite complexity
+hypothesis, its complexity is proportional to
+$\EuScript{O}m(k+1)$ with $m$ the number of valued actions, and
+$k$ the number of rules. (at worst, every action is covered $k+1$
+times).
 
 \subsection{Layer 2: IOSTS transformation}
 \label{sec:modelinf:webapps:L2}
 
-An IOSTS is also associated with an IOLTS (Input/Output Labeled
-Transition System) to formulate its semantics. Intuitively, IOLTS
-semantics correspond to valued automata without symbolic
-variable, which are often infinite. IOLTS states are labeled by
-internal variable valuations while transitions are labeled by
-actions and parameter valuations. The semantics of an IOSTS
+An IOSTS is also associated with an Input/Output Labeled
+Transition System (IOLTS) to formulate its semantics
+\cite{rusu2005automatic}.  Intuitively, IOLTS semantics
+correspond to valued automata without symbolic variable, which
+are often infinite. IOLTS states are labeled by internal variable
+valuations, and transitions are labeled by actions and parameter
+valuations. The semantics of an IOSTS
 $\EuScript{S}=<L,l0,V,V0,I,\Lambda,\rightarrow>$ is the IOLTS
-$\llbracket \EuScript{S}\rrbracket = <Q,q_0,\Sigma,\rightarrow>$
-composed of valued states in $Q = L \times D_V$, $q_0=(l0,V0)$
-is the initial one, $\Sigma$ is the set of valued symbols, and
-$\rightarrow$ is the transition relation. A more complete
-definition of IOLTS semantics can be found in \cite{FTW05}.
+$\llbracket \EuScript{S}\rrbracket = <S,s_0,\Sigma,\rightarrow>$,
+where:
+
+\begin{itemize}
+    \item $S = L \times D_V$ is a set of valued states;
+
+    \item $s_0=(l0,V0) \in S$ is the initial state;
+
+    \item $\Sigma$ is a set of valued actions;
+
+    \item $\rightarrow$ is the transition relation. A more
+        complete definition of IOLTS semantics can be found in
+        \cite{FTW05}.
+\end{itemize}
 
 Given an IOSTS transition $l_1 \xrightarrow{a(p),G,A}l_2$, we
 obtain an IOLTS transition $(l_1,v)$ $\xrightarrow{a(p),\theta}
