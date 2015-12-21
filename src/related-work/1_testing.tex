@@ -888,77 +888,82 @@ works can be grouped in three different categories:
 
 \begin{itemize}
 
-    \item \textbf{Invariant satisfiability:}
-    invariants represent properties that are always true. They are
-    constructed by hand from a specification, and later checked on
-    the collected traces. Similarly to runtime verification
-    \cite{Leucker2009293}, this approach allows to test complex
-    properties on an implementation. It gave birth to several works
-    in the literature. For instance, the passive testing method,
-    presented in \cite{CMdO09}, aims to test the satisfiability of
-    invariants on Mobile ad hoc network (MANET) routing protocols.
-    Different steps are required: definition of invariants from the
-    specification, extraction of execution traces with sniffers,
-    verification of the invariants on the trace set. Other works
-    focus on \emph{Component-based System Testing}: in this case, passive
-    methods are usually used to check conformance or security. For
-    instance, the \textit{TIPS} tool \cite{5552735} performs an
-    automated analysis of the captured trace sets to determine if a
-    given set of timed extended invariants are satisfied. As in
-    \cite{CMdO09}, invariants are constructed from the specification
-    and traces are collected with network sniffers. Cavalli \emph{et al.}
-    propose an approach for testing the security of web service
-    compositions in \cite{cavalli2009passive}. Security rules are
-    here modeled with the Nomad language \cite{cuppens2005nomad},
-    which expresses authorizations or prohibitions by means of
-    time constraints. Preliminary, a rule set is manually
-    constructed from a specification. Traces of the implementation
-    are extracted with modules that are placed at each workflow
-    engine layer that executes web services. Then, the method checks,
-    with the collected traces, that the implementation does not
-    contradict security rules. Andrés \emph{et al.} presented a methodology
-    to perform passive testing of timed systems in
-    \cite{andres2012formal}. The paper gives two algorithms to decide
-    the correctness of proposed invariants with respect to a given
-    specification and algorithms to check the correctness of a log,
-    recorded from the implementation under test, with respect to an
-    invariant;
+    \item \textbf{Invariant satisfiability:} invariants represent
+        properties that are always true. They are constructed by
+        hand from a specification, and later checked on the
+        collected traces. Similarly to runtime verification
+        \cite{Leucker2009293}, this approach allows to test
+        complex properties on an implementation. It gave birth to
+        several works in the literature. For instance, the
+        passive testing method, presented in \cite{CMdO09}, aims
+        to test the satisfiability of invariants on Mobile ad hoc
+        network (MANET) routing protocols.  Different steps are
+        required: definition of invariants from the
+        specification, extraction of execution traces with
+        sniffers, verification of the invariants on the trace
+        set. Other works focus on \emph{Component-based System
+        Testing}: in this case, passive methods are usually used
+        to check conformance or security. For instance, the
+        \textit{TIPS} tool \cite{5552735} performs an automated
+        analysis of the captured trace sets to determine if a
+        given set of timed extended invariants are satisfied. As
+        in \cite{CMdO09}, invariants are constructed from the
+        specification and traces are collected with network
+        sniffers. Cavalli \emph{et al.} propose an approach for
+        testing the security of web service compositions in
+        \cite{cavalli2009passive}. Security rules are here
+        modeled with the Nomad language \cite{cuppens2005nomad},
+        which expresses authorizations or prohibitions by means
+        of time constraints. Preliminary, a rule set is manually
+        constructed from a specification. Traces of the
+        implementation are extracted with modules that are placed
+        at each workflow engine layer that executes web services.
+        Then, the method checks, with the collected traces, that
+        the implementation does not contradict security rules.
+        Andrés \emph{et al.} presented a methodology to perform
+        passive testing of timed systems in
+        \cite{andres2012formal}. The paper gives two algorithms
+        to decide the correctness of proposed invariants with
+        respect to a given specification and algorithms to check
+        the correctness of a log, recorded from the
+        implementation under test, with respect to an invariant;
 
-    \item \textbf{Forward checking:}
-    Implementation reactions are given on-the-fly to an algorithm
-    that detects incorrect behaviors by covering the specification
-    transitions with these reactions. Lee \emph{et al.} proposed a passive
-    testing method dedicated to wired protocols \cite{1621118}.
-    Protocols are modeled with \textit{Event-driven Extended Finite
-    State Machines} (EEFSM), compound of variables.  Several
-    algorithms on the EEFSM model and their applications to the OSPF
-    protocol and TCP state machines are presented. Algorithms check
-    whether partial traces, composed of actions and parameters, meet
-    a given symbolic specification on-the-fly. The analysis of the
-    symbolic specification is performed by means of configuration. A
-    configuration represents a tuple gathering the current state
-    label, and a set of assignments and guards modeling the variable
-    state;
+    \item \textbf{Forward checking:} implementation reactions are
+        given on-the-fly to an algorithm that detects incorrect
+        behaviors by covering the specification transitions with
+        these reactions. Lee \emph{et al.} proposed a passive
+        testing method dedicated to wired protocols
+        \cite{1621118}.  Protocols are modeled with
+        \textit{Event-driven Extended Finite State Machines}
+        (EEFSM), compound of variables.  Several algorithms on
+        the EEFSM model and their applications to the Open
+        Shortest Path First (OSPF) protocol and Transmission
+        Control Protocol (TCP) state machines are presented.
+        Algorithms check whether partial traces, composed of
+        actions and parameters, meet a given symbolic
+        specification on-the-fly. The analysis of the symbolic
+        specification is performed by means of configuration. A
+        configuration represents a tuple gathering the current
+        state label, and a set of assignments and guards modeling
+        the variable state;
 
-    \item \textbf{Backward checking:}
-    Alcalde \emph{et al.} proposed an approach that processes a partial
-    trace backward to narrow down the possible specifications in
-    \cite{alcalde2004network}. The algorithm performs two steps. It
-    first follows a given trace backward, from the current
-    configuration to a set of starting ones, according to the
-    specification. With this step, the algorithm finds the possible
-    starting configurations of the trace, which lead to the current
-    configuration. Then, it analyses the past of this set of starting
-    configurations, also in a backward manner, seeking for
-    configurations in which the variables are determined.  When such
-    configurations are reached, a decision is taken on the validity
-    of the studied paths (traces are completed). Such an approach is
-    usually applied as a complement to forward checking to detect
-    more errors.
-
+    \item \textbf{Backward checking:} Alcalde \emph{et al.}
+        proposed an approach that processes a partial trace
+        backward to narrow down the possible specifications in
+        \cite{alcalde2004network}. The algorithm performs two
+        steps. It first follows a given trace backward, from the
+        current configuration to a set of starting ones,
+        according to the specification. With this step, the
+        algorithm finds the possible starting configurations of
+        the trace, which lead to the current configuration. Then,
+        it analyses the past of this set of starting
+        configurations, also in a backward manner, seeking for
+        configurations in which the variables are determined.
+        When such configurations are reached, a decision is taken
+        on the validity of the studied paths (traces are
+        completed). Such an approach is usually applied as a
+        complement to forward checking to detect more errors.
 \end{itemize}
-
-\subsubsection{Why passive testing?}
 
 It is worth mentioning that passive testing has also been
 successfully applied for fault management \cite{965909}, fault
@@ -977,5 +982,5 @@ still presents interesting advantages:
         active testing is not even feasible, such as systems with
         many different components, \emph{e.g.}, software oriented
         architectures, distributed systems, but also production
-        systems.
+        systems such as the ones we target in this thesis.
 \end{itemize}
