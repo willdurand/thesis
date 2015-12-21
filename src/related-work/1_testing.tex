@@ -35,7 +35,7 @@ simulation are all verification methods.
 Validation is testing as the act of revealing bugs. That is what
 most people think testing is, and also the meaning we give to the
 word "testing" in the sequel of this thesis. Testing involves a
-(software) \textit{system under test} (SUT). The prevailing
+(software) \textit{system Under Test} (SUT). The prevailing
 intuition of testing is reflected in its operational
 characterization as an activity in which a \textit{tester} first
 generates and sends stimuli, \emph{i.e.} \textit{test input} data, to a
@@ -272,8 +272,8 @@ more reliable by means of Model-based Testing.
 \textit{Model-based Testing} (MbT) is application of Model-based
 design for designing and optionally also executing artifacts to
 perform software testing \cite{Jorgensen:1995:STC:526521}.
-Models can be used to represent the desired behavior of an SUT,
-or to represent testing strategies and a test environment.
+\emph{Models} can be used to represent the desired behavior of an
+SUT, or to represent testing strategies and a test environment.
 Model-based Testing can be summarized as a three-step process,
 which is extended in Figure \ref{fig:mbt}:
 
@@ -322,10 +322,17 @@ them to build tools or generate documentation, or (iii) reveal
 defects (validation or verification).
 
 Such models usually describe the behaviors of the software being
-modeled, and can also be known as specifications, helping
-understand and predict its behavior. There are numerous models for
-modeling software systems, and each describes different aspects
-of software behavior. For example, control flow, data flow, and
+modeled, and can also be known as \emph{specifications}, helping
+understand and predict its behavior. In the Industry, we often
+encounter a "specifications phase", as in the V-model
+\cite{rook1986controlling,mathur2010advancements}, that is done
+before the "coding phase". Yet, the term "specification" refers
+to "a detailed formulation [...], which provides a definitive
+description of a system for the purpose of developing or
+validating the system" \cite{5733835}, which is a less
+restrictive definition.  There are numerous models for modeling
+software systems, and each describes different aspects of
+software behavior. For example, control flow, data flow, and
 program dependency graphs express how the implementation behaves
 by representing its source code structure. It is worth mentioning
 that a model does not have to completely describe it to be
@@ -335,57 +342,62 @@ We can classify models that can be employed for testing into two
 categories (these lists are not exhaustive):
 
 \begin{itemize}
-    \item \textbf{Behavior/Control oriented:} Finite Automata (like
-        Finite State Machines, Symbolic Transition Systems, and Labeled
-        Transition Systems) are well-known in software testing. They are
-        very generic and flexible, and are a good fit when it comes to
-        model software systems. For real-time and/or safety-critical
-        systems, we often rely on Synchronous Languages such as Lustre
-        \cite{lustre:ieee} and SCADE
-        \cite{LeSergent:2011:SCF:2188575.2188578}. We can also mention
-        Petri Nets, Finite State Machines, and timed automata
-        \cite{Alur94atheory};
+    \item \textbf{Behavior/Control oriented:} \emph{Finite
+        Automata} (like \emph{Finite State Machines},
+        \emph{Symbolic Transition Systems}, and \emph{Labeled
+        Transition Systems}) are well-known in software testing.
+        They are very generic and flexible, and are a good fit
+        when it comes to model software systems. For real-time
+        and/or safety-critical systems, we often rely on
+        synchronous languages such as \emph{Lustre}
+        \cite{lustre:ieee} and \emph{SCADE}
+        \cite{LeSergent:2011:SCF:2188575.2188578}. We can also
+        mention \emph{Petri Nets}, \emph{Finite State Machines},
+        and \emph{Timed Automata} \cite{Alur94atheory};
 
     \item \textbf{Data oriented (pre/post):} often using annotation
         languages originating from the \textit{Design-By-Contract}
         paradigm \cite{Meyer:1992:ADC:618974.619797}. These languages
-        make it possible to express formal properties (invariants,
-        pre/post-conditions) that directly annotate program entities
-        (such as classes, methods, attributes) in the source code. Many
-        annotation languages exist, such as the Java Modeling Language
-        \cite{jml}, Spec\# \cite{117852}, the Object Constraint Language
-        \cite{Warmer:1998:OCL:291202}, the B-Method
-        \cite{Lano:1996:BLM:525749}, and Praspel
-\cite{Enderlin:2011:PSL:2075545.2075551}.
+        make it possible to express formal properties
+        (invariants, pre/post-conditions) that directly annotate
+        program entities (such as classes, methods, attributes)
+        in the source code. Many annotation languages exist, such
+        as the \emph{Java Modeling Language} (JML) \cite{jml},
+        \emph{Spec\#} \cite{117852}, the \emph{Object Constraint
+        Language} (OCL) \cite{Warmer:1998:OCL:291202}, the
+        \emph{B-Method} \cite{Lano:1996:BLM:525749}, and
+        \emph{Praspel} \cite{Enderlin:2011:PSL:2075545.2075551}.
 \end{itemize}
 
 In \cite{Sommerville:1997:REG:549198}, Sommerville and Sawyer
 give some guidelines for choosing a model for software
 requirements. The choice of a model depends on many factors, such
-as aspects of the system under test or the testing goal.  Below
-we introduce a few definitions of formal models that we use in
-this thesis. We mainly work with behavior-oriented models that
+as aspects of the system under test or the testing goal.
+
+Below we introduce a few definitions of formal models that we use
+in this thesis. We mainly work with behavior-oriented models that
 are finite automata since they are particularly suitable for
 modeling both web applications and production systems behaviors.
 
 \subsubsection{Model definitions}
 
-\paragraph{Labeled Transition Systems}
+\paragraph{Labeled Transition Systems.}
 \label{sec:definitions:lts}
 
-A \textit{Labeled Transition System} is a model compound of
-states with transitions, labeled with actions, between them.
-The states model the system states and the labeled transitions
-model the actions that a system can perform.
-
-We give the definition of the LTS model below, but we refer to
-\cite{ltsTretmans} for a more detailed description.
+A \textit{Labeled Transition System} (LTS)
+\cite{milner1980calculus} is a model compound of \emph{states}
+with \emph{transitions}, labeled with actions, between them.  The
+states model the system states and the labeled transitions model
+the actions that a system can perform.  We give the definition of
+the LTS model below, but we refer to \cite{ltsTretmans} for a
+more detailed description.
 
 \begin{definition}[Labeled Transition System]
-    A labeled transition system is a 4-tuple $<Q,L,T,q_0>$ where:
+    A Labeled Transition System (LTS) is a 4-tuple $<Q,L,T,q_0>$
+    where:
 
     \begin{itemize}
-    \item $Q$ is a countable, non-empty set of state;
+    \item $Q$ is a countable, non-empty set of states;
 
     \item $L$ is a countable set of labels;
 
@@ -397,76 +409,101 @@ We give the definition of the LTS model below, but we refer to
     \end{itemize}
 
     We write $q \xrightarrow[]{t} q'$ if there is a transition
-    labeled $t$ from state $q$ to state $q'$ , \emph{i.e.}, $(q, t, q')
-    \in T$.
+    labeled $t$ from state $q$ to state $q'$ , \emph{i.e.} $(q,
+    t, q') \in T$.
+
+    The labels in $L$ represent the observable actions of a
+    system, \emph{i.e.} the interactions of the system with its
+    environment.
+    Internal actions are denoted by the special label $\tau
+    \not\in L$. Both $\tau$ and states are assumed to be
+    unobservable for the environment.
 
 	\label{def:lts}
 \end{definition}
 
+\begin{example}
+    Figure \ref{fig:lts-example} presents the Labeled Transition
+    System $lts_{machine}$ representing a coffee machine. There
+    is a button interaction ($button$), and labels for coffee
+    ($coffee$) and tea ($tea$). It is a graph where nodes
+    represent states, and labeled edges represent transitions.
 
-\paragraph{Symbolic Transition Systems}
+    We have $lts_{machine} = <\{ S1, S2, S3, S4 \}, \{ button, coffee, tea
+    \}, \{ <S1, button, S2>, <S2, coffee, S3>, <S2, tea, S4> \},
+    S1>$, and we can write $S1 \xrightarrow[]{button} S2$, and
+    also $S1 \xrightarrow[]{button \cdot coffee} S3$, however $S1
+    \not\xrightarrow[]{button \cdot tea} S3$.
+
+    \begin{figure}[ht]
+        \begin{center}
+            \includegraphics[width=0.7\linewidth]{figures/lts.png}
+        \end{center}
+
+        \caption{An example of a Labeled Transition System
+        representing a coffee machine.}
+        \label{fig:lts-example}
+    \end{figure}
+\end{example}
+
+\paragraph{Symbolic Transition Systems.}
 \label{sec:definitions:sts}
 
-The \textit{Symbolic Transition System} (STS) is known as a very
-general and powerful model for describing several aspects of
-event-based systems. The use of symbolic variables
-helps describe infinite state machines in a finite manner. This
-potentially infinite behavior is represented by the semantics of
-a STS, given in terms of \textit{Labeled Transition System}
-(LTS). STS operations and transformations are often given with
-inference rules.
-
-We give some definitions related to the STS model below, but we
-refer to \cite{FTW05} for a more detailed description.
-
-\begin{definition}[Variable assignment]
-We assume that there exist a domain of values denoted by $D$ and
-a variable set $X$ taking values in $D$. The assignment of
-variables in $Y \subseteq X$ to elements of $D$ is denoted by
-$\alpha: Y \rightarrow D$. $\alpha(x)$ denotes the assignment of
-the variable $x$ to a value in $D$.
-
-We denote by $D_Y$ the assignment set over $Y$. We also denote by
-$id_Y$ the identity assignment over $Y$. Finally, $v_\emptyset$
-is the empty assignment.
-\end{definition}
+The \textit{Symbolic Transition System} (STS)
+\cite{hennessy1995symbolic} is known as a very general and
+powerful model for describing several aspects of event-based
+systems. Symbolic Transition Systems (STSs) extend on LTSs by
+incorporating the notion of data and data-dependent control flow.
+The use of symbolic variables helps describe infinite state
+machines in a finite manner. This potentially infinite behavior
+is represented by the semantics of a STS, given in terms of LTS.
+STS operations and transformations are often given with inference
+rules. We give some definitions related to the STS model below,
+but we refer to \cite{FTW05} for a more detailed description.
 
 \begin{definition}[Symbolic Transition System]
-	A Symbolic Transition System (STS) consists of locations and
-    transitions between locations. It is defined as a tuple $<
-    L,l0,V,V0,I,\Lambda,$ $\rightarrow>$, where:
+    A Symbolic Transition System (STS) consists of
+    \emph{locations} and \emph{transitions} between locations.
+    Locations can be seen as symbolic states.
+    A STS is defined as a tuple
+    $<L,l0,V,V0,I,\Lambda,\rightarrow>$, where:
 
-	\begin{itemize}
-        \item STSs do not have \textbf{states but locations}
-        (a.k.a. symbolic states), and $L$ is the finite location
-        set, with $l0$ being the initial one;
+    \begin{itemize}
+        \item $L$ is a countable set of locations;
 
-        \item $V$ is the finite set of internal variables, while
-        $I$ is the finite set of parameters. The internal
-        variables are initialized with the condition $V0$ on
-        $V$;
+        \item $l0 \in L$ is the initial location;
 
-        \item $\Lambda$ is the finite set of symbolic actions
-        $a(p)$ ($a$ being a symbol), with $p=(p_1,\dots ,p_k)$ a
-        finite set of parameters in $I^{k} (k \in \mathbb{N})$;
+        \item $V$ is a finite set of location (or internal)
+            variables;
 
-        \item $\rightarrow$ is the finite set of symbolic
+        \item $V0$ is a condition on the initialization of the
+            location variables $V$;
+
+        \item $I$ is a finite set of parameters (also known as
+            interaction variables), disjoint from $V$;
+
+        \item $\Lambda$ is a finite set of symbolic actions
+            $a(p)$ with $a$ a symbol, and $p=(p_1,\dots ,p_k)$ a
+            finite set of parameters in $I^{k} (k \in
+            \mathbb{N})$;
+
+        \item $\rightarrow$ is a finite set of symbolic
             transitions. A symbolic transition $t =
-            (l_i,l_j,a(p),G,\\A)$, from the location $l_i \in L$
-            to $l_j \in L$, also denoted by $l_i
-            \xrightarrow{a(p),G,A} l_j$, is labeled by:
+            (l_i,l_j,a(p),G,\\A) \in \rightarrow$, from the
+            location $l_i \in L$ to $l_j \in L$, also denoted by
+            $l_i \xrightarrow{a(p),G,A} l_j$, is labeled by:
 
 		\begin{itemize}
-            \item an action $a(p) \in \Lambda$;
+            \item An action $a(p) \in \Lambda$;
 
-            \item a guard $G$ over $(p \cup V)$, which
+            \item A guard $G$ over $(p \cup V)$, which
             restricts the firing of the transition. Throughout
-            this thesis, we consider guards written as
-            conjunctions of equalities: $\displaystyle
+            this thesis, we often consider guards written as
+            \textbf{conjunctions} of equalities: $\displaystyle
             \bigwedge_{x \in I \cup V} (x == val)$;
 
-            \item an assignment $A$ which defines the evolution
-            of the proper variables, $A_x$ being the function in
+            \item An assignment $A$ that defines the evolution
+            of the variables, $A_x$ being the function in
             $A$ defining the evolution of the variable $x \in V$.
 		\end{itemize}
 	\end{itemize}
@@ -474,11 +511,11 @@ is the empty assignment.
 	\label{def:sts}
 \end{definition}
 
-We also denote by $Proj_{x}(G)$ the projection of the guard $G$ over
-the variable $x \in I \cup V$, which extracts the equality
-$(x==val)$ from $G$. For example, given the guard $G_1 = [nsys==1
-\wedge nsec==8 \wedge point==1 \wedge pid==1]$, $Proj_{nsys}(G_1)
-= (nsys==1)$.
+We also denote by $Proj_{x}(G)$ the projection of the guard $G$
+over the variable $x \in I \cup V$, which extracts the equality
+$(x==val)$ from $G$. For example, given the guard $G_1 =
+[(nsys==1) \wedge (nsec==8) \wedge (point==1) \wedge (pid==1)]$,
+$Proj_{nsys}(G_1) = (nsys==1)$.
 
 For readability purpose, if $A$ is the identity function $id_V$,
 we denote a transition by $l_i \xrightarrow{a(p),G} l_j$. We
@@ -488,37 +525,90 @@ represent STS paths: $l \xRightarrow{(a_1,G_1,A_1)\dots
 \xrightarrow{a_1,G_1,A_1} l_1\dots
 l_{n-1}\xrightarrow{a_n,G_n,A_n}l_n=l'$.
 
-\paragraph{Labeled Transition System semantics}
+\begin{example}
+    Figure \ref{fig:sts-example} presents the Symbolic Transition
+    System $sts_{machine}$ representing a simple slot-machine, as
+    in \cite{FTW05}. The first arrow on $L0$ indicates the
+    initial location, and the fact that the machine starts with
+    no money ($v = 0$). A player can insert a coin ($coin$), and
+    win the jackpot in a non-deterministic manner ($v$ coins are
+    passed over parameter $i$ of output action $tray$), or lose
+    his money ($(i == 0)$). After that, the machine behaves as
+    initially, but with a different amount of coins.
+
+    We have $sts_{machine} = <\{L0, L1, L2, L3\}, L0, \{ v \}, \{
+    v \mapsto 0 \}, \{ i \}, \{ coin, tray \}, \rightarrow >$
+    where $\rightarrow$ is given by the directed edges between
+    the locations in Figure \ref{fig:sts-example}.  We can write
+    $L2 \xrightarrow{tray(i), G_{1} = [(i == 0)]} L0$, and
+    $Proj_{i}(G_{1}) = (i == 0)$.
+
+    \begin{figure}[ht]
+        \begin{center}
+            \includegraphics[width=0.7\linewidth]{figures/sts-example.png}
+        \end{center}
+
+        \caption{An example of Symbolic Transition System
+        representing a simple slot-machine.}
+        \label{fig:sts-example}
+    \end{figure}
+
+    \label{example:sts}
+\end{example}
+
+\begin{definition}[Variable assignment (valuation)]
+    We assume that there exists a domain of values denoted by
+    $D$, and a variable set $X$ taking values in $D$. The
+    \emph{assignment} of variables in $Y \subseteq X$ to elements
+    of $D$ is denoted by the function $\alpha: Y \rightarrow D$.
+    $\alpha(x)$ denotes the assignment of the variable $x$ to a
+    value in $D$.
+
+    The empty variable assignment is denoted by $v_\emptyset$.
+
+    We denote by $D_Y$ the set of all variable assignments over
+    $Y$: $D_Y = \{ \alpha : Y \rightarrow D | v \text{ is a
+    variable assignment of } Y \}$. We also denote by $id_Y$ the
+    identity assignment over $Y$: $\forall x \in Y, id_Y(x)
+    = x$.
+
+    Finally, the \emph{satisfaction} of a first order formula
+    \cite{huth2004logic} (\emph{i.e.} a guard) $\phi$ with
+    respect to a given variable assignment $\alpha$ is denoted by
+    $\alpha \models \phi$.
+\end{definition}
+
+\paragraph{Labeled Transition System semantics.}
 \label{sec:definitions:lts-semantics}
 
-A STS is associated with a Labeled Transition System (LTS) to
-formulate its semantics. Intuitively, a LTS semantics corresponds
-to a valued state machine, without symbolic variables, which is
+A STS is associated with a Labeled Transition System to formulate
+its \emph{semantics} \cite{FTW05}. A LTS semantics corresponds to
+a valued state machine, without symbolic variables, which is
 often infinite: the LTS states are labeled by internal variable
 assignments while transitions are labeled by actions combined
 with parameter assignments.
 
 \begin{definition}[Labeled Transition System semantics]
-    The semantics of a STS $\EuScript{S}=<L,l0,$ $V,$ $V0,$
-    $I,\Lambda,\rightarrow>$ is the LTS
-    $||\EuScript{S}||=<Q,q_0,\sum,\rightarrow>$ where:
+    As defined in \cite{FTW05}, the semantics of a STS
+    $\EuScript{S}=<L,l0,$ $V,$ $V0, I,\Lambda,\rightarrow>$ is
+    the LTS $||\EuScript{S}||=<Q,q_0,\sum,\rightarrow>$ where:
 
 	\begin{itemize}
 
-		\item $Q=L \times D_V$ is the set of states;
+        \item $Q=L \times D_V$ is a finite set of states;
 
         \item $q_0=(l0,V0)$ is the initial state;
 
-		\item $\sum=\{(a(p),\alpha)  \mid  a(p)\in\Lambda, \alpha \in
-		D_p\}$ is the set of valued events;
+        \item $\sum=\{(a(p),\alpha)  \mid  a(p)\in\Lambda, \alpha
+            \in D_p\}$ is the set of \emph{valued actions};
 
         \item $\rightarrow$ is the transition relation $Q \times
-        \Sigma \times Q$ deduced by the following rule:\\
+            \Sigma \times Q$ defined by the following rule:\\
 	\end{itemize}
-	\begin{center}
+    \begin{center}
     {\Large
     $\frac{l_1 \xrightarrow{a(p),G,A}l_2,\alpha \in D_p, v \in D_V, v'
-        \in D_V, v \cup \alpha \models G, v'=A(v \cup \alpha))}{(l_1,v)
+        \in D_V, v \cup \alpha \models G, v'=A(v \cup \alpha)}{(l_1,v)
             \xrightarrow{a(p),\alpha} (l_2,v') }$
     }
 	\end{center}
@@ -526,72 +616,112 @@ with parameter assignments.
 	\label{def:semantics}
 \end{definition}
 
-This rule can be read as follows: for a STS transition $l_1
+The rule above can be read as follows: for a STS transition $l_1
 \xrightarrow{a(p),G,A}l_2$, we obtain a LTS transition $(l_1,v)$
 $\xrightarrow{a(p),\alpha} (l_2,v')$ with $v$ a variable
-assignment over the internal variable set, if there exists an
+assignment over the internal variable set if there exists an
 assignment $\alpha$ such that the guard $G$ evaluates to true
 with $v \cup \alpha$. Once the transition is executed, the
 internal variables are assigned with $v'$ derived from the
 assignment $A(v \cup \alpha)$.
 
-In addition, runs and traces, which represent executions and
-event sequences, can also be derived from LTS semantics:
+In addition, \emph{runs} and \emph{traces}, which represent
+\emph{executions} and \emph{event sequences}, can also be derived
+from LTS semantics:
 
 \begin{definition}[Runs and traces]
     Given a STS $\EuScript{S}=$ $<L,l0,V,V0,I,\Lambda,
-	\rightarrow>$, interpreted by its LTS semantics
+    \rightarrow>$, interpreted by its LTS semantics
 	$||\EuScript{S}||=<Q,q_0,\sum,\rightarrow>$, a run $q_0
-	\alpha_0 \dots \alpha_{n-1} q_n$ is an alternate sequence of states
-    and valued actions. $Run(\EuScript{S})=Run(||\EuScript{S}||)$ is
-	the set of runs found in $||\EuScript{S}||$.
+    \alpha_0 \dots \alpha_{n-1} q_n$ is an alternate finite
+    sequence of states and valued actions.
+    $Run(\EuScript{S})=Run(||\EuScript{S}||)$ is the set of runs
+    found in $||\EuScript{S}||$.
 
     It follows that a trace of a run $r$ is defined as the
     projection $proj_{\sum}(r)$ on the actions.
 
-	\label{def:runs-and-traces}
+    \label{def:runs-and-traces}
 \end{definition}
 
-\paragraph{Input/Output Symbolic Transition Systems}
+\paragraph{Input/Output Symbolic Transition Systems.}
 \label{sec:definitions:iosts}
 
-An Input/Output Symbolic Transition System (IOSTS) is a STS where
-the action set is divided into two subsets: one containing the
-inputs, beginning by $?$, to express actions expected by the
-system, and another containing outputs, beginning by $!$, to
-express actions produced by the system.
+An Input/Output Symbolic Transition System (IOSTS)
+\cite{Rusu:2000:AST:647982.743536} is a STS where the action set
+is divided into two subsets: one containing the inputs, beginning
+with $?$, to express actions expected by the system, and another
+containing outputs, beginning with $!$, to express actions
+produced by the system. When no output action is possible, the
+only observation that can be made is \emph{quiescence}
+\cite{Tre96}.
 
 \begin{definition}[Input/Output Symbolic Transition System]
-An Input/Output Symbolic Transition System (IOSTS) $\EuScript{S}$
-is a tuple $< L,l0,V,V0,I,\Lambda,\rightarrow>$, where:
+    As defined in \cite{Rusu:2000:AST:647982.743536}, an
+    Input/Output Symbolic Transition System (IOSTS)
+    $\EuScript{S}$ is a tuple $<L,l0,V,V0,I,\Lambda,\rightarrow>$, where:
 
 \begin{itemize}
-\item $L$ is the finite set of locations, $l0$ the initial
-location;
+    \item $L$ is a finite set of locations;
 
-\item $V$ is the finite set of internal variables, $I$ is the
-finite set of parameters. The internal variables are initialized
-with the assignment $V0$ on $V$, which is assumed to be unique;
+    \item $l0 \in L$ the initial location;
 
-\item $\Lambda$ is a finite set of symbolic actions $a(p)$, with
-$p = (p_1,\dots,p_k)$ a finite list of parameters in $I^k(k \in
-\mathbb{N})$. $p$ is assumed unique. $\Lambda= \Lambda^I  \cup
-\Lambda^O \cup \{!\delta \}$: $\Lambda^I$ represents the set of
-input actions, $\Lambda^O$ the set of output actions, and
-$\delta$ the quiescence;
+    \item $V$ is a finite set of location (or internal)
+        variables;
 
-\item $\rightarrow$ is the finite transition set. A transition
-$(l_i,l_j,a(p),G,A)$, from the location $l_i \in L$ to $l_j \in
-L$, denoted by $l_i \xrightarrow{a(p),G,A} l_j$ is labeled by: an
-action $a(p) \in \Lambda$, a guard  $G$ over $(p \cup V \cup T(p
-\cup V))$ that restricts the firing of the transition. $T(p \cup
-V)$ is a set of functions that return boolean values only (a.k.a.
-predicates) over $p \cup V$, an assignment function $A$ that
-updates internal variables. $A$ is on of the form $(x:=A_x)_{x\in
-V}$, where $A_x$ is an expression over $V \cup p \cup T(p \cup
-V)$.
+    \item $V0$ is a condition on the initialization of the
+        location variables $V$;
+
+    \item $I$ is a finite set of parameters, disjoint from $V$;
+
+    \item $\Lambda$ is a finite set of symbolic actions $a(p)$,
+        with $a$ a symbol, and $p = (p_1,\dots,p_k)$ a finite set
+        of parameters in $I^k(k \in \mathbb{N})$. $p$ is assumed
+        unique. $\Lambda$ is partitioned into a set of input
+        actions $\Lambda^I$ and a set of output actions
+        $\Lambda^O$, and we write $\Lambda = \Lambda^I \cup
+        \Lambda^O \cup \{!\delta \}$: $\Lambda^I$, with $\delta$
+        the quiescence;
+
+    \item $\rightarrow$ is a finite set of symbolic transitions.
+        A symbolic transition $(l_i,l_j,a(p),G,A)$, from the
+        location $l_i \in L$ to $l_j \in L$, also denoted by $l_i
+        \xrightarrow{a(p),G,A} l_j$, is labeled by:
+
+        \begin{itemize}
+            \item A action $a(p) \in \Lambda$;
+
+            \item A guard  $G$ over $(p \cup V \cup T(p \cup
+                V))$, which restricts the firing of the
+                transition. $T(p \cup V)$ is a set of functions
+                that return boolean values only (also known as
+                predicates) over $p \cup V$;
+
+            \item An assignment $A$ that defines the evolution of
+                the variables. $A$ is of the form $(x:=A_x)_{x\in
+                V}$, where $A_x$ is an expression over $V \cup p
+                \cup T(p \cup V)$.
+        \end{itemize}
 \end{itemize}
 \end{definition}
+
+\begin{example}
+    Figure \ref{fig:iosts-example} is the IOSTS of the
+    slot-machine introduced in Example \vref{example:sts}.  We
+    have $iosts_{machine} = <\{L0, L1, L2, L3\}, L0, \{ v \}, \{
+    v \mapsto 0 \}, \{ i \}, \{ coin?, tray! \}, \rightarrow >$
+    with $\Lambda^I = \{ coin? \}$ and $\Lambda^O = \{ tray! \}$.
+
+    \begin{figure}[ht]
+        \begin{center}
+            \includegraphics[width=0.7\linewidth]{figures/iosts-example.png}
+        \end{center}
+
+        \caption{An example of Input/Output Symbolic Transition
+        System representing a simple slot-machine.}
+        \label{fig:iosts-example}
+    \end{figure}
+\end{example}
 
 \subsubsection{Common terms in MbT}
 
