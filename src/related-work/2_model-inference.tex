@@ -55,19 +55,19 @@ passive methods since no interaction is required.
 
 In the following section, we give an overview of prominent active
 inference approaches: we introduce $\EuScript{L}^*$-based
-techniques in Section \vref{sec:active-letoile}, incremental
-learning techniques in Section \vref{sec:active-increment}, and
+techniques on the next page, incremental
+learning techniques on page \pageref{sec:active-increment}, and
 the model generation by means of automatic testing of
 event-driven applications providing Graphical User Interfaces
-GUIs) in Section \vref{sec:active-crawling}. Passive inference
+GUIs) on page \pageref{sec:active-crawling}. Passive inference
 techniques are extensively described in Section
 \vref{sec:passive}. We cover passive inference techniques using
-event sequence-based abstraction in Section
-\vref{sec:passive-fsa}, using state-based abstraction in Section
-\vref{sec:passive-spec}. Then, we present some white-box
-approaches in Section \vref{sec:passive-white}, and we also
+event sequence-based abstraction on page
+\pageref{sec:passive-fsa}, using state-based abstraction on page
+\pageref{sec:passive-spec}. Then, we present some white-box
+approaches on page \pageref{sec:passive-white}, and we also
 mention a few techniques that leverage documentation to infer
-models in Section \vref{sec:passive-others}.
+models on page \pageref{sec:passive-others}.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
@@ -93,7 +93,7 @@ automatic testing. We introduce some of them on page
 
 \begin{figure}[h]
     \begin{center}
-        \includegraphics[width=0.9\linewidth]{figures/active.png}
+        \includegraphics[width=1.0\linewidth]{figures/active.png}
     \end{center}
 
     \caption{Active model inference principle. Interactions are
@@ -139,7 +139,7 @@ two kinds of queries, as depicted in Figure \ref{fig:angluin}:
 
 \begin{figure}[h]
     \begin{center}
-        \includegraphics[width=0.9\linewidth]{figures/angluin.png}
+        \includegraphics[width=1.0\linewidth]{figures/angluin.png}
     \end{center}
 
     \caption{The principle of $\EuScript{L}^*$-based learning
@@ -179,10 +179,8 @@ disadvantages of requiring a lot of iterations and an heavy use
 of an expert oracle. Several papers focused on these issues by
 revisiting \cite{regularinfBerg06,regularinfBerg08}, optimizing
 and/or upgrading $\EuScript{L}^*$
-\cite{Raffelt:2005:LLA:1081180.1081189,irfan12}, others proposed
-to apply it in specific application contexts, as summarized
+\cite{Raffelt:2005:LLA:1081180.1081189,irfan12} as summarized
 below.
-\TODO{add more refs}
 
 Raffelt \emph{et al.} introduced \textit{LearnLib}
 \cite{Raffelt:2005:LLA:1081180.1081189}, a library for learning
@@ -378,13 +376,15 @@ represented with transitions and states in a graph or state
 machine, which expresses the functional behavior of the
 application observed from its GUI. As the number of screens may
 be infinite, some approaches require state abstractions to limit
-the model size, and a few others merge equivalence states (the
-equivalence relation being defined with regards to the context of
-the application).
+the model size
+\cite{MobiGUITARIEEESoftware2014,guitar,5954416,WPX13,SP15}, and
+a few others merge equivalence states
+\cite{crawljax:tweb12,4656395} (the equivalence relation being
+defined with regards to the context of the application).
 
 \begin{figure}[ht]
     \begin{center}
-        \includegraphics[width=0.9\linewidth]{figures/crawler.png}
+        \includegraphics[width=1.0\linewidth]{figures/crawler.png}
     \end{center}
 
     \caption{The principle of inferring models with crawling
@@ -393,63 +393,6 @@ the application).
 	using the information gathered by the test engine.}
     \label{fig:crawler}
 \end{figure}
-
-\begin{table}
-	\begin{tabular}{| c | c | c | c | c | c | c |}
-
-		\hline
-
-		Paper &2& 3 & 4& 5 & 6 & 7 	\\
-		\hline
-
-		%\cite{monkey}                           &mobile                 &B  &  &IM &Random   & Yes	\\
-
-		\cite{hungar2002}                       &distributed
-        systems   &B  &  &FM&$\EuScript{L}^*$       & \\
-
-		%\cite{Memon:2003}                        &desktop                &B  &  &M &DFS      &  \\
-
-		\cite{5416728}                          &web                    &B  &  &  &Concolic & Yes \\
-
-		\cite{concolicandroid12}                &mobile                 &W  &  &  &Concolic & 					\\
-
-		\cite{Joorabchi:2012:REI:2420240.2420457}                    &mobile                 &B  &  &IM &DFS		& Yes 			 		\\
-
-		\cite{webmate12}                        &web                    &B  &  &IM &         & Yes \\
-
-		%\cite{dynodroid}                        &mobile                 &B  &Yes &  &Random 	& Yes		\\
-
-		\cite{5954416,Amalfitano:2012:UGR:2351676.2351717}     &mobile                 &B  &  &IM &BFS DFS 	& Yes	\\
-
-		\cite{guitar,MobiGUITARIEEESoftware2014}          &desktop, mobile        &B	&  &FM &DFS		& Yes  \\
-
-		\cite{crawljax:tweb12}                  &web                    &B	&  &FM&Multiple &	\\
-
-		\cite{4656395}                          &web                    &B 	&  &IM &DFS 		&   \\
-
-		\cite{Choi2013}                         &mobile                 &B  &  &FM&DFS      &   \\
-
-		\cite{WPX13}                            &mobile                 &G  &  &IM &Multiple(2)		& 	\\
-
-		\cite{Azim13}                           &mobile                 &G	&Yes &IM &DFS		& Yes \\
-
-		\cite{SP15}								&mobile                 &B	&Yes &FM &Multiple		& Yes \\
-		\hline
-	\end{tabular}
-	\\
-
-	\caption{An overview of some works on GUI application
-	crawling. Column 2 represents the type of application under
-	analysis. Column 3 indicated the accessibility (black-box
-	(B), white-box (W), grey-box (G)). Column 4 gives whether the
-	technique requires an external environment. Column 5
-	indicates whether the technique builds formal models (FM) or
-	informal models (IM). Column 6 gives the strategy or
-	algorithm used to crawl the application. Last column (7)
-	shows whether the technique handles potential crashes, \emph{i.e.}
-	errors encountered during crawling.}
-	\label{table:gui_works}
-\end{table}
 
 All these approaches focus on different applications seen in
 different viewpoints. We chose to summarize them in Table
@@ -597,12 +540,79 @@ different viewpoints. We chose to summarize them in Table
 	others.
 \end{itemize}
 
+\begin{sidewaystable}
+    \begin{center}
+	\begin{tabular}{| c | c | c | c | c | c | c |}
+
+		\hline
+
+        Paper & Type & Accessibility & External environment & Model
+        generation & Strategy & Crash report \\
+		\hline
+
+        %\cite{monkey} &mobile &B  &  &IM &Random   & Yes	\\
+		%\cite{Memon:2003} &desktop &B  &  &M &DFS      &  \\
+        %\cite{dynodroid} &mobile &B  &Yes &  &Random 	& Yes		\\
+
+        \cite{hungar2002} & distributed systems & Black-box & No &
+        Formal & $\EuScript{L}^*$ & No
+        \\
+        \cite{5416728} &web & Black-box  & No  &  & Concolic & \textbf{Yes}
+        \\
+        \cite{concolicandroid12} & mobile & White-box  & No &  &
+        Concolic & No
+        \\
+        \cite{Joorabchi:2012:REI:2420240.2420457} & mobile &
+        Black-box & No & Informal & DFS & \textbf{Yes}
+        \\
+		\cite{webmate12} & web & Black-box & No & Informal & & \textbf{Yes}
+        \\
+        \cite{5954416,Amalfitano:2012:UGR:2351676.2351717} &
+        mobile & Black-box  & No & Informal  & BFS, DFS & \textbf{Yes}
+        \\
+		\cite{guitar,MobiGUITARIEEESoftware2014} & desktop,
+		mobile & Black-box & No & Formal & DFS & \textbf{Yes}
+        \\
+        \cite{crawljax:tweb12} & web & Black-box & No & Formal &
+        Multiple & No
+        \\
+        \cite{4656395} & web & Black-box & No & Informal & DFS & No
+        \\
+        \cite{Choi2013} & mobile & Black-box & No & Formal & DFS &
+        No
+        \\
+		\cite{WPX13} & mobile & Grey-box & No & Informal & Multiple
+		& No
+        \\
+        \cite{Azim13} & mobile & Grey-box & \textbf{Yes} & Informal & DFS
+        & \textbf{Yes}
+        \\
+        \cite{SP15} & mobile & Black-box & \textbf{Yes} & Formal &
+        Multiple & \textbf{Yes}
+        \\
+		\hline
+	\end{tabular}
+\end{center}
+
+    \caption{An overview of some works on GUI application
+    crawling. Column 2 represents the type of application under
+    analysis. Column 3 indicated the accessibility (black-,
+    grey-, or white-box). Column 4 gives whether the technique
+    requires an external environment. Column 5 indicates whether
+    the technique builds formal models or informal models. Column
+    6 gives the strategy or algorithm used to crawl the
+    application. Last column (7) shows whether the technique
+    handles potential crashes, \emph{i.e.} errors encountered
+    during crawling.}
+	\label{table:gui_works}
+\end{sidewaystable}
+
 Active inference approaches repeatedly query systems or humans to
 collect positive or negative observations. Nonetheless, this can
-lead to some issues like disturbing the system for instance. This
-is not always suitable, and that is why another category of
-methods infer models in a passive manner, \emph{i.e.} without
-stimulating the software system.  In the next section, we
+lead to some issues like disturbing the system for instance.
+That is why we did not choose to perform active model inference,
+but rather passive model inference, \emph{i.e.} without
+stimulating the software system. In the next section, we
 introduce some of these passive model inference techniques.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -999,14 +1009,24 @@ format, and if a specific template is provided.
 
 \subsection{Conclusion}
 
-In the sequel, we present two approaches combining model
-inference and expert systems to infer models from traces for web
-applications (Chapter \ref{sec:modelinf:webapps}) and industrial
-systems (Chapter \ref{sec:modelinf:prodsystems}). The state
-merging is replaced with a context-specific state reduction based
-on an event sequence abstraction. This state reduction can be
-seen as the kTail algorithm introduced previously where $k$ is as
-high as possible. Furthermore, our work focus on both speed and
+Given the constraints formulated in
+\crossref{sec:intro}{sec:intro:problems}, we are not able to
+leverage white-box or documentation-based works. For the record,
+we cannot safely reuse existing documentation. Due to the
+heterogeneous set of software we target, we cannot rely on
+white-box approaches either.
+
+In the sequel, we present two approaches combining passive model
+inference, machine learning, and expert systems to infer models
+from traces for web applications (Chapter
+\ref{sec:modelinf:webapps}) and industrial systems (Chapter
+\ref{sec:modelinf:prodsystems}).  Our work is similar to those
+using event sequence abstraction (page
+\pageref{sec:passive-fsa}), except that state merging is replaced
+with a context-specific state reduction based on an event
+sequence abstraction. This state reduction can be seen as the
+kTail algorithm introduced previously where $k$ is as high as
+possible. Furthermore, our work focus on both speed and
 scalability to be able to construct models of Michelin's
 production systems in an efficient manner. Among all potential
 use cases, we need such models to perform passive testing on
