@@ -723,69 +723,97 @@ only observation that can be made is \emph{quiescence}
     \end{figure}
 \end{example}
 
-\subsubsection{Common terms in MbT}
+In this thesis, we chose to use these models to represent the
+behaviors of web applications and production systems in order to
+perform Model-based Testing, \emph{i.e.} relying on models to
+perform testing, mainly to prevent regressions. \emph{Conformance
+Testing} is a black-box testing method leveraging formal methods
+\cite{tretmans1992formal}. We give a few definitions related to
+Conformance Testing below.
+
+\subsubsection{Conformance Testing}
 
 In this section, we introduce a few common terms defining what
-Model-based Testing is, and how it works in general.
+\emph{Conformance Testing}
+\cite{brinksma1989formal,tretmans1992formal,Tretmans:1993:FAC:648128.747730}
+is, and how it works in general.
 
-Executing a test case on a system yields a set of observations.
-Every observation represents a part of the \textit{implementation
-model} of the system. The set of all observations made with all
-possible test cases represents the complete implementation model
-of the system.
+\paragraph{Test hypothesis.} Executing a test case on a system
+yields a set of observations. Every observation represents a
+part of the \textit{implementation model} of the system. The set
+of all observations made with all possible test cases represents
+the complete implementation model of the system. The \emph{test
+hypothesis} \cite{Bernot:1991:TAF:112287.112303} is that, for
+every system, there is a corresponding observational equivalent
+implementation model: $\forall \text{ } iut \in IMPS, \exists
+\text{ } I_{iut} \in MODS$, where $iut$ is a concrete
+\emph{implementation under test}, $IMPS$ is the universe of
+implementations, $I_{iut}$ is a model of $iut$, and $MODS$ is the
+universe of the models of all \emph{implementations under test}.
 
-\paragraph{Testing hypothesis} For every system there is a
-corresponding observational equivalent implementation model:
-$\forall \text{ } iut \in IMPS, \exists \text{ } I_{iut} \in
-MODS$, where $iut$ is a concrete implementation under test,
-$IMPS$ is the universe of implementations, $I_{iut}$ is a model
-of $iut$, and $MODS$ is the universe of the models of all IUT.
+\paragraph{Conformance.} To check whether an implementation under
+test $iut$ conforms to a specification $spec$, we need to know
+precisely what it means for $iut$ to conforms to $spec$,
+\emph{i.e.} a formal definition of conformance is required
+\cite{ltsTretmans}. As $iut$ is a real, physical "thing", which
+consists of software (and sometimes physical devices), we cannot
+use it as a formal object. We rely on the test hypothesis
+mentioned previously to reason about implementations under test
+as if they were formal implementations. By doing this, we can
+define conformance with a formal relation between models of
+implementations and specifications, \emph{i.e.} an
+\emph{implementation relation}.
 
-\paragraph{Implementation relation} To define conformance between
-an implementation under test $imp$ and a specification $spec$, we
-use the notion of an \textit{implementation relation}: $imp
-\subseteq MODS \times SPECS$, with $SPECS$ the set of
-specifications. We can find different implementation relations,
-\emph{e.g.}, \cite{Bri88,phalippou94}.
+\paragraph{Implementation relation.} To formally define
+conformance between an implementation under test $iut$ and a
+specification $spec$, we use the notion of an
+\emph{implementation relation}: $imp \subseteq MODS \times
+SPECS$, with $SPECS$ the set of specifications. We can find
+different implementation relations, \emph{e.g.},
+\cite{Bri88,phalippou94}.
 
-\paragraph{Conformance} An implementation $iut$ conforms to a
-specification $spec$ if the existing model $I_{iut}$ of $iut$ is
-\textit{imp-related} to $spec$. There are many conformance
-relations in the literature, which we can organize in three
-categories:
+An implementation $iut$ \textbf{conforms to} a specification
+$spec$ if the existing model $I_{iut}$ of $iut$ is
+\textit{imp-related} to $spec$: $I_{iut} \textbf{imp} spec$.
+There are many conformance relations in the literature, which we
+can organize in three categories:
 
 \begin{itemize}
-    \item \textbf{Equivalence relations:} Isomorphism,
-        Bisimulation
-        \cite{Abdulla06,Fernandez89animplementation}, Trace
-        Equivalence, Testing Equivalence \cite{Abramsky1987225},
-        Refusal Equivalence \cite{Phillips86};
+    \item \textbf{Equivalence relations:} \emph{Isomorphism},
+        \emph{Bisimulation}
+        \cite{Abdulla06,Fernandez89animplementation}, \emph{Trace
+        Equivalence}, \emph{Testing Equivalence}
+        \cite{Abramsky1987225}, \emph{Refusal Equivalence}
+        \cite{Phillips86};
 
-    \item \textbf{Preorder relations:} Observation Preorder,
-        Trace Preorder \cite{DNH84}, Testing Preorder
-        \cite{Beohar2015}, Refusal Preorder;
+    \item \textbf{Preorder relations:} \emph{Observation
+        Preorder}, \emph{Trace Preorder} \cite{DNH84},
+        \emph{Testing Preorder} \cite{Beohar2015}, \emph{Refusal
+        Preorder};
 
-    \item \textbf{Input-Output relations:} Input-Output Testing,
-        Input-Output Refusal, ioconf
-        \cite{tretmans1996conformance}, ioco \cite{Tre96}.
+    \item \textbf{Input-Output relations:} \emph{Input-Output
+        Testing}, \emph{Input-Output Refusal}, \emph{ioconf}
+        \cite{tretmans1996conformance}, \emph{ioco} \cite{Tre96}.
 \end{itemize}
 
-\paragraph{Conformance testing} Conformance Testing assesses
-conformance to an unknown implementation under test $iut$ to its
-specification $spec$ by means of test experiments. Experiments
-consist of stimulating $iut$ in certain ways and observing its
-reactions. This process is called \textit{test execution}.
+\paragraph{Conformance testing.} Conformance Testing
+assesses conformance to an unknown implementation under test
+$iut$ to its specification $spec$ by means of test experiments.
+Experiments consist of stimulating $iut$ in certain ways and
+observing its reactions. This process is called \textit{test
+execution}, which is defined below.
 
-\paragraph{Test execution} The successful execution of a test
+\paragraph{Test execution.} The successful execution of a test
 case $TC$ can be written as follows: $I_{iut} \text{ }
-\mathbf{passes} \text{ } TC$. We can easily extend it to a test
+\mathbf{passes} \text{ } TC$. We extend it to a test
 suite $TS$: $I_{iut} \text{ } \mathbf{passes} \text{ } TS
 \Leftrightarrow \forall \text{ } TC \in TS : I_{iut} \text{ }
 \mathbf{passes} \text{ } TC$. On the contrary, $I_{iut} \text{ }
 \mathbf{fails} \text{ } TC \Leftrightarrow I_{iut} \text{ } \neg
 \mathbf{passes} \text{ } TC$.
 
-This leads to three properties on the test suite $TS$:
+This leads to three properties on the test suite $TS$
+\cite{ltsTretmans}:
 
 \begin{itemize}
 \item \textbf{Soundness:} $\forall \text{ } iut \in IMPS, iut$
@@ -806,11 +834,15 @@ description of the \textit{environment} in which an
 implementation under test $iut$ is embedded, and where it
 communicates with a \textit{tester}.
 
-\paragraph{Tester and verdicts} A tester executes the test cases.
-To be able to decide about the success of each, a
+\paragraph{Tester and verdicts.} A tester executes the test
+cases. To be able to decide about the success of each, a
 \textit{verdict} (most of the time, $pass$ or $fail$) is attached
 to each state of each test case.
 
+Neither Model-based Testing nor Conformance Testing state that
+"executing the test cases" implies to interact with the system
+under test. Indeed, there is a last perspective related to
+whether the testing method stimulates the system or not.
 
 \subsection{(Active and) passive testing}
 \label{sec:related:testing:active-passive}
@@ -831,7 +863,7 @@ how we apply the test cases to the system under test:
         period of time.
 \end{itemize}
 
-While active testing can take place as black- or white-box
+While active testing can take place as black-, grey-, or white-box
 testing, passive testing is often a special form of black-box
 testing. Active testing works by stimulating the system under
 test, \emph{i.e.} observing outputs of an implementation for predefined
@@ -846,7 +878,7 @@ passive testing is that it does not disturb the system, and it
 can be applied to large (distributed) systems. While most of the
 works on passive testing are related to networks, protocols, and
 web services, such a technique can be particularly suitable for
-production systems.
+production systems such as Michelin's systems.
 
 Several works, dealing with passive testing of protocols or
 components, have been proposed over the last decade. For all of
@@ -856,8 +888,8 @@ works can be grouped in three different categories:
 
 \begin{itemize}
 
-    \item \textbf{Invariant satisfiability.}
-    Invariants represent properties that are always true. They are
+    \item \textbf{Invariant satisfiability:}
+    invariants represent properties that are always true. They are
     constructed by hand from a specification, and later checked on
     the collected traces. Similarly to runtime verification
     \cite{Leucker2009293}, this approach allows to test complex
@@ -868,7 +900,7 @@ works can be grouped in three different categories:
     Different steps are required: definition of invariants from the
     specification, extraction of execution traces with sniffers,
     verification of the invariants on the trace set. Other works
-    focus on component-based system testing: in this case, passive
+    focus on \emph{Component-based System Testing}: in this case, passive
     methods are usually used to check conformance or security. For
     instance, the \textit{TIPS} tool \cite{5552735} performs an
     automated analysis of the captured trace sets to determine if a
