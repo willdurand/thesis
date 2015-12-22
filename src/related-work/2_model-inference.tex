@@ -17,7 +17,7 @@ models up to date since they are poorly documented.
 
 Solutions to these problems can be initiated by means of model
 inference. This research domain originates from works on language
-learning started in the 1960s with Gold \cite{Gold1978302}, based
+learning started in the 1970's with Gold \cite{Gold1978302}, based
 on previous work to formalize natural languages. Model inference
 here describes a set of methods that infer a specification by
 gathering and analyzing system executions and concisely
@@ -39,8 +39,8 @@ models from log files in order to retrieve important information
 in order to identify failure causes \cite{4700316}. It has also
 successfully been applied to intrusion detection \cite{debar00},
 searching for features in execution traces that allow to
-distinguish browsers from other software systems. A prominent use
-of model inference also concerns Model-based Testing
+distinguish browsers from other software systems. Among all, two
+uses of model inference are Model-based Testing
 \cite{Lorenzoli2008,tap2011,MobiGUITARIEEESoftware2014} and
 verification \cite{Ammons:2002:MS:565816.503275}.
 
@@ -125,7 +125,7 @@ two kinds of queries, as depicted in Figure \ref{fig:angluin}:
 
 \begin{itemize}
     \item A \textbf{membership query}, consisting in asking the
-        teacher whether a word is contained in the regular
+        teacher whether a string is contained in the regular
         language.  If the word is accepted, it is considered a
         \textit{positive} example, otherwise it represents a
         negative example;
@@ -168,8 +168,8 @@ the table are filled with prefix-closed input sequences. The
 columns of the table are labeled with input suffix sequences,
 which represent the distinguishing sequences of the states of the
 future Mealy machine. The table cells are completed by the last
-outputs given by the teacher after receiving the concatenations
-of prefixes and suffixes.
+output event given by the teacher after receiving the
+concatenations of prefixes and suffixes.
 
 In domains such as model inference where strings and answers
 usually do not come from human experts but from experiments,
@@ -208,9 +208,9 @@ known as \textit{Finite Memory Automata} \cite{Kaminski1994329},
 are models that are capable of expressing the influence of data
 on control flows. The algorithm directly infers the effect of
 data values on control flows as part of the learning process. As
-a consequence, the models are more expressive than Finite State
-Machines (FSM) and the implementation also  outperforms the
-classic $\EuScript{L}^*$ algorithm. Howar \emph{et al.} optimized this
+a consequence, the models are more expressive than DFA, and the
+implementation also outperforms the classic $\EuScript{L}^*$
+algorithm. Howar \emph{et al.} optimized this
 approach and proposed a method to infer \textit{semantic
 interfaces} of data structures on the basis of active learning
 and systematic testing in \cite{howar2012}. Semantic interfaces
@@ -280,7 +280,7 @@ and Negative Inference (RPNI) algorithm, called \textit{Regular
 Positive and Negative Incremental Inference} (RPNII)
 \cite{Dupont96incrementalregular}. In short, RPNI requires
 positive and negative samples as a whole and builds DFA. It
-merges the blocks of states having the same prefixes (words
+merges the blocks of states having the same prefixes (strings
 accepted from a state leading to all the other states) and such
 that the prefixes augmented by one symbol are not in the negative
 samples. The inference process of the RPNI algorithm can be seen
@@ -550,44 +550,44 @@ different viewpoints. We chose to summarize them in Table
         generation & Strategy & Crash report \\
 		\hline
 
-        %\cite{monkey} &mobile &B  &  &IM &Random   & Yes	\\
+        %\cite{monkey} &Mobile &B  &  &IM &Random   & Yes	\\
 		%\cite{Memon:2003} &desktop &B  &  &M &DFS      &  \\
-        %\cite{dynodroid} &mobile &B  &Yes &  &Random 	& Yes		\\
+        %\cite{dynodroid} &Mobile &B  &Yes &  &Random 	& Yes		\\
 
-        \cite{hungar2002} & distributed systems & Black-box & No &
+        \cite{hungar2002} & Distributed systems & Black-box & No &
         Formal & $\EuScript{L}^*$ & No
         \\
-        \cite{5416728} &web & Black-box  & No  &  & Concolic & \textbf{Yes}
-        \\
-        \cite{concolicandroid12} & mobile & White-box  & No &  &
-        Concolic & No
-        \\
-        \cite{Joorabchi:2012:REI:2420240.2420457} & mobile &
+        %\cite{5416728} & Web & Black-box  & No  &  & Concolic & \textbf{Yes}
+        %\\
+        %\cite{concolicandroid12} & Mobile & White-box  & No &  &
+        %Concolic & No
+        %\\
+        \cite{Joorabchi:2012:REI:2420240.2420457} & Mobile &
         Black-box & No & Informal & DFS & \textbf{Yes}
         \\
-		\cite{webmate12} & web & Black-box & No & Informal & & \textbf{Yes}
+		\cite{webmate12} & Web & Black-box & No & Informal & - & \textbf{Yes}
         \\
         \cite{5954416,Amalfitano:2012:UGR:2351676.2351717} &
-        mobile & Black-box  & No & Informal  & BFS, DFS & \textbf{Yes}
+        Mobile & Black-box  & No & Informal  & BFS, DFS & \textbf{Yes}
         \\
 		\cite{guitar,MobiGUITARIEEESoftware2014} & desktop,
-		mobile & Black-box & No & Formal & DFS & \textbf{Yes}
+		Mobile & Black-box & No & Formal & DFS & \textbf{Yes}
         \\
-        \cite{crawljax:tweb12} & web & Black-box & No & Formal &
+        \cite{crawljax:tweb12} & Web & Black-box & No & Formal &
         Multiple & No
         \\
-        \cite{4656395} & web & Black-box & No & Informal & DFS & No
+        \cite{4656395} & Web & Black-box & No & Informal & DFS & No
         \\
-        \cite{Choi2013} & mobile & Black-box & No & Formal & DFS &
+        \cite{Choi2013} & Mobile & Black-box & No & Formal & DFS &
         No
         \\
-		\cite{WPX13} & mobile & Grey-box & No & Informal & Multiple
+		\cite{WPX13} & Mobile & Grey-box & No & Informal & Multiple
 		& No
         \\
-        \cite{Azim13} & mobile & Grey-box & \textbf{Yes} & Informal & DFS
+        \cite{Azim13} & Mobile & Grey-box & \textbf{Yes} & Informal & DFS
         & \textbf{Yes}
         \\
-        \cite{SP15} & mobile & Black-box & \textbf{Yes} & Formal &
+        \cite{SP15} & Mobile & Black-box & \textbf{Yes} & Formal &
         Multiple & \textbf{Yes}
         \\
 		\hline
@@ -626,7 +626,7 @@ execution traces, source code, or even documentation, as shown in
 Figure \ref{fig:passive}. Since there is no interaction with the
 system to model, theses techniques are said passive or offline.
 In contrast to active model inference, the samples are usually
-considered positive elements. Also, models are often
+considered positive elements only. Also, models are often
 constructed by initially representing sample sets with automata
 whose equivalent states are merged. This section presents an
 overview of these techniques.
@@ -742,7 +742,7 @@ behavior rates, \emph{i.e.} the number of behaviors found in the models
 but not in the traces. This can be explained by the fact that
 these algorithms are not really able to control
 over-generalization when only positive samples are available. A
-comparison has also be made between the kTail- and
+comparison has also been made between the kTail- and
 kBehavior-based methods. In short, kTail provides low illegal
 behavior rate, but also low correct behavior rate. On the other
 hand, kBehavior has higher illegal behavior rate, but good
