@@ -1122,7 +1122,7 @@ periods of time. We executed our implementation on a Linux
 
 We present here the results of 6 experiments on the same
 production system with different event sets collected during 1,
-8, 11, 20, and 23 days. These results are depicted in Figure
+8, 11, 20, and 23 days. These results are depicted in Table
 \ref{fig:results}. The third column gives the number of
 production events recorded on the system. The next column shows
 the trace number obtained after the parsing step.  $N$ and $M$
@@ -1160,10 +1160,10 @@ $C_2$ &       &           &         &   &   &  7,824 &  80   &   \\
 $D_1$ & 11    & 3,851,264 & 73,364  & 2 & 3 & 35,541 & 924   & 9 \\
 $D_2$ &       &           &         &   &   & 17,402 & 837   &   \\
 \hline
-$E_1$ & 20    & 7,635,494 & 134,908 & 2 & 3 & 61,795 & 1,441 & 16 \\
+$E_1$ & 20    & 7,635,494 & 134,908 & 2 & 3 & 61,795 & 1,441 & 15 \\
 $E_2$ &       &           &         &   &   & 35,799 & 1,401 &    \\
 \hline
-$F_1$ & 23    & 9,231,160 & 161,035 & 2 & 3 & 77,058 & 1,587 & 24 \\
+$F_1$ & 23    & 9,231,160 & 161,035 & 2 & 3 & 77,058 & 1,587 & 21 \\
 $F_2$ &       &           &         &   &   & 43,536 & 1,585 &    \\
 \hline
 \end{tabular}
@@ -1174,11 +1174,11 @@ Michelin production system with different event sets.}
 \label{fig:results}
 \end{sidewaystable}
 
-First, these results show that our framework can take millions
-of production events and still builds models quickly (20
-minutes). With sets collected during one day up to one week
-(experiments $A$, $B$, $C$, and $D$), models are inferred in less
-than 10 minutes. Hence, \textit{Autofunk} can be used to quickly infer
+First, these results show that our framework can take millions of
+production events and still builds models quickly (20 minutes).
+With sets collected during one day up to one week (experiments
+$A$, $B$, $C$, and $D$), models are inferred in less than 10
+minutes. Hence, \textit{Autofunk} can be used to quickly infer
 models for analysis purpose or to help diagnose faults in a
 system. Experiment $F$ handled almost 10 million events in less
 than half an hour to build two models including around 1,600
@@ -1188,15 +1188,14 @@ minutes to open and parse around 1,000 files (number of Michelin
 log files for this experiment). This issue is solved by the
 architecture presented in Figure \ref{fig:autofunk_gen_branded}.
 The graph shown in Figure \ref{fig:time-vs-messages} summarizes
-the performances of our framework and how fast it is at
+the performances of our framework, and how fast it is at
 transforming production events into models (experiments $B$, $C$
 and $D$ run in about 9 minutes). It also demonstrates that
 doubling the event set does not involve doubling its execution
-time. The exponential trend line reveals that the overall
-framework scales well, even with the current parsing
-implementation.
+time. The linear regression reveals that the overall framework
+scales well, even with the current parsing implementation.
 
-In Figure \ref{fig:results}, the difference between the number of
+In Table \ref{fig:results}, the difference between the number of
 trace subsets (7th column) and the number of branches included in
 the STSs $R(\EuScript{S}_i)$ (8th column) clearly shows that our
 STS reduction approach is effective. For instance, with
@@ -1209,33 +1208,33 @@ The reduction ratio may vary with other systems.
 \begin{figure}[ht]
   \includegraphics[width=1.0\linewidth]{figures/time-vs-messages.png}
 
-  \caption{Execution time vs events. According to the exponential
-  trend, we can state that our framework scales well.}
+  \caption{Execution time vs events. According to the trend shown
+  by the linear regression, we can state that our framework
+  scales well.}
   \label{fig:time-vs-messages}
-
-  \TODO{not really accurate}
 \end{figure}
 
-We also extracted the values of columns 4 and 7 in Figure
+We also extracted the values of columns 4 and 7 in Table
 \ref{fig:results} to depict the stacked bar chart illustrated in
 Figure \ref{fig:proportions}. This chart shows, for each
-experiment, the proportion of complete traces kept by \textit{Autofunk} to
-build models, over the initial number of traces in $Traces(Sua)$.
-\textit{Autofunk} has kept only 37\% of the initial traces in Experiment
-$A$ because its initial trace set is too small and contains many
-incomplete behaviors. During a day, most of the recorded traces
-do not start or end at entry or exit points, but rather start or
-end somewhere in production lines (cf. Section
-\ref{prodsys:context}). That is why, on a single day, we can find
-so many incomplete traces. With more production events, such a
-phenomenon is limited because we absorb these storage delays.
+experiment, the proportion of complete traces kept by
+\textit{Autofunk} to build models, over the initial number of
+traces in $Traces(Sua)$.  \textit{Autofunk} has kept only 37\% of
+the initial traces in Experiment $A$ because its initial trace
+set is too small and contains many incomplete behaviors. During a
+day, most of the recorded traces do not start or end at entry or
+exit points, but rather start or end somewhere in production
+lines (cf. Section \ref{prodsys:context}). That is why, on a
+single day, we can find so many incomplete traces. With more
+production events, such a phenomenon is limited because we absorb
+these storage delays.
 
 \begin{figure}[ht]
   \includegraphics[width=1.0\linewidth]{figures/proportions.png}
 
   \caption{Proportions of complete traces for the different
-  experiments. This chart shows that \textit{Autofunk} considers a lot of
-  traces to infer models, but there is still room for
+  experiments. This chart shows that \textit{Autofunk} considers
+  a lot of traces to infer models, but there is still room for
   improvement.}
   \label{fig:proportions}
 \end{figure}
@@ -1260,17 +1259,6 @@ concluded that 10\% was the best ratio for removing incomplete
 traces in our experiments.  30\% of initial traces have been
 removed, which is close to the reality.
 
-\begin{figure}[ht]
-  \includegraphics[width=1.0\linewidth]{figures/memory-time.png}
-
-  \caption{Memory consumption vs execution time. This version of
-  \textit{Autofunk} is still a prototype, and memory consumption remains
-  an issue.}
-  \label{fig:memory-time}
-
-  \TODO{not really accurate}
-\end{figure}
-
 Another potential issue with our parsing implementation is that
 every event has to be loaded in memory, so that we can perform
 computation and apply our algorithms on them. But working
@@ -1278,9 +1266,19 @@ with millions of Java objects requires a lot of memory, \emph{i.e.}
 memory consumption depends on the amount of initial traces. We
 compared execution time and memory consumption in Figure
 \ref{fig:memory-time}, showing that memory consumption tends to
-follow a logarithmic trend. In the next version of \textit{Autofunk}, we
-plan to work on improving memory consumption even if it has been
-considered acceptable as is by Michelin.
+follow a logarithmic trend. In the next version of
+\textit{Autofunk}, we plan to work on improving memory
+consumption even if it has been considered acceptable as is by
+Michelin.
+
+\begin{figure}[ht]
+  \includegraphics[width=1.0\linewidth]{figures/memory-time.png}
+
+  \caption{Execution time vs memory consumption. This version 2 of
+  \textit{Autofunk} is still a prototype, and memory consumption
+  remains an issue.}
+  \label{fig:memory-time}
+\end{figure}
 
 For confidentiality reasons, we are not able to provide results
 related to the generation of more abstract models.
