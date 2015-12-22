@@ -999,11 +999,12 @@ rules may have different forms:
 \item They can be applied to a single transition only. In this
 case, the rule replaces the transition action to add more sense
 to the action. The rule given in Figure \ref{fig:rule:deauth} is
-an example, which recognizes a user de-authentication, and adds a
-new action $Deauthentication$. This rule means that if a
-$PostRedirection$ action is triggered against a "Logout" endpoint
-(given by the variable \textit{isLogout} added by Layer 3), then
-this is a "de authentication";
+an example, which recognizes a user "deauthentication",
+\emph{i.e.} when a user logs out, and adds a new action
+$Deauthentication$. This rule means that if a $PostRedirection$
+action is triggered against a "Logout" endpoint (given by the
+variable \textit{isLogout} added by Layer 3), then this is a
+deauthentication;
 
 \item The rules can also aggregate several successive transitions
 up to complete paths into one transition labeled by a more
