@@ -299,29 +299,31 @@ techniques.
 model inference applied to web applications, a preliminary work
 that gave birth to \textit{Autofunk}, our modular framework for
 inferring models (and later, performing testing). This chapter
-gives an overview of \textit{Autofunk}'s very first architecture.
-It then presents how \textit{Autofunk} relies on an automatic
-testing technique to improve the completeness of the inferred
-models. A note on its implementation is then given, following by
-an experimentation. This work has been published in \emph{Actes
-de la 13eme {\'e}dition d’AFADL, atelier francophone sur les
-Approches Formelles dans l’Assistance au D{\'e}veloppement de
-Logiciels} (AFADL'14) \cite{durand2014inference}, and in the
-Proceedings of the Fifth Symposium on Information and
-Communication Technology (SoICT'14)
+gives an overview of \textit{Autofunk}'s very first architecture,
+called \emph{Autofunk v1}.  It then presents how
+\textit{Autofunk} relies on an automatic testing technique to
+improve the completeness of the inferred models. A note on its
+implementation is then given, following by an experimentation.
+This work has been published in \emph{Actes de la 13eme
+{\'e}dition d’AFADL, atelier francophone sur les Approches
+Formelles dans l’Assistance au D{\'e}veloppement de Logiciels}
+(AFADL'14) \cite{durand2014inference}, and in the Proceedings of
+the Fifth Symposium on Information and Communication Technology
+(SoICT'14)
 \cite{DBLP:conf/soict/DurandS14}.
 
 \textbf{Chapter \ref{sec:modelinf:prodsystems}} introduces our
 framework \textit{Autofunk} revisited to target production
 systems. This chapter gives the context that led to our choices
-regarding the design of \textit{Autofunk}. Our reduction
+regarding the design of \textit{Autofunk v2}. Our reduction
 technique that heavily reduces models is then presented, along
 with the results of a case study on Michelin's production
 systems. A whole section is dedicated to the implementation of
 \textit{Autofunk} for Michelin. Last significant part of this
 chapter is the use of a machine learning technique to maximize
-one part of our model inference technique. This work has been
-published in the Proceedings of Formal Methods 2015 (FM'15)
+one part of our model inference technique, which led to the
+creation of \emph{Autofunk v3}. This work has been published in
+the Proceedings of Formal Methods 2015 (FM'15)
 \cite{DBLP:conf/fm/DurandS15}, and in the Proceedings of the 9th
 International Conference on Distributed Event-Based Systems
 (DEBS'15) \cite{DBLP:conf/debs/SalvaD15}.
@@ -329,7 +331,7 @@ International Conference on Distributed Event-Based Systems
 \textbf{Chapter \ref{sec:testing}} tackles the problem of testing
 production systems, without disturbing them, and without having
 any specification. It presents our work on both offline and
-online passive testing, by extending \textit{Autofunk}'s model
+online passive testing, by extending \textit{Autofunk v3}'s model
 inference framework. After having presented the overall idea, two
 algorithms are given and explained. The results of a case study
 on Michelin's production systems is given. Such results are

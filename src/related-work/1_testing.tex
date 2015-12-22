@@ -632,9 +632,10 @@ from LTS semantics:
 \begin{definition}[Runs and traces]
     Given a STS $\EuScript{S}=$ $<L,l0,V,V0,I,\Lambda,
     \rightarrow>$, interpreted by its LTS semantics
-	$||\EuScript{S}||=<Q,q_0,\sum,\rightarrow>$, a run $q_0
-    \alpha_0 \dots \alpha_{n-1} q_n$ is an alternate finite
-    sequence of states and valued actions.
+    $||\EuScript{S}||=<Q,q_0,\sum,\rightarrow>$, a run $q_0 \cdot
+    \alpha_0 \cdot \dots \cdot \alpha_{n-1} \cdot q_n$ is an
+    alternate finite sequence of states and valued actions,
+    concatenated with the $\cdot$ operator.
     $Run(\EuScript{S})=Run(||\EuScript{S}||)$ is the set of runs
     found in $||\EuScript{S}||$.
 

@@ -14,16 +14,16 @@ premises of our work on model inference (of production systems)
 applied to web applications.
 
 In this chapter, we introduce the first version of
-\textit{Autofunk}, our modular framework for inferring models,
-\emph{i.e.} Input/Output Symbolic Transition Systems here, by
-using a rule-based expert system. A bisimulation minimization
-technique \cite{Park:1981:CAI:647210.720030} is applied to reduce
-the model size. We generate several models of a same application
-at different levels of abstraction. \textit{Autofunk} relies on
-an \emph{automatic testing} technique to improve the completeness
-of the inferred models. We evaluate our tool on the
-GitHub\footnote{\url{https://github.com/}} website, showing
-encouraging results.\\
+\textit{Autofunk} (v1), our modular framework for inferring
+models, \emph{i.e.} Input/Output Symbolic Transition Systems
+here, by using a rule-based expert system. A bisimulation
+minimization technique \cite{Park:1981:CAI:647210.720030} is
+applied to reduce the model size. We generate several models of a
+same application at different levels of abstraction.
+\textit{Autofunk} relies on an \emph{automatic testing} technique
+to improve the completeness of the inferred models. We evaluate
+our tool on the GitHub\footnote{\url{https://github.com/}}
+website, showing encouraging results.\\
 
 \minitoc
 
@@ -363,6 +363,8 @@ $t$ is the sequence of valued actions $\sigma(t) =
 
 The resulting structured HTTP trace set derived from the raw HTTP
 traces is denoted by $ST$.
+
+    \label{def:structured-http-traces}
 \end{definition}
 
 If we take back the HTTP messages given in Figure
@@ -391,7 +393,7 @@ A straightforward rule example that removes the actions relative
 to the retrieval of PNG\footnote{Portable Network Graphics}
 images, and written with the Drools formalism, is given in Figure
 \ref{fig:layer1:filter}.  $\$valued\_action$ is a variable
-representing a $Get$ (valued) action.  Actions own $request$ and
+representing a $Get$ valued action.  Actions own $request$ and
 $response$ attributes, respectively representing the HTTP request
 and HTTP response for that given valued action. Such attributes
 can be accessed into the action's parentheses:
@@ -407,15 +409,21 @@ filtering rules, could be expressed as follows:
 $\frac{
     \begin{matrix}
         valued\_event = (Get(p), \theta) \in \sigma,\\\theta
-        \models [ (request.mime\_type = 'png') \vee
-        (request.file\_extension = 'png') ]
+        \models [ (request.mime\_type == 'png') \vee
+        (request.file\_extension == 'png') ]
     \end{matrix}
 }{
     \begin{matrix}
-        \sigma = \sigma / \{ valued\_event \}
+        \sigma = \sigma \setminus \{ valued\_event \}
     \end{matrix}
 }$
 \end{center}
+
+Yet, the Drools rule language is simple and more convenient,
+especially for the domain experts who have to write such rules.
+That is why we chose to write inference rules with this language.
+In the sequel, inference rules for \emph{Autofunk} are given as
+Drools rules.
 
 \begin{figure}[ht]
 \begin{framed}
@@ -448,9 +456,9 @@ inference rules are Modus Ponens (soundness hypothesis introduced
 previously).  Consequently, Layer 1 is sound and complete
 \cite{logicreasoning}.  Keeping in mind the finite complexity
 hypothesis, its complexity is proportional to
-$\EuScript{O}m(k+1)$ with $m$ the number of valued actions, and
-$k$ the number of rules. (at worst, every action is covered $k+1$
-times).
+$\EuScript{O}(m(k+1))$ with $m$ the number of valued actions, and
+$k$ the number of rules (worst case scenario is when every valued
+action is covered $k+1$ times in the expert system engine).
 
 \subsection{Layer 2: IOSTS transformation}
 \label{sec:modelinf:webapps:L2}
@@ -481,7 +489,7 @@ where:
 Given an IOSTS transition $l_1 \xrightarrow{a(p),G,A}l_2$, we
 obtain an IOLTS transition $(l_1,v)$ $\xrightarrow{a(p),\theta}
 (l_2,v')$ with $v$ a set of valuations over the internal variable
-set, if there exists a parameter valuation set $\theta$ such that
+set if there exists a parameter valuation set $\theta$ such that
 the guard $G$ evaluates to true with $v \cup \theta$. Once the
 transition is executed, the internal variables are assigned with
 $v'$ derived from the assignment $A(v \cup \theta)$.
@@ -489,12 +497,11 @@ Our IOSTS transformation relies upon this IOLTS semantics
 transformation that we have reversed.  In order to generate the
 first IOSTS denoted by $\EuScript{S}_1$, the associated runs are
 first computed from the structured traces by injecting states
-between valued actions. These steps are detailed in the
-sequel.
+between valued actions. These steps are detailed below.
 
 \subsubsection{Traces to runs}
 
-Given a structured trace $\sigma = (a_1(p),\theta_1) \dots
+Given a structured HTTP trace $\sigma = (a_1(p),\theta_1) \dots
 (a_n(p),\theta_n)$, a run $r$ is first derived by constructing
 and injecting states on the right and left sides of
 each valued action $(a_i(p),\theta_i)$ of $\sigma$. Keeping in
@@ -517,19 +524,20 @@ incremented to yield a new and unique state.
 
 The translation of the structured traces into a run set is
 performed by Algorithm \ref{traces_to_runs}, which takes a
-trace set $ST$ as input and returns a run set $SR$. It owns a
+trace set $ST$ as input, and returns a run set $SR$. It owns a
 set $States$ storing the constructed states. All the runs $r$ of
-$SR$ start with the same state $(l0,v_\emptyset)$. Algorithm
-\ref{traces_to_runs} covers the actions $(a_i,\theta_i)$ of a
-trace $\sigma$ in order to construct the next state $s$. It
-extracts the valuation $URI=val$ (line 8) from $\theta_i$ giving
-the URI value of the next resource reached after the action
-$a_i$. The state $s=((val,k+1),v_\emptyset)$ is constructed with
-$k$ such that there exists $((URI,k),v_\emptyset) \in States$
-composed of the greatest integer $k \geq 0$. The current run $r$
-is completed with the valued action $(a_i,\theta_i)$ followed by
-the state $s$ (line 14). Finally, $SR$ gathers all the
-constructed runs.
+$SR$ start with the same \emph{initial state} $(l0,v_\emptyset)$.
+Algorithm \ref{traces_to_runs} iterates over the valued actions
+$(a_i,\theta_i)$ of a trace $\sigma$ in order to construct the
+next states $s$. It extracts the valuation $URI=val$ (line 10) from
+$\theta_i$ giving the URI value of the next resource reached
+after the action $a_i$. The state $s=((val,k+1),v_\emptyset)$ is
+constructed with $k$ such that there exists
+$((URI,k),v_\emptyset) \in States$ composed of the greatest
+integer $k \geq 0$. The current run $r$ is completed with the
+valued action $(a_i,\theta_i)$ followed by the state $s$ (line
+16). The operator $\cdot$ denotes this completion. Finally, $SR$
+gathers all the constructed runs (line 17).
 
 \begin{algorithm}
 \SetKwInOut{Input}{input} \SetKwInOut{Output}{output}
@@ -544,29 +552,31 @@ $States:=\emptyset$ is the set of the constructed states\;
 \If{$ST$ is empty} {
 $SR:= \{(l0,v_\emptyset)\}$}
 
-\ForEach{trace $\sigma=(a_0,\theta_0)...(a_n,\theta_n) \in ST$} {
-$r:= (l0,v_\emptyset)$\;
+\Else{
+    $SR:= \emptyset$
 
-\For{ $0 \leq i \leq n$}{
+    \ForEach{trace $\sigma=(a_0,\theta_0)...(a_n,\theta_n) \in ST$}{
+        $r:= (l0,v_\emptyset)$\;
 
-extract the valuation $URI=val$ from $\theta_i$\;
+        \For{ $0 \leq i \leq n$}{
 
-\If{($(val,0),v_\emptyset) \notin States$}{
-$s:=((val,0),v_\emptyset)$\; }
+            extract the valuation $URI=val$ from $\theta_i$\;
 
-\Else{ $s:=((val,k+1),v_\emptyset)$ with $k\geq 0$ the greatest
-integer such that $((val,k),v_\emptyset) \in States$\; }
+            \If{($(val,0),v_\emptyset) \notin States$}{
+            $s:=((val,0),v_\emptyset)$\; }
 
-$States:=States \cup \{s\}$\;
+            \Else{ $s:=((val,k+1),v_\emptyset)$ with $k\geq 0$ the greatest
+            integer such that $((val,k),v_\emptyset) \in States$\; }
 
-$r:=r.(a_i,\theta_i).s$
+            $States:=States \cup \{s\}$\;
 
-}%endfor_i
+            $r:=r \cdot (a_i,\theta_i) \cdot s$
 
-$SR:=SR \cup \{r\}$
+        }%endfor_i
 
-}%endfor trace
-
+        $SR:=SR \cup \{r\}$
+    }%endfor trace
+}
 END\;
 
     \caption{Traces to runs algorithm}
@@ -574,11 +584,11 @@ END\;
 \end{algorithm}
 
 \begin{proposition}
-For each trace $\sigma \in ST$, Algorithm \ref{traces_to_runs}
-constructs a run $r=s_0(a_0,\theta_0)s_1 \dots
-\\s_n(a_n,\theta_n)s_{n+1} \in SR$ such that $\forall
-(a_i,\theta_i) ( 0<i\leq n), \exists ! s_i(a_i,\theta_i)s_{i+1}$
-in $r$.
+    For each trace $\sigma \in ST$, Algorithm \ref{traces_to_runs}
+    constructs a run $r=s_0 \cdot (a_0,\theta_0) \cdot s_1 \dots
+    s_n \cdot (a_n,\theta_n) \cdot s_{n+1} \in SR$ such that
+    $\forall (a_i,\theta_i)_{0<i\leq n} \in \sigma, \exists ~!~ s_i
+    \cdot (a_i,\theta_i) \cdot s_{i+1}$ in $r$.
 \end{proposition}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -594,54 +604,65 @@ forms a tree compound of paths, each expressing one trace, and
 starting from the same initial location.
 
 \begin{definition}[IOSTS tree]
-\label{IOSTS_tree}
-Given a run set $SR$, the IOSTS $\EuScript{S}_1$ is called the
-IOSTS tree of $SR$ and corresponds to the tuple
-$<L_{\EuScript{S}_1}, l0_{\EuScript{S}_1},V_{\EuScript{S}_1},
-V0_{\EuScript{S}_1}, I_{\EuScript{S}_1},
-\Lambda_{\EuScript{S}_1},\rightarrow_{\EuScript{S}_1}>$ such
-that:
+    Given a run set $SR$, the IOSTS $\EuScript{S}_1$ is called
+    the \emph{IOSTS tree} of $SR$, and corresponds to the tuple
+    $<L_{\EuScript{S}_1}, l0_{\EuScript{S}_1},V_{\EuScript{S}_1},
+    V0_{\EuScript{S}_1}, I_{\EuScript{S}_1},
+    \Lambda_{\EuScript{S}_1},\rightarrow_{\EuScript{S}_1}>$ such
+    that:
 
-\begin{itemize}
+    \begin{itemize}
 
-\item $L_{\EuScript{S}_1}= \{l_i \mid \exists r\in SR, (l_i,v_\emptyset)$ is
-a state found in $r\}$;
+    \item $L_{\EuScript{S}_1}= \{l_i \mid \exists ~r \in SR,
+        (l_i,v_\emptyset)$ is a state found in $r\}$;
 
-\item $l0_{\EuScript{S}_1}$ is the initial location such that $\forall r \in
-SR$, $r$ starts with $(l0_{\EuScript{S}_1},v_\emptyset)$;
+    \item $l0_{\EuScript{S}_1}$ is the initial location such that
+        $\forall ~r \in SR$, $r$ starts with
+        $(l0_{\EuScript{S}_1},v_\emptyset)$;
 
-\item $V_{\EuScript{S}_1}=\emptyset$,
-    $V0_{\EuScript{S}_1}=v_\emptyset$;
+    \item $V_{\EuScript{S}_1}=\emptyset$;
 
-\item $\Lambda_{\EuScript{S}_1}= \{a_i(p) \mid \exists r\in SR,
-(a_i(p),\theta_i)$ is a valued action in $r\}$;
+    \item $V0_{\EuScript{S}_1}=v_\emptyset$;
 
-\item $\rightarrow_{\EuScript{S}_1}$ is defined by the
-    inference rule given below, applied to every run $r\in SR$.
-    $s_i (a_i(p),\theta_i) s_{i+1} \text{ is a term of } r,
-    s_i=(l_i,v_\emptyset),$ $s_{i+1}=(l_{i+1},v_\emptyset)$, and:
+    \item $I_{\EuScript{S}_1}$ is a finite set of parameters,
+        disjoint from $V_{\EuScript{S}_1}$;
 
-    \begin{center}
-    {\Large
-        $\frac{G_i=\displaystyle \bigwedge_{(x_i=vi)\in \theta_i} x_i==vi}
-        {l_i \xrightarrow{a_i(p),G_i,(x:=x)_{x\in V}}_{\EuScript{S}_1} l_{i+1}}$
-    }
-    \end{center}
+    \item $\Lambda_{\EuScript{S}_1}= \{a_i(p) \mid \exists ~r \in SR,
+        (a_i(p),\theta_i)$ is a valued action in $r\}$;
 
-\end{itemize}
+    \item $\rightarrow_{\EuScript{S}_1}$ is defined by the
+        inference rule given below, applied to every run
+        $r = s_0 \cdot (a_0,\theta_0) \cdot s_1 \dots
+        s_i \cdot (a_i,\theta_i) \cdot s_{i+1} \in SR$:
+
+        \begin{center}
+            {\Large
+            $\frac{G_i=\displaystyle \bigwedge_{(x_i:=v_i) \in
+            \theta_i} (x_i==v_i)}
+            {l0 \xrightarrow{a_i(p),G_i,(x:=x)_{x\in
+            V}}_{\EuScript{S}_1} l_{i+1}}$
+        }
+        \end{center}
+
+        We have $s_0 = (l0_{\EuScript{S}_1}, v_{\emptyset})$, $s_i = (l_i,
+        v_{\emptyset})$, and $s_{i+1} = (l_{i+1}, v_{\emptyset})$.
+    \end{itemize}
+
+    \label{IOSTS_tree}
 \end{definition}
 
 The inference rule given in the definition above states that each
-run $r \in SR$ is transformed into a unique IOSTS path, only
-sharing a common initial location $l0$. And for each path, the
-guard is defined as the conjunction of the assignments of the
+run $r \in SR$ is transformed into a unique \emph{IOSTS path},
+only sharing a common initial location $l0$. And for each path,
+the guard is defined as the conjunction of the assignments of the
 variables found in the corresponding trace.
 
 \subsubsection{IOSTS minimization}
 
 Methods such as gkTail and KLFA could be applied to reduce the
-previous inferred IOSTS tree, however due to the way these
-methods work, it would likely lead to an over-generalized model.
+previous inferred IOSTS tree,however due to the way these
+methods work, it would likely lead to an over-generalized model
+(cf. \crossref{sec:related}{sec:passive-fsa}).
 Similarly, locations could be merged to reduce the IOSTS size
 with the classical learning algorithms based upon
 $\EuScript{L}^*$ \cite{Angluin198787,lambeau08}. Nonetheless,
@@ -662,12 +683,13 @@ and go to states from where they can simulate each other again.
 A great bisimulation minimization algorithm is given in
 \cite{Fernandez89animplementation}.
 
-When receiving new traces from the Monitor, the model yield by
-this layer is not fully regenerated, but rather completed on the
-fly. New traces are translated into IOSTS paths that are disjoint
-from $\EuScript{S}_1$ except from the initial location. We
-perform a union between $\EuScript{S}_1$ and IOSTS paths. Then,
-the resulting IOSTS is minimized.
+When receiving new traces from the \emph{Monitor} (cf. Figure
+\ref{fig:soict-framework}), the model yield by this layer is not
+fully regenerated, but rather completed on-the-fly. New traces
+are translated into IOSTS paths that are disjoint from
+$\EuScript{S}_1$ except from the initial location. We perform a
+union between $\EuScript{S}_1$ and IOSTS paths. Then, the
+resulting IOSTS is minimized.
 
 \paragraph{Completeness, soundness, complexity.}
 
@@ -711,10 +733,10 @@ Get(https://github.com/)
 \end{BVerbatim}
 \end{figure}
 
-After the application of Layer 2, we obtain the IOSTS given in Figure
-\ref{fig:github:iosts:1}. Locations are labeled by the URI found
-in the request and by an integer to keep the tree structure of
-the initial traces. Actions are composed of the HTTP verb
+After the application of Layer 2, we obtain the IOSTS given in
+Figure \ref{fig:github:iosts:1}. Locations are labeled by the URI
+found in the request and by an integer to keep the tree structure
+of the initial traces. Actions are composed of the HTTP verb
 enriched with the variables URI, request, and response. This
 IOSTS exactly reflects the trace behavior but it is still
 difficult to interpret. More abstract actions shall be deduced by
@@ -722,23 +744,6 @@ the next layers.
 \end{example}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
-\begin{figure}[H]
-\begin{minipage}{.5\textwidth}
-    \includegraphics[width=0.8\linewidth]{figures/gh-iosts-1.png}
-
-    \caption{IOSTS $\EuScript{S}_1$ obtained after the
-    application of Layer 2.}
-    \label{fig:github:iosts:1}
-\end{minipage}
-\begin{minipage}{.5\textwidth}
-    \includegraphics[width=1.0\linewidth]{figures/gh-iosts-2.png}
-
-    \caption{IOSTS $\EuScript{S}_2$ obtained after the
-    application of Layer 3.}
-    \label{fig:github:iosts:2}
-\end{minipage}
-\end{figure}
 
 \subsection{Layers 3-N: IOSTS abstraction}
 \label{sec:modelinf:webapps:L4}
@@ -825,6 +830,48 @@ after a request sent with the $GET$ method, contains a login
 form, then this transition is marked as a "login page" with the
 assignment on the variable $isLoginPage$;
 
+\begin{figure}[h]
+\begin{framed}
+\begin{BVerbatim}
+rule "Identify Login page"
+when
+  $t: Transition(
+    Action == "GET",
+    Guard.response.content contains('login-form')
+  )
+then
+  modify ($t) {
+    Assign.add("isLoginPage := true")
+  }
+end
+\end{BVerbatim}
+\end{framed}
+
+\begin{framed}
+\begin{BVerbatim}
+rule "Identify Logout action"
+when
+  $t: Transition(
+    Action == "GET",
+    Guard.uri matches("/logout")
+  )
+then
+  modify ($t1) {
+    Assign.add("isLogout := true")
+  }
+end
+\end{BVerbatim}
+\end{framed}
+
+    \caption{Login page and logout action recognition rules. The
+    first rule adds a new assignment to any transition having a
+    response's content containing a login form. The second
+    transition adds a new assignment to all transitions where
+    the $uri$ (guard) matches $/logout$, identifying logout
+    actions.}
+    \label{fig:rule:login}
+\end{figure}
+
 \item The \textbf{generic aggregation of some successive
     transitions}. Here, some transitions (two or more) are
     analyzed in the conditional part of the rule. When the rule
@@ -877,54 +924,11 @@ $POST$ method has a response identified as a redirection,
 comes after, both transitions are reduced into a single one
 carrying the new action $PostRedirection$. Just like valued
 actions, guards can be accessed: $Guard.something$ where
-$something$ is a guard. The Drools Domain-Specific Language (DSL)
-also provides keywords such as $contains$ or $match$ to deal with
-the values.
+$something$ is a guard. The Drools rule language also provides
+keywords such as $contains$ or $match$ to deal with the values.
 \end{itemize}
 
-\begin{figure}[h]
-\begin{framed}
-\begin{BVerbatim}
-rule "Identify Login page"
-when
-  $t: Transition(
-    Action == "GET",
-    Guard.response.content contains('login-form')
-  )
-then
-  modify ($t) {
-    Assign.add("isLoginPage := true")
-  }
-end
-\end{BVerbatim}
-\end{framed}
-
-\begin{framed}
-\begin{BVerbatim}
-rule "Identify Logout action"
-when
-  $t: Transition(
-    Action == "GET",
-    Guard.uri matches("/logout")
-  )
-then
-  modify ($t1) {
-    Assign.add("isLogout := true")
-  }
-end
-\end{BVerbatim}
-\end{framed}
-
-    \caption{Login page and logout action recognition rules. The
-    first rule adds a new assignment to any transition having a
-    response's content containing a login form. The second
-    transition adds a new assignment to all transitions where
-    the $uri$ (guard) matches $/logout$, identifying logout
-    actions.}
-    \label{fig:rule:login}
-\end{figure}
-
-\begin{figure}[h]
+\begin{figure}
 \begin{framed}
 \begin{BVerbatim}
 rule "Identify Redirection after a POST"
@@ -957,6 +961,7 @@ creation of a new $PostRedirection$ transition.}
 \label{fig:rule:redirect}
 \end{figure}
 
+
 \begin{example}
 When we apply these rules on the IOSTS example given in Figure
 \ref{fig:github:iosts:1}, we obtain a new IOSTS illustrated in
@@ -965,6 +970,23 @@ Figure \ref{fig:github:iosts:2}. Its size is reduced since it has
 IOSTS does not precisely reflect the initial scenario yet. Rules
 deducing more abstract actions are required. These are found in
 the next layer.
+
+\begin{figure}[h]
+\begin{minipage}{.5\textwidth}
+    \includegraphics[width=0.8\linewidth]{figures/gh-iosts-1.png}
+
+    \caption{IOSTS $\EuScript{S}_1$ obtained after the
+    application of Layer 2.}
+    \label{fig:github:iosts:1}
+\end{minipage}
+\begin{minipage}{.5\textwidth}
+    \includegraphics[width=1.0\linewidth]{figures/gh-iosts-2.png}
+
+    \caption{IOSTS $\EuScript{S}_2$ obtained after the
+    application of Layer 3.}
+    \label{fig:github:iosts:2}
+\end{minipage}
+\end{figure}
 \end{example}
 
 \subsubsection{Layer 4}
@@ -1067,7 +1089,7 @@ always matches the pattern:
 rule given in Figure \ref{fig:rule:gh-project} captures this
 pattern and derives a new action named $ShowProject$.
 
-\begin{figure}
+\begin{figure}[h]
 \begin{framed}
 \begin{BVerbatim}
 rule "GitHub profile pages"
@@ -1120,11 +1142,10 @@ matching \textit{/\{username\}/\{project name\}}.}
 The application of the four previous rules leads to the final
 IOSTS depicted in Figure \ref{fig:github:iosts:4}. Now, it can be
 used for application comprehension since most of its actions have
-a precise meaning and clearly describe the application's
-behaviors.
+a precise meaning, and describe the application's behaviors.
 \end{example}
 
-\begin{figure}[ht]
+\begin{figure}[h]
     \begin{center}
     \includegraphics[width=0.6\linewidth]{figures/gh-iosts-41.png}
     \caption{The final IOSTS $\EuScript{S}_3$ obtained after the
@@ -1143,7 +1164,7 @@ the quality of the collected traces, these models are said
 partial. In order to improve the completeness of our inferred
 models, we rely on an automatic testing technique (that is,
 crawling) to interact with the application. This is the role of
-the Robot explorer, driven by the Models generator.
+the \emph{Robot explorer}, driven by the Models generator.
 
 Rather than using a static traversal strategy as in
 \cite{Memon:2003,concolicandroid12,crawljax:tweb12,
@@ -1161,35 +1182,34 @@ extract one complete and executable path $p$ ended by a location
 $l$ of $Loc$ (line 5). This step is sound since all the locations
 of $\EuScript{S}_i$ belong to the location set of
 $\EuScript{S}_1$ (Proposition \ref{prop:loc:inclu}). Such an
-IOSTS preamble is required by the Robot explorer for trying to
-reach the location $l$ by executing every action of $p$. The
-algorithm finally returns a list of paths $List$, which is sent
-to the Robot explorer. The exploration ends once all the
+IOSTS \emph{preamble} is required by the Robot explorer for
+trying to reach the location $l$ by executing every action of
+$p$. The algorithm finally returns a list of paths $List$, which
+is sent to the Robot explorer. The exploration ends once all the
 locations of $\EuScript{S}_i$ or of $\EuScript{S}_1$ are visited
-(line 3). The algorithm only returns unexplored locations even
-if, while the execution of the algorithm, the IOSTS
-$\EuScript{S}_i$ has been regenerated several times since the
-marked locations are also stored in the set $L$. Hence, if a
-location of $\EuScript{S}_i$ is chosen a second time by the
-rules, the algorithm checks if it has been previously visited
-(line 7).
+(line 3). The algorithm returns unexplored locations only even
+if, while executing the algorithm, the IOSTS $\EuScript{S}_i$ is
+regenerated several times because the marked locations are also
+stored in the set $L$. Hence, if a location of $\EuScript{S}_i$
+is chosen a second time by the rules, the algorithm checks
+whether it has been previously visited (line 7).
 
-\begin{algorithm}
+\begin{algorithm}[h]
 \SetKwInOut{Input}{input} \SetKwInOut{Output}{output}
 
 \Input{IOSTS $\EuScript{S}_1$, $\EuScript{S}_i$}
-\Output{List of preambles}
+\Output{List of preambles $List$}
 
-$L:=\emptyset$ List of explored locations of $\EuScript{S}_1$\;
+$L:=\emptyset$ is the list of explored locations of $\EuScript{S}_1$\;
 BEGIN\;
 \While{$L \neq L_{\EuScript{S}_1}$ and $L \neq L_{\EuScript{S}_i}$ }
 {
-Apply the rules on $\EuScript{S}_i$ and extract a  Location List $Loc$\;
+Apply the rules on $\EuScript{S}_i$ and extract a  location list $Loc$\;
 Go back to $\EuScript{S}_1$\;
 
 \ForEach{$l \in Loc$}{
 \If{$l \notin L$}
-{Compute a preamble $p$ from $l0_{\EuScript{S}_1}$ which reaches $l$\;
+{Compute a preamble $p$ from $l0_{\EuScript{S}_1}$ that reaches $l$\;
 
 $L:= L \cup \{l\}$\;
 $List:= List \cup  \{p\}$\;
@@ -1207,21 +1227,22 @@ The rules of the Strategy layer can encode different strategies.
 We propose two examples below:
 
 \begin{itemize}
-    \item \textbf{Classical traversal strategies} (Depth-first
-        search, Breadth-first search) can still be established.
-        For example, Figure \ref{fig:rule:bfs} depicts two rules
-        expressing the choice the next location to explore in a
-        breadth-wise order first. First, the initial location
-        $l0$ is chosen and marked as explored (rule BFS).  Then,
-        the transitions having an initial location marked as
-        explored and a final location not yet explored are
-        collected by the rule BFS2, except for the transitions
-        carrying an HTTP error (response status upper or equal to
-        400).  The $accumulate$ keyword is a Drools function that
-        allows to operate on sets of data, which we used to
-        transcribe the previous sentence.  The selected locations
-        are marked as explored in the IOSTS $\EuScript{S}_i$ with
-        the method $SetExplored$ in the "then" part of the rule;
+    \item \textbf{Classical traversal strategies} (\emph{e.g.},
+        Depth-First Search and Breadth-First Search) can still be
+        performed.  For example, Figure \ref{fig:rule:bfs}
+        depicts two rules expressing the choice the next location
+        to explore in a breadth-wise order first. First, the
+        initial location $l0$ is chosen and marked as explored
+        (rule BFS).  Then, the transitions having an initial
+        location marked as explored and a final location not yet
+        explored are collected by the rule BFS2, except for the
+        transitions carrying an HTTP error (response status upper
+        or equal to 400).  The $accumulate$ keyword is a Drools
+        function that allows to operate on sets of data, which we
+        used to transcribe the previous sentence.  The selected
+        locations are marked as explored in the IOSTS
+        $\EuScript{S}_i$ with the method $SetExplored$ in the
+        "then" part of the rule;
 
     \item \textbf{Semantic-driven strategies} could also be
         applied, when the meaning of some actions is
@@ -1308,36 +1329,44 @@ taken into consideration.
 \label{sec:modelinf:webapps:exp}
 
 We implemented this technique in a prototype tool called
-\textit{Autofunk}. A user interacts with \textit{Autofunk} through a web
-interface and either gives a URL  or a file containing traces.
-These have to be stored in the HTTP Archive (HAR) format as it is
-the defacto standard to describe HTTP traces, used by various
-HTTP related tools. Such traces can be obtained from many HTTP
-monitoring tools (Mozilla Firefox or Google Chrome included).
-Then, \textit{Autofunk} produces IOSTS models, which are stored in a
-database. The last model is depicted in the web interface.
+\textit{Autofunk v1}. A user interacts with \textit{Autofunk}
+through a web interface and either gives a URL or a file
+containing traces.  These traces have to be packaged in the HTTP
+Archive (HAR) format as it is the defacto standard to describe
+HTTP traces, used by various HTTP related tools. Such traces can
+be obtained from many HTTP monitoring tools (Mozilla Firefox or
+Google Chrome included).  Then, \textit{Autofunk} produces IOSTS
+models, which are stored in a database. The last model is
+depicted in a web interface.
 
 The JBoss Drools Expert tool has been chosen to implement the
 rule-based system. Such an engine leverages Object-Oriented
 Programming in the rule statements and takes knowledge bases
-given as Java objects (Location, Transition, GET, POST objects in
-this work).
+given as Java objects (\emph{e.g.}, $Location$, $Transition$,
+$Get$, $Post$ objects in this work). Inference rules are written
+in \emph{.drl} files, which makes it simple for human domain
+experts to write rules. These files are then read by the Drools
+engine during its initialization. Our prototype does not allow
+its user to add rules through the web interface though.
 
-The GitHub website \footnote{\url{https://github.com/}} is an example
-of application giving significant results. We recorded a trace
-set composed of 840 HTTP requests / responses. Then, we applied
-\textit{Autofunk} to them with a Models generator composed of 5 layers
-gathering 18 rules whose 3 are specialized to GitHub. After
-having performed trace filtering (Layer 1), we obtained a first
-IOSTS tree composed of 28 transitions. The next 4 layers
-automatically inferred a last IOSTS tree $\EuScript{S}_4$, given
-in Figure \ref{fig:git:iosts}, that is composed of 12 transitions
-from which 9 have a clear and intelligible meaning. Layers 4 and
-5 include inference rules that are specific to GitHub. For other
-websites, these rules cannot be reused and have to be rewritten.
+The GitHub website \footnote{\url{https://github.com/}} is an
+example of application giving significant results. We recorded a
+trace set composed of 840 HTTP requests / responses. Then, we
+applied \textit{Autofunk} to them with a Models generator
+composed of 5 layers gathering 18 rules whose 3 are specialized
+to GitHub. After having performed trace filtering (Layer 1), we
+obtained a first IOSTS tree composed of 28 transitions. The next
+4 layers automatically inferred a last IOSTS tree
+$\EuScript{S}_4$, given in Figure \ref{fig:git:iosts}, that is
+composed of 12 transitions from which 9 have a clear and
+intelligible meaning. Layers 4 and 5 include inference rules that
+are specific to GitHub. For other websites, these rules cannot be
+reused and have to be rewritten.
 
 \begin{figure}[ht]
-    \includegraphics[width=.45\textwidth]{figures/gh-2-4-bis.png}
+    \begin{center}
+        \includegraphics[width=.45\textwidth]{figures/gh-2-4-bis.png}
+    \end{center}
 
     \caption {This model is the IOSTS $\EuScript{S}_4$ obtained
     from a trace set composed of 840 HTTP requests and responses,
