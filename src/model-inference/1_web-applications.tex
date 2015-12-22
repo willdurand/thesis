@@ -177,6 +177,16 @@ In the following section, we describe our model inference method.
 \section{Inferring models with rule-based expert systems}
 \label{sec:modelinf:webapps:contrib}
 
+The Models generator is mainly composed of a rule-based expert
+system, adopting a forward chaining. Such a system separates the
+knowledge base from the reasoning: the former is expressed with
+data also known as facts and the latter is realized with
+inference rules that are applied to the facts. Our Models
+generator initially takes traces as an initial knowledge base and
+owns inference rules organized into layers for trying to fit the
+human expert behavior. These layers are depicted in Figure
+\ref{fig:se}.
+
 \begin{figure}[ht]
     \begin{center}
         \includegraphics[width=1.0\linewidth]{figures/soict_se.png}
@@ -188,16 +198,6 @@ In the following section, we describe our model inference method.
     exploration strategy by means of rules.}
     \label{fig:se}
 \end{figure}
-
-The Models generator is mainly composed of a rule-based expert
-system, adopting a forward chaining. Such a system separates the
-knowledge base from the reasoning: the former is expressed with
-data also known as facts and the latter is realized with
-inference rules that are applied to the facts. Our Models
-generator initially takes traces as an initial knowledge base and
-owns inference rules organized into layers for trying to fit the
-human expert behavior. These layers are depicted in Figure
-\ref{fig:se}.
 
 Usually, when a human expert has to read traces of an
 application, he often filters them out to only keep those that
@@ -232,13 +232,34 @@ layers should own the most precise rules that may be dedicated to
 one specific application.
 
 For readability purpose, we chose to represent inference rules
-with this format: \textit{When conditions on facts Then actions
-on facts}. This format has been borrowed to the Drools inference
-engine \footnote{\url{http://www.jboss.org/drools/}}.
+with the
+\emph{Drools}\footnote{\url{http://www.jboss.org/drools/}} rule
+inference language. A \emph{Drools rule} has the following rough
+structure:
+
+\begin{BVerbatim}
+rule "name"
+  when
+    LHS
+  then
+    RHS
+end
+\end{BVerbatim}
+
+$LHS$ stands for Left-Hand Side. It is the conditional part of
+the rule, containing the \emph{premises} of the rule. $RHS$ is
+the Right-Hand Side of the rule, \emph{i.e.} the actions that are
+executed (also known as conclusions) whenever $LHS$ is evaluated
+to true. The rule above could have been expressed as follows:
+$\frac{LHS}{RHS}$, but for more complex rules, the Drools
+formalism is more readable. Furthermore, one of the biggest
+advantages of Drools is its ability to handle structured data as
+facts, such as Java objects.
+
 Independently on the application's type, Layers 2 to N handle the
 following fact types: \textit{Location}, which represents an
 IOSTS location, and \textit{Transition}, which represents an
-IOSTS transition, composed of two locations $Linit$, $Lfinal$,
+IOSTS transition composed of two locations $Linit$, $Lfinal$,
 and two data collections \textit{Guard} and \textit{Assign}. It
 is manifest that the inference of models has to be done in a
 finite time and in a deterministic way, otherwise our solution
@@ -316,23 +337,23 @@ and the response content that is the collection (HTTP status,
 headers, response content). A header may also be a collection of
 data or may be null. Contents are textual, \emph{e.g.}, HTML.
 Since we wish to translate such traces into IOSTSs, we turn these
-textual items into a structured valued action $(a(p),\theta)$
-with $a$ the HTTP verb and $\theta$ a valuation over the variable
-set $p=\{URI,request,response\}$. This is captured by the
-following definition:
+textual items into a structured \emph{valued action}
+$(a(p),\theta)$ with $a$ the HTTP verb and $\theta$ a valuation
+over the variable set $p=\{URI,request,response\}$. This is
+captured by the following definition:
 
 \begin{definition}[Structured HTTP traces] Let $t=
 req_1,resp_1$, \dots, $req_n,$ $resp_n$ be a raw HTTP trace
 composed of an alternate finite sequence of HTTP request $req_i$
 and HTTP response $resp_i$. The structured HTTP trace $\sigma$ of
-$t$ is the sequence $(a_1(p),\theta_1) \dots (a_n(p),\theta_n)$
-where:
+$t$ is the sequence of valued actions $\sigma(t) =
+(a_1(p),\theta_1) \dots (a_n(p),\theta_n)$ where:
 
 \begin{itemize}
-    \item $a_i$ is the HTTP verb used to make the request in
+    \item $a_i$ is a HTTP verb used to make the request in
         $req_i$;
 
-    \item $p$ is the parameter set $\{URI, request, response\}$;
+    \item $p$ is a parameter set $\{URI, request, response\}$;
 
     \item $\theta_i$ is a valuation $p \rightarrow D_p$ that
         assigns a value to each variables of $p$.  $\theta$ is
@@ -346,24 +367,25 @@ traces is denoted by $ST$.
 
 If we take back the HTTP messages given in Figure
 \ref{fig:httpexample}, we obtain the structured HTTP trace
-$(Get(p), \theta)$ with $\theta = \{URI="/hello",
-request=\{headers=[ Host= "example.org", Connection =
-"keep-alive", Accept = "text/html" ]\},
-response=\{statusCode=200, headers=[ Content-Type = "text/html",
-Content-Length = 13], content= "Hello, World!"\}\}$.
+$\sigma = (Get(p), \theta)$ with $\theta = \{URI="/hello",
+request=\{headers=[ Host = "example.org", Connection =
+"keep-alive", Accept = "text/html" ]\},\\
+response = \{status\_code = 200, headers=[ Content-Type =
+"text/html",\\
+Content-Length = 13], content = "Hello, World!"\}\}$.
 
 For a main request performed by a user, many other sub-requests
 are also launched by a browser in order to fetch images,
-CSS\footnote{Cascading Style Sheets} and
-JavaScript files.  Generally speaking, these do not enlighten a
-peculiar functional behavior of the application. This is why we
-propose to add rules in Layer 1 to filter these sub-requests out
-from the traces. Such sub-requests can be identified by different
-ways, \emph{e.g.}, by focusing on the file extension found at the end of
-the URI or on the content-type value of the request headers.
-Consequently, this layer includes a set of rules, constituted of
-conditions on the HTTP content found in an action, that remove
-valued actions when the condition is met.
+CSS\footnote{Cascading Style Sheets} and JavaScript files.
+Generally speaking, these do not enlighten a peculiar functional
+behavior of the application. This is why we propose to add rules
+in Layer 1 to filter these sub-requests out from the traces. Such
+sub-requests can be identified by different ways, \emph{e.g.}, by
+focusing on the file extension found at the end of the URI or on
+the content-type value of the request headers.  Consequently,
+this layer includes a set of rules, constituted of conditions on
+the HTTP content found in an action, that remove valued actions
+when the condition is met.
 
 A straightforward rule example that removes the actions relative
 to the retrieval of PNG\footnote{Portable Network Graphics}
@@ -378,7 +400,22 @@ $Action(request.attr)$, where $attr$ is a request's attribute
 symbols such as $or$, $and$, and $not$. Actions can be
 manipulated in the $then$ part of the rule, as shown in Figure
 \ref{fig:layer1:filter}. The $retract$ keyword is used to remove
-a fact from the knowledge base.
+a fact from the knowledge base. This rule, which is an example of
+filtering rules, could be expressed as follows:
+
+\begin{center}
+$\frac{
+    \begin{matrix}
+        valued\_event = (Get(p), \theta) \in \sigma,\\\theta
+        \models [ (request.mime\_type = 'png') \vee
+        (request.file\_extension = 'png') ]
+    \end{matrix}
+}{
+    \begin{matrix}
+        \sigma = \sigma / \{ valued\_event \}
+    \end{matrix}
+}$
+\end{center}
 
 \begin{figure}[ht]
 \begin{framed}
@@ -1281,7 +1318,7 @@ Then, \textit{Autofunk} produces IOSTS models, which are stored in a
 database. The last model is depicted in the web interface.
 
 The JBoss Drools Expert tool has been chosen to implement the
-rule-based system. Such an engine leverages Object Oriented
+rule-based system. Such an engine leverages Object-Oriented
 Programming in the rule statements and takes knowledge bases
 given as Java objects (Location, Transition, GET, POST objects in
 this work).
