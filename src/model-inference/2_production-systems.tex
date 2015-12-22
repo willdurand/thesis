@@ -1,72 +1,82 @@
 \chapter{Model inference for production systems}
 \label{sec:modelinf:prodsystems}
 
+In this chapter, we introduce \emph{Autofunk v2} following by
+\emph{Autofunk v3}. This is our passive model inference
+framework, improving \emph{Autofunk v1}'s capabilities, and
+focused on inferring models of production systems. It combines
+model inference, machine learning, and expert systems to infer \\
+
 \minitoc
+
+\pagebreak
 
 \section{Introduction}
 
-In the industry, building models for production systems, \emph{i.e.}
-event-driven systems that run in production environments and are
-distributed over several devices and sensors, is frequent since
-these are valuable in many situations like testing and fault
-diagnosis for instance. Models may have been written as
-storyboards or with languages such as the Unified Modeling
-Language (UML) or even more formal languages. Usually, these
-models are designed when brand-new systems are built. It has been
-pointed out by our industrial partner that production systems
-have a life span of many years, up to 20 years, and are often
-incrementally updated, but their corresponding models are not.
-This leads to a major issue which is to keep these models up to
-date and synchronized with the respective systems. This is a
-common problem with documentation in general, and it often
+In the Industry, building models for production systems,
+\emph{i.e.} event-driven systems that run in production
+environments and are distributed over several devices and
+sensors, is frequent since these are valuable in many situations
+like testing and fault diagnosis for instance. Models may have
+been written as storyboards or with languages such as the Unified
+Modeling Language (UML) or even more formal languages. Usually,
+these models are designed when brand-new systems are built. It
+has been pointed out by our industrial partner that production
+systems have a life span of many years, up to 20 years, and are
+often incrementally updated, but their corresponding models are
+not.  This leads to a major issue which is to keep these models
+up to date and synchronized with the respective systems. This is
+a common problem with documentation in general, and it often
 implies rather under-specified or not documented systems that no
 one wants to maintain because of lack of understanding.
 
 In this chapter, we focus on this problem for production systems
 that exchange thousands of events a day. Several approaches have
-already been proposed for different types of systems, usually for
-GUI applications, \emph{e.g.}, desktop or mobile applications. Yet, we
+already been proposed for different types of systems.  Yet, we
 noticed that these approaches were not tailored to support
-production systems. From the literature (cf. Chapter
-\ref{sec:related}), we deduced the following key observations:
+production systems. From the literature,
+\crossref{sec:related}{sec:related:modelinf}, we deduced the
+following key observations:
 
 \begin{itemize}
-    \item Model inference approaches give approximate models
-        capturing the behaviors of a system and more. In our
-        context, we want exact models that could be used for
-        regression test case generation and fault diagnosis. We
-        define exactness with the trace-inclusion and
-        trace-equivalence relations given in \cite{petrenko06};
+    \item Most of the existing model inference approaches give
+        approximate models capturing the behaviors of a system
+        and more. In our context, we want exact models that could
+        be used for regression test case generation, and fault
+        diagnosis. We define exactness with the
+        \emph{trace-inclusion} and \emph{trace-equivalence}
+        relations given in \cite{petrenko06};
 
-    \item Most of these approaches perform active testing on
-        systems to learn models. Applying active testing on
-        running systems is complicated since these must not be
-        disrupted (otherwise it may lead to severe damages on the
-        production machines);
+    \item Applying active inference on running systems is
+        complicated since these must not be disrupted (otherwise
+        it may lead to severe damages on the production
+        machines), but also because we cannot rely on any oracle
+        or teacher;
 
     \item Production systems exchange thousands and thousands of
-        events a day. Most of the model inference approaches
-        cannot take such a huge amount of information to build
-        models. We need a solution that is scalable.
+        events a day. Again, most of the model inference
+        approaches cannot take such a huge amount of information
+        to build models. We need a solution that is scalable.
 \end{itemize}
 
-Based on these observations, we propose a pragmatic model
-inference approach that aims at building formal models describing
-functional behaviors of a system. Our goal is to quickly build
-exact models from large amounts of production events.
-Furthermore, execution speed takes an important place for
-building up to date models. Such models could also be used for
-diagnosis every time an issue would be experienced in production.
-The strong originality of our approach lies in the combination of
-two domains for model inference: model-driven engineering and
-expert systems. We consider formal models and their definitions
-to infer models by means of different transformations. But we
-also take into consideration the knowledge of human experts
-captured by expert systems. A part of our approach is based upon
-this notion of knowledge implemented with inference rules. We
-reuse what worked well for web applications and enhance many
-parts of our framework to come up with a better version of our
-\textit{Autofunk} framework, which is presented in this thesis.
+Based on these observations, we propose a pragmatic \emph{passive
+model inference} approach that aims at building formal models
+describing functional behaviors of a system. Our goal is to
+quickly build exact models from large amounts of production
+events.  Furthermore, execution speed takes an important place
+for building up to date models. Such models could also be used
+for diagnosis every time an issue would be experienced in
+production.  The strong originality of our approach lies in the
+combination of two domains for model inference: model-driven
+engineering and expert systems. We consider formal models and
+their definitions to infer models by means of different
+transformations. But we also take into consideration the
+knowledge of human experts captured by expert systems. A part of
+our approach is based upon this notion of knowledge implemented
+with inference rules. We reuse what worked well for web
+applications and enhance many parts of our framework to come up
+with a better version of our \textit{Autofunk} framework, which
+is presented throughout this thesis.
 
 In the following section, we describe the context in which this
 work has been conducted. In Section
@@ -76,9 +86,9 @@ case study. Section \ref{sec:modelinf:usability} highlights our
 work on improving usability of the generated models.  We give our
 results in Section \ref{sec:modelinf:prodsystems:results}. We
 highlight an improvement made on our framework in Section
-\label{sec:modelinf:prodsystems:better-segmentation}, and we
-conclude on this work in Section
-\ref{sec:modelinf:prodsystems:conclusion}.
+\label{sec:modelinf:prodsystems:better-segmentation}, which is
+part of \emph{Autofunk v3}. We conclude on this chapter in
+Section \ref{sec:modelinf:prodsystems:conclusion}.
 
 \textbf{Publications.} This work has been published in the
 Proceedings of Formal Methods 2015 (FM'15)
@@ -86,46 +96,46 @@ Proceedings of Formal Methods 2015 (FM'15)
 International Conference on Distributed Event-Based Systems
 (DEBS'15) \cite{DBLP:conf/debs/SalvaD15}.
 
-\section{Context}
+\section{Context at Michelin}
 \label{prodsys:context}
 
 Michelin is a worldwide tire manufacturer and designs most of its
 factories, production systems, and software by itself.  Like
-many other industrial companies, Michelin follows the Computer
-Integrated Manufacturing (CIM) approach \cite{rehg2004computer},
+many other industrial companies, Michelin follows the \emph{Computer
+Integrated Manufacturing} (CIM) approach \cite{rehg2004computer},
 using computers and software to control the entire manufacturing
 process. In this thesis, we focus on the Level 2 of the CIM
 approach, \emph{i.e.} all the applications that monitor and control
-several production devices and points, \emph{i.e.} locations where a
-production line branches into multiple lines, in a workshop. In a
-factory, there are different workshops for each step of the tire
-building process. At a workshop level, we observe a continuous
-stream of products from specific entry points to a finite set of
-exit points, \emph{i.e.} where products go to reach the next step of the
-manufacturing process, and disappear of the workshop frame in the
-meantime, as shown in Figure \ref{fig:workshop-annotated}.
-Depending on the workshops, products can stay in this frame for
-days up to several weeks.  Indeed, a workshop may contain storage
-areas where products can stay for a while, depending on the
-production campaigns or needs for instance.  Millions of
-\emph{production events} are exchanged among the industrial
-devices of the same workshop every day, allowing some factories
-to build over 30,000 tires a day.
+several production devices and \emph{points}, \emph{i.e.}
+locations where a production line branches into multiple lines,
+in a workshop. In a factory, there are different \emph{workshops}
+for each step of the tire building process. At a workshop level,
+we observe a continuous stream of products from specific entry
+points to a finite set of exit points, \emph{i.e.} where products
+go to reach the next step of the manufacturing process, and
+disappear of the workshop frame in the meantime, as shown in
+Figure \ref{fig:workshop-annotated}.  Depending on the workshops,
+products can stay in this frame for days up to several weeks.
+Indeed, a workshop may contain storage areas where products can
+stay for a while, depending on the production campaigns or needs
+for instance.  Thousands and thousands of \emph{production
+events} are exchanged among the industrial devices of the same
+workshop every day, allowing some factories to build over 30,000
+tires a day.
 
 \begin{figure}[ht]
     \includegraphics[width=1.0\linewidth]{figures/workshop-annotated.png}
 
     \caption{A workshop owns a set of known entry and exit
-    points.  A continuous stream of products starts from known
-    entry points and ends at known exit points. This figure
-    shows two production lines: the pink line having two exit
-    points, and the blue one having only one real exit point,
-    not two. The red line represents a false-positive here,
-    which is a problem we have to take into account while
-    detecting (entry and) exit points.}
+    points. A continuous stream of products starts from known
+    entry points, and ends at known exit points. This figure
+    shows two production lines: the grey line having two exit
+    points (represented by the circles), and the black one having
+    only one real exit point, not two. The red dotted line
+    represents a false-positive here, which is a problem we have
+    to take into account while detecting (entry and) exit
+    points.}
     \label{fig:workshop-annotated}
-
-    \TODO{to redraw}
 \end{figure}
 
 Although there is a finite number of applications, each has
@@ -168,8 +178,8 @@ to design our framework:
         be passively collected. Such systems are compound of
         production lines fragmented into several devices and sensors.
         Hence, a production system can have several entry and exit
-        points. We denote such a system by $\mathit{Sua}$ (system
-        under analysis);
+        points. We denote such a system by $\mathit{Sua}$ (\emph{system
+        under analysis});
 
     \item \textbf{Production events:} an event of the form
         $a(\alpha)$ must include a distinctive label $a$ along with a
@@ -178,13 +188,14 @@ to design our framework:
         over the same parameter set. The events are ordered and
         processed with respect to this order;
 
-    \item \textbf{Traces identification:} traces are sequences of events
-        $a_1(\alpha_1)$...$a_n(\alpha_n)$. A trace is identified by a
-        specific parameter that is included in all event assignments
-        of the same trace. This identifier is denoted by $pid$ and
-        identifies products, \emph{e.g.}, tires at Michelin.  Besides this,
-        event assignments include a time stamp to sort them into
-        traces.
+    \item \textbf{Traces identification:} traces are sequences of
+        events $a_1(\alpha_1) \cdot \dots \cdot a_n(\alpha_n)$. A
+        trace is identified by a specific parameter that is
+        included in all event assignments of the same trace. This
+        identifier is denoted by $pid$ and identifies products,
+        \emph{e.g.}, tires at Michelin.  Besides this, event
+        assignments include a time stamp to sort the events into
+        the traces.
 \end{itemize}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -192,7 +203,7 @@ to design our framework:
 \section{\textit{Autofunk}'s models generator revisited}
 \label{sec:modelinf:prodsystems:autofunk}
 
-In this section, we introduce our revisited framework \textit{Autofunk},
+In this section, we introduce our framework \textit{Autofunk v2},
 whose main architecture is depicted in Figure
 \ref{fig:prodsystems:autofunk-overview}. This new version also
 contains different modules (in grey in the figure): four modules
@@ -208,26 +219,27 @@ derive more abstract and readable models.
     \label{fig:prodsystems:autofunk-overview}
 \end{figure}
 
-We consider \textit{Symbolic Transition Systems} (STSs) as models
-for representing production system behaviors. As reminder, STSs
-are state machines incorporating actions (\emph{i.e.} events in this
-context), labeled on transitions, that show what can be given to
-and observed on the system. In addition, actions are tied to an
-explicit notion of data. A more formal definition can be found
-in \crossref{sec:related}{sec:definitions:sts}.
-As a reminder, the innovation of this framework lies in the
-combination of the notion of expert systems with the STS
-formalism: the STS representation, operators and transformations,
-can be expressed with deduction rules, and the knowledge of a
-human expert of a system can be transcribed with inference rules.
-\textit{Autofunk} combines both domains in such a way that each model
-modification can be expressed and implemented with a rule.  As a
-consequence, the data collections handled by \textit{Autofunk} are always
-expressed with knowledge bases (Events, Actions, Traces, STS,
-etc.) on which rules are applied to infer models. Given a system
-$\mathit{Sua}$ and a set of production events, \textit{Autofunk} builds
-trace-included models, \emph{i.e.} the traces of a model $\EuScript{S}$
-are included in the traces of $\mathit{Sua}$.
+Here, we consider \textit{Symbolic Transition Systems} (STSs) as
+models for representing production system behaviors. As reminder,
+STSs are state machines incorporating actions (\emph{i.e.} events
+in this context), labeled on transitions, that show what can be
+given to and observed on the system. In addition, actions are
+tied to an explicit notion of data. A formal definition can
+be found in \crossref{sec:related}{sec:definitions:sts}.
+The innovation of this framework lies in the combination of the
+notion of expert systems with the STS formalism: the STS
+representation, operators and transformations, are expressed
+with deduction rules, and the knowledge of a human expert of a
+system can be transcribed with inference rules.
+\textit{Autofunk v2} combines both domains in such a way that
+each model modification can be expressed and implemented with a
+rule.  As a consequence, the data collections handled by
+\textit{Autofunk} are always expressed with knowledge bases
+(Events, Actions, Traces, STSs, etc.) on which rules are applied
+to infer models. Given a system $\mathit{Sua}$ and a set of
+production events, \textit{Autofunk} builds \emph{trace-included}
+models, \emph{i.e.} the traces of a model $\EuScript{S}$ are
+included in the traces of $\mathit{Sua}$.
 
 \begin{figure}[ht]
 \begin{framed}
@@ -254,17 +266,17 @@ assignments of variables (\emph{e.g.}, $nsys$).}
 \label{fig:rawdatum}
 \end{figure}
 
-To explain how \textit{Autofunk} works with production systems, we
-consider a case study based upon the example of Figure
-\ref{fig:rawdatum}. It depicts simplified production events
-similar to those extracted from Michelin's logging system.
-$INFO$, $17011$, and $17021$ are labels along
-with assignments of variables \emph{e.g.}, $nsys$, which indicates an
-industrial device number, and $point$, which gives the product
-position.  Real events own around 20 parameters in average. Such
-a format is specific to Michelin but other kinds of events could
-be considered by updating the first module of \textit{Autofunk}.  In this
-example, each line represents an event that happened in the
+To explain how \textit{Autofunk v2} works with production
+systems, we consider a case study based upon the example of
+Figure \ref{fig:rawdatum}. It depicts simplified production
+events similar to those extracted from Michelin's logging system.
+$INFO$, $17011$, and $17021$ are labels along with assignments of
+variables \emph{e.g.}, $nsys$, which indicates an industrial
+device number, and $point$, which gives the product position.
+Real events own around 20 parameters in average. Such a format is
+specific to Michelin but other kinds of events could be
+considered by updating the first module of \textit{Autofunk}.  In
+this example, each line represents an event that happened in the
 system. This format has been borrowed from Michelin's logging
 system, hence its special formatting. It is worth mentioning that
 the first line of this set is an event that is tied to the
@@ -273,19 +285,19 @@ logging system, not the production system we are interested in.
 \subsection{Production events and traces}
 \label{part3:collecting}
 
-\textit{Autofunk} takes production events as input from a system under
-analysis $\mathit{Sua}$. To avoid disrupting the (running) system $\mathit{Sua}$,
-we do not instrument the industrial equipment composing the
-whole system. Everything is done offline with a logging system or
-with monitoring. We start by formatting these events to obtain a
-set of events of the form $a(\alpha)$ with $a$ a label, and
-$\alpha$ a parameter assignment. We call these formatted events,
-\textit{valued events}. Valued events are similar to valued
-actions (as in Chapter \ref{sec:modelinf:webapps}) except that
-this term is more accurate in our industrial context.  Performing
-such a step allows to collect productions events from various
-sources and still be able to perform the next steps in a unique
-manner.
+\textit{Autofunk} takes production events as input from a system
+under analysis $\mathit{Sua}$. To avoid disrupting the (running)
+system $\mathit{Sua}$, we do not instrument the industrial
+equipment composing the whole system. Everything is done offline
+with a logging system or with monitoring. We start by formatting
+these events to obtain a set of events of the form $a(\alpha)$
+with $a$ a label, and $\alpha$ a parameter assignment. We call
+these formatted events, \textit{valued events}. Valued events are
+similar to valued actions (as in Chapter
+\ref{sec:modelinf:webapps}) except that this term is more
+accurate in our industrial context.  Performing such a step
+allows to collect productions events from various sources, and
+still be able to perform the next steps in a unique manner.
 
 In this set, some of these valued events may be irrelevant.  For
 instance, some events may capture logging information and are not
@@ -328,14 +340,16 @@ which do not contain any business value. The variable
 $\$valued\_event$ is a valued event (instance of $ValuedEvent$),
 containing parameter assignments ($Assign$ attribute) that can be
 accessed using the following notation: $Assign.foo$ where $foo$
-is a name and the result its corresponding value.\\The second
-rule removes valued events extracted from very specific events,
-\emph{i.e.} those whose $key$ matches a pattern and having a $inc$ value
-that is not equal to $1$.  To fully understand the syntax of this
-rule, one has to know that when there is no logical connective
-between the conditions, it defaults to a conjunction.  Such a
-rule has been given by a Michelin expert and allows to remove
-some duplicate events.  In the context of Michelin, we use four
+is a name and the result its corresponding value.
+
+The second rule in Figure \ref{fig:removalrules} removes valued
+events extracted from very specific events, \emph{i.e.} those
+whose $key$ matches a pattern and having a $inc$ value that is
+not equal to $1$.  To fully understand the syntax of this rule,
+one has to know that when there is no logical connective between
+the conditions, it defaults to a conjunction.  Such a rule has
+been given by a Michelin expert and allows to remove some
+duplicate events.  In the context of Michelin, we use four
 inference rules to remove all irrelevant events.
 
 \begin{figure}[ht]
@@ -378,18 +392,19 @@ each valued event, and time stamps. We call the resulting trace
 set $Traces(Sua)$:
 
 \begin{definition}[$Traces(Sua)$]
-    Given a system under analysis $\mathit{Sua}$, $Traces(Sua)$ denotes
-    its formatted trace set. $Traces(Sua)$ includes traces of the
-    form $(a_1,\alpha_1) \dots (a_n,\alpha_n)$ such that
-    $(a_i,\alpha_i)_{(1 \leq i \leq n)}$ are (ordered) valued
-    events having the same identifier assignment.
+    Given a system under analysis $\mathit{Sua}$, $Traces(Sua)$
+    denotes its \emph{formatted trace set}. $Traces(Sua)$
+    includes traces of the form $(a_1,\alpha_1) \cdot \dots \cdot
+    (a_n,\alpha_n)$ such that $(a_i,\alpha_i)_{(1 \leq i \leq
+    n)}$ are (ordered) valued events having the same identifier
+    assignment.
 
 	\label{def:structuredtrace}
 \end{definition}
 
 We can now state that a STS model $\EuScript{S}$ is said
-trace-included if and only if $Traces(\EuScript{S}) \subseteq
-Traces(Sua)$ as defined in \cite{petrenko06}.
+\emph{trace-included} if and only if $Traces(\EuScript{S})
+\subseteq Traces(Sua)$ as defined in \cite{petrenko06}.
 
 \subsection{Trace segmentation and filtering}
 \label{sec:modelinf:prodsystems:segmentation}
@@ -403,29 +418,31 @@ events. We can determine which product was present in the
 workshop before by retrieving the first event tied to it.
 If the physical location of this event is not one of the known
 entry points of the workshop, then the product was there before.
-In a similar manner, we are able to retrieve incomplete
-executions related to the end of the collection, \emph{i.e.} the events
-tied to products that did not reach any of the known exit points
-of the workshop.
+In a similar manner, we are able to retrieve \emph{incomplete
+executions} related to the end of the collection, \emph{i.e.} the
+events tied to products that did not reach any of the known exit
+points of the workshop.
 
 We define a \textit{complete trace} as a trace containing all
 events expressing the path taken by a product in a production
-system, from the beginning, \emph{i.e.} one of its entry points, to the
-end, \emph{i.e.} one of its exit points. In the trace set $Traces(Sua)$,
-we do not want to keep incomplete traces, \emph{i.e.}  traces related to
-products which did not pass through one of the known entry points
-or moved to the next step of the manufacturing process using one
-of the known exit points.
+system, from the beginning, \emph{i.e.} one of its entry points,
+to the end, \emph{i.e.} one of its exit points. In the trace set
+$Traces(Sua)$, we do not want to keep incomplete traces,
+\emph{i.e.}  traces related to products which did not pass
+through one of the known entry points or moved to the next step
+of the manufacturing process using one of the known exit points.
 
 \begin{definition}[Complete traces]
-Let $\mathit{Sua}$ be a system under analysis and $Traces({Sua})$
-be its trace set. A trace $t=a_1(\alpha_1) \dots a_n(\alpha_n) \in
-Traces({Sua})$ is said complete if and only if $\alpha_1$
-includes an assignment $point=val1$, which denotes an entry point
-of $\mathit{Sua}$, and $\alpha_n$ includes an assignment
-$point=val2$, which denotes an exit point.  The complete traces
-of $\mathit{Sua}$ are denoted by $CTraces({Sua}) \subseteq
-Traces({Sua})$.
+    Let $\mathit{Sua}$ be a system under analysis and
+    $Traces({Sua})$ be its trace set. A trace $t=a_1(\alpha_1)
+    \cdot \dots \cdot a_n(\alpha_n) \in Traces({Sua})$ is said
+    \emph{complete} if and only if $\alpha_1$ includes an
+    assignment $(point:=val1)$, which denotes an entry point of
+    $\mathit{Sua}$, and $\alpha_n$ includes an assignment
+    $(point:=val2)$, which denotes an exit point.
+
+    The \emph{complete traces} of $\mathit{Sua}$ are denoted by
+    $CTraces({Sua}) \subseteq Traces({Sua})$.
 \end{definition}
 
 We also chose to split $Traces(Sua)$ constructed in the previous step
@@ -447,8 +464,8 @@ This analysis is performed on the assignments $(point:=val)$
 found in the first and last valued events of the traces of
 $Traces(Sua)$ since $point$ captures the product physical
 location and especially the entry and exit points of $\mathit{Sua}$.
-We obtain two ratios $Rinit(point:=val)$ and
-$Rfinal(point:=val)$.  Based on these ratios, one can deduce the
+We obtain two ratios $Rinit(point:=val1)$ and
+$Rfinal(point:=val2)$.  Based on these ratios, one can deduce the
 entry point set $POINT_{init}$ and the exit point set
 $POINT_{final}$ if $Traces(Sua)$ is large enough. Pragmatically,
 we observed that the traces collected during one or two days are
@@ -459,7 +476,7 @@ first $N$ and $M$ ratios only. On the other hand, a week offers
 good results. We chose to set a fixed yet configurable
 minimum limit to 10\%. Assignments $(point:=val)$ having a ratio
 below this limit are not retained. Then, for each assignment
-$\alpha_i=(point:=val)$ in $POINT_{init}$, we construct a trace
+$\alpha_i=(point:=val1)$ in $POINT_{init}$, we construct a trace
 set $ST_i$ such that a trace of $ST_i$ has a first valued event
 including the assignment $\alpha_i$, and ends with a valued event
 including an assignment $(point:=val2)$ in $POINT_{final}$. We
@@ -475,12 +492,13 @@ $t$ having a repetitive pattern $p$ and another equivalent trace
 including this pattern $p$ once, then $t$ is removed since we
 suppose that $t$ does not express a new and interesting behavior.
 Here, traces are removed rather than deleting the repetitive
-patterns to prevent from modifying traces and to keep the trace
-inclusion \cite{petrenko06} property between $CTraces(Sua)$ and
-$Traces(Sua)$.  In Algorithm \ref{algo_traces}, two traces
-$t=\sigma_1 p,\dots,p \sigma_n$ and $t'=\sigma_1 p' \sigma_n$ are
-said equivalent if the patterns $p$, $p'$ and the sub-sequences
-are equivalent, denoted by the $\sim_{(pid)}$ notation:
+patterns to prevent from modifying traces and to keep the
+\emph{trace inclusion} \cite{petrenko06} property between
+$CTraces(Sua)$ and $Traces(Sua)$.  In Algorithm
+\ref{algo_traces}, two traces $t=\sigma_1 p,\dots,p \sigma_n$ and
+$t'=\sigma_1 p' \sigma_n$ are said equivalent if the patterns
+$p$, $p'$ and the sub-sequences are equivalent, denoted by the
+$\sim_{(pid)}$ notation:
 
 \begin{definition}[The $\sim_{(pid)}$ relation]
     Let $p$ be a pattern of a trace $t$ and $p'$ be a pattern of
