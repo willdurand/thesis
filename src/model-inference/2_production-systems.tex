@@ -6,7 +6,8 @@ In this chapter, we introduce \emph{Autofunk v2}, following by
 framework, improving \emph{Autofunk v1}'s capabilities, and
 focused on inferring models of production systems. It combines
 model inference, machine learning, and expert systems to infer
-Symbolic Transition Systems (STSs).\\
+Symbolic Transition Systems (STSs).
+\TODO{to write}\\
 
 \minitoc
 
@@ -252,16 +253,16 @@ included in the traces of $\mathit{Sua}$.
 17-Jun-2014 23:29:59.00|INFO|New File
 
 17-Jun-2014 23:29:59.50|17011|MSG_IN  [nsys: 1] \
-  [nsec: 8] [point: 4] [pid: 1]
+  [nsec: 8] [point: 1] [pid: 1]
 
 17-Jun-2014 23:29:59.61|17021|MSG_OUT [nsys: 1] \
-  [nsec: 8] [point: 4] [tpoint: 8] [pid: 1]
+  [nsec: 8] [point: 3] [tpoint: 8] [pid: 1]
 
 17-Jun-2014 23:29:59.70|17011|MSG_IN  [nsys: 1] \
-  [nsec: 8] [point: 4] [pid: 2]
+  [nsec: 8] [point: 2] [pid: 2]
 
 17-Jun-2014 23:29:59.92|17021|MSG_OUT [nsys: 1] \
-  [nsec: 8] [point: 4] [tpoint: 8] [pid: 2]
+  [nsec: 8] [point: 4] [tpoint: 9] [pid: 2]
 \end{BVerbatim}
 \end{framed}
 
@@ -329,10 +330,10 @@ Figure \ref{fig:rawdatum}.
 \begin{figure}[ht]
 \begin{framed}
     $Traces(Sua) =
-    17011(nsys:=1,nsec:=8,point:=4,pid:=1)\text{ }
-    17021(nsys:=1,nsec:=8,point:=4,tpoint:=8,pid:=1)\text{ }
-    17011(nsys:=1,nsec:=8,point:=4,pid:=2)\text{ }
-    17021(nsys:=1,nsec:=8,point:=4,tpoint:=8,pid:=2)$
+    17011(nsys:=1, nsec:=8, point:=1, pid:=1)\text{ }
+    17021(nsys:=1, nsec:=8, point:=3, tpoint:=8, pid:=1)\text{ }
+    17011(nsys:=1, nsec:=8, point:=2, pid:=2)\text{ }
+    17021(nsys:=1, nsec:=8, point:=4, tpoint:=9, pid:=2)$
 \end{framed}
 
 \caption{Initial trace set $Traces(Sua)$ based on the events
@@ -706,6 +707,7 @@ this point, production events are called \emph{actions} of the STS.
     \label{}
 \end{proposition}
 
+\begin{example}
 Figure \ref{fig:firstmodel} depicts the model obtained from the
 traces given in Figure \ref{fig:tsua}. Every initial trace is now
 represented as a STS branch. Parameter assignments are modeled
@@ -720,6 +722,7 @@ with constraints over transitions, called \textit{guards}.
   based on the traces given in Figure \ref{fig:tsua}.}
   \label{fig:firstmodel}
 \end{figure}
+\end{example}
 
 This STS expresses the behaviors found in $Traces(Sua)$ but in a
 slightly different manner. Trace inclusion \cite{petrenko06}
@@ -749,12 +752,12 @@ mechanism already introduced in the previous chapter.
 \subsection{STS reduction}
 \label{sec:modelinf:prodsystems:reduction}
 
-A model $\EuScript{S}_i$ constructed with the above steps is
-usually too large, and thus cannot be beneficial as is. Using
-such a model for testing purpose would lead to too many test
-cases for instance. That is why we use a reduction step, aiming
-at diminishing the first model into a second one, denoted by
-$R(\EuScript{S}_i)$ that will be more usable. As discussed in
+A model $\EuScript{S}_i$ constructed with the steps presented
+before is usually too large, and thus cannot be beneficial as is.
+Using such a model for testing purpose would lead to too many
+test cases for instance. That is why we use a reduction step,
+aiming at diminishing the first model into a second one, denoted
+by $R(\EuScript{S}_i)$ that is more usable. As discussed in
 Chapter \ref{sec:modelinf:webapps}, most of the existing
 approaches propose two solutions: (i) inferring models with high
 levels of abstraction, which leads to over-approximated models,
@@ -768,70 +771,63 @@ and that there should only be deterministic decisions, the STS
 $\EuScript{S}_i$ should contain branches capturing the same
 sequences of events (without necessarily the same parameter
 assignments).  As a result, we chose to apply an approach
-tailored to support large models that
-consists in combining STS branches that have the same
-sequences of actions so that we still obtain a model having a
-tree structure. When branches are combined together, parameter
-assignments are wrapped into matrices in such a way that trace
-equivalence between the first model and the new one is preserved.
-More precisely, a sequence of successive guards found in a branch
-is stored into a matrix column. By doing this, we reduce the
-model size, we can still retrieve original behaviors and only
-these ones, and we still preserve trace inclusion between the
+tailored to support large models that consists in combining STS
+branches that have the same sequences of actions so that we still
+obtain a model having a tree structure. When branches are
+combined together, parameter assignments are wrapped into
+matrices in such a way that trace equivalence between the first
+model and the new one is preserved.  More precisely, a sequence
+of successive guards found in a branch is stored into a matrix
+column. By doing this, we reduce the model size, we can still
+retrieve original behaviors (and only these ones, \emph{i.e.} no
+approximation), and we still preserve trace inclusion between the
 reduced STS and $Traces(Sua)$.
 The use of matrices offers here another advantage: the parameter
-assignments are now packed into a structure that can be more
-easily analyzed later. As described in Section
+assignments are now packed into a structure that can be easily
+analyzed later. As shown later in Section
 \ref{sec:modelinf:prodsystems:results}, this straightforward
-approach gives good results in terms of STS reduction and
+approach gives good results in terms of STS reduction, and
 requires low processing time, even with millions of transitions.
 
-\begin{figure}[h]
-    \begin{center}
-        \includegraphics[width=0.5\linewidth]{figures/STS2.png}
-    \end{center}
-
-	\caption{Reduced Symbolic Transition System model obtained
-    from the model depicted in Figure \ref{fig:firstmodel}.}
-	\label{fig:reduced-model}
-\end{figure}
-
-Figure \ref{fig:reduced-model} depicts the reduced model obtained
-from the STS of Figure \ref{fig:firstmodel}. Now we have only one
-branch where guards are packed into one matrix $M_{[b]}$.
-
-Given a STS $\EuScript{S}_i$, every STS branch is initially
-adapted to express sequences of guards in a vector form to ease
-the STS reduction. Later, the concatenation of these vectors
-shall give birth to matrices. This adaptation is obtained with
-the definition of the STS operator $Mat$:
+Given a STS $\EuScript{S}_i$, every STS branch is adapted to
+express sequences of guards in a vector form to ease the STS
+reduction. Later, the concatenation of these vectors shall give
+birth to matrices. This adaptation is obtained with the
+definition of the \emph{STS operator} $Mat$:
 
 \begin{definition}[The $Mat$ operator]
 \label{rule:matrix}
   Let $\EuScript{S}_i=<L_{\EuScript{S}_i},l0_{\EuScript{S}_i},V_{\EuScript{S}_i},V0_{\EuScript{S}_i},I_{\EuScript{S}_i},\Lambda_{\EuScript{S}_i},$
   $\rightarrow_{\EuScript{S}_i}>$ be a STS. We denote by
-  $Mat(\EuScript{S}_i)$ the STS operator which consists in
-  expressing guards of STS branches in a vector form.
-
-  $Mat(\EuScript{S}_i)=<L_{Mat(\EuScript{S}_i)},l0_{Mat(\EuScript{S}_i)},V_{Mat(\EuScript{S}_i)},V0_{Mat(\EuScript{S}_i)},I_{Mat(\EuScript{S}_i)},\Lambda_{Mat(\EuScript{S}_i)},$
-  $\rightarrow_{Mat(\EuScript{S}_i)}>$ where:
+  $Mat(\EuScript{S}_i)$ the \emph{STS operator} that consists in
+  expressing guards of STS branches $b_i$ in a vector form, such
+  that
+  $Mat(\EuScript{S}_i)=<L_{Mat(\EuScript{S}_i)},l0_{Mat(\EuScript{S}_i)},V_{Mat(\EuScript{S}_i)},$
+  $V0_{Mat(\EuScript{S}_i)},I_{Mat(\EuScript{S}_i)},\Lambda_{Mat(\EuScript{S}_i)},\rightarrow_{Mat(\EuScript{S}_i)}>$
+  where:
 
 	\begin{itemize}
     \item $L_{Mat(\EuScript{S}_i)}=L_{\EuScript{S}_i}$;
+
     \item $l0_{Mat(\EuScript{S}_i)}=l0_{\EuScript{S}_i}$;
+
     \item $I_{Mat(\EuScript{S}_i)}=I_{\EuScript{S}_i}$;
+
     \item $\Lambda_{Mat(\EuScript{S}_i)} = \Lambda_{\EuScript{S}_i}$;
 
-    \item $V_{Mat(\EuScript{S}_i)}$, $V0_{Mat(\EuScript{S}_i)}$
+    \item $V_{Mat(\EuScript{S}_i)}$, $V0_{Mat(\EuScript{S}_i)}$,
       and $\rightarrow_{Mat(\EuScript{S}_i)}$ are given by the
       following rule:
 
     \begin{center}
     {\Large
-    $\frac{b_i=l0 \xRightarrow{(a_1(p_1),G_1,A_1)...(a_n(p_n),G_n,A_n)} l_n}{
+    $\frac{b_i~= ~l0 \xRightarrow{(a_1(p_1),G_1,A_1) \dots
+    (a_n(p_n),G_n,A_n)} l_n}{
       \begin{matrix}
-        V0_{Mat(\EuScript{S}_i)}:=V0_{Mat(\EuScript{S}_i)} \wedge M_{i}=[G_1,...,G_n]\\
-        l0_{Mat(\EuScript{S}_i)} \xRightarrow{(a_1(p_1),M_i[1],id_V) ...(a_n(p_n),M_i[n],id_V) }_{\rightarrow_{Mat(\EuScript{S}_i)}} l_n\\
+        V0_{Mat(\EuScript{S}_i)}:=V0_{Mat(\EuScript{S}_i)} \wedge
+        M_i=\begin{bmatrix}G_1\\ \vdots\\ G_n\end{bmatrix}\\
+        l0_{Mat(\EuScript{S}_i)}
+        \xRightarrow{(a_1(p_1),M_i[1],id_V) \dots (a_n(p_n),M_i[n],id_V) }_{\rightarrow_{Mat(\EuScript{S}_i)}} l_n\\
       \end{matrix}
     }$
     }
@@ -839,55 +835,62 @@ the definition of the STS operator $Mat$:
   \end{itemize}
 
   Given a branch $b_i \in (\rightarrow_{Mat(\EuScript{S}_i)})^n$,
-  we also denote by $Mat(b_i)=M$ the vector used with $b_i$.
+  we also denote by $Mat(b_i) = M_i$ the vector used with $b_i$.
 \end{definition}
 
-Now, we are ready to merge the STS branches that have the same
+It is now possible to merge the STS branches that have the same
 sequences of actions. This last sentence can be interpreted as an
 equivalence relation over STS branches from which we can derive
-equivalence classes:
+\emph{equivalence classes}:
 
 \begin{definition}[STS branch equivalence class]
 Let
-$\EuScript{S}_i=<L_{\EuScript{S}_i},l0_{\EuScript{S}_i},V_{\EuScript{S}_i},V0_{\EuScript{S}_i},I_{\EuScript{S}_i},\Lambda_{\EuScript{S}_i},$
-$\rightarrow_{\EuScript{S}_i}>$ be a STS obtained from
-$Traces(Sua)$ (and having a tree structure). $[b]$ denotes the
-equivalence class of $\EuScript{S}_i$ branches such that: $[b]=\{
-b_j= l0_{\EuScript{S}_i}\\
-\xRightarrow{(a_1(p_1),G_{1j},A_{1j})\dots(a_n(p_n),G_{nj},A_{nj})}
-l_{nj}(j\geq 1) \mid b=l0_{\EuScript{S}_i}
-\xRightarrow{(a_1(p_1),G_{1},A_{1})\dots(a_n(p_n),G_{n},A_{n})}
-l_n\}.$
+$\EuScript{S}_i=<L_{\EuScript{S}_i},l0_{\EuScript{S}_i},V_{\EuScript{S}_i},V0_{\EuScript{S}_i},I_{\EuScript{S}_i},$
+$\Lambda_{\EuScript{S}_i}, \rightarrow_{\EuScript{S}_i}>$ be a STS obtained from
+$Traces(Sua)$ (and having a tree structure).
+
+$[b]$ denotes the \emph{equivalence class} of $\EuScript{S}_i$
+branches such that: $[b]=\{
+    b_j = l0_{\EuScript{S}_i}\\ \xRightarrow{(a_1(p_1),G_{1j},A_{1j}) \dots
+    (a_n(p_n),G_{nj},A_{nj})}
+    l_{nj} (1 \leq j) \mid b = l0_{\EuScript{S}_i}
+    \xRightarrow{(a_1(p_1),G_{1},A_{1})\dots(a_n(p_n),G_{n},A_{n})} l_n\}.$
 \end{definition}
 
 The reduced STS denoted by $R(\EuScript{S}_i)$ of
 $\EuScript{S}_i$ is obtained by concatenating all the branches of
 each equivalence class $[b]$ found in $Mat(\EuScript{S}_i)$ into
 one branch. This is achieved by an algorithm based on hashes (cf.
-Section \ref{sec:impl-exp-collect}). The vectors found in the
-branches of $[b]$ are concatenated as well into the same unique
-matrix $M_{[b]}$. A column of this matrix represents a complete
-and ordered sequence of guards found in one initial branch of
-$\EuScript{S}_i$. $R(\EuScript{S}_i)$ is defined as follow:
+Section \ref{sec:prodsystems:impl-exp-collect}). The vectors
+found in the branches of $[b]$ are concatenated as well into the
+same unique matrix $M_{[b]}$. A column of this matrix represents
+a complete and ordered sequence of guards found in one initial
+branch of $\EuScript{S}_i$. $R(\EuScript{S}_i)$ is defined as
+follows:
 
 \begin{definition}[Reduced STS $R(\EuScript{S}_i)$]
 	\label{rule:min}
 
 	Let $\EuScript{S}_i=<L_{\EuScript{S}_i},l0_{\EuScript{S}_i},V_{\EuScript{S}_i},V0_{\EuScript{S}_i},I_{\EuScript{S}_i},\Lambda_{\EuScript{S}_i},$ $\rightarrow_{\EuScript{S}_i}>$ be
-    a STS inferred from a structured trace set $Traces(Sua)$. The reduction of $\EuScript{S}_i$ is modeled by the STS
-	$R(\EuScript{S}_i)= <L_R,l0_R,V_R,V0_R,I_R,\Lambda_R,$
-	$\rightarrow_R>$ where:
+    a STS inferred from a structured trace set $Traces(Sua)$. The
+    reduction of $\EuScript{S}_i$ is modeled by the STS
+    $R(\EuScript{S}_i)=
+    <L_R,l0_R,V_R,V0_R,I_R,\Lambda_R,\rightarrow_R>$ where:
 
   \begin{center}
       {\Large
   $\frac{\begin{matrix}
-      [b]=\{b_1,...,b_m\},
-      b=l0_{\EuScript{S}_i} \xRightarrow{(a_1(p_1),G_{1},A_{1})...(a_n(p_n),G_{n},A_{n})}_{Mat(\EuScript{S}_i)} l_{n}\\
+      [b]=\{b_1, \dots ,b_m\},
+      b=l0_{\EuScript{S}_i} \xRightarrow{(a_1(p_1),G_{1},A_{1})
+      \dots (a_n(p_n),G_{n},A_{n})} l_{n}\\
+      % TODO: I removed: _{Mat(\EuScript{S}_i)} from \xRightarrow{}
     \end{matrix}
   }
   {\begin{matrix}
-      V0_R:=V0_R \wedge M_{[b]}=[Mat(b_1),...,Mat(b_m)] \wedge (1 \leq c_{[b]} \leq m),\\
-      l0_R \xRightarrow{(a_1(p_1),M_{[b]}[1,c_{[b]}],id_V)... (a_n(p_n),M_{[b]}[n,c_{[b]}],id_V)}_{\rightarrow_R}\\  (l_{n1}...l_{nm})
+      V0_R:=V0_R \wedge M_{[b]}=[Mat(b_1), \dots ,Mat(b_m)] \wedge (1 \leq c_{[b]} \leq m),\\
+      l0_R \xRightarrow{(a_1(p_1),M_{[b]}[1,c_{[b]}],id_V) \dots
+      (a_n(p_n),M_{[b]}[n,c_{[b]}],id_V)}_{\rightarrow_R} (l_{n1}
+      \cdots l_{nm})
     \end{matrix}
   }$
   }
@@ -900,23 +903,26 @@ matrix column represents a successive list of guards found in a
 branch of the initial STS $\EuScript{S}_i$. The choice of the
 column in a matrix depends on a new variable $c_{[b]}$.
 
-Figure \ref{fig:firstmodel} has two branches that can be combined
-since they have the same action sequences. During the
-construction of the reduced STS depicted in Figure
-\ref{fig:finalmodel}, the guards are placed into two vectors
-$M1=[G1\text{ }G2]$ and $M2=[G3\text{ }G4]$.  These are combined
-into the same matrix $M_{[b]}$. The variable $c_{[b]}$ is used to
-take either the guards of the first column or the guards of the
+\begin{example}
+Figure \ref{fig:reduced-model} depicts the reduced model obtained
+from the STS depicted in Figure \ref{fig:firstmodel}. Its guards
+are placed into two vectors
+$M_1=\begin{bmatrix}G1\\G2\end{bmatrix}$ and
+$M_2=\begin{bmatrix}G3\\G4\end{bmatrix}$, combined into the same
+matrix $M_{[b]}$. The variable $c_{[b]}$ is used to take
+either the guards of the first column or the guards of the
 second one.
 
-\begin{figure}[ht]
-  \includegraphics[width=1.0\linewidth]{figures/STSfinal.png}
+\begin{figure}[h]
+    \begin{center}
+        \includegraphics[width=0.6\linewidth]{figures/STS2.png}
+    \end{center}
 
-    \caption{The construction of the final Symbolic Transition
-    System model. The final model is on the right, obtained after
-    having applied all abstraction rules.}
-	\label{fig:finalmodel}
+	\caption{Reduced Symbolic Transition System model obtained
+    from the model depicted in Figure \ref{fig:firstmodel}.}
+	\label{fig:reduced-model}
 \end{figure}
+\end{example}
 
 The STS $R(\EuScript{S}_i)$ has less branches but still expresses
 the initial behaviors described by the STS $\EuScript{S}_i$.
@@ -934,27 +940,27 @@ proposition:
 \subsection{STS abstraction}
 
 Given the trace set $ST_i \in CTraces(Sua)$, the generated STS
-$R(\EuScript{S}_i)$ can be used for analysis purpose but is still
+$R(\EuScript{S}_i)$ can be used for analysis purpose, but it is still
 difficult to manually interpret, even for experts.  This fifth
-\textit{Autofunk} module aims to analyze $R(\EuScript{S}_i)$ in order to
-produce a new STS $\EuScript{S}_i^\uparrow$ whose level of
-abstraction is lifted by using more intelligible actions. This
+\textit{Autofunk} module aims to analyze $R(\EuScript{S}_i)$ in
+order to produce a new STS $\EuScript{S}_i^\uparrow$ whose level
+of abstraction is lifted by using more intelligible actions. This
 process is performed with inference rules, which encode the
-knowledge of the expert of the system. These are triggered on the
-transitions of $R(\EuScript{S}_i)$ to deduce new transitions. We
-consider the same two types of rules as in
+knowledge of the expert of the system. These rules are fired on
+the transitions of $R(\EuScript{S}_i)$ to deduce new transitions.
+We consider the same two types of rules as in
 \crossref{sec:modelinf:webapps}{sec:modelinf:webapps:L4}:
 
 \begin{itemize}
-    \item the rules replacing some transitions by more
+    \item The rules \emph{replacing some transitions} by more
     comprehensive ones. These rules are of the form: \textit{When
     Transition $l_1 \xrightarrow{a(p),G,A}_{R(\EuScript{S}_i)}
     l_2$, condition on $a(p),G,A$, Then add $l_1
     \xrightarrow{a'(p'),G',A'}_{\EuScript{S}_i^\uparrow} l_2$ and
     retract $l_1 \xrightarrow{a(p),G,A}_{R(\EuScript{S}_i)}
-l_2$};
+    l_2$};
 
-    \item the rules that aggregate some successive transitions
+    \item The rules that \emph{aggregate some successive transitions}
     to a single transition compound of a more abstract action.
     These rules are of the form \textit{When Transition $l_1
     \xRightarrow{(a_1,G_1,A_1),...(a_n,G_n,A_n)} l_n$, condition
@@ -968,8 +974,33 @@ higher level of abstraction. These can be particularly useful for
 generating documentation or better understanding how the system
 behaves, especially when issues are experienced in production.
 On the other hand, it is manifest that the trace inclusion
-property is lost with the STSs constructed by this module since
-sequences are modified.
+property is lost with the STSs constructed by this module because
+sequences are modified. In other words, such models cannot be
+used for testing purpose.
+
+\begin{example}
+If we take back our example, the actions of the STS depicted in
+Figure \ref{fig:reduced-model} can be replaced thanks to the
+inference rules given in Figure \ref{rule:rename-tr}. Such rules
+change the labels $17011$ and $17021$ to more intelligible ones.
+The STS depicted on the left in Figure \ref{fig:finalmodel} is
+the result of the application of these rules on the model given
+in Figure \ref{fig:reduced-model}.
+The rule shown in Figure \ref{rule:aggregate-tr} aggregates
+two transitions into a unique transition indicating the movement
+of a product in its production line. $Transition$ are facts
+modeling STS transitions as seen in Chapter \TODO{to verify}
+\ref{sec:modelinf:webapps}. We need a variable $\$lfinal$ that
+retains the final location of the first transition $\$t1$, so
+that we can reuse it in the condition of the second transition
+$\$t2$. The final location of the first transition must be the
+initial location of the second transition ($Linit == \$lfinal$)
+to perform the aggregation. From 5 initial production events
+that are not self-explanatory, we generate a simpler STS
+constituted of one transition, clearly expressing a part of the
+functioning of the system. The result of this rule is shown in
+Figure \ref{fig:finalmodel} (on the right).
+\end{example}
 
 \begin{figure}[ht]
 \begin{framed}
@@ -978,7 +1009,7 @@ rule "Mark destination requests"
 when:
   $t: Transition(action == "17011")
 then
-  $t.setAction("Destination Request")
+  $t.setAction("DestinationRequest")
 end
 \end{BVerbatim}
 \end{framed}
@@ -989,7 +1020,7 @@ rule "Mark destination responses"
 when:
   $t: Transition(action == "17021")
 then
-  $t.setAction("Destination Response")
+  $t.setAction("DestinationResponse")
 end
 \end{BVerbatim}
 \end{framed}
@@ -1006,16 +1037,16 @@ end
 rule "Aggregate destination requests/responses"
 when
   $t1: Transition(
-    action == "Destination Request", $lfinal := Lfinal
+    action == "DestinationRequest", $lfinal := Lfinal
   )
   $t2: Transition(
-    action == "Destination Response" , Linit == $lfinal
+    action == "DestinationResponse" , Linit == $lfinal
   )
 then
   insert(
     new Transition(
-      "Product Advance",
-      Guard( $t1.Guard, $t2.Guard),
+      "ProductAdvance",
+      Guard($t1.Guard, $t2.Guard),
       Assign($t1.Assign, $t2.Assign),
       $t1.Linit,
       $t2.Lfinal
@@ -1033,22 +1064,17 @@ end
   \label{rule:aggregate-tr}
 \end{figure}
 
-If we take back our example, the actions of the STS of Figure
-\ref{fig:reduced-model} are replaced with the rules of Figure
-\ref{rule:rename-tr} that change the labels $17011$ and
-$17021$ to more intelligible ones. The third rule of
-Figure \ref{rule:aggregate-tr} aggregates the two transitions
-into a unique transition indicating the movement of a product in
-its production line. $Transition$ are facts modeling STS
-transitions as seen in Chapter \ref{sec:modelinf:webapps}. We
-need a variable $\$lfinal$ that retains the final location of the
-first transition $\$t1$, so that we can reuse it in the condition
-of the second transition $\$t2$. The final location of the first
-transition must be the initial location of the second transition
-($Linit == \$lfinal$) to perform the aggregation.
-From 5 initial production events that are not self-explanatory,
-we generate a simpler STS constituted of one transition, clearly
-expressing a part of the functioning of the system.
+\begin{figure}[ht]
+    \begin{center}
+        \includegraphics[width=1.0\linewidth]{figures/STSfinal.png}
+    \end{center}
+
+    \caption{The construction of the final Symbolic Transition
+    System model. The final model is on the right, obtained after
+    having applied all the abstraction rules given in Figures
+    \ref{rule:rename-tr} and \ref{rule:aggregate-tr}.}
+	\label{fig:finalmodel}
+\end{figure}
 
 % By writing 20 rules to enrich the meaning of the actions for our
 % case study with Michelin, we were able to generate a model that
@@ -1066,20 +1092,21 @@ model inference framework for Michelin. Then, we give an
 evaluation on real production systems.
 
 \subsection{Implementation}
-\label{sec:impl-exp-collect}
+\label{sec:prodsystems:impl-exp-collect}
 
-Our framework \textit{Autofunk} is developed in Java and leverages Drools.
-In our industrial context, we have several bases of facts used
-throughout the different \textit{Autofunk} modules, represented as Java
-objects such as: Events, Trace sets $ST_i$, Runs, Transitions,
-and STSs. We chose to target performance and simplicity while
-implementing \textit{Autofunk}. That is why most of the steps are
-implemented with parallel algorithms (except the production event
-parsing). Figure \ref{fig:autofunk_initial_setup} shows the
-initial setup of \textit{Autofunk}. We have sets of log files to parse
-coming from Michelin's logging system. \textit{Autofunk} reads these
-files, and transforms them into traces, that are then used to
-build models.
+Our framework \textit{Autofunk v2} is developed in Java and
+leverages Drools.  In our industrial context, we have several
+bases of facts used throughout the different \textit{Autofunk}
+modules, represented as Java objects such as: Events, Trace sets
+$ST_i$, Runs, Transitions, and STSs. We chose to target
+performance and simplicity while implementing \textit{Autofunk}.
+That is why most of the steps are implemented with parallel
+algorithms (except the production event parsing). Figure
+\ref{fig:autofunk_initial_setup} shows the initial setup of
+\textit{Autofunk}. We have sets of log files to parse coming from
+Michelin's logging system. \textit{Autofunk} reads these files,
+and transforms them into traces, that are then used to build
+models.
 
 \begin{figure}[ht]
     \includegraphics[width=1.0\linewidth]{figures/autofunk_initial_setup.png}
@@ -1222,18 +1249,18 @@ minutes. Hence, \textit{Autofunk} can be used to quickly infer
 models for analysis purpose or to help diagnose faults in a
 system. Experiment $F$ handled almost 10 million events in less
 than half an hour to build two models including around 1,600
-branches. As mentioned in Section \ref{sec:impl-exp-collect}, the
-parsing process is not parallelized yet, and it took up to 20
-minutes to open and parse around 1,000 files (number of Michelin
-log files for this experiment). This issue is solved by the
-architecture presented in Figure \ref{fig:autofunk_gen_branded}.
-The graph shown in Figure \ref{fig:time-vs-messages} summarizes
-the performances of our framework, and how fast it is at
-transforming production events into models (experiments $B$, $C$
-and $D$ run in about 9 minutes). It also demonstrates that
-doubling the event set does not involve doubling its execution
-time. The linear regression reveals that the overall framework
-scales well, even with the current parsing implementation.
+branches. As mentioned earlier in this section, the parsing
+process is not parallelized yet, and it took up to 20 minutes to
+open and parse around 1,000 files (number of Michelin log files
+for this experiment). This issue is solved by the architecture
+presented in Figure \ref{fig:autofunk_gen_branded}.  The graph
+shown in Figure \ref{fig:time-vs-messages} summarizes the
+performances of our framework, and how fast it is at transforming
+production events into models (experiments $B$, $C$ and $D$ run
+in about 9 minutes). It also demonstrates that doubling the event
+set does not involve doubling its execution time. The linear
+regression reveals that the overall framework scales well, even
+with the current parsing implementation.
 
 In Table \ref{fig:results}, the difference between the number of
 trace subsets (7th column) and the number of branches included in
