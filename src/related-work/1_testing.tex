@@ -200,17 +200,19 @@ accessibility:
 
 Independently of the sort of testing one choose, a common problem
 in software testing is to determine a relevant and efficient set
-of test cases.
-\TODO{to be continued}
+of test cases. Because testing cannot guarantee the absence of
+faults, a challenge is to select subset of test cases from all
+possible test cases with a high chance of detecting most faults.
+It is especially the case for regression testing since it is
+usually an expensive process \cite{graves2001empirical}. We refer
+to this choice as the \emph{test selection}, which we present
+below.
 
 \subsubsection{Test selection}
 
-Because testing cannot guarantee the absence of faults, a
-challenge is to select subset of test cases from all possible
-test cases with a high chance of detecting most faults. A lot of
-research on \textit{test selection} (or strategies) has been
-done, and there are numerous existing methods for both black-box
-and white-box approaches:
+A lot of research on \textit{test selection} (or strategies) has
+been done, and there are numerous existing methods for both
+black-box and white-box approaches. Here are some of them:
 
 \begin{itemize}
     \item \textbf{Black-box strategies:} \emph{Combinatorial
@@ -264,11 +266,11 @@ white- and black-box strategies.
 While the Industry created many different testing tools (often
 originating from Academia), they mostly perform testing by hand.
 Researchers in software testing have worked for decades on
-automatic test generation. Automatic testing is, for instance,
-one way to automate white-box approaches, but there are many
-other techniques. On the contrary, Model-based Testing (MbT)
-\cite{Jorgensen:1995:STC:526521} is
-one research area that tries to automate black-box approaches.
+automatic test generation. \emph{Automatic testing}  is, for
+instance, one way to automate white-box approaches \cite{pex},
+but there are many other techniques. On the contrary,
+\emph{Model-based Testing} (MbT) \cite{Jorgensen:1995:STC:526521}
+is one research area that tries to automate black-box approaches.
 In this thesis, we are interested in making production systems
 more reliable by means of Model-based Testing.
 
