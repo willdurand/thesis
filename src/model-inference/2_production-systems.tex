@@ -655,7 +655,7 @@ Given a run set $Runs_i$, The STS $\EuScript{S}_i=<L_{\EuScript{S}_i},
   expresses the behaviors found in $Runs_i$ where:
 
 	\begin{itemize}
-    \item $L_{\EuScript{S}_i}= \{l_i \mid \exists r\in Runs_i,
+    \item $L_{\EuScript{S}_i}= \{l_i \mid \exists ~r \in Runs_i,
       (li,v_\emptyset)$ is a state found in $r\}$;
 
     \item $l0_{\EuScript{S}_i} = l0$ is the initial location
@@ -695,7 +695,7 @@ common initial location $l0$, and for each path, the guard
 corresponds to the conjunction of the assignments of the
 variables found in the trace, which is important to avoid
 over-approximation. This is captured by the proposition below. At
-this point, production events are called actions of the STS.
+this point, production events are called \emph{actions} of the STS.
 
 \begin{proposition}
     Let $ST_i$ be a complete trace set obtained from
