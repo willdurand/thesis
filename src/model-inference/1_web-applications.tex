@@ -106,7 +106,12 @@ model, and the higher the layer is, the more abstract the model
 becomes. Models are then stored and can be later analyzed by
 experts, verification tools, etc. The number of layers is not
 strictly bounded even though it is manifest that it has to be
-finite.
+finite. We choose to infer \emph{Input/Output Symbolic Transistion
+Systems} (IOSTSs) to model behaviors of web applications. Indeed,
+such models are suitable to describe communicating systems,
+\emph{e.g.}, systems based on client-server architectures, with
+data by means of automata along with inputs and outputs
+\cite{Rusu:2000:AST:647982.743536}.
 
 \begin{figure}[ht]
     \begin{center}
@@ -122,7 +127,7 @@ The Models generator relies upon traces to construct IOSTSs (cf.
 \crossref{sec:related}{sec:definitions:iosts}), but the given
 trace set may not be substantial enough to generate relevant
 IOSTSs. More traces could be yet collected as far as the
-application being analyzed is an event-driven application.  Such
+application being analyzed is an event-driven application. Such
 traces can be produced by stimulating and exploring the
 application with automatic testing. In our approach, this
 exploration is achieved by the \textit{Robot explorer}, which is
@@ -366,14 +371,16 @@ traces is denoted by $ST$.
     \label{def:structured-http-traces}
 \end{definition}
 
+\begin{example}
 If we take back the HTTP messages given in Figure
 \ref{fig:httpexample}, we obtain the structured HTTP trace
 $\sigma = (Get(p), \theta)$ with $\theta = \{URI="/hello",
 request=\{headers=[ Host = "example.org", Connection =
-"keep-alive", Accept = "text/html" ]\},\\
+"keep-alive", Accept =\\"text/html" ]\},
 response = \{status\_code = 200, headers=[ Content-Type =
-"text/html",\\
+"text/html",
 Content-Length = 13], content = "Hello, World!"\}\}$.
+\end{example}
 
 For a main request performed by a user, many other sub-requests
 are also launched by a browser in order to fetch images,
@@ -464,11 +471,11 @@ action is covered $k+1$ times in the expert system engine).
 
 An IOSTS is also associated with an Input/Output Labeled
 Transition System (IOLTS) to formulate its semantics
-\cite{rusu2005automatic}.  Intuitively, IOLTS semantics
-correspond to valued automata without symbolic variable, which
-are often infinite. IOLTS states are labeled by internal variable
-valuations, and transitions are labeled by actions and parameter
-valuations. The semantics of an IOSTS
+\cite{rusu2005automatic,FTW05,FTW06}.  Intuitively, IOLTS
+semantics correspond to valued automata without symbolic
+variable, which are often infinite. IOLTS states are labeled by
+internal variable valuations, and transitions are labeled by
+actions and parameter valuations. The semantics of an IOSTS
 $\EuScript{S}=<L,l0,V,V0,I,\Lambda,\rightarrow>$ is the IOLTS
 $\llbracket \EuScript{S}\rrbracket = <S,s_0,\Sigma,\rightarrow>$,
 where:
@@ -480,9 +487,7 @@ where:
 
     \item $\Sigma$ is a set of valued actions;
 
-    \item $\rightarrow$ is the transition relation. A more
-        complete definition of IOLTS semantics can be found in
-        \cite{FTW05}.
+    \item $\rightarrow$ is the transition relation.
 \end{itemize}
 
 Given an IOSTS transition $l_1 \xrightarrow{a(p),G,A}l_2$, we
@@ -506,13 +511,13 @@ and injecting states on the right and left sides of
 each valued action $(a_i(p),\theta_i)$ of $\sigma$. Keeping in
 mind the IOLTS semantics definition, a state shall be modeled by
 the couple $((URI,k),v_\emptyset)$ with $v_\emptyset$ the empty
-valuation.  $(URI,k)$ is a couple composed of a URI and of an
-integer $(k \geq 0)$. Typically, a couple $(URI,k)$ shall be a
+valuation.  $(URI,k)$ is a couple composed of a URI and an
+integer $(k \geq 0)$, which shall be a
 location of the future IOSTS. All the runs $r$ of the run set
 $SR$ start with the same state $(l0,v_\emptyset)$. Then, a run is
 constructed by incrementally covering one trace: for an action
 $(a_i,\theta_i)$ found in a trace, we extract the valuation
-$URI=val$ from $\theta_i$ giving the URI value of the next
+$URI:=val$ from $\theta_i$ giving the URI value of the next
 resource reached after the action $a_i$, and we complete the
 current run $r$ with $(a_i,\theta_i)$ followed by the state
 $((val,k),v_\emptyset)$.  Since we wish to preserve the
@@ -549,10 +554,9 @@ BEGIN\;
 $States:=\emptyset$ is the set of the constructed states\;
 
 \If{$ST$ is empty} {
-$SR:= \{(l0,v_\emptyset)\}$}
-
+    $SR:= \{(l0,v_\emptyset)\}$}\;
 \Else{
-    $SR:= \emptyset$
+    $SR:= \emptyset$\;
 
     \ForEach{trace $\sigma=(a_0,\theta_0)...(a_n,\theta_n) \in ST$}{
         $r:= (l0,v_\emptyset)$\;
@@ -569,11 +573,10 @@ $SR:= \{(l0,v_\emptyset)\}$}
 
             $States:=States \cup \{s\}$\;
 
-            $r:=r \cdot (a_i,\theta_i) \cdot s$
+            $r:=r \cdot (a_i,\theta_i) \cdot s$\;
 
         }%endfor_i
-
-        $SR:=SR \cup \{r\}$
+        $SR := SR \cup \{r\}$\;
     }%endfor trace
 }
 END\;
@@ -584,9 +587,9 @@ END\;
 
 \begin{proposition}
     For each trace $\sigma \in ST$, Algorithm \ref{traces_to_runs}
-    constructs a run $r=s_0 \cdot (a_0,\theta_0) \cdot s_1 \dots
-    s_n \cdot (a_n,\theta_n) \cdot s_{n+1} \in SR$ such that
-    $\forall (a_i,\theta_i)_{0<i\leq n} \in \sigma, \exists ~!~ s_i
+    constructs a run $r=s_0 \cdot (a_0,\theta_0) \cdot s_1 \cdot
+    \dots \cdot s_n \cdot (a_n,\theta_n) \cdot s_{n+1} \in SR$ such that
+    $\forall (a_i,\theta_i)_{(0 < i\leq n)} \in \sigma, \exists ~!~ s_i
     \cdot (a_i,\theta_i) \cdot s_{i+1}$ in $r$.
 \end{proposition}
 
@@ -631,7 +634,7 @@ starting from the same initial location.
 
     \item $\rightarrow_{\EuScript{S}_1}$ is defined by the
         inference rule given below, applied to every run
-        $r = s_0 \cdot (a_0,\theta_0) \cdot s_1 \dots
+        $r = s_0 \cdot (a_0,\theta_0) \cdot s_1 \cdot \dots \cdot
         s_i \cdot (a_i,\theta_i) \cdot s_{i+1} \in SR$:
 
         \begin{center}
@@ -1404,6 +1407,17 @@ is. It can be as difficult as writing a formal model, hence the
 need for an automated way to write the rules of Layers 3 to N.
 Ideally, the framework itself should generate a set of rules,
 \emph{e.g.}, using a machine learning technique.
+
+We chose to model behaviors of web applications using
+Input/Output Symbolic Transition Systems. Yet, we did not
+leverage is main characteristic, \emph{i.e.} the distinction
+betwen input and output actions. At first, we thought that
+distinguishing HTTP requests from HTTP responses would have made
+sense but it was a mistake. Indeed, to represent a full action of
+a web application, one cannot separate the HTTP request from its
+HTTP response. Our inferred IOSTSs are actually STSs, which is
+perfectly fine because IOSTS is a specialization of STS. In the
+sequel, we use STS models.
 
 The first results on model inference were very encouraging, so we
 decided to rework our architecture to build a better framework on

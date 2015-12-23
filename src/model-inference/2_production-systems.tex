@@ -1,11 +1,12 @@
 \chapter{Model inference for production systems}
 \label{sec:modelinf:prodsystems}
 
-In this chapter, we introduce \emph{Autofunk v2} following by
+In this chapter, we introduce \emph{Autofunk v2}, following by
 \emph{Autofunk v3}. This is our passive model inference
 framework, improving \emph{Autofunk v1}'s capabilities, and
 focused on inferring models of production systems. It combines
-model inference, machine learning, and expert systems to infer \\
+model inference, machine learning, and expert systems to infer
+Symbolic Transition Systems (STSs).\\
 
 \minitoc
 
@@ -18,8 +19,8 @@ In the Industry, building models for production systems,
 environments and are distributed over several devices and
 sensors, is frequent since these are valuable in many situations
 like testing and fault diagnosis for instance. Models may have
-been written as storyboards or with languages such as the Unified
-Modeling Language (UML) or even more formal languages. Usually,
+been written as storyboards or with languages such as the \emph{Unified
+Modeling Language} (UML) or even more formal languages. Usually,
 these models are designed when brand-new systems are built. It
 has been pointed out by our industrial partner that production
 systems have a life span of many years, up to 20 years, and are
@@ -86,7 +87,7 @@ case study. Section \ref{sec:modelinf:usability} highlights our
 work on improving usability of the generated models.  We give our
 results in Section \ref{sec:modelinf:prodsystems:results}. We
 highlight an improvement made on our framework in Section
-\label{sec:modelinf:prodsystems:better-segmentation}, which is
+\ref{sec:modelinf:prodsystems:better-segmentation}, which is
 part of \emph{Autofunk v3}. We conclude on this chapter in
 Section \ref{sec:modelinf:prodsystems:conclusion}.
 
@@ -191,7 +192,7 @@ to design our framework:
         processed with respect to this order;
 
     \item \textbf{Traces identification:} traces are sequences of
-        events $a_1(\alpha_1) \cdot \dots \cdot a_n(\alpha_n)$. A
+        events $a_1(\alpha_1) \dots  a_n(\alpha_n)$. A
         trace is identified by a specific parameter that is
         included in all event assignments of the same trace. This
         identifier is denoted by $pid$ and identifies products,
@@ -217,9 +218,9 @@ derive more abstract and readable models.
         \includegraphics[width=1.0\linewidth]{figures/autofunk.png}
     \end{center}
 
-    \caption{Overview of \textit{Autofunk} revisited with the different
-    modules in grey along with their corresponding steps. The last
-    module (STS abstraction) is optional.}
+    \caption{Overview of \textit{Autofunk v2}. It is a set of
+    different modules (in grey) along with their corresponding
+    steps. The last module (STS abstraction) is optional.}
     \label{fig:prodsystems:autofunk-overview}
 \end{figure}
 
@@ -270,6 +271,7 @@ assignments of variables (\emph{e.g.}, $nsys$).}
 \label{fig:rawdatum}
 \end{figure}
 
+\begin{example}
 To explain how \textit{Autofunk v2} works with production
 systems, we consider a case study based upon the example of
 Figure \ref{fig:rawdatum}. It depicts simplified production
@@ -285,11 +287,12 @@ system. This format has been borrowed from Michelin's logging
 system, hence its special formatting. It is worth mentioning that
 the first line of this set is an event that is tied to the
 logging system, not the production system we are interested in.
+\end{example}
 
 \subsection{Production events and traces}
 \label{part3:collecting}
 
-\textit{Autofunk} takes production events as input from a system
+\textit{Autofunk v2} takes production events as input from a system
 under analysis $\mathit{Sua}$. To avoid disrupting the (running)
 system $\mathit{Sua}$, we do not instrument the industrial
 equipment composing the whole system. Everything is done offline
@@ -303,20 +306,21 @@ accurate in our industrial context.  Performing such a step
 allows to collect productions events from various sources, and
 still be able to perform the next steps in a unique manner.
 
-In this set, some of these valued events may be irrelevant.  For
+In this set, some of these valued events are irrelevant.  For
 instance, some events may capture logging information and are not
 part of the functioning of the system. In Figure
-\ref{fig:rawdatum}, the event having the type $INFO$
-belongs to this category and can be safely removed. Filtering is
-achieved by an expert system and inference rules. Here again, a
-human expert knows which events should be filtered out, and
-inference rules offer a natural way to express his knowledge. On
-top of that, expert systems also offer fast processing in this
-situation. We use inference rules of the form:
+\ref{fig:rawdatum}, the event having the type $INFO$ belongs to
+this category and can be safely removed. Filtering is achieved by
+an expert system and inference rules. Here again, a human expert
+knows which events should be filtered out, and inference rules
+offer a natural way to express his knowledge. On top of that,
+expert systems also offer fast processing in this situation. We
+use inference rules of the form:
 
 \textit{When $a(\alpha)$, condition on $a(\alpha)$, then
-retract($a(\alpha)$)}.
+retract $a(\alpha)$}.
 
+\begin{example}
 The remaining valued events are time-ordered to produce an
 initial set of traces denoted by $Traces(Sua)$. Figure
 \ref{fig:tsua} illustrates this set obtained from the events of
@@ -324,17 +328,18 @@ Figure \ref{fig:rawdatum}.
 
 \begin{figure}[ht]
 \begin{framed}
-    $Traces(Sua) = \{
-    (17011(nsys:=1,nsec:=8,point:=4,pid:=1)\text{ }
-    17021(nsys:=1,nsec:=8,point:=4,tpoint:=8,pid:=1))$,
-    $(17011(nsys:=1,nsec:=8,point:=4,pid:=2)\text{ }
-    17021(nsys:=1,nsec:=8,point:=4,tpoint:=8,pid:=2)) \}$
+    $Traces(Sua) =
+    17011(nsys:=1,nsec:=8,point:=4,pid:=1)\text{ }
+    17021(nsys:=1,nsec:=8,point:=4,tpoint:=8,pid:=1)\text{ }
+    17011(nsys:=1,nsec:=8,point:=4,pid:=2)\text{ }
+    17021(nsys:=1,nsec:=8,point:=4,tpoint:=8,pid:=2)$
 \end{framed}
 
 \caption{Initial trace set $Traces(Sua)$ based on the events
 given in Figure \ref{fig:rawdatum}.}
 \label{fig:tsua}
 \end{figure}
+\end{example}
 
 Figure \ref{fig:removalrules} shows two concrete rules applied to
 Michelin systems. These two rules are written with the Drools
@@ -398,9 +403,9 @@ set $Traces(Sua)$:
 \begin{definition}[$Traces(Sua)$]
     Given a system under analysis $\mathit{Sua}$, $Traces(Sua)$
     denotes its \emph{formatted trace set}. $Traces(Sua)$
-    includes traces of the form $(a_1,\alpha_1) \cdot \dots \cdot
-    (a_n,\alpha_n)$ such that $(a_i,\alpha_i)_{(1 \leq i \leq
-    n)}$ are (ordered) valued events having the same identifier
+    includes traces of the form $a_1(\alpha_1) \dots
+    a_n(\alpha_n)$ such that $a_i(\alpha_i)_{(1 \leq i \leq
+    n)}$ are ordered valued events having the same identifier
     assignment.
 
 	\label{def:structuredtrace}
@@ -439,7 +444,7 @@ of the manufacturing process using one of the known exit points.
 \begin{definition}[Complete traces]
     Let $\mathit{Sua}$ be a system under analysis and
     $Traces({Sua})$ be its trace set. A trace $t=a_1(\alpha_1)
-    \cdot \dots \cdot a_n(\alpha_n) \in Traces({Sua})$ is said
+    \dots a_n(\alpha_n) \in Traces({Sua})$ is said
     \emph{complete} if and only if $\alpha_1$ includes an
     assignment $(point:=val1)$, which denotes an entry point of
     $\mathit{Sua}$, and $\alpha_n$ includes an assignment
@@ -460,10 +465,11 @@ Algorithm \ref{algo_traces}. It starts by splitting $Traces(Sua)$
 into several trace sets $ST_i$, one for each entry point of the
 system $\mathit{Sua}$, and then removes incomplete traces. Since
 we want a framework as flexible as possible, we chose to perform
-a statistical analysis on $Traces(Sua)$ aiming at automatically
-detecting the entry and exit points.  In Michelin systems, the
-parameter $point$ stores the product physical location and can be
-used to deduce the entry and exit points of the systems.
+a \emph{statistical analysis} on $Traces(Sua)$ aiming at
+automatically detecting the entry and exit points.  In Michelin
+systems, the parameter $point$ stores the product physical
+location and can be used to deduce the entry and exit points of
+the systems.
 This analysis is performed on the assignments $(point:=val)$
 found in the first and last valued events of the traces of
 $Traces(Sua)$ since $point$ captures the product physical
@@ -484,75 +490,95 @@ $\alpha_i=(point:=val1)$ in $POINT_{init}$, we construct a trace
 set $ST_i$ such that a trace of $ST_i$ has a first valued event
 including the assignment $\alpha_i$, and ends with a valued event
 including an assignment $(point:=val2)$ in $POINT_{final}$. We
-obtain the set $ST=\{ST_1,...,ST_N\}$ with $N$ the number of
+obtain the set $ST=\{ST_1,\dots,ST_N\}$ with $N$ the number of
 entry points of the system $\mathit{Sua}$.
 
+\begin{example}
 In our straightforward example, we obtain one trace set
-$ST_1=Traces(Sua)$.
+$ST_1 = Traces(Sua) \in ST$.
+\end{example}
 
 Thereafter, \textit{Autofunk} scans the traces in $ST$ and tries
-to detect repetitive patterns $p,\dots,p$. If it finds a trace
-$t$ having a repetitive pattern $p$ and another equivalent trace
-including this pattern $p$ once, then $t$ is removed since we
-suppose that $t$ does not express a new and interesting behavior.
-Here, traces are removed rather than deleting the repetitive
-patterns to prevent from modifying traces and to keep the
-\emph{trace inclusion} \cite{petrenko06} property between
-$CTraces(Sua)$ and $Traces(Sua)$.  In Algorithm
-\ref{algo_traces}, two traces $t=\sigma_1 p,\dots,p \sigma_n$ and
-$t'=\sigma_1 p' \sigma_n$ are said equivalent if the patterns
-$p$, $p'$ and the sub-sequences are equivalent, denoted by the
-$\sim_{(pid)}$ notation:
+to detect repetitive patterns $p \dots p$. A \emph{pattern} is a
+sequence of valued events that should contain at least one valued
+event. For example, $p_x = a_x(\alpha_x)$ is a pattern, and
+$p_{y} = a_y(\alpha_y) a_y(\alpha_y)$ is another pattern, which
+is not equivalent to $p_x$. This notion of pattern is specific to
+our industrial context where physical devices may send
+information multiple times until they get an acknowledgment.
+
+If \emph{Autofunk} finds a trace $t$ having a repetitive pattern
+$p$, and another \emph{equivalent trace} $t'$ including this
+pattern $p$ once, then $t$ is removed since we suppose that $t$
+does not express a new and interesting behavior. Traces are
+removed rather than deleting the repetitive patterns to prevent
+from modifying traces and to keep the \emph{trace inclusion}
+\cite{petrenko06} property between $CTraces(Sua)$ and
+$Traces(Sua)$. The $\sim_{(pid)}$ relation is used to define
+equivalence between two traces:
 
 \begin{definition}[The $\sim_{(pid)}$ relation]
-    Let $p$ be a pattern of a trace $t$ and $p'$ be a pattern of
-    a trace $t'$. We denote by $\sim{(pid)}$ the relation that
-    defines the equivalence between $t$ and $t'$, and we write
-    $t \sim_{(pid)} t'$ if and only if $t$ and $t'$ have the same
-    successive valued events after having removed the assignments
-    of the variable $pid$.
+    Let $t$ and $t'$ be two traces. We denote by $\sim_{(pid)}$
+    the relation that defines the equivalence between $t$ and
+    $t'$, and we write $t \sim_{(pid)} t'$, if and only if
+    $t$ and $t'$ have the same successive valued events after
+    having removed the assignments of the variable $pid$.
 \end{definition}
 
-At the end we obtain the complete trace set $CTraces(Sua)$.
+In Algorithm \ref{algo_traces}, two traces $t=\sigma_i ~p \dots
+p~ \sigma_j$ and $t'=\sigma_i' ~p'~ \sigma_j'$ are said
+\emph{equivalent} if the patterns $p$, $p'$, and the sub-traces
+$\sigma_i = a_1(\alpha_1) \dots a_i(\alpha_i)$, $\sigma_j =
+a_j(\alpha_j) \dots a_n(\alpha_n)$, $\sigma_i'$, $\sigma_j'$ are
+equivalent, \emph{i.e.} $p \sim_{(pid)} p'$, $\sigma_i
+\sim_{(pid)} \sigma_i'$, and $\sigma_j \sim_{(pid)} \sigma_j'$,
+and we can remove $t$ from $ST$.
+
+At the end of Algorithm \ref{algo_traces} we obtain the complete
+trace set $CTraces(Sua)$.
 
 \begin{algorithm}[h]
 	\SetKwInOut{Input}{input}
 	\SetKwInOut{Output}{output}
 
-  \Input{$Traces(Sua)$,\\optionally entry point number $N$ and/or exit point number $M$}
+  \Input{$Traces(Sua)$, optionally the number of entry points
+  $N$ and/or the number of exit points $M$}
   \Output{$CTraces(Sua)=\{ST_1,...,ST_n\}$}
 
 \BlankLine
 BEGIN\;
 \emph{Step 1. $Traces(Sua)$ segmentation}
 
-\ForEach{$t=(a_1,\alpha_1)...(a_n,\alpha_n) \in Traces(Sua)$} {
-$Rinit((point:=val)\subset \alpha_1)++$\;
+\ForEach{$t=a_1(\alpha_1) \dots a_n(\alpha_n) \in Traces(Sua)$} {
+$Rinit((point:=val1)\subset \alpha_1)++$\;
 $Rfinal((point:=val2)\subset \alpha_n)++$\;
 }
 $POINT_{init}=\{(point:=val) \mid Rinit((point:=val))>10$\% or belongs to the N highest ratios$\}$\;
 $POINT_{final}=\{(point:=val) \mid Rfinal((point:=val))>10$\% or belongs to the M highest ratios$\}$\;
 \BlankLine
 
+$ST := \emptyset$\;
 \ForEach{$\alpha_i=(point:=val) \in POINT_{init}$} {
-	$ST_i=\{a1(\alpha_1)...an(\alpha_n)\in Traces(Sua) \mid \alpha_i\subset \alpha_1, \exists (point:=val2)\subset \alpha_n, (point:=val2)\in POINT_{final}    \}$\;
+	$ST_i := \{a_1(\alpha_1) \dots a_n(\alpha_n)\in Traces(Sua) \mid
+	\alpha_i\subset \alpha_1, \exists ~(point:=val2) \subset
+\alpha_n \wedge (point:=val2) \in POINT_{final}    \}$\;
+
+    $ST := ST \cup \{ ST_i \}$\;
 }
-$ST:=\{ST_1,...,ST_N\}$\;
 
 \BlankLine
-\emph{Step 2. trace filtering}
+\emph{Step 2. Trace filtering}
 
-\ForEach{$t=\sigma_1p...p\sigma_n\in ST$} {
-	\If{ $\exists t'=\sigma_1'p'\sigma_n'\in ST$ such that $p\sim_{(pid)}p'$, $\sigma_1\sim_{(pid)}\sigma_1'$, $\sigma_n\sim_{(pid)}\sigma_n'$ }
-	{
-		$ST:= ST/ \{  t \}$\;
-	}
+\ForEach{$t = \sigma_i ~p \dots p~ \sigma_j \in ST$} {
+    \If{$\exists ~t'= \sigma_i' ~p'~ \sigma_j' \in ST
+    \mid
+    p \sim_{(pid)} p' \wedge \sigma_i \sim_{(pid)} \sigma_i' \wedge
+    \sigma_j \sim_{(pid)} \sigma_j'$}{
+        $ST := ST \setminus \{  t \}$\;
+    }
+}
 
-
-	}
-
-    $CTraces(Sua) := ST$
-
+$CTraces(Sua) := ST$\;
 END\;
 
 \caption{Trace segmentation algorithm}
@@ -564,35 +590,41 @@ END\;
 
 One model is then built for each trace set $ST_i \in
 CTraces(Sua)$ by reusing the technique introduced in
-\crossref{sec:modelinf:webapps}{sec:iosts-gen}. Given a set
-$ST_i$, a first STS, denoted by $\EuScript{S}_i$, is built in a
-simple yet quick manner. Each trace of $ST_i$ is completed to
-derive a set of runs. A run is an alternate sequence of states
-and events. Given a trace $t$ in $ST_i$, states, which are
-unique, are injected before and after each event of $t$. States
-must be unique to keep the ordering of the events in the runs,
-and to prevent merging different behaviors in the model.  The
-initial state is an exception though as it is shared by all the
-runs. The model $\EuScript{S}_i$ is obtained by transforming runs
-into sequences of transitions that are then joined together.
+\crossrefp{sec:modelinf:webapps}{sec:modelinf:webapps:L2}{sec:iosts-gen}.
+Given a set $ST_i$, a first STS, denoted by $\EuScript{S}_i$, is
+built in a simple yet quick manner. Each trace of $ST_i$ is
+completed to derive a set of runs. A run is an alternate sequence
+of states and events. Given a trace $t$ in $ST_i$, states, which
+are unique, are injected before and after each event of $t$.
+States must be unique to keep the ordering of the events in the
+runs, and to prevent merging different behaviors in the model.
+The initial state is an exception though as it is shared by all
+the runs. The model $\EuScript{S}_i$ is obtained by transforming
+runs into sequences of transitions that are then joined together.
+This is similar to what we have done in the previous chapter
+except that we now have to deal with many trace sets.
 
-The translation of $ST_i$ into a run set denoted by $Runs_i$ is done
-by completing traces with states. Each run starts by the same
-initial state $(l0,v_\emptyset)$ with $v_\emptyset$ the empty
-assignment. Then, new states are injected after each event.
+The translation of $ST_i$ into a run set denoted by $Runs_i$ is
+done by completing traces with states. Each run starts by the
+same initial state $(l0,v_\emptyset)$ with $v_\emptyset$ the
+empty assignment. Then, new states are injected after each event.
 $Runs_i$ is formally given by the following definition:
 
 \begin{definition}[Structured runs]
-  Let $ST_i$ be a complete trace set obtained from
-  $\mathit{Sua}$. We denote by $Runs_i$ the set of runs derived from
-  $ST_i$ with the following inference rule:
+    Let $ST_i$ be a \emph{complete trace set} obtained from
+    $\mathit{Sua}$. We denote by $Runs_i$ the \emph{set of runs}
+    derived from $ST_i$ with the following inference rule:
 
-  \begin{center}
+    \begin{center}
     {\Large
-    $\frac{\sigma_{k(1\leq k \leq n)}=(a_1,\alpha_1)...(a_n,\alpha_n) \in ST_i}
-    {(l0,v_\emptyset) (a_1,\alpha_1) (l_{k1},v_\emptyset) \dots (l_{kn-1},v_\emptyset) (a_n,\alpha_n) (l_{kn},v_\emptyset) \in Runs_i}$
+    $\frac{
+        \sigma_{k(1\leq k \leq n)}=a_1(\alpha_1) \dots a_n(\alpha_n)~ \in ~ST_i
+    }{
+        (l0,v_\emptyset) \cdot a_1(\alpha_1) \cdot
+        (l_{k1},v_\emptyset) \cdot \dots \cdot (l_{kn-1},v_\emptyset)
+        \cdot a_n(\alpha_n) \cdot (l_{kn},v_\emptyset)~ \in ~Runs_i}$
     }
-  \end{center}
+    \end{center}
 \end{definition}
 
 The above definition preserves trace inclusion \cite{petrenko06}
@@ -606,20 +638,21 @@ $Traces(Runs_i) \subseteq Traces(Sua)$.
 \end{proposition}
 
 The runs of $Runs_i$ have states that are unique except for the
-initial state $(l0,v_\emptyset)$. We defined such a set to
-ease the process of building a STS having a tree structure.  Runs
-are transformed into STS paths that are assembled together by
-means of a disjoint union. The resulting STS forms a tree
-compound of branches starting from the location $l0$. Parameters
-and guards are extracted from the assignments found in valued
-events:
+initial state $(l0,v_\emptyset)$, which is common to every run.
+We defined such a set to ease the process of building a STS
+having a tree structure. Runs are transformed into \emph{STS
+paths} that are assembled together by means of a disjoint union.
+The resulting STS forms a tree compound of branches starting from
+the initial location $l0$, mimicking what we have done in the
+previous chapter but generalizing the definition to any run.
+Parameters and guards are extracted from the assignments found in
+valued events:
 
 \begin{definition}[Run set to STS]
-  Given a run set $Runs_i$, $\EuScript{S}_i=<L_{\EuScript{S}_i},
-  l0_{\EuScript{S}_i},V_{\EuScript{S}_i}, V0_{\EuScript{S}_i},
-  I_{\EuScript{S}_i},\\
-  \Lambda_{\EuScript{S}_i},\rightarrow_{\EuScript{S}_i}>$ is the
-  STS expressing the behaviors found in $Runs_i$ such that:
+Given a run set $Runs_i$, The STS $\EuScript{S}_i=<L_{\EuScript{S}_i},
+  l0_{\EuScript{S}_i},V_{\EuScript{S}_i},\\V0_{\EuScript{S}_i},
+  I_{\EuScript{S}_i}, \Lambda_{\EuScript{S}_i},\rightarrow_{\EuScript{S}_i}>$
+  expresses the behaviors found in $Runs_i$ where:
 
 	\begin{itemize}
     \item $L_{\EuScript{S}_i}= \{l_i \mid \exists r\in Runs_i,
@@ -627,9 +660,15 @@ events:
 
     \item $l0_{\EuScript{S}_i} = l0$ is the initial location
       such that $\forall r \in Runs_i$, $r$ starts with
-      $(l0,v_\emptyset)$;
+      $(l0,v_\emptyset)$. $l0$ is a common location shared by all
+      $\EuScript{S}_i$;
 
-    \item $V_{\EuScript{S}_i}=\emptyset$, $V0_{\EuScript{S}_i}=v_\emptyset$;
+    \item $V_{\EuScript{S}_i}=\emptyset$;
+
+    \item $V0_{\EuScript{S}_i}=v_\emptyset$;
+
+   \item $I_{\EuScript{S}_i}$ is a finite set of parameters,
+        disjoint from $V_{\EuScript{S}_i}$;
 
     \item $\rightarrow_{\EuScript{S}_i}$ and
       $\Lambda_{\EuScript{S}_i}$ are defined by the following
@@ -638,9 +677,10 @@ events:
 
   \begin{center}
     {\Large
-    $\frac{(l_i,v_\emptyset) (a_i,\alpha_i) (l_{i+1},v_\emptyset)
-    \in r, p=\{x \mid (x:=v)\in \alpha_i \}, G_i=\displaystyle
-  \bigwedge_{(x:=v)\in \alpha_i}x==v}{l_i \xrightarrow{a_i(p),G_i,id_V}_{\EuScript{S}_i} l_{i+1}}$
+        $\frac{(l_i,v_\emptyset) \cdot a_i(\alpha_i) \cdot (l_{i+1},v_\emptyset)
+        \in ~r, ~p = \{x \mid (x:=v)\in \alpha_i \}, G_i=\displaystyle
+        \bigwedge_{(x:=v)\in \alpha_i}(x == v)}
+        {l_i \xrightarrow{a_i(p),G_i,id_{V_{\EuScript{S}_i}}}_{\EuScript{S}_i} l_{i+1}}$
     }
   \end{center}
 
@@ -679,6 +719,7 @@ with constraints over transitions, called \textit{guards}.
   \caption{First generated Symbolic Transition System model,
   based on the traces given in Figure \ref{fig:tsua}.}
   \label{fig:firstmodel}
+  \TODO{add parenthesis}
 \end{figure}
 
 This STS expresses the behaviors found in $Traces(Sua)$ but in a
