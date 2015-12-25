@@ -170,9 +170,12 @@ by a model, here with a Labeled Transition System as defined in
 \crossref{sec:related:testing}{sec:definitions:lts}. We also
 denote this model by $\mathit{Sut}$.
 
-The first implementation relation, denoted by $\leq_{ct}$,
-refers to the trace preorder relation \cite{DNH84}. It aims at
-checking whether all the complete execution traces of
+The first implementation relation, denoted by $\leq_{ct}$, refers
+to the trace preorder relation
+\cite{DNH84,vaandrager1991relationship} (cf. Example
+\ref{example:trace_preorder} on page
+\pageref{example:trace_preorder}).
+It aims at checking whether all the complete execution traces of
 $\mathit{Sut}$ are pass traces of
 $\EuScript{S}^{N}=\{\EuScript{S}_1^{N},\dots,\EuScript{S}_n^{N}\}$.
 The first implementation relation can be written with the
@@ -181,7 +184,7 @@ following definition:
 \begin{definition}[The $\leq_{ct}$ implementation relation]
 \label{rel:impl1}
 
-Let $\EuScript{S}^{N}$ be an inferred model of $\mathit{Sua}$ and
+Let $\EuScript{S}^{N}$ be an inferred model of $\mathit{Sua}$, and
 $\mathit{Sut}$ be the system under test. When $\mathit{Sut}$
 produces complete traces also captured by $\EuScript{S}^{N}$, we
 write: ${Sut} \leq_{ct} \EuScript{S}^{N} =_{def} CTraces({Sut})
