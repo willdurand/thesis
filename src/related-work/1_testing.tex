@@ -459,11 +459,14 @@ a more detailed description.
     \end{figure}
 \end{example}
 
+Based on this definition, we give the formal definition of a
+\emph{trace}:
+
 \begin{definition}[Trace]
     A \emph{trace} is a finite sequence of observable actions.
     The set of all traces over $L$ is denoted by $L^*$, with
     $\epsilon$ denoting the empty sequence.
-    We also have $traces(p) =_{def} \{ \sigma \in L^* \mid p
+    We also have $Traces(p) =_{def} \{ \sigma \in L^* \mid p
     \xRightarrow{\sigma} \}$ with $p$ being a state of a LTS.
 \end{definition}
 
@@ -532,11 +535,11 @@ but we refer to \cite{FTW05} for a more detailed description.
 	\label{def:sts}
 \end{definition}
 
-We also denote by $Proj_{x}(G)$ the projection of the guard $G$
+We also denote by $proj_{x}(G)$ the projection of the guard $G$
 over the variable $x \in I \cup V$, which extracts the equality
 $(x==val)$ from $G$. For example, given the guard $G_1 =
 [(nsys==1) \wedge (nsec==8) \wedge (point==1) \wedge (pid==1)]$,
-$Proj_{nsys}(G_1) = (nsys==1)$.
+$proj_{nsys}(G_1) = (nsys==1)$.
 
 For readability purpose, if $A$ is the identity function $id_V$,
 we denote a transition by $l_i \xrightarrow{a(p),G} l_j$. We
@@ -562,7 +565,7 @@ l_{n-1}\xrightarrow{a_n,G_n,A_n}l_n=l'$.
     where $\rightarrow$ is given by the directed edges between
     the locations in Figure \ref{fig:sts-example}.  We can write
     $L2 \xrightarrow{tray(i), G_{1} = [(i == 0)]} L0$, and
-    $Proj_{i}(G_{1}) = (i == 0)$.
+    $proj_{i}(G_{1}) = (i == 0)$.
 
     \begin{figure}[ht]
         \begin{center}
@@ -577,15 +580,14 @@ l_{n-1}\xrightarrow{a_n,G_n,A_n}l_n=l'$.
     \label{example:sts}
 \end{example}
 
-\begin{definition}[Variable assignment (valuation)]
+\begin{definition}[Variable assignment]
     We assume that there exists a domain of values denoted by
     $D$, and a variable set $X$ taking values in $D$. The
-    \emph{assignment} of variables in $Y \subseteq X$ to elements
-    of $D$ is denoted by the function $\alpha: Y \rightarrow D$.
-    $\alpha(x)$ denotes the assignment of the variable $x$ to a
-    value in $D$.
-
-    The empty variable assignment is denoted by $v_\emptyset$.
+    \emph{variable assignment} (also called \emph{valuation} of
+    variables in $Y \subseteq X$ to elements of $D$ is denoted by
+    the function $\alpha: Y \rightarrow D$.  $\alpha(x)$ denotes
+    the assignment of the variable $x$ to a value in $D$.
+    The \emph{empty variable assignment} is denoted by $v_\emptyset$.
 
     We denote by $D_Y$ the set of all variable assignments over
     $Y$: $D_Y = \{ \alpha : Y \rightarrow D | v \text{ is a
@@ -646,22 +648,22 @@ with $v \cup \alpha$. Once the transition is executed, the
 internal variables are assigned with $v'$ derived from the
 assignment $A(v \cup \alpha)$.
 
-In addition, \emph{runs}, which represent \emph{event sequences},
-can also be derived from LTS semantics \cite{Tre96}:
+\emph{Runs} and \emph{traces}, which represent \emph{executions}
+and \emph{event sequences}, can also be derived from LTS
+semantics \cite{jeron2006model}:
 
-\begin{definition}[Run]
+\begin{definition}[Runs and traces]
     Given a STS $\EuScript{S}=$ $<L,l0,V,V0,I,\Lambda,
     \rightarrow>$, interpreted by its LTS semantics
     $||\EuScript{S}||=<Q,q_0,\sum,\rightarrow>$, a \emph{run}
     $q_0 \cdot \alpha_0 \cdot \dots \cdot \alpha_{n-1} \cdot q_n$
     is an alternate finite sequence of states and valued actions,
-    concatenated with the $\cdot$ operator.
-
-    $Run(\EuScript{S})=Run(||\EuScript{S}||)$ is the set of runs
-    found in $||\EuScript{S}||$.
-
-    It follows that a trace of a run $r$ is defined as the
-    projection $proj_{\sum}(r)$ on the actions.
+    concatenated with the $\cdot$ operator. $Runs(\EuScript{S})$
+    is the set of runs of $\EuScript{S}$.
+    A \emph{trace} of a run $r \in Runs(\EuScript{S})$ is the
+    projection $proj_{\sum}(r)$ of $r$ on actions.
+    $Traces(\EuScript{S}) =_{def} proj_{\sum}(Runs(\EuScript{S}))$
+    denotes the set of traces of $\EuScript{S}$.
 
     \label{def:runs-and-traces}
 \end{definition}
@@ -681,7 +683,8 @@ only observation that can be made is \emph{quiescence}
 \begin{definition}[Input/Output Symbolic Transition System]
     As defined in \cite{Rusu:2000:AST:647982.743536}, an
     Input/Output Symbolic Transition System (IOSTS)
-    $\EuScript{S}$ is a tuple $<L,l0,V,V0,I,\Lambda,\rightarrow>$ where:
+    $\EuScript{S}$ is a tuple $<L,l0,V,V0,I,\Lambda,$
+    $\rightarrow>$ where:
 
 \begin{itemize}
     \item $L$ is a finite set of locations;
