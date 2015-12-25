@@ -3,39 +3,31 @@
 
 Manual testing is, by far, the most popular technique for
 testing, but this technique is known to be error-prone as well.
-Additionally, production systems are usually composed of
-thousands of states (i.e. sets of conditions that exist at a
-given instant in time) and production events, which makes
-testing time consuming. Our industrial partner Michelin is a
-worldwide tire manufacturer that designs most of its factories,
-production systems, and software by itself. In a factory, there
-are different workshops for each step of the tire building
-process. At a workshop level, we observe a continuous stream of
-products from specific entry points (railroad switches) to a
-finite set of exit points, constituting production lines.
-Thousands of \emph{production events} are exchanged among the
-industrial devices of the same workshop every day, allowing some
-factories to build over 30,000 tires a day.
+As already formulated in this thesis, production systems are
+usually composed of thousands of states (\emph{i.e.} sets of
+conditions that exist at a given instant in time) and production
+events, which makes testing time consuming.  In this context, we
+propose a \emph{passive testing framework} for production systems
+that is composed of two parts: a model inference engine, already
+presented in Chapter \ref{sec:modelinf:prodsystems}, and a
+passive testing engine that is the purpose of this chapter. Both
+parts have to be fast and scalable to be used in practice.
 
-In this context, we propose a testing framework for production
-systems that is composed of two parts: a model inference engine,
-as already presented in Chapter \ref{sec:modelinf:prodsystems},
-and a passive testing engine that is presented in this chapter.
-Both parts have to be fast and scalable to be used in practice.
 The main idea of our proposal is that, given a running production
 system, we extract knowledge and models by passively monitoring
 it. Such models describe the functional behaviors of the system,
-and may serve for different purposes, e.g., testing of a second
-production system. The latter can be a new system roughly
+and may serve for different purposes, \emph{e.g.}, testing
+another production system. The latter can be a new system roughly
 comparable to the first one in terms of features, but it can also
 be an updated version of the first one. Indeed, upgrades might
-inadvertently introduce or create faults, and could lead to
-severe damages. Here, testing the updated system means detecting
+inadvertently introduce faults, and it could lead to severe
+damages. Here, testing the updated system means detecting
 potential regressions before deploying changes in production.
 
-A \textit{passive tester} (a.k.a. observer) aims at checking
-whether a system under test conforms to an inferred model. It can
-be performed in either online or offline mode, as defined below:
+A \textit{passive tester} (also known as observer) aims at
+checking whether a system under test \emph{conforms to} an
+inferred model. It can be performed in either online or offline
+mode, as defined below:
 
 \begin{itemize}
     \item \textbf{Online testing:} sometimes called on-the-fly
@@ -49,44 +41,45 @@ be performed in either online or offline mode, as defined below:
 \end{itemize}
 
 We collect the traces of the system under test by reusing
-\textit{Autofunk}'s Models generator. In offline mode, we build a set of
-traces with the same level of abstraction as those considered for
-inferring models. In online mode, we apply the same process for
-each new incoming trace. Then, we use these traces to check if
-the system under test conforms to the inferred models.
-Conformance is defined with two implementation relations, which
-express precisely what the system under test should do. The first
-relation corresponds to the trace preorder \cite{DNH84}, which is
-a well-known relation based upon trace inclusion, and heavily
-used with passive testing.  Nevertheless, our inferred models are
-partials, i.e.  they do not necessarily capture all the possible
-behaviors that should happen. That is why we propose a second
-implementation relation, less restrictive on the traces that
-should be observed from the system under test.
+\textit{Autofunk v3}'s Models generator. In offline mode, we
+build a set of traces with the same level of abstraction as those
+considered for inferring models. In online mode, we apply the
+same process for each new incoming trace. Then, we use these
+traces to check if the system under test conforms to the inferred
+models. \emph{Conformance} is defined with two implementation
+relations, which express precisely what the system under test
+should do. The first relation corresponds to the \emph{trace
+preorder} \cite{DNH84}, which is a well-known relation based upon
+trace inclusion, and heavily used with passive testing.
+Nevertheless, our inferred models are partials, \emph{i.e.} they
+do not necessarily capture all the possible behaviors that should
+happen. That is why we propose a second implementation relation,
+less restrictive on the traces that should be observed from the
+system under test.
 
 Both offline and online modes are not completely unalike, they
 also serve different purposes. In previous works, we used to work
-with fixed sets of traces. We noticed that, by taking large sets,
-we could build more complete models. Performing offline passive
-testing allows to use such large trace sets, hence the intuition
-that we should be able to validate more behaviors. Our online
-passive testing approach records traces on a system under test on
-the fly, and then check whether those traces satisfy
-specifications still generated from a system under analysis. It
-enables what we call just-in-time fault detection. Faults can be
-revealed in near real-time on a running system so that users can
-be notified as soon as possible.
+with fixed sets of traces. We noticed that, by taking large trace
+sets, we could build more complete models. Performing offline
+passive testing allows to use such large trace sets, hence the
+intuition that we should be able to validate more behaviors. Our
+online passive testing approach records traces on a system under
+test on-the-fly, and then check whether those traces satisfy
+specifications, still generated from a system under analysis. It
+enables what we call \emph{just-in-time fault detection}. Faults
+can be revealed in near real-time on a running system so that
+users can be notified as soon as possible.
 
-In Section \ref{sec:testing:normal}, we introduce a new step of
-the model inference method described in Chapter
+In Section \ref{sec:testing:normal}, we introduce an extra step
+of the model inference method described in Chapter
 \ref{sec:modelinf:prodsystems} that is required to enable
 testing. In Section \ref{sec:testing:passive}, we present both
-our offline and online passive testing techniques on-top of this
-model inference framework respectively in Section
+our offline and online passive testing techniques, built on-top of
+this model inference framework, respectively in Section
 \ref{sec:testing:offline} and Section \ref{sec:testing:online}.
 We present key results on offline passive testing in Section
-\ref{sec:testing:offline:impl-exp}.  Finally, we conclude on this
-work in Section \ref{sec:testing:conclusion}.
+\ref{sec:testing:offline:impl-exp}. Finally, we conclude on this
+chapter in Section \ref{sec:testing:conclusion}.
 
 \textbf{Publication.} This work has been partially published in
 the Proceedings of the 13th International Conference on Formal
@@ -99,26 +92,26 @@ Methods and Models for Co-Design (MEMOCODE'15) \cite{7340480}.
 
 In order to perform testing, we reuse the reduced model
 $R(\EuScript{S}) = \{R(\EuScript{S}_1),\dots,R(\EuScript{S}_n)\}$
-inferred with \textit{Autofunk} that we \textit{normalize} to get rid of
-some runtime-dependent information.  Indeed, both models
+inferred with \textit{Autofunk} that we \textit{normalize} to get
+rid of some runtime-dependent information.  Indeed, both models
 $\EuScript{S}$ and $R(\EuScript{S})$ include parameters that are
 dependent to the products being manufactured.  That is a
 consequence of generating models that describe behaviors of a
-continuous stream of products which are strictly identified, i.e.
-for each action in a given sequence, we have the assignment $(pid
-= val)$ ($pid$ stands for product identifier).  Here, we
-normalize these models before using them for testing.  The
-resulting models are denoted by $\EuScript{S}^{N}$ and
-$R(\EuScript{S}^{N})$.
+continuous stream of products that are strictly identified,
+\emph{i.e.} for each action in a given sequence, we have the
+assignment $(pid := val)$ (for the record, $pid$ stands for
+\emph{product identifier}).  Here, we normalize these models
+before using them for testing.  The resulting models are denoted
+by $\EuScript{S}^{N}$ and $R(\EuScript{S}^{N})$.
 
 We remove the assignments relative to product identifiers and
 time stamps. Furthermore, we label all the final locations with
-"Pass". We flag these locations as verdict locations and gather
-them in the set $Pass \subseteq L_{\EuScript{S_i}^{N}}$. Both
-$\EuScript{S}^{N}$ and $R(\EuScript{S}^{N})$ represent more
-generic models, i.e.  they express \textit{some possible
-behaviors that should happen}. These behaviors are represented
-by the traces $Traces_{Pass} (\EuScript{S}^{N})=\displaystyle
+"Pass". We flag these locations as \emph{verdict locations}, and
+gather them in the set $Pass \subseteq L_{\EuScript{S_i}^{N}}$.
+Both $\EuScript{S}^{N}$ and $R(\EuScript{S}^{N})$ represent more
+generic models, \emph{i.e.}  they express \textit{some possible
+behaviors that should happen}. These behaviors are represented by
+the traces $Traces_{Pass} (\EuScript{S}^{N})=\displaystyle
 \bigcup_{1 \leq i \leq n} Traces_{Pass}
 (\EuScript{S}_i^{N})=Traces_{Pass} (R(\EuScript{S}^{N}))$. We
 refer to these traces as \textit{pass traces}. We call the other
@@ -132,34 +125,35 @@ traces \textit{possibly fail traces}.
 We consider both models $\EuScript{S}^{N}$ and
 $R(\EuScript{S}^{N})$ of a system under analysis $\mathit{Sua}$,
 generated by our inference-based model generation framework, as
-reference models. In this section, we present the second part of
-our framework, dedicated to the passive testing of a system under
-test $\mathit{Sut}$.
-
-\begin{figure}[ht]
-\includegraphics[width=0.85\linewidth]{figures/passive_autofunk.png}
-
-\caption{The architecture of \textit{Autofunk} with the passive testing
-extension. While the previous \textit{Autofunk}'s architecture has been
-kept, there is two new modules: STS Normalization and "check",
-representing the passive conformance testing part.}
-\label{fig:passive-autofunk}
-\end{figure}
+\emph{reference models}. In this section, we present the second
+part of our framework, dedicated to the passive testing of a
+system under test $\mathit{Sut}$.
 
 Figure \ref{fig:passive-autofunk} depicts the architecture of our
 passive testing technique. In offline mode, a set of production
 events has been collected beforehand from $\mathit{Sut}$ in the
-same way as for $\mathit{Sua}$. These are grouped into traces to
-form the trace set $Traces({Sut})$, and then filtered as
-explained in
-\crossref{sec:modelinf:prodsystems}{sec:modelinf:prodsystems:better-segmentation}
-to obtain a set of complete traces denoted by $CTraces({Sut})$.
-In online mode, we do not have traces but rather filtered valued
-events of $\mathit{Sut}$ coming on-the-fly. Finally, we perform
-passive testing to check if $\mathit{Sut}$ conforms to
-$\EuScript{S}^{N}$.
+same way as for $\mathit{Sua}$. These events are grouped into
+traces to form the trace set $Traces({Sut})$, and then filtered
+to obtain a set of complete traces denoted by $CTraces({Sut})$
+(cf.
+\crossref{sec:modelinf:prodsystems}{sec:modelinf:prodsystems:better-segmentation}).
+In online mode (not represented on the figure), we do not have
+traces but rather filtered valued events of $\mathit{Sut}$ coming
+on-the-fly. Finally, we perform passive testing to \emph{check}
+if $\mathit{Sut}$ conforms to $\EuScript{S}^{N}$.
 
-\TODO{figure? maybe 2?}
+\begin{figure}[h]
+    \begin{center}
+        \includegraphics[width=1.0\linewidth]{figures/passive_autofunk.png}
+    \end{center}
+
+    \caption{The architecture of \textit{Autofunk v3} with the
+    passive testing extension. While the previous
+    \textit{Autofunk}'s architecture has been kept, there are
+    two new modules: "STS Normalization" and "check",
+    representing the passive conformance testing part.}
+    \label{fig:passive-autofunk}
+\end{figure}
 
 Our industrial partner wishes to check whether every complete
 execution trace of $\mathit{Sut}$ matches a behavior captured by
@@ -170,9 +164,9 @@ conclude that $\mathit{Sut}$ is faulty because $\EuScript{S}^{N}$
 is a partial model, and it does not necessarily includes all the
 correct behaviors. Below, we formalize theses verdict notions
 with two implementation relations. Such relations between models
-can only be written by assuming the following classical test
-assumption: the black-box system $\mathit{Sut}$ can be described
-by a model, here with a LTS as defined in
+can only be written by assuming the following \emph{test
+assumption}: the black-box system $\mathit{Sut}$ can be described
+by a model, here with a Labeled Transition System as defined in
 \crossref{sec:related:testing}{sec:definitions:lts}. We also
 denote this model by $\mathit{Sut}$.
 
@@ -372,7 +366,7 @@ simplification of guards:
 %vectors of guards from the matrices in $R(\EuScript{S}_i)^{G}$ in
 %order to express that a trace $t$ can still comply with the
 %behaviours found in $R(\EuScript{S}_i)^{G}$, even if it does not
-%strictly satisfy all guards of a single branch (i.e. the same
+%strictly satisfy all guards of a single branch (\emph{i.e.} the same
 %column in the matrices), but rather the disjunction of the guards
 %belonging to the matrices of this branch.
 

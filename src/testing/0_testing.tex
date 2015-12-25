@@ -5,11 +5,21 @@
 
 In this chapter, we tackle the problem of testing production
 systems (as defined in the previous chapter), without disturbing
-them, and without having any specification. Those two constraints
-sounds familiar as they have already been taken into
-consideration in the previous chapter.\\
+them, and without having any specification \emph{a priori}. Those
+two constraints sounds familiar as they have already been taken
+into consideration in the previous chapter. We present a passive
+testing technique built on-top of \emph{Autofunk v3}. First, we
+infer reference models of a system under analysis $\mathit{Sua}$.
+Then, we check whether a system under test ($\mathit{Sut}$)
+conforms to these inferred models by means of two implementation
+relations. We reuse the trace preorder relation, and we propose
+our own implementation relation to comply with Michelin's needs.
+
+\TODO{...}\\
 
 \minitoc
+
+\pagebreak
 
 \input{src/testing/1_introduction}
 \input{src/testing/2_offline-passive-testing}
