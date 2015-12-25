@@ -6,8 +6,16 @@ In this chapter, we introduce \emph{Autofunk v2}, following by
 framework, improving \emph{Autofunk v1}'s capabilities, and
 focused on inferring models of production systems. It combines
 model inference, machine learning, and expert systems to infer
-Symbolic Transition Systems (STSs).
-\TODO{to write}\\
+Symbolic Transition Systems (STSs). We replaced the minimization
+technique presented in the previous chapter by a context-specific
+reduction method, still preserving exactness of the inferred
+models, but more efficient. This is illustrated with an
+evaluation of \emph{Autofunk v2}. These results conducted to
+the release of \emph{Autofunk v3}.  The main difference between
+\emph{Autofunk v2} and \emph{Autofunk v3} is the use of the
+\emph{k-means clustering} method. This is a machine learning
+technique that we leverage to segment and filter input trace
+sets, so that inferred models contain complete behaviors only.\\
 
 \minitoc
 
@@ -989,7 +997,7 @@ in Figure \ref{fig:reduced-model}.
 The rule shown in Figure \ref{rule:aggregate-tr} aggregates
 two transitions into a unique transition indicating the movement
 of a product in its production line. $Transition$ are facts
-modeling STS transitions as seen in Chapter \TODO{to verify}
+modeling STS transitions as seen in Chapter
 \ref{sec:modelinf:webapps}. We need a variable $\$lfinal$ that
 retains the final location of the first transition $\$t1$, so
 that we can reuse it in the condition of the second transition
@@ -1183,9 +1191,9 @@ extensive analyses.
 
 We conducted several experiments with real sets of production
 events, recorded in one of Michelin's factories at different
-periods of time. We executed our implementation on a Linux
-(Debian) machine with 12 Intel(R) Xeon(R) CPU X5660 @ 2.8GHz and
-64GB RAM.
+periods of time. We executed our implementation of \emph{Autofunk
+v2} on a Linux (Debian) machine with 12 Intel(R) Xeon(R) CPU
+X5660 @ 2.8GHz and 64GB RAM.
 
 We present here the results of 6 experiments on the same
 production system with different event sets collected during 1,
@@ -1438,8 +1446,9 @@ trace sets of the system under analysis.
         \includegraphics[width=1.0\linewidth]{figures/autofunk_branded.png}
     \end{center}
 
-    \caption{Final architecture of our framework \textit{Autofunk},
-    designed for quickly inferring models of Michelin's production systems.}
+    \caption{Final architecture of our framework
+    \textit{Autofunk} (v3), designed for quickly inferring
+    models of Michelin's production systems.}
     \label{fig:autofunk_branded}
 \end{figure}
 
