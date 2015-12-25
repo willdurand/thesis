@@ -400,8 +400,8 @@ A \textit{Labeled Transition System} (LTS)
 with \emph{transitions}, labeled with actions, between them.  The
 states model the system states and the labeled transitions model
 the actions that a system can perform.  We give the definition of
-the LTS model below, but we refer to \cite{ltsTretmans} for a
-more detailed description.
+the LTS model below, but we refer to \cite{Tre96,ltsTretmans} for
+a more detailed description.
 
 \begin{definition}[Labeled Transition System]
     A Labeled Transition System (LTS) is a 4-tuple $<Q,L,T,q_0>$
@@ -425,10 +425,12 @@ more detailed description.
 
     The labels in $L$ represent the observable actions of a
     system, \emph{i.e.} the interactions of the system with its
-    environment.
-    Internal actions are denoted by the special label $\tau
-    \not\in L$. Both $\tau$ and states are assumed to be
-    unobservable for the environment.
+    environment.  Internal actions are denoted by the special
+    label $\tau \not\in L$. Both $\tau$ and states are assumed to
+    be unobservable for the environment.
+
+    The class of all labelled transition systems over $L$ is
+    denoted by $\EuScript{LTS}(L)$ \cite{Tre96}.
 
 	\label{def:lts}
 \end{definition}
@@ -456,6 +458,14 @@ more detailed description.
         \label{fig:lts-example}
     \end{figure}
 \end{example}
+
+\begin{definition}[Trace]
+    A \emph{trace} is a finite sequence of observable actions.
+    The set of all traces over $L$ is denoted by $L^*$, with
+    $\epsilon$ denoting the empty sequence.
+    We also have $traces(p) =_{def} \{ \sigma \in L^* \mid p
+    \xRightarrow{\sigma} \}$ with $p$ being a state of a LTS.
+\end{definition}
 
 \paragraph{Symbolic Transition Systems.}
 \label{sec:definitions:sts}
@@ -636,17 +646,17 @@ with $v \cup \alpha$. Once the transition is executed, the
 internal variables are assigned with $v'$ derived from the
 assignment $A(v \cup \alpha)$.
 
-In addition, \emph{runs} and \emph{traces}, which represent
-\emph{executions} and \emph{event sequences}, can also be derived
-from LTS semantics:
+In addition, \emph{runs}, which represent \emph{event sequences},
+can also be derived from LTS semantics \cite{Tre96}:
 
-\begin{definition}[Runs and traces]
+\begin{definition}[Run]
     Given a STS $\EuScript{S}=$ $<L,l0,V,V0,I,\Lambda,
     \rightarrow>$, interpreted by its LTS semantics
-    $||\EuScript{S}||=<Q,q_0,\sum,\rightarrow>$, a run $q_0 \cdot
-    \alpha_0 \cdot \dots \cdot \alpha_{n-1} \cdot q_n$ is an
-    alternate finite sequence of states and valued actions,
+    $||\EuScript{S}||=<Q,q_0,\sum,\rightarrow>$, a \emph{run}
+    $q_0 \cdot \alpha_0 \cdot \dots \cdot \alpha_{n-1} \cdot q_n$
+    is an alternate finite sequence of states and valued actions,
     concatenated with the $\cdot$ operator.
+
     $Run(\EuScript{S})=Run(||\EuScript{S}||)$ is the set of runs
     found in $||\EuScript{S}||$.
 
@@ -807,6 +817,34 @@ can organize in three categories:
         Testing}, \emph{Input-Output Refusal}, \emph{ioconf}
         \cite{tretmans1996conformance}, \emph{ioco} \cite{Tre96}.
 \end{itemize}
+
+In this thesis, we use the trace preorder relation $\leq_{tr}$.
+The intuition behind this relation is that an implementation $i$
+may show only behaviour, in terms of traces of observable
+actions, which is specified in the specification $s$, \emph{i.e.}
+let $i, s \in \EuScript{LTS}(L)$, then $i \leq_{tr} s =_{def}
+traces(i) \subseteq traces(s)$ \cite{Tre96}.
+
+\begin{example}
+    Figure \ref{fig:trace_preorder} illustrates the trace
+    preorder relation. The traces of the LTS $\EuScript{S}_1$ are
+    included in those of the $\EuScript{S}_2$, \emph{i.e.}
+    $\EuScript{S}_1 \leq_{tr} \EuScript{S}_2$.  On the contrary,
+    $traces(\EuScript{S}_2) \not\subseteq traces(\EuScript{S}_1)$
+    because the trace $button \cdot tea$ is not observable in
+    $\EuScript{S}_1$, hence $\EuScript{S}_2 \not\leq_{tr}
+    \EuScript{S}_1$.
+
+    \begin{figure}[ht]
+        \begin{center}
+            \includegraphics[width=0.7\linewidth]{figures/trace_preorder.png}
+        \end{center}
+
+        \caption{Illustration of the trace preorder relation
+        between two LTSs.}
+        \label{fig:trace_preorder}
+    \end{figure}
+\end{example}
 
 \paragraph{Conformance testing.} Conformance Testing
 assesses conformance to an unknown implementation under test
