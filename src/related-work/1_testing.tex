@@ -467,7 +467,7 @@ Based on this definition, we give the formal definition of a
     The set of all traces over $L$ is denoted by $L^*$, with
     $\epsilon$ denoting the empty sequence.
     We also have $Traces(p) =_{def} \{ \sigma \in L^* \mid p
-    \xRightarrow{\sigma} \}$ with $p$ being a state of a LTS.
+    \xRightarrow{\sigma} \}$ with $p$ being a state.
 \end{definition}
 
 \paragraph{Symbolic Transition Systems.}
@@ -799,25 +799,28 @@ different implementation relations, \emph{e.g.},
 
 An implementation $iut$ \textbf{conforms to} a specification
 $spec$ if the existing model $I_{iut}$ of $iut$ is
-\textit{imp-related} to $spec$: $I_{iut} \textbf{imp} spec$.
+\textit{imp-related} to $spec$: $I_{iut} ~imp~ spec$.
 There are many conformance relations in the literature, which we
 can organize in three categories:
 
 \begin{itemize}
     \item \textbf{Equivalence relations:} \emph{Isomorphism},
-        \emph{Bisimulation}
-        \cite{Abdulla06,Fernandez89animplementation}, \emph{Trace
-        Equivalence}, \emph{Testing Equivalence}
-        \cite{Abramsky1987225}, \emph{Refusal Equivalence}
-        \cite{Phillips86};
+        \emph{Bisimulation Equivalence}
+        \cite{milner1989communication,Fernandez89animplementation},
+        \emph{Trace Equivalence} \cite{tan_testing_1995},
+        \emph{Testing Equivalence} \cite{Abramsky1987225},
+        \emph{Refusal Equivalence} \cite{Phillips86};
 
     \item \textbf{Preorder relations:} \emph{Observation
-        Preorder}, \emph{Trace Preorder} \cite{DNH84},
-        \emph{Testing Preorder} \cite{Beohar2015}, \emph{Refusal
-        Preorder};
+        Preorder} \cite{milner1980calculus,hennessy1980observing},
+        \emph{Trace Preorder}
+        \cite{DNH84,vaandrager1991relationship},
+        \emph{Testing Preorder} \cite{DNH84,Beohar2015},
+        \emph{Refusal Preorder} \cite{phillips1987refusal};
 
     \item \textbf{Input-Output relations:} \emph{Input-Output
-        Testing}, \emph{Input-Output Refusal}, \emph{ioconf}
+        Testing} \cite{Tre96}, \emph{Input-Output Refusal}
+        \cite{heerink1997refusal}, \emph{ioconf}
         \cite{tretmans1996conformance}, \emph{ioco} \cite{Tre96}.
 \end{itemize}
 
@@ -826,14 +829,14 @@ The intuition behind this relation is that an implementation $i$
 may show only behaviour, in terms of traces of observable
 actions, which is specified in the specification $s$, \emph{i.e.}
 let $i, s \in \EuScript{LTS}(L)$, then $i \leq_{tr} s =_{def}
-traces(i) \subseteq traces(s)$ \cite{Tre96}.
+Traces(i) \subseteq Traces(s)$ \cite{Tre96}.
 
 \begin{example}
     Figure \ref{fig:trace_preorder} illustrates the trace
     preorder relation. The traces of the LTS $\EuScript{S}_1$ are
     included in those of the $\EuScript{S}_2$, \emph{i.e.}
     $\EuScript{S}_1 \leq_{tr} \EuScript{S}_2$.  On the contrary,
-    $traces(\EuScript{S}_2) \not\subseteq traces(\EuScript{S}_1)$
+    $Traces(\EuScript{S}_2) \not\subseteq Traces(\EuScript{S}_1)$
     because the trace $button \cdot tea$ is not observable in
     $\EuScript{S}_1$, hence $\EuScript{S}_2 \not\leq_{tr}
     \EuScript{S}_1$.
@@ -848,6 +851,8 @@ traces(i) \subseteq traces(s)$ \cite{Tre96}.
         \label{fig:trace_preorder}
     \end{figure}
 \end{example}
+
+Now we can define what \emph{Conformance Testing} is.
 
 \paragraph{Conformance testing.} Conformance Testing
 assesses conformance to an unknown implementation under test

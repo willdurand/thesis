@@ -675,15 +675,15 @@ structured trace set $ST$ before applying inference rules.
 Instead, we propose to use a minimization technique.
 
 This IOSTS tree can be reduced in term of location size by
-applying a bisimulation minimization technique
-\cite{Park:1981:CAI:647210.720030} that still preserves the
-functional behaviors expressed in the original model.  This
-minimization constructs the state sets (blocks) that are
-bisimilar equivalent. Two states are said bisimilar equivalent,
-denoted by $q \sim q'$ if and only if they simulate each other
-and go to states from where they can simulate each other again.
-A great bisimulation minimization algorithm is given in
-\cite{Fernandez89animplementation}.
+applying a bisimulation minimization technique that still
+preserves the functional behaviors expressed in the original
+model. This minimization constructs the state sets (blocks) that
+are bisimilar equivalent \cite{Park:1981:CAI:647210.720030}. Two
+states are said bisimilar equivalent, denoted by $q \sim q'$ if
+and only if they simulate each other and go to states from where
+they can simulate each other again.  Two great bisimulation
+minimization algorithms are given in
+\cite{Fernandez89animplementation,Abdulla06}.
 
 When receiving new traces from the \emph{Monitor} (cf. Figure
 \ref{fig:soict-framework}), the model yield by this layer is not
