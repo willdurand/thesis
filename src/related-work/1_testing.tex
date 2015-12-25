@@ -204,9 +204,10 @@ of test cases. Because testing cannot guarantee the absence of
 faults, a challenge is to select subset of test cases from all
 possible test cases with a high chance of detecting most faults.
 It is especially the case for regression testing since it is
-usually an expensive process \cite{graves2001empirical}. We refer
-to this choice as the \emph{test selection}, which we present
-below.
+usually an expensive process
+\cite{Rothermel:1997:SER:248233.248262,graves2001empirical}. We
+refer to this choice as the \emph{test selection}, which we
+present below.
 
 \subsubsection{Test selection}
 
@@ -255,7 +256,9 @@ black-box and white-box approaches. Here are some of them:
         the implementation with a fault by applying a mutation
         operator, and then determining whether testing identifies
         this fault. This is known as \emph{Mutation Testing}
-        \cite{1702444}.
+        \cite{1702444}. Finally, even if \emph{Pairwise Testing}
+        is black-box, it has been adapted for white-box,
+        \emph{e.g.}, in \cite{4385509}.
 \end{itemize}
 
 The \textbf{grey-box} approach remains vague, and does not own
