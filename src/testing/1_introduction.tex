@@ -351,16 +351,16 @@ The disjunction of guards $M_{[b]}[j,1] \vee \dots \vee
 M_{[b]}[j,k]$, found in the matrix $M_{[b]}$, could be simplified
 by gathering all the equalities $x==val$ together with
 disjunctions for every variable $x$ that belongs to the parameter
-set $p_j$. Such equalities can be extracted with the
-\textit{Proj} operator (see Definition \ref{def:sts}). We
-obtain one guard of the form $\bigwedge_{x \in p_j}(x==val_1 \vee
-\dots \vee x==val_k)$. The STS $D(\EuScript{S}_i^{N})$, derived
-from $R(\EuScript{S}_i^{N})$, is constructed with this
-simplification of guards:
+set $p_j$. Such equalities can be extracted with the projection
+operator \textit{proj} (see Definition \ref{def:sts}). We obtain
+one guard of the form $\bigwedge_{x \in p_j}(x==val_1 \vee \dots
+\vee x==val_k)$. The STS $D(\EuScript{S}_i^{N})$, derived from
+$R(\EuScript{S}_i^{N})$, is constructed with this simplification
+of guards:
 
 %all the variable assignments found in the guards
 %$M_{[b]}[j,1],..., M_{[b]}[j,k]$ can be collected with the
-%projection operator $Proj_{x}(G)$.
+%projection operator $proj_{x}(G)$.
 
 %It is then possible to create
 %vectors of guards from the matrices in $R(\EuScript{S}_i)^{G}$ in
@@ -393,10 +393,10 @@ simplification of guards:
 					\xRightarrow{(a_1(p_1),M_b[1])\dots (a_m(p_m),M_b[m])}_{\rightarrow_D}
 					l_m\\
 					V_D=V0_D \wedge M_b, M_b[j, 1]_{(1\leq j \leq m)} =\\
-					 \displaystyle \bigwedge_{x \in p_j} ( Proj_x(M_{[b]}[j, 1]) \vee \dots \vee Proj_x(M_{[b]}[j, k]))
+					 \displaystyle \bigwedge_{x \in p_j} ( proj_x(M_{[b]}[j, 1]) \vee \dots \vee proj_x(M_{[b]}[j, k]))
 
 
-					%\bigvee_{1 \leq k \leq k} Proj_x ((M_{[b]}[j, k])
+					%\bigvee_{1 \leq k \leq k} proj_x ((M_{[b]}[j, k])
 
 					\end{matrix}
 				}$
