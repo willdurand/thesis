@@ -114,8 +114,8 @@ behaviors that should happen}. These behaviors are represented by
 the traces $Traces_{Pass} (\EuScript{S}^{N})=\displaystyle
 \bigcup_{1 \leq i \leq n} Traces_{Pass}
 (\EuScript{S}_i^{N})=Traces_{Pass} (R(\EuScript{S}^{N}))$. We
-refer to these traces as \textit{pass traces}. We call the other
-traces \textit{possibly fail traces}.
+refer to these traces as \textit{pass traces}, and we call the
+other traces \textit{possibly fail traces}.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
@@ -188,14 +188,15 @@ Let $\EuScript{S}^{N}$ be an inferred model of $\mathit{Sua}$, and
 $\mathit{Sut}$ be the system under test. When $\mathit{Sut}$
 produces complete traces also captured by $\EuScript{S}^{N}$, we
 write: ${Sut} \leq_{ct} \EuScript{S}^{N} =_{def} CTraces({Sut})
-\subseteq  Traces_{Pass}(\EuScript{S}^{N})$.
+\subseteq  Traces_{Pass}(\EuScript{S}^{N})$ \cite{Tre96}.
 \end{definition}
 
-Pragmatically, the reduced model $R(\EuScript{S}^{N})$ sounds
-more convenient for passively testing $\mathit{Sut}$ since it is
-strongly reduced in terms of size compared to $\EuScript{S}^{N}$.
-The test relation can also be written as below since both models
-$\EuScript{S}^{N}$ and $R(\EuScript{S}^{N})$ are trace equivalent:
+The reduced model $R(\EuScript{S}^{N})$ sounds more convenient
+for passively testing $\mathit{Sut}$ because it is strongly
+reduced in terms of size compared to $\EuScript{S}^{N}$.  Hence,
+the test relation can also be written as below because both models
+$\EuScript{S}^{N}$ and $R(\EuScript{S}^{N})$ are trace
+equivalent \cite{petrenko06}:
 
 \begin{proposition}
 \label{rel:impl12}
@@ -204,162 +205,132 @@ ${Sut} \leq_{ct} \EuScript{S}^{N} \text{ if and only if } CTraces({Sut})
 \end{proposition}
 
 As stated previously, the inferred model $\EuScript{S}^{N}$ of
-$\mathit{Sua}$ is partial, and might not capture all the
+$\mathit{Sua}$ is partial, and it might not capture all the
 behaviors that should happen on $\mathit{Sut}$. Consequently,
-our partner wants a weaker implementation relation that is less
-restrictive on the traces that should be observed from
-$\mathit{Sut}$.  In other words, this second relation aims to check
-that, for every complete trace $t=a_1(\alpha_1)...a_m(\alpha_m)$
-of $\mathit{Sut}$, we also have a set of traces of
+our partner wants a \emph{weaker implementation relation} that is
+less restrictive on the traces that should be observed from
+$\mathit{Sut}$.  In other words, this second relation aims to
+check that, for every complete trace $t=a_1(\alpha_1) \dots
+a_m(\alpha_m)$ of $\mathit{Sut}$, we also have a set of traces of
 $Traces_{Pass}(\EuScript{S}^{N})$ having the same sequence of
 symbols such that every variable assignment $\alpha_j(x)_{(1 \leq
 j \leq m)}$ of $t$ is found in one of the traces of
 $Traces_{Pass}(\EuScript{S}^{N})$ with the same symbol $a_j$.
-If we take back the example of Figure \ref{fig:firstmodel}, the
-trace $t=(17011(nsys:=1,nsec:=8,point:=1,pid:=1)\text{ }
-17021(nsys:=1,nsec:=8,point:=4,tpoint:=9,pid:=1)$ is not a pass trace
-of $\EuScript{S}^{N}$ because this trace cannot be extracted from
-one of the paths of the STS of Figure \ref{fig:firstmodel}, on
-account of the variables $point$ and $tpoint$, which do not take
-the expected values. Nonetheless, both variables are assigned
-with $point:=4,tpoint:=9$ in the second path. This is interesting
-as it indicates that such values may be correct since they are
-actually used in a similar action in a similar path. Here, the
-second implementation relation aims at expressing that this trace
-$t$ captures a correct behavior as well.
 
-\TODO{first model?}
+\begin{example}
+    Figure \ref{fig:sts-ch4} recalls the example considered in
+    Chapter \ref{sec:modelinf:prodsystems}. The trace $t =
+    17011(nsys:=1, nsec:=8, point:=1, pid:=1)\text{ }
+    17021(nsys:=1, nsec:=8, point:=4, tpoint:=9, pid:=1)$ is not
+    a \emph{pass trace} of $\EuScript{S}^{N}$ because this trace
+    cannot be extracted from one of the paths of the STS depicted
+    in Figure \ref{fig:sts-ch4}, on account of the variables
+    $point$ and $tpoint$, which do not take the expected values.
+    Nonetheless, both variables are assipned with $(point := 4)$
+    and $(tpoint := 9)$ in the second path. This is interesting
+    as it indicates that such values \emph{may} be correct since
+    they are actually used in a similar action in a similar path.
+    Our second implementation relation aims at expressing that
+    such a trace $t$ captures a correct behavior as well.
 
-% \begin{comment}
-% This second implementation relation, denoted with $\leq_{mct}$, is written
-% with the classes of equivalent paths $[b]$, found in a STS of
-% $\EuScript{S}^{N}=\{\EuScript{S}_1^{N},...,\EuScript{S}_n^{N}\}$.
-% Indeed, an equivalent class $[b]$ of $\EuScript{S}_i^{N}$ gathers
-% STS paths having the same sequence of labels but with
-% different guards. The definition of $\leq_{mct}$, given below,
-% means that for a trace $t$, an equivalence class $[b]$ must be
-% found such that for every valued action $a_j(\alpha_j)$, each
-% variable assignment $\alpha_j(x)$ with $x$ a variable, must
-% satisfies at least on the guards $G_{j1},...,G_{jk}$ found on
-% the transitions labeled with $a_j(p_j)$:
-%
-% \begin{proposition}
-%     Let $\mathit{Sua}$ be the system under analysis,
-%     $\EuScript{S}^{N}=\{\EuScript{S}_1^{N},\dots,\EuScript{S}_n^{N}\}$ be its inferred model and $\mathit{Sut}$ be the system under test.
-%     We denote ${Sut} \leq_{mct} \EuScript{S}^{N} =_{def} \forall t=
-%     a_1(\alpha_1)...a_m(\alpha_m) \in CTraces({Sut}), \exists
-%     \EuScript{S}_i^{N} \text{ and } [b]=\{l0_{\EuScript{S}_i^{N}} \xRightarrow{(a_1(p_1),G_{1o}),...,(a_m(p_m),G_{mo})}l_{mo} (1 \leq o \leq k) \}$ such that $\forall \alpha_j(x) (1 \leq j \leq m), \alpha_j(x) \models G_{j1} \vee ... \vee  G_{jk}$ and $l_{mo} \in Pass$.
-% \end{proposition}
-%
-% This relation can be reformulated with the reduced model
-% $R(\EuScript{S}^{N})=\{R(\EuScript{S}_1^{N}),\dots,R(\EuScript{S}_n^{N})\}$,
-% which reduces the equivalence classes $[b]$ into one STS path.
-% Given a trace $a_1(\alpha_1)...a_m(\alpha_m)$, the relation can
-% be now written with matrices of guards: for every valued action
-% $a_j(\alpha_j)$, each variable assignment $\alpha_j(x)$ must now
-% satisfies one of the guards of the matrix line $j$ in
-% $M_{[b]}[j,*]$.  If, we take back the trace example
-% $t=(17011(nsys=1,nsec=8,point=1,pid=1)\text{ }
-% 17021(nsys=1,nsec=8,point=4,tpoint=9,pid=1)$, and the STS of
-% Figure \ref{fig:reduced-model}, the assignment $point=4$, which
-% is given with the second valued action of $t$, satisfies one of
-% the guards of the second line of the matrix $M_{[b]}$.
-% \end{comment}
+    \begin{figure}[ht]
+        \begin{center}
+            \includegraphics[width=1.0\linewidth]{figures/STS1.png}
+        \end{center}
 
-This implementation relation, denoted by $\leq_{mct}$, is
-written with:
+        \caption{The first Symbolic Transition System inferred in
+        Chapter \ref{sec:modelinf:prodsystems}.}
+        \label{fig:sts-ch4}
+    \end{figure}
+\end{example}
+
+The second implementation relation, denoted by $\leq_{mct}$, is
+defined as follows:
 
 \begin{definition}[The $\leq_{mct}$ implementation relation]
-	\label{impl21}
-	 Let $\EuScript{S}^{N}$ be an inferred model of $\mathit{Sua}$ and
-	 $\mathit{Sut}$ be the system under test.
-
-     We denote by ${Sut} \leq_{mct} \EuScript{S}^{N} =_{def} \forall
-     t= a_1(\alpha_1) \dots a_m(\alpha_m) \in CTraces({Sut}),
-     \forall \alpha_j(x)_{(1 \leq j \leq m)},\\ \exists
-     \EuScript{S}_i^{N} \in \EuScript{S}^{N} \text{ and } t'\in
-     Traces_{Pass}(\EuScript{S}_i^{N})$ such that
-     $t'=a_1(\alpha_1')...a_m(\alpha_m')$ \text{ and }
+     Let $\EuScript{S}^{N}$ be an inferred model of
+     $\mathit{Sua}$, and $\mathit{Sut}$ be a system under test.
+     We write: ${Sut} \leq_{mct} \EuScript{S}^{N}$ if and only if
+     $\forall ~t= a_1(\alpha_1) \dots a_m(\alpha_m) \in
+     CTraces({Sut})$, $\forall ~\alpha_j(x)_{(1 \leq j \leq m)},
+     \exists ~\EuScript{S}_i^{N} \in \EuScript{S}^{N}$ and $t'
+     \in Traces_{Pass}(\EuScript{S}_i^{N})$ such that
+     $t'=a_1(\alpha_1') \dots a_m(\alpha_m')$ and
      $\alpha_j'(x)=\alpha_j(x)$.
+
+     \label{impl21}
 \end{definition}
 
-In the following, we rewrite this relation in an equivalent but
-simpler form. According to the above definition, the successive
-symbols and variable assignments of a trace $t \in
-CTraces({Sut})$ must be found into several traces of
-$Traces_{Pass}(\EuScript{S}_i^{N})$, which have the same sequence
-of symbols $a_1...a_m$ as the trace $t$. The reduced model
-$R(\EuScript{S}_i^{N})$ was previously constructed to capture
-all these traces in $Traces_{Pass}(\EuScript{S}_i^{N})$, having
-the same sequence of symbols. Indeed, given a STS
-$\EuScript{S}_i^{N}$, all the STS paths of $\EuScript{S}_i^{N}$,
-which have the same sequence of symbols labeled on the
-transitions, are compacted into one STS path $b$ in
-$R(\EuScript{S}_i^{N})$ whose transition guards are stored into a
-matrix $M_{[b]}$.
+According to the above definition, the successive symbols and
+variable assignments of a trace $t \in CTraces({Sut})$ must be
+found into several traces of $Traces_{Pass}(\EuScript{S}_i^{N})$,
+which have the same sequence of symbols $a_1 \dots a_m$ as the
+trace $t$. The reduced model $R(\EuScript{S}_i^{N})$ was
+previously constructed to capture all these traces in
+$Traces_{Pass}(\EuScript{S}_i^{N})$, having the same sequence of
+symbols. Indeed, given a STS $\EuScript{S}_i^{N}$, all the STS
+paths of $\EuScript{S}_i^{N}$, which have the same sequence of
+symbols labeled on the transitions, are packed into one STS path
+$b$ in $R(\EuScript{S}_i^{N})$ whose transition guards are stored
+into a matrix $M_{[b]}$.
 
-If, we take back the trace example
-$t=(17011(nsys:=1,nsec:=8,point:=1,pid:=1)\text{ }
-17021(nsys:=1,nsec:=8,point:=4,tpoint:=9,pid:=1))$, and the STS of
-Figure \ref{fig:reduced-model}, $t$ is a pass trace with respect
-to $\leq_{mct}$ because each assignment $\alpha_j(x)$ satisfies
-at least one guard of the matrix line $j$. For instance, the
-assignment $point:=4$, which is given with the second valued
-action of $t$, satisfies one of the guards of the second line of
-the matrix $M_{[b]}$.
+\begin{example}
+    Given our trace example $t = 17011(nsys:=1, nsec:=8,
+    point:=1, pid:=1)\text{ } 17021(nsys:=1, nsec:=8, point:=4,
+    tpoint:=9, pid:=1)$, and the reduced model depicted in Figure
+    \ref{fig:sts-reduced-ch4}, $t$ is a pass trace with respect
+    to $\leq_{mct}$ because each assignment $\alpha_j(x)$
+    satisfies at least one guard of the matrix line $j$. For
+    instance, the assignment $(point := 4)$, which is given with
+    the second valued action of $t$, satisfies one of the guards
+    of the second line of the matrix $M_{[b]}$.
 
-Given a trace $a_1(\alpha_1) \dots a_m(\alpha_m) \in CTraces({Sut})$
-and a STS path $b$ of $R(\EuScript{S}_i^{N})$ having the same
-sequence of symbols $a_1 \dots a_m$, the relation can be now
-formulated as follows: for every valued action $a_j(\alpha_j)$,
-each variable assignment $\alpha_j(x)$ must satisfies at least
-one of the guards of the matrix line $j$ in $M_{[b]}[j,*]$.
+    \begin{figure}[h]
+        \begin{center}
+            \includegraphics[width=1.0\linewidth]{figures/reduced_sts_ch4.png}
+        \end{center}
 
-The implementation relation $\leq_{mct}$ can then be written with:
+        \caption{Reduced Symbolic Transition System model (with
+        its matrix) obtained from the model depicted in Figure
+        \ref{fig:sts-ch4}.}
+        \label{fig:sts-reduced-ch4}
+    \end{figure}
+\end{example}
+
+Given a trace $a_1(\alpha_1) \dots a_m(\alpha_m) \in
+CTraces({Sut})$ and a STS path $b$ of $R(\EuScript{S}_i^{N})$
+having the same sequence of symbols $a_1 \dots a_m$, the relation
+can now be formulated as follows: for every valued action
+$a_j(\alpha_j)$, each variable assignment $\alpha_j(x)$ must
+satisfies at least one of the guards of the matrix line $j$ in
+$M_{[b]}[j,*]$.
+
+Consequently, we propose to rewrite the implementation relation
+$\leq_{mct}$ below:
 
 \begin{proposition}
-	${Sut} \leq_{mct} \EuScript{S}^{N} \text{ if and only if } \forall t=
-	a_1(\alpha_1) \dots a_m(\alpha_m) \in CTraces({Sut}), \exists
-	R(\EuScript{S}_i^{N}) \in R(\EuScript{S}^{N)} \text{ and }
-	b=l0_{R(\EuScript{S}_i^{N})} \xRightarrow{(a_1(p_1),M_{[b]}[1,c_{[b]}]),\dots,(a_j(p_j),M_{[b]}[j,c_{[b]}])} l_m$ with $(1 \leq c_{[b]} \leq k)$ such that $\forall \alpha_j(x) (1 \leq j \leq m), \alpha_j(x) \models M_{[b]}[j,1] \vee \dots \vee  M_{[b]}[j,k]$ and $l_m \in Pass$.
+    ${Sut} \leq_{mct} \EuScript{S}^{N}$ if and only if
+    $\forall ~t = a_1(\alpha_1) \dots a_m(\alpha_m) \in
+    CTraces({Sut})$, $\exists ~R(\EuScript{S}_i^{N}) \in
+    R(\EuScript{S}^{N)}$ and
+    $b = l0_{R(\EuScript{S}_i^{N})}
+    \xRightarrow{(a_1(p_1),M_{[b]}[1,c_{[b]}]) \dots (a_j(p_j),M_{[b]}[j,c_{[b]}])}
+    l_m$
+    with $(1 \leq c_{[b]} \leq k)$ such that $\forall
+    ~\alpha_j(x)_{(1 \leq j \leq m)}, \alpha_j(x) \models
+    M_{[b]}[j,1] \vee \dots \vee  M_{[b]}[j,k]$, and $l_m \in Pass$.
 \end{proposition}
-
-% \begin{comment}
-% This second implementation relation, denoted with $\leq_{mct}$, can be written with the reduced model
-% $R(\EuScript{S}^{N})=\{R(\EuScript{S}_1^{N}),\dots,R(\EuScript{S}_n^{N})\}$. Indeed, given a STS $\EuScript{S}_i^{N}$, all the STS paths of$\EuScript{S}_i^{N}$, which have the same sequence of symbols labeled on the transitions, are compacted into one STS path $b$ in $R(\EuScript{S}_i^{N})$ whose transition guards are stored into a matrix $M_{[b]}$. Given a trace $a_1(\alpha_1)...a_m(\alpha_m) \in CTraces({Sut})$ and a STS path $b$ of $R(\EuScript{S}_i^{N})$ having the same sequence of symbols $a_1...a_m$, the relation can
-% be now formulated as follows: for every valued action
-% $a_j(\alpha_j)$, each variable assignment $\alpha_j(x)$ must
-% satisfies at least one of the guards of the matrix line $j$ in
-% $M_{[b]}[j,*]$.
-%
-%
-%
-%
-% If, we take back the trace example
-% $t=(17011(nsys=1,nsec=8,point=1,pid=1)\text{ }
-% 17021(nsys=1,nsec=8,point=4,tpoint=9,pid=1)$, and the STS of
-% Figure \ref{fig:reduced-model}, the assignment $point=4$, which
-% is given with the second valued action of $t$, satisfies one of
-% the guards of the second line of the matrix $M_{[b]}$. Hence, $t$ represents a correct behaviour w.r.t. the STS of
-% Figure \ref{fig:reduced-model}.
-%
-% \begin{definition}
-%     ${Sut} \leq_{mct} \EuScript{S}^{N} \text{ iff } \forall t=
-%     a_1(\alpha_1)...a_1(\alpha_m),\\ \exists
-%     R(\EuScript{S}_i^{N}) \text{ and } l0_{R(\EuScript{S}_i^{N})} \xRightarrow{(a_1(p_1),G_{1}),...,(a_m(p_m),G_{m})} l_m$ such that $\forall \alpha_j(x) (1 \leq j \leq m), \alpha_j(x) \models M_{[b]}[j,1] \vee ... \vee  M_{[b]}[j,k]$ and $l_m \in Pass$.
-% \end{definition}
-% \end{comment}
 
 The disjunction of guards $M_{[b]}[j,1] \vee \dots \vee
 M_{[b]}[j,k]$, found in the matrix $M_{[b]}$, could be simplified
-by gathering all the equalities $x==val$ together with
+by gathering all the equalities $(x == val)$ together with
 disjunctions for every variable $x$ that belongs to the parameter
 set $p_j$. Such equalities can be extracted with the projection
 operator \textit{proj} (see Definition \ref{def:sts}). We obtain
-one guard of the form $\bigwedge_{x \in p_j}(x==val_1 \vee \dots
-\vee x==val_k)$. The STS $D(\EuScript{S}_i^{N})$, derived from
-$R(\EuScript{S}_i^{N})$, is constructed with this simplification
-of guards:
+one guard of the form $\displaystyle \bigwedge_{x \in p_j} ((x ==
+val_1) \vee \dots \vee (x == val_k))$. The STS
+$D(\EuScript{S}_i^{N})$, derived from $R(\EuScript{S}_i^{N})$, is
+constructed with this simplification of guards:
 
 %all the variable assignments found in the guards
 %$M_{[b]}[j,1],..., M_{[b]}[j,k]$ can be collected with the
@@ -376,70 +347,82 @@ of guards:
 \begin{definition}[Derived STS $D(\EuScript{S}_i^{N})$]
     Let
     $R(\EuScript{S}_i^{N})=<L_R,l0_R,V_R,V0_R,I_R,\Lambda_R,\rightarrow_R>$
-    be a STS of $R(\EuScript{S}^{N})$. We denote by $D(\EuScript{S}_i^{N})$ the STS $ <L_D,l0_D,V_D,V0_D,I_D,\Lambda_D,\rightarrow_D>$ derived from $R(\EuScript{S}_i^{N})$ such that:
-\begin{itemize}
-    \item $L_D=L_{R}, l0_D=l0_{R}, I_D=I_{R},
-        \Lambda_D=\Lambda_{R}$;
-    \item $V_D, V0_D$ and $\rightarrow_D$ are given by the following inference rule:
+    be a STS of $R(\EuScript{S}^{N})$. We denote by
+    $D(\EuScript{S}_i^{N})$ the STS $
+    <L_D,l0_D,V_D,V0_D,I_D,\Lambda_D,\rightarrow_D>$ derived from
+    $R(\EuScript{S}_i^{N})$ such that:
 
-				$\frac{
-					\begin{matrix}
-					b=l0_{R}
-					\xRightarrow{(a_1(p_1),M_{[b]}[1,c_{[b]}])\dots (a_m(p_m),M_{[b]}[m,c_{[b]}]}_{\rightarrow_{R}}
-					l_{m},
-					(1 \leq c_{[b]} \leq k) \text{ in } V0_{R}
-					\end{matrix}
-				}
-				{
-					\begin{matrix}
-					l0_D
-					\xRightarrow{(a_1(p_1),M_b[1])\dots (a_m(p_m),M_b[m])}_{\rightarrow_D}
-					l_m\\
-					V_D=V0_D \wedge M_b, M_b[j, 1]_{(1\leq j \leq m)} =\\
-					 \displaystyle \bigwedge_{x \in p_j} ( proj_x(M_{[b]}[j, 1]) \vee \dots \vee proj_x(M_{[b]}[j, k]))
+    \begin{itemize}
+        \item $L_D=L_{R}$;
 
+        \item $l0_D=l0_{R}$;
 
-					%\bigvee_{1 \leq k \leq k} proj_x ((M_{[b]}[j, k])
+        \item $I_D=I_{R}$;
 
-					\end{matrix}
-				}$
-  \end{itemize}
+        \item $\Lambda_D=\Lambda_{R}$;
 
-    $D(\EuScript{S}^{N})$ denotes the model $\{D(\EuScript{S}_1^{N}),\dots,D(\EuScript{S}_n^{N}) \}$.
+        \item $V_D, V0_D$ and $\rightarrow_D$ are defined by the
+            following inference rule:
+
+            $\frac{
+                \begin{matrix}
+                b=l0_{R}
+                \xRightarrow{(a_1(p_1),M_{[b]}[1,c_{[b]}])\dots
+                (a_m(p_m),M_{[b]}[m,c_{[b]}])}_{\rightarrow_{R}}
+                l_{m},
+                (1 \leq c_{[b]} \leq k) \text{ in } V0_{R}
+                \end{matrix}
+            }
+            {
+                \begin{matrix}
+                l0_D
+                \xRightarrow{(a_1(p_1),M_{b}[1])\dots (a_m(p_m),M_{b}[m])}_{\rightarrow_D}
+                l_m, V_D=V0_D \wedge M_{b},\\
+                M_{b}[j]_{(1\leq j \leq m)} = \displaystyle
+                \bigwedge_{x \in p_j} ( proj_x(M_{[b]}[j, 1])
+                \vee \dots \vee proj_x(M_{[b]}[j, k]))
+
+                \end{matrix}
+            }$
+    \end{itemize}
+
+    We also have $D(\EuScript{S}^{N}) =
+    \{D(\EuScript{S}_1^{N}),\dots,D(\EuScript{S}_n^{N}) \}$.
 \end{definition}
-
 
 The second implementation relation $\leq_{mct}$ can now be
 expressed by:
 
 \begin{proposition}
-    ${Sut} \leq_{mct} \EuScript{S}^{N} \text{ if and only if }\forall t=
-    a_1(\alpha_1) \dots a_m(\alpha_m) \in CTraces({Sut}), \exists
-    D(\EuScript{S}_i^{N}) \in D(\EuScript{S}^{N}) \text{ and }
-    l0_{D(\EuScript{S}_i^{N})}
-    \xRightarrow{(a_1(p_1),G_{1}),\dots,(a_m(p_m),G_{m})} l_m
-    \text{ such that } \forall \alpha_j (1 \leq j \leq m),
-    \alpha_j \models G_{j}$ and $l_m \in Pass$.
+    ${Sut} \leq_{mct} \EuScript{S}^{N}$ if and only if $\forall
+    ~t= a_1(\alpha_1) \dots a_m(\alpha_m) \in CTraces({Sut})$,
+    $\exists ~D(\EuScript{S}_i^{N}) \in D(\EuScript{S}^{N})$ and
+    $l0_{D(\EuScript{S}_i^{N})} \xRightarrow{(a_1(p_1),G_{1})
+    \dots (a_m(p_m),G_{m})} l_m$ such that $\forall
+    ~\alpha_{j ~(1 \leq j \leq m)}, \alpha_j \models G_{j}$ and
+    $l_m \in Pass$.
 \end{proposition}
 
 
-$\leq_{cmt}$ now means that a trace of $\mathit{Sut}$ must also
-be a pass trace of the model
-$D(\EuScript{S}^{N})=(D(\EuScript{S}_1^{N}),\dots,D(\EuScript{S}_n^{N}))$.
-Furthermore, this notion of trace inclusion can be formulated
+The implementation relation $\leq_{mct}$ now means that a trace
+of $\mathit{Sut}$ must also be a pass trace of the model
+$D(\EuScript{S}^{N})=\{D(\EuScript{S}_1^{N}),\dots,D(\EuScript{S}_n^{N})\}:w
+$. Furthermore, this notion of trace inclusion can be formulated
 with the first implementation relation $\leq_{ct}$ as follows:
 
 \begin{proposition}
-	\label{rel:impl2}
-${Sut} \leq_{mct} \EuScript{S}^{N} \text{ if and only if } CTraces({Sut})\subseteq Traces_{Pass}(D(\EuScript{S}^{N}))$
+    ${Sut} \leq_{mct} \EuScript{S}^{N} \text{ if and only if }
+    CTraces({Sut})\subseteq
+    Traces_{Pass}(D(\EuScript{S}^{N}))$, and ${Sut} \leq_{mct}
+    \EuScript{S}^{N} \Leftrightarrow {Sut} \leq_{ct}
+    D(\EuScript{S}^{N})$.
 
-${Sut} \leq_{mct} \EuScript{S}^{N}\Leftrightarrow {Sut} \leq_{ct} D(\EuScript{S}^{N})$
-
+    \label{rel:impl2}
 \end{proposition}
 
 The implementation relation $\leq_{mct}$ is now expressed with
 the first relation $\leq_{ct}$, which implies that our passive
-testing algorithms shall be the same for both relations but shall
-take different reference models.
-In the next section, we introduce an offline passive testing
-algorithm that uses these two implementation relations.
+testing algorithms shall be the same for both relations except
+that they shall take different reference models. In the next
+section, we introduce an offline passive testing algorithm that
+uses these two implementation relations.
