@@ -11,33 +11,38 @@ verdict "Pass$\leq_{ct}$" if the relation $\leq_{ct}$ is
 satisfied, and the verdict "Pass$\leq_{mct}$" if $\leq_{mct}$ is
 satisfied.
 
-The algorithm relies upon the function ${check(Trace ~trace, STS
-~\EuScript{S})}$ to check whether the trace $trace =
+Algorithm \ref{algo:check} relies upon the function ${check(Trace
+~trace, STS ~\EuScript{S})}$ to check whether the trace $trace =
 a_1(\alpha_1) \dots a_m(\alpha_m)$ is a trace of the STS
 $\EuScript{S}$. If a STS path $b$ is composed of the same
-sequence of symbols than the trace $trace$, the function tries to
-find a matrix column $M=M_{[b]}[*,i]$ such that every variable
-assignment $\alpha_j$ satisfies the guard $M[j]$. If such a
-column of guards exists, the function returns True, and False
-otherwise.
+sequence of symbols than $trace$ (line
+\ref{algo:check:line:exists}), the function tries to find a
+matrix column (\emph{i.e.} a vector) $M = M_{[b]}[*,c_{[b]}]$ ($1
+\leq c_{[b]} \leq k$) such that every variable assignment
+$\alpha_j$ satisfies the guard $M[j]$. If such a column of guards
+exists, the function returns $True$, and $False$ otherwise.
 
-Algorithm \ref{algo:check} covers every trace $trace$ of
-$CTraces({Sut})$ and tries to find a STS $R(\EuScript{S}_i^{N})$
-such that $t$ is also a trace of $R(\EuScript{S}_i^{N})$ with
-$check(t, R(\EuScript{S}_i^{N}))$.  If no model
-$R(\EuScript{S}_i^{N})$ has been found, the trace $t$ is placed
-into the set $T_1$. $T_1$ gathers the possibly fail traces
-with respect to $\leq_{ct}$. Thereafter, the algorithm performs the same
-step but on the STS $D(\EuScript{S}^{N})$. One more time, if no
-model $D(\EuScript{S}_i^{N})$ has been found, the trace $t$ is placed
-into the set $T_2$.  The latter gathers the possibly fail traces,
-with respect to the relation $\leq_{mct}$.
+First, this algorithm covers every trace $trace$ of
+$CTraces({Sut})$, and tries to find a STS $R(\EuScript{S}_i^{N})$
+such that $trace$ is also a trace of $R(\EuScript{S}_i^{N})$ with
+$check(trace, R(\EuScript{S}_i^{N}))$ (line
+\ref{algo:check:line:check1}).  If no model
+$R(\EuScript{S}_i^{N})$ is found, $trace$ is added to the set
+$T_1$ (line \ref{algo:check:line:t1}), which gathers the possibly
+fail traces with respect to $\leq_{ct}$.
+
+Thereafter, this algorithm performs the same step but using the
+STS $D(\EuScript{S}^{N})$ (line \ref{algo:check:line:check2}).
+One more time, if no model $D(\EuScript{S}_i^{N})$ is found, the
+trace $trace$ is added to the set $T_2$ (line
+\ref{algo:check:line:t2}), which gathers the possibly fail
+traces with respect to the relation $\leq_{mct}$.
 
 Finally, if $T_1$ is empty, the verdict "Pass$\leq_{ct}$" is
-returned, which means that the first implementation relation holds.
-Otherwise, $T_1$ is provided. If $T_2$ is empty, the verdict
-"Pass$\leq_{mct}$" is returned, or $T_2$ in the other case.
-
+returned, which means that the first implementation relation
+holds. Otherwise, $T_1$ is provided. If $T_2$ is empty, the
+verdict "Pass$\leq_{mct}$" is returned. Otherwise $T_2$ is
+returned.
 
 \begin{algorithm}[ht]
     \SetKwInOut{Input}{input}
@@ -59,23 +64,25 @@ Otherwise, $T_1$ is provided. If $T_2$ is empty, the verdict
     \ForEach{$trace \in CTraces({Sut})$}{
 
         \For{$i = 1, \dots, n$}{
-            \If{\check($trace$, $R(\EuScript{S}_i^{N})$)}{
+            \If{\check($trace$,
+            $R(\EuScript{S}_i^{N})$)}{\label{algo:check:line:check1}
                 break\;
             }
         }
 
         \If{$i == n$} {
-            $T_1=T_1 \cup \{trace\}$\;
+            $T_1=T_1 \cup \{trace\}$\;\label{algo:check:line:t1}
 
             \For{$i = 1, \dots, n$}{
 
-                \If{\check($trace$, $D(\EuScript{S}_i^{N})$)}{
+                \If{\check($trace$,
+                $D(\EuScript{S}_i^{N})$)}{\label{algo:check:line:check2}
                     break\;
                 }
             }
 
             \If{$i==n$} {
-                $T_2=T_2 \cup \{trace\}$\;
+                $T_2=T_2 \cup \{trace\}$\;\label{algo:check:line:t2}
             }
         }
     }%endfor1
@@ -99,12 +106,12 @@ Otherwise, $T_1$ is provided. If $T_2$ is empty, the verdict
             \xRightarrow{(a_1(p_1),G_{1},A_{1}) \dots
             (a_n(p_n),G_{n},A_{n})} l_n \mid trace =
             a_1(\alpha_1),\dots, a_n(\alpha_n)$ and $l_n \in
-            Pass$}{
+            Pass$}{\label{algo:check:line:exists}
 
-                $M_{[b]} = Mat(b)$ is the Matrix $k \times m$ of $b$\;
-                $i=1$\;
-                \While{$i \leq m$}{
-                    $M=M_{[b]}[*,i]$\;
+                $M_{[b]} = Mat(b)$ is the matrix $n \times k$ of $b$\;
+                $c_{[b]} = 1$\;
+                \While{$c_{[b]} \leq k$}{
+                    $M = M_{[b]}[*,c_{[b]}]$\;
 
                     \For{$j = 1, \dots, n$}{
                         \If{$\alpha_j \not\models M[j]$}{
@@ -126,12 +133,12 @@ Otherwise, $T_1$ is provided. If $T_2$ is empty, the verdict
 \end{algorithm}
 
 When one of the implementation relations does not hold, this
-algorithm offers the advantage to provide the possibly fail
+algorithm offers the advantage of providing the possibly fail
 traces of $CTraces({Sut})$. Such traces can be later analyzed to
-check if $\mathit{Sut}$ is correct or not. That is helpful for
-Michelin engineers as it allows them to only focus on what are
-potentially faulty behaviors, reducing debugging time, and
-making engineers more efficient.
+check if $\mathit{Sut}$ is correct or not. That is very helpful
+for Michelin engineers because it allows them to only focus on
+what are potentially faulty behaviors, reducing debugging time,
+and making engineers more efficient.
 
 In the same spirit, our online passive testing algorithm is given
 in the next section.
