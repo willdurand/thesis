@@ -527,21 +527,23 @@ is composed of the URI accompanied with an integer $k$, which is
 incremented to yield a new and unique state.
 
 The translation of the structured traces into a run set is
-performed by Algorithm \ref{traces_to_runs}, which takes a
+performed by Algorithm \ref{algo:traces_to_runs}, which takes a
 trace set $ST$ as input, and returns a run set $SR$. It owns a
 set $States$ storing the constructed states. All the runs $r$ of
 $SR$ start with the same \emph{initial state} $(l0,v_\emptyset)$.
-Algorithm \ref{traces_to_runs} iterates over the valued actions
+Algorithm \ref{algo:traces_to_runs} iterates over the valued actions
 $(a_i,\theta_i)$ of a trace $\sigma$ in order to construct the
-next states $s$. It extracts the valuation $URI=val$ (line 10) from
+next states $s$. It extracts the valuation $URI=val$ (line
+\ref{algo:traces_to_runs:line:extract}) from
 $\theta_i$ giving the URI value of the next resource reached
 after the action $a_i$. The state $s=((val,k+1),v_\emptyset)$ is
 constructed with $k$ such that there exists
 $((URI,k),v_\emptyset) \in States$ composed of the greatest
 integer $k \geq 0$. The current run $r$ is completed with the
 valued action $(a_i,\theta_i)$ followed by the state $s$ (line
-16). The operator $\cdot$ denotes this completion. Finally, $SR$
-gathers all the constructed runs (line 17).
+\ref{algo:traces_to_runs:line:run}). The operator $\cdot$ denotes
+this completion. Finally, $SR$ gathers all the constructed runs
+(line \ref{algo:traces_to_runs:line:sr}).
 
 \begin{algorithm}
 \SetKwInOut{Input}{input} \SetKwInOut{Output}{output}
@@ -554,7 +556,7 @@ BEGIN\;
 $States:=\emptyset$ is the set of the constructed states\;
 
 \If{$ST$ is empty} {
-    $SR:= \{(l0,v_\emptyset)\}$}\;
+    $SR:= \{(l0,v_\emptyset)\}$\;}
 \Else{
     $SR:= \emptyset$\;
 
@@ -563,7 +565,8 @@ $States:=\emptyset$ is the set of the constructed states\;
 
         \For{ $0 \leq i \leq n$}{
 
-            extract the valuation $URI=val$ from $\theta_i$\;
+            extract the valuation $URI=val$ from
+            $\theta_i$\;\label{algo:traces_to_runs:line:extract}
 
             \If{($(val,0),v_\emptyset) \notin States$}{
             $s:=((val,0),v_\emptyset)$\; }
@@ -573,20 +576,21 @@ $States:=\emptyset$ is the set of the constructed states\;
 
             $States:=States \cup \{s\}$\;
 
-            $r:=r \cdot (a_i,\theta_i) \cdot s$\;
+            $r:=r \cdot (a_i,\theta_i) \cdot
+            s$\;\label{algo:traces_to_runs:line:run}
 
         }%endfor_i
-        $SR := SR \cup \{r\}$\;
+        $SR := SR \cup \{r\}$\;\label{algo:traces_to_runs:line:sr}
     }%endfor trace
 }
 END\;
 
     \caption{Traces to runs algorithm}
-    \label{traces_to_runs}
+    \label{algo:traces_to_runs}
 \end{algorithm}
 
 \begin{proposition}
-    For each trace $\sigma \in ST$, Algorithm \ref{traces_to_runs}
+    For each trace $\sigma \in ST$, Algorithm \ref{algo:traces_to_runs}
     constructs a run $r=s_0 \cdot (a_0,\theta_0) \cdot s_1 \cdot
     \dots \cdot s_n \cdot (a_n,\theta_n) \cdot s_{n+1} \in SR$ such that
     $\forall (a_i,\theta_i)_{(0 < i\leq n)} \in \sigma, \exists ~!~ s_i
@@ -1176,54 +1180,64 @@ addition of an orthogonal layer in the Models generator to
 describe any kind of exploration strategy by means of rules.
 
 The simplified algorithm of the Strategy layer is given in
-Algorithm \ref{exploration-strategy}. The latter applies the
-rules on any stored IOSTS $\EuScript{S}_i$. It emerges a
-location list $Loc$ that are marked with "explored" by the rules
-to avoid re-using them twice (line 4). Then, the algorithm goes
-back to the first generated IOSTS $\EuScript{S}_1$ in order to
-extract one complete and executable path $p$ ended by a location
-$l$ of $Loc$ (line 5). This step is sound since all the locations
-of $\EuScript{S}_i$ belong to the location set of
-$\EuScript{S}_1$ (Proposition \ref{prop:loc:inclu}). Such an
-IOSTS \emph{preamble} is required by the Robot explorer for
-trying to reach the location $l$ by executing every action of
-$p$. The algorithm finally returns a list of paths $List$, which
-is sent to the Robot explorer. The exploration ends once all the
-locations of $\EuScript{S}_i$ or of $\EuScript{S}_1$ are visited
-(line 3). The algorithm returns unexplored locations only even
-if, while executing the algorithm, the IOSTS $\EuScript{S}_i$ is
-regenerated several times because the marked locations are also
-stored in the set $L$. Hence, if a location of $\EuScript{S}_i$
-is chosen a second time by the rules, the algorithm checks
-whether it has been previously visited (line 7).
+Algorithm \ref{algo:exploration-strategy}. The latter applies the
+rules on any stored IOSTS $\EuScript{S}_i$. It emerges a location
+list $Loc$ that are marked with "explored" by the rules to avoid
+re-using them twice (line
+\ref{algo:exploration-strategy:line:rules}). Then, the algorithm
+goes back to the first generated IOSTS $\EuScript{S}_1$ in order
+to extract one complete and executable path $p$ ended by a
+location $l$ of $Loc$ (line
+\ref{algo:exploration-strategy:line:goback}). This step is sound
+since all the locations of $\EuScript{S}_i$ belong to the
+location set of $\EuScript{S}_1$ (Proposition
+\ref{prop:loc:inclu}). Such an IOSTS \emph{preamble} is required
+by the Robot explorer for trying to reach the location $l$ by
+executing every action of $p$. The algorithm finally returns a
+list of paths $List$, which is sent to the Robot explorer. The
+exploration ends once all the locations of $\EuScript{S}_i$ or of
+$\EuScript{S}_1$ are visited (line
+\ref{algo:exploration-strategy:line:end}). The algorithm returns
+unexplored locations only even if, while executing the algorithm,
+the IOSTS $\EuScript{S}_i$ is regenerated several times because
+the marked locations are also stored in the set $L$. Hence, if a
+location of $\EuScript{S}_i$ is chosen a second time by the
+rules, the algorithm checks whether it has been previously
+visited (line \ref{algo:exploration-strategy:line:check}).
 
 \begin{algorithm}[h]
-\SetKwInOut{Input}{input} \SetKwInOut{Output}{output}
+\SetKwInOut{Input}{input}
+\SetKwInOut{Output}{output}
 
 \Input{IOSTS $\EuScript{S}_1$, $\EuScript{S}_i$}
 \Output{List of preambles $List$}
 
 $L:=\emptyset$ is the list of explored locations of $\EuScript{S}_1$\;
 BEGIN\;
-\While{$L \neq L_{\EuScript{S}_1}$ and $L \neq L_{\EuScript{S}_i}$ }
-{
-Apply the rules on $\EuScript{S}_i$ and extract a  location list $Loc$\;
-Go back to $\EuScript{S}_1$\;
 
-\ForEach{$l \in Loc$}{
-\If{$l \notin L$}
-{Compute a preamble $p$ from $l0_{\EuScript{S}_1}$ that reaches $l$\;
+\While{$L \neq L_{\EuScript{S}_1}$ and $L \neq
+L_{\EuScript{S}_i}$}{\label{algo:exploration-strategy:line:end}
 
-$L:= L \cup \{l\}$\;
-$List:= List \cup  \{p\}$\;
-}
-%\Else{Repeat 1)}
-}
+    Apply the rules on $\EuScript{S}_i$ and extract a  location list
+    $Loc$\;\label{algo:exploration-strategy:line:rules}
+
+    Go back to
+    $\EuScript{S}_1$\;\label{algo:exploration-strategy:line:goback}
+
+    \ForEach{$l \in Loc$}{
+        \If{$l \notin L$}{\label{algo:exploration-strategy:line:check}
+            Compute a preamble $p$ from $l0_{\EuScript{S}_1}$ that reaches $l$\;
+
+            $L:= L \cup \{l\}$\;
+            $List:= List \cup  \{p\}$\;
+        }
+        %\Else{Repeat 1)}
+    }
 }
 END\;
 
-\caption{Exploration strategy}
-\label{exploration-strategy}
+    \caption{Exploration strategy}
+    \label{algo:exploration-strategy}
 \end{algorithm}
 
 The rules of the Strategy layer can encode different strategies.
