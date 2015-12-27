@@ -101,8 +101,10 @@ continuous stream of products that are strictly identified,
 \emph{i.e.} for each action in a given sequence, we have the
 assignment $(pid := val)$ (for the record, $pid$ stands for
 \emph{product identifier}).  Here, we normalize these models
-before using them for testing.  The resulting models are denoted
-by $\EuScript{S}^{N}$ and $R(\EuScript{S}^{N})$.
+before using them for testing. The resulting models are denoted
+by $\EuScript{S}^{N} = \{ \EuScript{S}_1^{N}, \dots,
+\EuScript{S}_n^{N} \}$ and $R(\EuScript{S}^{N}) = \{
+R(\EuScript{S}_1^{N}), \dots, R(\EuScript{S}_n^{N}) \}$.
 
 We remove the assignments relative to product identifiers and
 time stamps. Furthermore, we label all the final locations with
@@ -406,8 +408,8 @@ expressed by:
 
 The implementation relation $\leq_{mct}$ now means that a trace
 of $\mathit{Sut}$ must also be a pass trace of the model
-$D(\EuScript{S}^{N})=\{D(\EuScript{S}_1^{N}),\dots,D(\EuScript{S}_n^{N})\}:w
-$. Furthermore, this notion of trace inclusion can be formulated
+$D(\EuScript{S}^{N})=\{D(\EuScript{S}_1^{N}),\dots,D(\EuScript{S}_n^{N})\}$.
+Furthermore, this notion of trace inclusion can be formulated
 with the first implementation relation $\leq_{ct}$ as follows:
 
 \begin{proposition}

@@ -4,99 +4,22 @@
 Our offline passive testing algorithm, which aims to check
 whether the two previous implementation relations hold, is given
 in Algorithm \ref{algo:check}. It takes the complete traces of
-$\mathit{Sut}$, and the models $R(\EuScript{S}^{N})$ and
-$D(\EuScript{S}^{N})$, with regards to Propositions
-\ref{rel:impl12} and \ref{rel:impl2}. It returns the verdict
-"Pass$\leq_{ct}$" ("Pass$\leq_{mct}$") if the relation
-$\leq_{ct}$ is satisfied ($\leq_{mct}$ respectively).
+$\mathit{Sut}$, as well as the models $R(\EuScript{S}^{N})$ and
+$D(\EuScript{S}^{N})$, with regards to Proposition
+\ref{rel:impl12} and Proposition \ref{rel:impl2}. It returns the
+verdict "Pass$\leq_{ct}$" if the relation $\leq_{ct}$ is
+satisfied, and the verdict "Pass$\leq_{mct}$" if $\leq_{mct}$ is
+satisfied.
 
-It relies upon the function \textit{check(Trace $trace$, STS
-$\EuScript{S}$)} to check whether the trace
-$trace=a_1(\alpha_1)...a_m(\alpha_m)$ is also a trace of the STS
+The algorithm relies upon the function ${check(Trace ~trace, STS
+~\EuScript{S})}$ to check whether the trace $trace =
+a_1(\alpha_1) \dots a_m(\alpha_m)$ is a trace of the STS
 $\EuScript{S}$. If a STS path $b$ is composed of the same
-sequence of symbols as the trace $trace$, the function tries to
-find a matrix column  $M=M_{[b]}[*,i]$ such that every variable
+sequence of symbols than the trace $trace$, the function tries to
+find a matrix column $M=M_{[b]}[*,i]$ such that every variable
 assignment $\alpha_j$ satisfies the guard $M[j]$. If such a
 column of guards exists, the function returns True, and False
 otherwise.
-
-\begin{algorithm}[h]
-    \SetKwInOut{Input}{input}
-    \SetKwInOut{Output}{output}
-    \SetKwFunction{check}{check}
-
-    \Input{$R(\EuScript{S}^{N})=\{R(\EuScript{S}_1^{N}),...,R(\EuScript{S}_n^{N})\},
-    D(\EuScript{S}^{N})=\{D(\EuScript{S}_1^{N}),...,D(\EuScript{S}_n^{N})\}, CTraces({Sut})$}
-    \Output{Verdicts or possibly fail trace sets $T_1, T_2$ }
-
-    BEGIN\;
-
-    $T_1 = T_2 = \emptyset$\;
-    \ForEach{$t \in CTraces({Sut})$}{
-
-        \ForEach{$i \in 1, \dots , n$}{
-
-            \lIf{\check($t$, $R(\EuScript{S}_i^{N})$)}{
-                break
-            }
-        }
-        \If{$i==n$} {
-            $T_1=T_1 \cup \{t\}$
-
-            \ForEach{$i \in 1, \dots , n$}{
-
-                \lIf{\check($t$, $D(\EuScript{S}_i^{N})$)}{
-                    break
-                }}
-            \lIf{$i==n$} {
-                $T_2=T_2 \cup \{t\}$
-            }
-
-        }
-
-     \lIf{$T_1==\emptyset$} {
-        return "Pass$\leq_{ct}$"}
-     \lElse{return $T_1$}
-     \lIf{$T_2==\emptyset$} {
-        return "Pass$\leq_{mct}$"}
-     \lElse{return $T_2$}
-
-
-    }%endfor1
-    END\;
-
-    \BlankLine
-    \BlankLine
-
-    \SetKwProg{Fn}{Function}{ is}{end}
-    \Fn{check(Trace $trace$, STS $\EuScript{S}$) : bool}{
-        \If{$\exists b=l0_{\EuScript{S}}
-            \xRightarrow{(a_1(p_1),G_{1},A_{1})\dots (a_n(p_n),G_{n},A_{n})}
-            l_n | trace = (a_1, \alpha_1),\dots ,(a_n, \alpha_n)$ and $l_n \in Pass$}{
-            $M_{[b]}=Mat(b)$ is the Matrix $k \times m$ of $b$\;
-            $i=1$\;
-            \While{$i \leq m$}{
-                $M=M_{[b]}[*,i]$\;
-                \ForEach{$j \in 1, \dots , n$}{
-                    \lIf{$\alpha_j \not\models M[j]$}{
-                        break
-                    }
-                }
-
-                \lIf{$j==n$}{
-                    return $True$
-                }
-                $i++$\;
-            }
-
-
-        }
-        return $False$\;
-    }
-
-    \caption{Offline passive testing algorithm}
-    \label{algo:check}
-\end{algorithm}
 
 Algorithm \ref{algo:check} covers every trace $trace$ of
 $CTraces({Sut})$ and tries to find a STS $R(\EuScript{S}_i^{N})$
@@ -114,6 +37,93 @@ Finally, if $T_1$ is empty, the verdict "Pass$\leq_{ct}$" is
 returned, which means that the first implementation relation holds.
 Otherwise, $T_1$ is provided. If $T_2$ is empty, the verdict
 "Pass$\leq_{mct}$" is returned, or $T_2$ in the other case.
+
+
+\begin{algorithm}[ht]
+    \SetKwInOut{Input}{input}
+    \SetKwInOut{Output}{output}
+    \SetKwFunction{check}{check}
+
+    \Input{
+        $R(\EuScript{S}^{N}),
+        D(\EuScript{S}^{N}),
+        CTraces({Sut})$
+    }
+    \Output{Verdicts or possibly fail trace sets $T_1, T_2$ }
+
+    BEGIN\;
+
+    $T_1 = \emptyset$\;
+    $T_2 = \emptyset$\;
+
+    \ForEach{$trace \in CTraces({Sut})$}{
+
+        \For{$i = 1, \dots, n$}{
+            \If{\check($trace$, $R(\EuScript{S}_i^{N})$)}{
+                break\;
+            }
+        }
+
+        \If{$i == n$} {
+            $T_1=T_1 \cup \{trace\}$\;
+
+            \For{$i = 1, \dots, n$}{
+
+                \If{\check($trace$, $D(\EuScript{S}_i^{N})$)}{
+                    break\;
+                }
+            }
+
+            \If{$i==n$} {
+                $T_2=T_2 \cup \{trace\}$\;
+            }
+        }
+    }%endfor1
+
+    \If{$T_1==\emptyset$} {
+    return "Pass$\leq_{ct}$"\;}
+    \Else{return $T_1$\;}
+
+    \If{$T_2==\emptyset$} {
+    return "Pass$\leq_{mct}$"\;}
+    \Else{return $T_2$\;}
+
+    END\;
+
+    \BlankLine
+    \BlankLine
+
+    \SetKwProg{Fn}{Function}{ is}{end}
+    \Fn{check(Trace $trace$, STS $\EuScript{S}$) : bool}{
+        \If{$\exists ~b=l0_{\EuScript{S}}
+            \xRightarrow{(a_1(p_1),G_{1},A_{1}) \dots
+            (a_n(p_n),G_{n},A_{n})} l_n \mid trace =
+            a_1(\alpha_1),\dots, a_n(\alpha_n)$ and $l_n \in
+            Pass$}{
+
+                $M_{[b]} = Mat(b)$ is the Matrix $k \times m$ of $b$\;
+                $i=1$\;
+                \While{$i \leq m$}{
+                    $M=M_{[b]}[*,i]$\;
+
+                    \For{$j = 1, \dots, n$}{
+                        \If{$\alpha_j \not\models M[j]$}{
+                            break\;
+                        }
+                    }
+
+                    \If{$j==n$}{
+                        return $True$\;
+                    }
+                    $i = i + 1$\;
+                }
+        }
+        return $False$\;
+    }
+
+    \caption{Offline passive testing algorithm}
+    \label{algo:check}
+\end{algorithm}
 
 When one of the implementation relations does not hold, this
 algorithm offers the advantage to provide the possibly fail
