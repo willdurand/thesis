@@ -334,17 +334,6 @@ val_1) \vee \dots \vee (x == val_k))$. The STS
 $D(\EuScript{S}_i^{N})$, derived from $R(\EuScript{S}_i^{N})$, is
 constructed with this simplification of guards:
 
-%all the variable assignments found in the guards
-%$M_{[b]}[j,1],..., M_{[b]}[j,k]$ can be collected with the
-%projection operator $proj_{x}(G)$.
-
-%It is then possible to create
-%vectors of guards from the matrices in $R(\EuScript{S}_i)^{G}$ in
-%order to express that a trace $t$ can still comply with the
-%behaviours found in $R(\EuScript{S}_i)^{G}$, even if it does not
-%strictly satisfy all guards of a single branch (\emph{i.e.} the same
-%column in the matrices), but rather the disjunction of the guards
-%belonging to the matrices of this branch.
 
 \begin{definition}[Derived STS $D(\EuScript{S}_i^{N})$]
     Let
