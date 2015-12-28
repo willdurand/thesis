@@ -10,12 +10,18 @@ two constraints sounds familiar as they have already been taken
 into consideration in the previous chapter. We present a passive
 testing technique built on-top of \emph{Autofunk v3}. First, we
 infer reference models of a system under analysis $\mathit{Sua}$.
-Then, we check whether a system under test ($\mathit{Sut}$)
+Then, we check whether a system under test $\mathit{Sut}$
 conforms to these inferred models by means of two implementation
-relations. We reuse the trace preorder relation, and we propose
-our own implementation relation to comply with Michelin's needs.
-
-\TODO{...}\\
+relations. We use the trace preorder relation to strictly check
+conformance between the two systems. Because the inferred models
+are partial, they likely lack information, which implies that a
+strict relation may be too strong. That is why we propose our own
+(weaker) implementation relation to comply with Michelin's needs.
+Such a relation is less strict than the trace preorder relation
+in order to accept not standard behaviors until a certain point.
+These two relations are leveraged in two algorithms for
+performing both offline and online passive conformance testing.
+We end this chapter with an evaluation on our offline approach.\\
 
 \minitoc
 
