@@ -1,29 +1,30 @@
 \section{Conclusion}
 \label{sec:testing:conclusion}
 
-In this chapter, we present a fast passive testing framework
-combining different fields such as model inference, expert
-systems, and machine learning. Such a framework is an extension
-of previous works based on model inference, whose name is
-\textit{Autofunk}.
+In this chapter, we presented a fast passive testing framework
+built on-top of our model inference framework \emph{Autofunk v3},
+which combines different techniques such as model inference,
+expert systems, and machine learning.
 
 Given a large set of production events, our framework infers
-exact models whose traces are included in the initial trace set
-of a system under analysis. Such models are then reused as
-specifications to perform: (i) offline passive testing using a
-second set of traces recorded on a system under test, (ii) online
-passive testing by taking new traces of a system under test
-on-the-fly. Using two implementation relations, \textit{Autofunk}
-is able to determine what has changed between the two systems.
-This is particularly useful for our industrial partner Michelin
-since potential regressions can be detected while deploying
-changes in production. Initial results on the offline method are
-encouraging, and Michelin engineers see a real potential in this
-framework.
+exact models whose traces are included \cite{petrenko06} in the
+initial trace set of a system under analysis. Such models are
+then reused as specifications to perform: (i) offline passive
+testing using a second set of traces recorded on a system under
+test, and (ii) online passive testing by taking new traces of a
+system under test on-the-fly. Using two implementation relations,
+\textit{Autofunk} is able to determine what has changed between
+the two systems. This is particularly useful for our industrial
+partner Michelin because potential regressions can be detected
+while deploying changes in production. Initial results on the
+offline method are encouraging, and Michelin engineers see a real
+potential in this framework.
 
 We know that 2\% of a large trace set (as mentioned in the
-results) can represent many traces, which can still be difficult
-to analyze. In a manufacturing context, this is valuable although
-we would like to reduce such false negatives. In the next
-chapter, we give our thoughts on how to improve \textit{Autofunk}
-as well as perspectives to leverage our work.
+previous section) still represents many traces, which may be
+difficult to analyze. Nonetheless in a manufacturing context,
+this is still valuable although we would like to reduce such
+false negatives.
+
+In the next chapter, we give our thoughts on how to improve
+\textit{Autofunk} as well as perspectives for future work.
