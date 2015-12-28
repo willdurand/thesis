@@ -4,25 +4,27 @@
 We conducted several experiments with real sets of production
 events, recorded in one of Michelin's factories at different
 periods of time. The results given in this section are focused on
-our \textbf{offline} passive testing technique. We executed our
-implementation on a Linux (Debian) machine with 12 Intel(R)
-Xeon(R) CPU X5660 @ 2.8GHz and 64GB RAM.
+our \textbf{offline} passive testing technique, built-on top of
+\emph{Autofunk v3}. We executed our implementation on a Linux
+(Debian) machine with 12 Intel(R) Xeon(R) CPU X5660 @ 2.8GHz and
+64GB RAM.
 
-We present, in Figure \ref{fig:testing:offline:results}, the results of several
-experiments on the same production system with different trace
-sets, recorded at different periods of time. The first column
-shows the experiment number, columns 2 and 3 respectively give
-the sizes of the trace sets of the system under analysis
-$\mathit{Sua}$ and of the system under test $\mathit{Sut}$. The
-two next columns show the percentage of pass traces with respect to the
-relations $\leq_{ct}$ and $\leq_{mct}$. The last column indicates
-the execution time for the testing phase.
+We present, in Table \ref{fig:testing:offline:results}, the
+results of three experiments on the same production system with
+different trace sets, recorded at different periods of time. The
+first column shows the experiment number (\#), columns 2 and 3
+respectively give the sizes of the trace sets of the system under
+analysis $\mathit{Sua}$ and of the system under test
+$\mathit{Sut}$. The two next columns show the percentage of pass
+traces with respect to the relations $\leq_{ct}$ and
+$\leq_{mct}$. The last column indicates the execution time (in
+minutes) for the testing phase.
 
 \begin{table}[h]
 \begin{center}
 \begin{tabular}{| c | c | c | c | c | c |}
 \hline
-Exp. & $Card(Traces({Sua}))$ & $Card(CTraces({Sut}))$ & Pass$\leq_{ct}$ & Pass$\leq_{mct}$ & Time\\
+\# & $Card(CTraces({Sua}))$ & $Card(CTraces({Sut}))$ & Pass$\leq_{ct}$ & Pass$\leq_{mct}$ & Time\\
 \hline
 \hline
 $1$ & 2,075 & 2,075 & 100\% & 100\% & 1 \\
@@ -40,36 +42,37 @@ $3$ & 53,996 & 25,047 & 98\% & 98\% & 10\\
 \end{table}
 
 In Experiment $1$, we decided to use the same production events
-for both inferring models, i.e. specifications, and testing. This
-experiment shows that our implementation behaves correctly when
-trace sets are similar, i.e. when behaviors of both
-$\mathit{Sua}$ and $\mathit{Sut}$ are equivalent.
+for both inferring models, \emph{i.e.} specifications, and
+testing. This experiment shows that our implementation behaves
+correctly when trace sets are similar, \emph{i.e.} when behaviors
+of both $\mathit{Sua}$ and $\mathit{Sut}$ are equivalent.
 
 Experiment $2$ has been run with traces of $\mathit{Sut}$ that
 are older than those of $\mathit{Sua}$, which is unusual as the
-defacto usage of our framework is to build specifications from a
+de facto usage of our framework is to build specifications from a
 production system $\mathit{Sua}$, and to take a newer or updated
 system as $\mathit{Sut}$.  Here, only 30\% of the traces of
-$\mathit{Sut}$ are pass traces with respect to the second implementation
-relation (same sequence of symbols with different values). There
-are two explanations: the system has been updated between the two
-periods of record (4 months), and production campaigns, i.e.
-grouping of planned orders and process orders to produce a
-certain amount of products over a certain period of time, were
-different (revealed by \textit{Autofunk}, indicating that values
-for some key parameters were unknown).
+$\mathit{Sut}$ are pass traces with respect to the second
+implementation relation (same sequence of symbols with different
+values). There are two explanations: (i) the system has been
+updated between the two periods of record (4 months), and (ii)
+production campaigns, \emph{i.e.} grouping of planned orders and
+process orders to produce a certain amount of products over a
+certain period of time, were different (revealed by
+\textit{Autofunk}, indicating that values for some key parameters
+were unknown).
 
 Finally, experiment $3$ shows good results as the specification
-models are rich enough, i.e.  built from a larger set of traces
-(10 days) than the one collected on $\mathit{Sut}$. Such an
-experiment is a typical usage of our framework at Michelin.  The
-traces of $\mathit{Sut}$ have been collected for 5 days, and it
-took only 10 minutes to check conformance. While 98\% of the
+models are rich enough, \emph{i.e.}  built from a larger set of
+traces (10 days) than the one collected on $\mathit{Sut}$. Such
+an experiment is a typical usage of our framework at Michelin.
+The traces of $\mathit{Sut}$ have been collected for 5 days, and
+it took only 10 minutes to check conformance. While 98\% of the
 traces are pass traces, the remaining 2\% are new behaviors that
-never occurred before. Such information is essential for Michelin
-engineers to determine the root causes. Even though 2\% may
-represent a large set to analyze, \textit{Autofunk} improves
-their work by highlighting the traces to focus on.  Such subset
-may contain false positives depending on the richness of the
-models, but using large sets of traces to build the models
+never occurred before. Such a piece of information is essential
+for Michelin engineers to determine the root causes. Even though
+2\% may represent a large set to analyze, \textit{Autofunk}
+improves their work by highlighting the traces to focus on.  Such
+subset may contain false positives depending on the richness of
+the models, but using large sets of traces to build the models
 reduces the number of false positives.
