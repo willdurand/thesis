@@ -5,21 +5,22 @@ Our online passive testing algorithm, which aims to check whether
 the two previous implementation relations hold, is given in
 Algorithm \ref{algo:check-online}. It also takes the same models
 $R(\EuScript{S}^{N})$ and $D(\EuScript{S}^{N})$, with regards to
-Propositions \ref{rel:impl12} and \ref{rel:impl2}, and it returns
-the same verdicts "Pass$\leq_{ct}$" or "Pass$\leq_{mct}$" if the
-relations $\leq_{ct}$ or $\leq_{mct}$ are satisfied.
+Proposition \ref{rel:impl12} and Proposition \ref{rel:impl2}, and
+it returns the same verdicts "Pass$\leq_{ct}$" or
+"Pass$\leq_{mct}$" whether the relations $\leq_{ct}$ or
+$\leq_{mct}$ are satisfied.
 
-In online mode, we do not have complete traces (like
+In online mode, we do not have complete traces (such as
 $CTraces({Sut})$), but traces that are constructed on-the-fly by
-an instance of tester, every time an event is received. Each event
-is filtered and transformed into a filtered valued event, from
-which we extract its product identifier $pid$. The valued event
-is then forwarded to the right tester, i.e. the instance for this
-$pid$. If there is no instance yet, we create a new tester for
-this $pid$ first, and then we forward the valued event. There
-should be one instance of tester running the same Algorithm
-\ref{algo-check-online} per $pid$, i.e. per product being
-manufactured.
+an instance of tester, every time an event is received. Each
+event is filtered and transformed into a filtered valued event,
+from which we extract its product identifier $pid$. The valued
+event is then forwarded to the right tester, \emph{i.e.} the
+instance for this $pid$. If there is no instance yet, we create a
+new tester for this $pid$ first, and then we forward the valued
+event. There should be one instance of tester running the same
+Algorithm \ref{algo-check-online} per $pid$, \emph{i.e.} per
+product being manufactured.
 
 \TODO{tester constructs a trace, then tries to check it over R or D
     it stops (and trace is possibly failed) when check has failed}
@@ -30,9 +31,8 @@ manufactured.
     \SetKwInOut{Output}{Output}
     \SetKwFunction{check}{check}
 
-    \Input{$R(\EuScript{S}^{N})=\{R(\EuScript{S}_1^{N}),...,R(\EuScript{S}_n^{N})\},
-    D(\EuScript{S}^{N})=\{D(\EuScript{S}_1^{N}),...,D(\EuScript{S}_n^{N})\}, CTraces({Sut})$}
-    \Output{Verdicts or possibly fail trace sets $T_1, T_2$ }
+    \Input{$R(\EuScript{S}^{N}), D(\EuScript{S}^{N})$}
+    \Output{Verdicts and/or possibly fail trace sets $T_1, T_2$ }
 
     BEGIN\;
     $trace = \emptyset$\;
