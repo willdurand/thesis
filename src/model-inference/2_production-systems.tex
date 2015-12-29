@@ -41,7 +41,7 @@ implies rather under-specified or not documented systems that no
 one wants to maintain because of lack of understanding.
 
 In this chapter, we focus on this problem for production systems
-that exchange thousands of events a day. Several approaches have
+that exchange thousands events a day. Several approaches have
 already been proposed for different types of systems.  Yet, we
 noticed that these approaches were not tailored to support
 production systems. From the literature,
@@ -63,7 +63,7 @@ following key observations:
         machines), but also because we cannot rely on any oracle
         or teacher;
 
-    \item Production systems exchange thousands and thousands of
+    \item Production systems exchange thousands and thousands
         events a day. Again, most of the model inference
         approaches cannot take such a huge amount of information
         to build models. We need a solution that is scalable.
@@ -1410,10 +1410,6 @@ In our context, observations are represented by the variable
 $point$ present in each trace of $Traces({Sua})$, which captures
 the product physical location, and $k=2$ as we want to group the
 outliers together, and leave the other points in another cluster.
-But, since we want to leverage the largest part of the initial
-trace set, we apply \textit{k-means clustering} several times
-until reaching 80\% of traces retained in a cluster.
-
 Once the entry and exit points are found, we segment
 $Traces({Sua})$ and obtain a set $CTraces({Sua})=\{ST_1, \dots,
 ST_n\}$. Then, we apply the same generation and reduction steps

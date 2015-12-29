@@ -3,20 +3,19 @@
 
 Model inference is a research field that has received a lot of
 attention over the past three decades, and it is still gaining
-ground with the emergence of new kinds of applications, \emph{e.g.}, web
-services and mobile applications. Many recent papers consider
-model inference to later perform analyses of the models or
-automatic testing in order to check different aspects of the
-software system such as robustness, security, and even regression
-testing, as presented in this thesis. Nonetheless, model
-inference has a few drawbacks, which require further
-investigation, and we believe that three major directions could
-be very beneficial.
+ground with the emergence of new kinds of applications. Many
+recent works consider model inference to later perform analyses
+of the models or automatic testing in order to check different
+aspects of the software system such as robustness, security, and
+even regression testing, as presented in this thesis.
+Nonetheless, model inference has a few drawbacks, which require
+further investigation, and we believe that three major directions
+could be very beneficial.
 
 \subsection{Building exact, or rather, more precise models}
 \label{sec:conclusion:modelinf:exact}
 
-When the inferred models are used for analysis, they must be as
+When the inferred models are used for analysis purpose, they must be as
 precise as possible. Nonetheless, we observed that the main
 feature leading to over-approximation is the state merging
 process. A trivial solution would be to use minimization
@@ -25,7 +24,7 @@ described in Chapter \ref{sec:modelinf:webapps} of this thesis.
 As a reminder, the bisimulation relation associated with a
 minimization technique merges the state sets that are bisimilar
 equivalent. This relation is stronger than a classical trace
-equivalence relation, but it may be even too strong since the
+equivalence relation, but it may be considered too strong since the
 bisimulation minimization usually does not merge enough states,
 and thus may still produce large models. If another more suitable
 relation can be used, and if verification or testing techniques
@@ -44,39 +43,38 @@ are measured to balance over-approximation and
 under-approximation of the inferred models with two search-based
 algorithms: (i) a multi-objective genetic algorithm, and (ii) the
 non-dominated sorting genetic algorithm \textit{NSGA-II}
-\cite{deb2002fast}. But
-this process is time-consuming and can only be applied to small
-systems because the complete models, \emph{i.e.} the models compound of
-all the observations, are incrementally re-generated from scratch
-to improve the metrics.  An iterative process performed by adding
-the observations one after one in the model could also be
-considered. For instance, with crawling techniques, every time a
-new state is explored, these metrics could refine the state
-merging on-the-fly. Other metrics could also be chosen depending
-on the context of the software system. In \textit{Autofunk}, a
-similar improvement would be to build submodels of a production
-system. By now, we consider a whole workshop as a production
-system to infer models, \emph{i.e.} we do not make any distinction among
+\cite{deb2002fast}. But this process is time-consuming and can
+only be applied to small systems because the complete models,
+\emph{i.e.} the models compound of all the observations, are
+incrementally re-generated from scratch to improve the metrics.
+An iterative process performed by adding the observations one
+after another in the model could also be considered. For
+instance, with crawling techniques, every time a new state is
+explored, these metrics could refine the state merging
+on-the-fly. Other metrics could also be chosen depending on the
+context of the software system. In \textit{Autofunk}, a similar
+improvement would be to build submodels of a production system.
+By now, we consider a whole workshop as a production system to
+infer models, \emph{i.e.} we do not make any distinction among
 the different parts of the workshop. Nonetheless, there are parts
-that are more critical than others, at least in Michelin's
+that are more critical than the others, at least in Michelin's
 workshops. Being able to focus on specific locations of a
 workshop would be interesting to build smaller models. This
 should bring significant improvements to the end users of
 \textit{Autofunk}.
 
-It has been argued with active and incremental learning
-techniques that negative observations strongly help in the
-inference of more precise models. But negative observations are
-usually not taken into account in crawling techniques and passive
-inference. When the system is available, a solution to collect
-negative observations would be to exercise the system with fuzzy
-testing. An execution ended by a crash or the raise of an
-exception could then be qualified as a negative observation.
-Another solution, sometimes considered with crawling techniques,
-would be to (re) incorporate users in the model inference process
-to guide the generation of observations. At the time of writing,
-it is often assumed that the user either gives all the system
-paths to explore or does nothing.
+In addition, negative observations strongly help in the inference
+of more precise models. Yet negative observations are usually not
+taken into account in passive inference.  When the system is
+available, a solution to collect negative observations would be
+to exercise the system with Fuzz Testing.  An execution ended by
+a crash or the raise of an exception could then be qualified as a
+negative observation.  Another solution, sometimes considered
+with crawling techniques, would be to (re) incorporate users in
+the model inference process to guide the generation of
+observations. At the time of writing, it is often assumed that
+the user either gives all the system paths to explore or does
+nothing.
 
 \subsection{Scalability as a first-class citizen}
 
@@ -85,13 +83,13 @@ amount of time is a goal that is not yet met by most of the
 existing model inference methods. To our knowledge, too few
 papers \cite{Yang:2006:PMT:1134285.1134325,Pradel:2009} take
 scalability into account. That is also why we have proposed
-techniques that scale well in this thesis. The use of specific
-parallel programming paradigms and heuristics would be an
-interesting research direction. These can be used to quickly
-build models or to find state equivalence classes. In this
-thesis, we tackled the problem of inferring models from
-production systems. Such systems are distributed over several
-devices, and generate millions of events a day. Collecting,
+techniques that scale well in this thesis. We believe that the
+use of specific parallel programming paradigms and heuristics
+would be an interesting research direction, \emph{e.g.}, to
+quickly build models or to find state equivalence classes. In
+this thesis, we tackled the problem of inferring models from
+production systems.  Such systems are distributed over several
+devices, and generate thousands events a day. Collecting,
 storing, and analyzing such amount of data becomes more and more
 complicated, and model inference algorithms have to take these
 points into account. Such challenges are close to those of what
