@@ -8,29 +8,78 @@ how, we think, \textit{Autofunk} could be enhanced to be more
 widely used. Furthermore, in this thesis, we only covered passive
 testing of production systems, but it would be interesting to see
 how active testing could be integrated with \textit{Autofunk}.
-This is discussed in Section
-\ref{sec:conclusion:testing:active}. Section
-\ref{sec:conclusion:testing:data} introduces our thoughts on data
-mining, which are semi-related to the previous section on active
-testing. Finally, Section \ref{sec:conclusion:testing:valid}
-discusses our main assumption used thorough this thesis, \emph{i.e.} we
-infer models of systems that behave correctly, and what we could
-do to reject it.
+This is discussed in Section \ref{sec:conclusion:testing:active}.
+Section \ref{sec:conclusion:testing:data} introduces our thoughts
+on data mining, which are semi-related to the previous section on
+active testing. Finally, Section
+\ref{sec:conclusion:testing:valid} discusses our main assumption
+used throughout this thesis, \emph{i.e.} we infer models of
+systems that behave correctly, and what we could do to reject it.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \subsection{Improving usability}
 
-Our implementation of \textit{Autofunk} has been built to
-validate our work, but also to bridge the gap between research
-and industrial applicability, thanks to our partner Michelin.
+Our implementation of \textit{Autofunk} has primarily been built
+to validate our work, but also to bridge the gap between research
+and industrial applicability, thanks to our partner Michelin. At
+the time of writing, \emph{Autofunk} is a Java console
+application with about 3,000 lines of code, and 119 unit tests
+covering 90\% of the code.
+
 Nevertheless, it is clear that this tool is still a prototype,
 and not a production-ready tool. As pointed out in this thesis,
 memory consumption remains an issue. With the rise of big data
 technologies and tools, it should be relatively simple to solve
-this issue.
+this issue. For instance, \emph{Autofunk v3} includes
+\emph{Apache Spark}\footnote{\url{https://spark.apache.org/}}, a
+framework for large-scale data processing, which, among all,
+provides an implementation of the k-means clustering algorithm.
+Such a framework is designed to handle large data sets. It should
+be possible to make \emph{Autofunk} more efficient by adapting
+our algorithms on-top of Apache Spark or any similar big data
+framework, \emph{e.g.}, with a \emph{Map-Reduce} approach
+\cite{dean2008mapreduce}. This is a programming model that allows
+to process large data sets with distributed parallel algorithms.
+Most of the algorithms presented in this thesis are already
+executable in parallel, but not distributed yet. Nonetheless,
+running \emph{Autofunk} on a computer cluster, \emph{i.e.} a set
+of interconnected computers seen as a single logical unit, should
+bring significant performance improvements.
 
-To go further, \TODO{...}
+By now, inference rules written with the Drools rule language,
+which are at the heart of \emph{Autofunk}, have to be packaged
+within the Java application. It would be better to allow the
+configuration of such rules at runtime, \emph{e.g.}, using a
+graphical user interface. This could also be helpful to write and
+manage the different sets of inference rules, which is an issue
+we already mentioned earlier in this thesis. An interface may
+mitigate such a drawback, but writing such inference rules
+remains a delicate task. That is why we would like to investigate
+different approaches to avoid such a labor. As we are already
+familiar with machine learning, we would like to pursue in this
+path by proposing a machine learning technique that replaces some
+of the inference rules. For instance, because the events in a
+production system are text-based and readable, the inference
+rules needed during the filtering step might be replaced by a
+method inspired by the works on automated text categorization
+\cite{Sebastiani:2002:MLA:505282.505283} and spam filtering
+\cite{Guzella200910206}. Yet, it is manifest that the inference
+rules used to lift abstraction of the models still have to be
+written, and cannot be easily replaced, because they strongly
+depend on the business.
+
+Another point that would be worth working on is the visualization
+of the inferred models. At the time of writing, \emph{Autofunk}
+is able to generate graphs of the models, but they are not really
+usable in practice because of the size of the models. In most
+cases, the models represent behaviors of a production system,
+which fit its layout. When a possibly fail trace is raised, it
+would be nice to present the possibly faulty behavior on-top of
+the layout of the production system under test. That way, an
+engineer would have all the information required to quickly
+determine whether it is a bug or a false-positive. In case of a
+true error, he would know where the error has happened.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
