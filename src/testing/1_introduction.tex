@@ -139,7 +139,7 @@ traces to form the trace set $Traces({Sut})$, and then filtered
 to obtain a set of complete traces denoted by $CTraces({Sut})$
 (cf.
 \crossref{sec:modelinf:prodsystems}{sec:modelinf:prodsystems:better-segmentation}).
-In online mode (not represented on the figure), we do not have
+In online mode (not represented in the figure), we do not have
 traces but rather filtered valued events of $\mathit{Sut}$ coming
 on-the-fly. Finally, we perform passive testing to \emph{check}
 if $\mathit{Sut}$ conforms to $\EuScript{S}^{N}$.
@@ -164,13 +164,15 @@ successful result. On the contrary, if an execution of
 $\mathit{Sut}$ is not captured by $\EuScript{S}^{N}$, one cannot
 conclude that $\mathit{Sut}$ is faulty because $\EuScript{S}^{N}$
 is a partial model, and it does not necessarily includes all the
-correct behaviors. Below, we formalize theses verdict notions
+correct behaviors. Below, we formalize these verdict notions
 with two implementation relations. Such relations between models
 can only be written by assuming the following \emph{test
 assumption}: the black-box system $\mathit{Sut}$ can be described
 by a model, here with a Labeled Transition System as defined in
 \crossref{sec:related:testing}{sec:definitions:lts}. We also
 denote this model by $\mathit{Sut}$.
+
+\subsection{First implementation relation: $\leq_{ct}$}
 
 The first implementation relation, denoted by $\leq_{ct}$, refers
 to the trace preorder relation
@@ -205,6 +207,8 @@ equivalent \cite{petrenko06}:
 ${Sut} \leq_{ct} \EuScript{S}^{N} \text{ if and only if } CTraces({Sut})
 \subseteq  Traces_{Pass}(R(\EuScript{S}^{N}))$.
 \end{proposition}
+
+\subsection{Second implementation relation: $\leq_{mct}$}
 
 As stated previously, the inferred model $\EuScript{S}^{N}$ of
 $\mathit{Sua}$ is partial, and it might not capture all the
@@ -330,10 +334,14 @@ disjunctions for every variable $x$ that belongs to the parameter
 set $p_j$. Such equalities can be extracted with the projection
 operator \textit{proj} (see Definition \ref{def:sts}). We obtain
 one guard of the form $\displaystyle \bigwedge_{x \in p_j} ((x ==
-val_1) \vee \dots \vee (x == val_k))$. The STS
-$D(\EuScript{S}_i^{N})$, derived from $R(\EuScript{S}_i^{N})$, is
-constructed with this simplification of guards:
+val_1) \vee \dots \vee (x == val_k))$, which is leveraged to
+construct \emph{derived} STSs.
 
+\subsection{Derived STSs}
+
+The STS $D(\EuScript{S}_i^{N})$, derived from
+$R(\EuScript{S}_i^{N})$, is constructed with the simplification
+of guards described in the previous section:
 
 \begin{definition}[Derived STS $D(\EuScript{S}_i^{N})$]
     Let
