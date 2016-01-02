@@ -30,12 +30,13 @@ and thus may still produce large models. If another more suitable
 relation can be used, and if verification or testing techniques
 can work well with larger yet more precise models, which results
 can we expect? In this thesis, we provided a preliminary answer
-to this question, but there is still a lot of work to do.
+to this question, but there is still a lot of work that could be
+done.
 
 Many model inference techniques rely on the notion of abstraction
 level to reduce the size of the inferred models. Nevertheless,
 this process implies over-approximation. A solution to limit it
-is to define and estimate quality metrics
+is to define and estimate \emph{quality metrics}
 \cite{tonella2012finding,Lo20122063} to guide the model
 construction. In \cite{tonella2012finding}, three metrics,
 related to over- and under-approximation rates and model size,
@@ -67,11 +68,11 @@ In addition, negative observations strongly help in the inference
 of more precise models. Yet negative observations are usually not
 taken into account in passive inference.  When the system is
 available, a solution to collect negative observations would be
-to exercise the system with Fuzz Testing.  An execution ended by
-a crash or the raise of an exception could then be qualified as a
-negative observation.  Another solution, sometimes considered
-with crawling techniques, would be to (re) incorporate users in
-the model inference process to guide the generation of
+to exercise the system with \emph{Fuzz Testing}.  An execution
+ended by a crash or the raise of an exception could then be
+qualified as a negative observation.  Another solution, sometimes
+considered with crawling techniques, would be to (re) incorporate
+users in the model inference process to guide the generation of
 observations. At the time of writing, it is often assumed that
 the user either gives all the system paths to explore or does
 nothing.
@@ -93,15 +94,15 @@ devices, and generate thousands events a day. Collecting,
 storing, and analyzing such amount of data becomes more and more
 complicated, and model inference algorithms have to take these
 points into account. Such challenges are close to those of what
-we now call "big data" \cite{bigdata14}. Big data not only
+we now call "big data" \cite{bigdata14}. This term not only
 defines the large volume of data but also new processing
 algorithms and applications since the traditional ones are
 inadequate.
 
 To pursue this path, applications in the Industry become more and
-more complex with the rise of Service-Oriented Architectures
-(SOA), distributed systems, and more recently
-microservices\footnote{\url{http://martinfowler.com/articles/microservices.html}}
+more complex with the rise of \emph{Service-Oriented
+Architectures} (SOA), distributed systems, and more recently
+\emph{microservices}\footnote{\url{http://martinfowler.com/articles/microservices.html}}
 \cite{thones2015microservices}.  For instance, microservices are
 emerging as a new architectural style, aiming at creating
 software systems as a set of small services, \emph{i.e.} small

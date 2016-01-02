@@ -29,9 +29,9 @@ covering 90\% of the code.
 
 Nevertheless, it is clear that this tool is still a prototype,
 and not a production-ready tool. As pointed out in this thesis,
-memory consumption remains an issue. With the rise of big data
-technologies and tools, it should be relatively simple to solve
-this issue. For instance, \emph{Autofunk v3} includes
+memory consumption remains an issue for example. With the rise of
+big data technologies and tools, it should be relatively simple
+to solve this issue. For instance, \emph{Autofunk v3} includes
 \emph{Apache Spark}\footnote{\url{https://spark.apache.org/}}, a
 framework for large-scale data processing, which, among all,
 provides an implementation of the k-means clustering algorithm.
@@ -45,7 +45,8 @@ Most of the algorithms presented in this thesis are already
 executable in parallel, but not distributed yet. Nonetheless,
 running \emph{Autofunk} on a computer cluster, \emph{i.e.} a set
 of interconnected computers seen as a single logical unit, should
-bring significant performance improvements.
+bring significant performance improvements, but it should also
+refine the overall scalability.
 
 By now, inference rules written with the Drools rule language,
 which are at the heart of \emph{Autofunk}, have to be packaged
@@ -69,17 +70,21 @@ rules used to lift abstraction of the models still have to be
 written, and cannot be easily replaced, because they strongly
 depend on the business.
 
-Another point that would be worth working on is the visualization
-of the inferred models. At the time of writing, \emph{Autofunk}
-is able to generate graphs of the models, but they are not really
-usable in practice because of the size of the models. In most
-cases, the models represent behaviors of a production system,
-which fit its layout. When a possibly fail trace is raised, it
-would be nice to present the possibly faulty behavior on-top of
-the layout of the production system under test. That way, an
-engineer would have all the information required to quickly
-determine whether it is a bug or a false-positive. In case of a
-true error, he would know where the error has happened.
+Another point that would be worth working on is the
+\emph{visualization} of the inferred models and test results. At
+the time of writing, \emph{Autofunk} is able to generate graphs
+representing the generated models, but they are not really usable
+in practice because of the size of the models. In most cases, the
+models represent behaviors of a production system, which fit its
+physical layout in a factory. When a possibly fail trace is
+raised, it would be nice to highlight the possibly faulty
+behavior directly using the layout of the production system under
+test. That way, an engineer would have all the information
+required to quickly determine what caused such a behavior, and
+state whether it is a bug or a false-positive. We could relate
+this idea to the research field on \emph{fault localization}
+\cite{jones2002visualization,wong2010software}, except that we
+would locate faults in a physical manner in a factory.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
@@ -139,13 +144,13 @@ under test. This is yet another strong assumption we would prefer
 not to make.
 
 Instead, we would like to leverage our inferred models to extract
-test data, for instance, by mining realistic domains as defined
-in \cite{Enderlin:2011:PSL:2075545.2075551}. Realistic domains
-are data domains found in concrete implementations. A data domain
-should come with a practical way to generate values in it. This
-would be particularly useful to actively test a system as it
-would ease the process of generating test data by means of a
-sampler for instance, \emph{i.e.} a value generator.
+test data, for instance, by mining \emph{realistic domains} as
+defined in \cite{Enderlin:2011:PSL:2075545.2075551}. Realistic
+domains are data domains found in concrete implementations. A
+data domain should come with a practical way to generate values
+in it. This would be particularly useful to actively test a
+system as it would ease the process of generating test data by
+means of a sampler for instance, \emph{i.e.} a value generator.
 
 Mining realistic domains for testing purpose is not the only use
 case in which we believe. Indeed, our inferred models own a lot
@@ -158,7 +163,8 @@ interesting to apply data mining techniques on them.
 
 Data mining \cite{chakrabarti2006data} is an interdisciplinary
 research domain whose goal is to extract information from a data
-set.
+set. Given the collected trace sets and/or the inferred models,
+we have a lot of information available for data mining.
 
 A side project we quickly set up with Michelin engineers was to
 visualize the data collected by \textit{Autofunk}. We relied on a
@@ -168,8 +174,15 @@ rates of some stores in a workshop, the number of manufactured
 products per day, but also the usage rates of the production
 machines themselves. Such information could be used to create
 models that might predict maintenance operations for instance.
+The main objective of \emph{predictive maintenance}
+\cite{mobley2002introduction} is to decide when to maintain a
+system according to its state, which we could deduce by mining
+the data contained in the inferred models.
 
-\TODO{...}
+We could also extract time data from the models. A potential use
+case would be to detect slownesses in the production lines. That
+way, we might highlight imperceptible abnormal functioning
+slowing down the whole manufacturing process.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
@@ -207,12 +220,12 @@ perform conformance testing based on our inferred models, but
 also to make the models more accurate. We already highlighted a
 few paths to improve the accuracy of the inferred models in
 Section \ref{sec:conclusion:modelinf:exact}. To go a step
-further, we could apply model checking \cite{baier2008principles}
-if we consider our inferred models as the system models. Model
-checking is a verification technique that explores all possible
-system states, described in a \textit{system model}, in a
-brute-force manner thanks to a model checker. It is useful to
-show whether a given system model truly satisfies a certain
-property.  Nonetheless, such properties have to be provided, and
-we hit a known issue again: the lack of up-to-date documentation
-and/or specification of legacy systems.
+further, we could apply \emph{model checking}
+\cite{baier2008principles} if we consider our inferred models as
+the system models. Model checking is a verification technique
+that explores all possible system states, described in a
+\textit{system model}, in a brute-force manner thanks to a model
+checker. It is useful to show whether a given system model truly
+satisfies a certain property.  Nonetheless, such properties have
+to be provided, and we hit a known issue again: the lack of
+up-to-date documentation and/or specification of legacy systems.
