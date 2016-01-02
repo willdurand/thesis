@@ -200,18 +200,18 @@ Later, Merten \emph{et al.} revisited \textit{LearnLib} in a tool called
 learning framework providing infrastructure for practical
 application, including the tool \textit{LearnLib Studio}, a
 graphical interface for designing and executing learning and
-experimentation setups, plus a set of Java libraries. Howar et
-al. pursued the inference of models  and proposed a technique and
-an implementation on-top of \textit{LearnLib} to actively learn
-register automata in \cite{howarRA2012}. Register automata, also
-known as \textit{Finite Memory Automata} \cite{Kaminski1994329},
-are models that are capable of expressing the influence of data
-on control flows. The algorithm directly infers the effect of
-data values on control flows as part of the learning process. As
-a consequence, the models are more expressive than DFA, and the
-implementation also outperforms the classic $\EuScript{L}^*$
-algorithm. Howar \emph{et al.} optimized this
-approach and proposed a method to infer \textit{semantic
+experimentation setups, plus a set of Java libraries. Howar
+\emph{et al.} pursued the inference of models  and proposed a
+technique and an implementation on-top of \textit{LearnLib} to
+actively learn register automata in \cite{howarRA2012}. Register
+automata, also known as \textit{Finite Memory Automata}
+\cite{Kaminski1994329}, are models that are capable of expressing
+the influence of data on control flows. The algorithm directly
+infers the effect of data values on control flows as part of the
+learning process. As a consequence, the models are more
+expressive than DFA, and the implementation also outperforms the
+classic $\EuScript{L}^*$ algorithm. Howar \emph{et al.} optimized
+this approach and proposed a method to infer \textit{semantic
 interfaces} of data structures on the basis of active learning
 and systematic testing in \cite{howar2012}. Semantic interfaces
 transparently reflect the behavioral influence of parameters at
@@ -519,8 +519,8 @@ different viewpoints. We chose to summarize them in Table
 	application exploration to detect bugs than on the model
 	generation. For instance, a small number of algorithms consider state
 	merging or the definition of state equivalence classes to
-	reduce the model size. At the time of writing, only Choi et
-	al. introduced an algorithm combining testing and the use
+	reduce the model size. At the time of writing, only Choi
+    \emph{et al.} introduced an algorithm combining testing and the use
 	of active learning \cite{Choi2013}. This algorithm is close
     to the $\EuScript{L}^*$-based approaches presented on page
 	\pageref{sec:active-letoile}, but it also limits the number of
@@ -959,7 +959,7 @@ express the method calls. JADET then infers temporal properties
 grouped into patterns that can be used to automatically find
 locations in programs that deviate from normal object usage.
 Temporal properties are obtained by the use of the data mining
-technique frequent itemset mining, which is applied to the source
+technique frequent item set mining, which is applied to the source
 code. These properties are fed into a classifier that detects and
 removes the abnormal properties. It then identifies the methods
 that violate the remaining ones.
