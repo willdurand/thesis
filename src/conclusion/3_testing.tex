@@ -86,6 +86,25 @@ this idea to the research field on \emph{fault localization}
 \cite{jones2002visualization,wong2010software}, except that we
 would locate faults in a physical manner in a factory.
 
+Finally, we would like to reduce the number of false negatives
+yield by our test engine as presented in
+\crossref{sec:testing}{sec:testing:offline:impl-exp}. For the
+record, false negatives are behaviors that are considered
+possibly faulty, even though they are correct, because such
+behaviors are not part of the reference models. We already know
+that inferring reference models from large sets of traces reduces
+the number of false negatives, but there might be other methods
+to overcome this issue. For instance, we proposed a weaker
+implementation relation that works well to avoid false positives
+with similar behaviors that are (partially) known. Unfortunately,
+this is not simply a problem of \emph{safe} (regression) test
+selection \cite{orso2004scaling} because we cannot plainly reject
+all new behaviors (as we could do in some more traditional
+testing scenarios). A naive approach would be to teach the test
+engine to recognize the new yet correct behaviors, but it seems
+cumbersome. Instead, we believe that enabling active testing may
+be more effective.
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \subsection{Performing active testing}
@@ -113,35 +132,25 @@ significantly, and it would also make its adoption easier as
 active testing is more often known than passive testing in the
 Industry.
 
-\begin{figure}[ht]
-    \begin{center}
-        \includegraphics[width=0.8\linewidth]{figures/autofunk_active.png}
-    \end{center}
-
-    \caption{Insight of an approach discussed with Michelin to
-    use a replay technique with \textit{Autofunk} in order to
-    track what has changed between two versions of a production
-    system.}
-    \label{fig:autofunk_active}
-\end{figure}
-
 A simplistic way to perform active testing would be to "replay"
-the data previously "recorded", \emph{i.e.} the data available in the
+\cite{thane2000using,Orso:2005:SCR:1082983.1083251} the data
+previously "recorded", \emph{i.e.} the data available in the
 inferred models. This is a path Michelin would like to explore.
 Figure \ref{fig:autofunk_active} gives the insight of their use
-case. A system under analysis $\mathit{Sua}$ in a production environment
-is used to build a first set of models. A system under test
-$\mathit{Sut}$, which is likely a different version of the system under
-analysis, is set up in a simulation environment (as already
-mentioned before). Replaying the data from $\mathit{Sua}$ in $\mathit{Sut}$ should
-produce new events that would be used to infer models of $\mathit{Sut}$.
-At this point, it should be possible to reuse the passive testing
-technique described in this thesis. Nevertheless, the main
-unanswered question is how to replay the data in a safe manner?
-Such an approach also implies that the initial conditions are
-exactly the same between the system under analysis and the system
-under test. This is yet another strong assumption we would prefer
-not to make.
+case. A system under analysis $\mathit{Sua}$ in a production
+environment is used to build a first set of models. A system
+under test $\mathit{Sut}$, which is likely a different version of
+the system under analysis, is set up in a simulation environment
+(as already mentioned before).  Replaying the data from
+$\mathit{Sua}$ in $\mathit{Sut}$ should produce new events that
+would be used to infer models of $\mathit{Sut}$.  At this point,
+it should be possible to reuse the passive testing technique
+described in this thesis.  Nevertheless, the main unanswered
+question is how to replay the data in a safe manner?  Such an
+approach also implies that the initial conditions are exactly the
+same between the system under analysis and the system under test.
+This is yet another strong assumption we would prefer not to
+make.
 
 Instead, we would like to leverage our inferred models to extract
 test data, for instance, by mining \emph{realistic domains} as
@@ -156,18 +165,33 @@ Mining realistic domains for testing purpose is not the only use
 case in which we believe. Indeed, our inferred models own a lot
 of interesting information related to the behaviors of a
 production system running in production, and it could be
-interesting to apply data mining techniques on them.
+interesting to apply data mining techniques on them.\\
+
+\begin{figure}[h]
+    \begin{center}
+        \includegraphics[width=0.96\linewidth]{figures/autofunk_active.png}
+    \end{center}
+
+    \caption{Insight of an approach discussed with Michelin to
+    use a replay technique with \textit{Autofunk} in order to
+    track what has changed between two versions of a production
+    system.}
+    \label{fig:autofunk_active}
+\end{figure}
 
 \subsection{Data mining}
 \label{sec:conclusion:testing:data}
 
 Data mining \cite{chakrabarti2006data} is an interdisciplinary
 research domain whose goal is to extract information from a data
-set. Given the collected trace sets and/or the inferred models,
-we have a lot of information available for data mining.
+set. For example, visualization, which we already mentioned in a
+previous section, is a component of data mining. In our case,
+given the collected trace sets and/or the inferred models, we
+have a lot of information available for data mining.
 
-A side project we quickly set up with Michelin engineers was to
-visualize the data collected by \textit{Autofunk}. We relied on a
+As an example, a side project we quickly set up with Michelin
+engineers was to visualize the data collected by
+\textit{Autofunk}. We relied on a
 tool\footnote{\url{https://www.elastic.co/products/kibana}} that
 allowed to show different business metrics, such as the usage
 rates of some stores in a workshop, the number of manufactured
@@ -182,7 +206,12 @@ the data contained in the inferred models.
 We could also extract time data from the models. A potential use
 case would be to detect slownesses in the production lines. That
 way, we might highlight imperceptible abnormal functioning
-slowing down the whole manufacturing process.
+slowing down the whole manufacturing process. This is somehow
+related to the \emph{workload-based performance testing} approach
+introduced by Avritzer \emph{et al.} \cite{avritzer2002software},
+and more generally, to the {performance testing}
+\cite{vokolos1998performance} and \emph{knowledge management}
+\cite{pachidi2015performance} fields.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
