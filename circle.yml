@@ -16,5 +16,6 @@ test:
   override:
     - docker run -v $(pwd):/data willdurand/latex make clean pdf
     - cat thesis.log | grep "Output written on thesis.pdf"
+    - docker run -v $(pwd):/data willdurand/latex checkcites --all thesis.aux | grep "Undefined reference(s) in your TeX file: 0"
   post:
     - mv thesis.pdf "$CIRCLE_ARTIFACTS/thesis-$CIRCLE_SHA1.pdf"
