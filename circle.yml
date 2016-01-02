@@ -1,6 +1,9 @@
 machine:
   services:
     - docker
+  environment:
+    CHECK_BUILD_SUCCESS: 'Output written on thesis.pdf'
+    CHECK_NO_UNDEFINED_REFS: 'Undefined reference(s) in your TeX file: 0'
 
 dependencies:
   # https://willdurand.com/docs/docker
@@ -15,7 +18,7 @@ dependencies:
 test:
   override:
     - docker run -v $(pwd):/data willdurand/latex make clean pdf
-    - cat thesis.log | grep "Output written on thesis.pdf"
-    - docker run -v $(pwd):/data willdurand/latex checkcites --all thesis.aux | grep "Undefined reference(s) in your TeX file: 0"
+    - cat thesis.log | grep "$CHECK_BUILD_SUCCESS"
+    - docker run -v $(pwd):/data willdurand/latex checkcites --all thesis.aux | grep "$CHECK_NO_UNDEFINED_REFS"
   post:
     - mv thesis.pdf "$CIRCLE_ARTIFACTS/thesis-$CIRCLE_SHA1.pdf"
