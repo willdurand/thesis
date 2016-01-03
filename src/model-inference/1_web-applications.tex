@@ -374,12 +374,12 @@ traces is denoted by $ST$.
 \begin{example}
 If we take back the HTTP messages given in Figure
 \ref{fig:httpexample}, we obtain the structured HTTP trace
-$\sigma = (Get(p), \theta)$ with $\theta = \{URI="/hello",
-request=\{headers=[ Host = "example.org", Connection =
-"keep-alive", Accept =\\"text/html" ]\},
-response = \{status\_code = 200, headers=[ Content-Type =
+$\sigma = (Get(p), \theta)$ with $\theta = \{URI:="/hello",
+request=\{headers=[ Host := "example.org", Connection :=
+"keep-alive", Accept :=\\"text/html" ]\},
+response = \{status\_code := 200, headers=[ Content-Type :=
 "text/html",
-Content-Length = 13], content = "Hello, World!"\}\}$.
+Content-Length := 13], content := "Hello, World!"\}\}$.
 \end{example}
 
 For a main request performed by a user, many other sub-requests
@@ -533,7 +533,7 @@ set $States$ storing the constructed states. All the runs $r$ of
 $SR$ start with the same \emph{initial state} $(l0,v_\emptyset)$.
 Algorithm \ref{algo:traces_to_runs} iterates over the valued actions
 $(a_i,\theta_i)$ of a trace $\sigma$ in order to construct the
-next states $s$. It extracts the valuation $URI=val$ (line
+next states $s$. It extracts the valuation $URI:=val$ (line
 \ref{algo:traces_to_runs:line:extract}) from
 $\theta_i$ giving the URI value of the next resource reached
 after the action $a_i$. The state $s=((val,k+1),v_\emptyset)$ is
@@ -554,34 +554,34 @@ this completion. Finally, $SR$ gathers all the constructed runs
 
 BEGIN\;
 
-$States:=\emptyset$ is the set of the constructed states\;
+$States = \emptyset$ is the set of the constructed states\;
 
 \If{$ST$ is empty} {
-    $SR:= \{(l0,v_\emptyset)\}$\;}
+    $SR = \{(l0,v_\emptyset)\}$\;}
 \Else{
-    $SR:= \emptyset$\;
+    $SR = \emptyset$\;
 
     \ForEach{trace $\sigma=(a_0,\theta_0)...(a_n,\theta_n) \in ST$}{
-        $r:= (l0,v_\emptyset)$\;
+        $r = (l0,v_\emptyset)$\;
 
         \For{ $0 \leq i \leq n$}{
 
-            extract the valuation $URI=val$ from
+            extract the valuation $URI:=val$ from
             $\theta_i$\;\label{algo:traces_to_runs:line:extract}
 
             \If{($(val,0),v_\emptyset) \notin States$}{
-            $s:=((val,0),v_\emptyset)$\; }
+            $ s= ((val,0),v_\emptyset)$\; }
 
-            \Else{ $s:=((val,k+1),v_\emptyset)$ with $k\geq 0$ the greatest
+            \Else{ $s = ((val,k+1),v_\emptyset)$ with $k\geq 0$ the greatest
             integer such that $((val,k),v_\emptyset) \in States$\; }
 
-            $States:=States \cup \{s\}$\;
+            $States = States \cup \{s\}$\;
 
-            $r:=r \cdot (a_i,\theta_i) \cdot
+            $r = r \cdot (a_i,\theta_i) \cdot
             s$\;\label{algo:traces_to_runs:line:run}
 
         }%endfor_i
-        $SR := SR \cup \{r\}$\;\label{algo:traces_to_runs:line:sr}
+        $SR = SR \cup \{r\}$\;\label{algo:traces_to_runs:line:sr}
     }%endfor trace
 }
 END\;
