@@ -105,7 +105,7 @@ returned.
     \BlankLine
 
     \SetKwProg{Fn}{Function}{ is}{end}
-    \Fn{check(Trace $trace$, STS $\EuScript{S}$) : bool}{
+    \Fn{check(Trace $trace$, STS $\EuScript{S}$) : boolean}{
         \If{$\exists ~b=l0_{\EuScript{S}}
             \xRightarrow{(a_1(p_1),G_{1},A_{1}) \dots
             (a_n(p_n),G_{n},A_{n})} l_n \mid trace =
@@ -123,10 +123,10 @@ returned.
                         }
                     }
 
-                    \If{$j==n$}{
+                    \If{$j == n$}{
                         return $True$\;
                     }
-                    $i = i + 1$\;
+                    $c_{[b]} = c_{[b]} + 1$\;
                 }
         }
         return $False$\;
