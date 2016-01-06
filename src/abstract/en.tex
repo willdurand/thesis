@@ -1,17 +1,44 @@
 This thesis is concerned with the problem of preventing
-regressions in (legacy) production systems by means of
-Model-based Testing. A production system is defined as a set of
-production machines controlled by a software, in a factory.
-Despite the large body of work within the field of Model-based
-Testing, a common issue remains the writing of models describing
-either the system under test or its specification. It is a
-tedious task that is even more complicated when the systems are
-referenced as "legacy", \emph{i.e.} out of date, and often not
-(or poorly) documented. A second point to take into account is
-that poduction systems often run continuously and should not be
-disrupted, which makes most of the existing classical testing
-techniques unsuable.
+regressions in (legacy) production systems such as those of our
+industrial partner Michelin, one of the three largest tire
+manufacturers in the world, by means of Model-based Testing. A
+production system is defined as a set of production machines
+controlled by a software, in a factory.  Despite the large body
+of work within the field of Model-based Testing, a common issue
+remains the writing of models describing either the system under
+test or its specification. It is a tedious task that is even more
+complicated when the systems are referenced as "legacy",
+\emph{i.e.} out of date, and often not (or poorly) documented. A
+second point to take into account is that production systems
+often run continuously and should not be disrupted, which makes
+most of the existing classical testing techniques unusable.
 
-We present an approach to infer models from traces, \emph{i.e.}
-sequences of events observed in a production environment, to
-address the first issue.
+We present an approach to infer exact models from traces,
+\emph{i.e.} sequences of events observed in a production
+environment, to address the first issue. We leverage the data
+exchanged among the devices and software in a black-box
+perspective to construct behavioral models using different
+techniques such as expert systems, model inference, and machine
+learning. It results in large yet partial models gathering the
+behaviors recorded on a system under analysis. We introduce a
+context-specific reduction algorithm to reduce such models in
+order to make them more usable while preserving trace equivalence
+between the original inferred models and the reduced ones. These
+models can serve different purposes, \emph{e.g.}, generating
+documentation, data mining, but also testing.
+
+To address the problem of testing production systems without
+disturbing them, this thesis introduces two passive Model-based
+Testing techniques. The offline passive testing technique allows
+to detect differences between two production systems, and the
+online technique enables on-the-fly testing of production
+systems. Both techniques leverage the inferred models, and rely
+on two implementation relations: the existing trace preorder
+relation, and a weaker implementation proposed to overcome the
+partialness of the inferred models.
+
+Overall, the thesis presents \emph{Autofunk}, a modular framework
+for model inference and testing of production systems, gathering
+the previous notions. Its Java implementation has been applied to
+different applications and production systems, and this thesis
+gives results from different case studies.
