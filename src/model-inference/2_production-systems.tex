@@ -301,19 +301,23 @@ logging system, not the production system we are interested in.
 \subsection{Production events and traces}
 \label{part3:collecting}
 
-\textit{Autofunk v2} takes production events as input from a system
-under analysis $\mathit{Sua}$. To avoid disrupting the (running)
-system $\mathit{Sua}$, we do not instrument the industrial
-equipment composing the whole system. Everything is done offline
-with a logging system or with monitoring. We start by formatting
-these events to obtain a set of events of the form $a(\alpha)$
-with $a$ a label, and $\alpha$ a parameter assignment. We call
-these formatted events, \textit{valued events}. Valued events are
-similar to valued actions (as in Chapter
-\ref{sec:modelinf:webapps}) except that this term is more
-accurate in our industrial context.  Performing such a step
-allows to collect productions events from various sources, and
-still be able to perform the next steps in a unique manner.
+\textit{Autofunk v2} takes production events as input from a
+system under analysis $\mathit{Sua}$. To avoid disrupting the
+(running) system $\mathit{Sua}$, we do not instrument the
+industrial equipment composing the whole system. Everything is
+done offline with a logging system or with monitoring. We start
+by formatting these events to obtain a set of events of the form
+$a(\alpha)$ with $a$ a label, and $\alpha$ a parameter
+assignment. We call these formatted events, \textit{valued
+events}. Valued events are similar to valued actions (as in
+Chapter \ref{sec:modelinf:webapps}) except that this term is more
+accurate in our industrial context. It is also worth mentioning
+here that this is a shortened notation because we omit the
+parameter set $p$ of a classical valued event: $a(\alpha) =
+(a(p), \alpha)$ with $\alpha$ the valuation over $p$.  Performing
+such a step allows to collect productions events from various
+sources, and still be able to perform the next steps in a unique
+manner.
 
 In this set, some of these valued events are irrelevant.  For
 instance, some events may capture logging information and are not
@@ -971,10 +975,10 @@ We consider the same two types of rules as in
     \item The rules that \emph{aggregate some successive transitions}
     to a single transition compound of a more abstract action.
     These rules are of the form \textit{When Transition $l_1
-    \xRightarrow{(a_1,G_1,A_1),...(a_n,G_n,A_n)} l_n$, condition
-    on $(a_1,G_1,A_1),...(a_n,G_n,A_n)$, Then add $l_1
+    \xRightarrow{(a_1,G_1,A_1) \dots (a_n,G_n,A_n)} l_n$, condition
+    on $(a_1,G_1,A_1) \dots (a_n,G_n,A_n)$, Then add $l_1
     \xrightarrow{a(p),G,A}_{\EuScript{S}_i^\uparrow} l_n $, and
-    retract $l_1 \xRightarrow{(a_1,G_1,A_1),...(a_n,G_n,A_n)} l_n$}.
+    retract $l_1 \xRightarrow{(a_1,G_1,A_1) \dots (a_n,G_n,A_n)} l_n$}.
 \end{itemize}
 
 The generated STSs represent recorded scenarios modeled at a
