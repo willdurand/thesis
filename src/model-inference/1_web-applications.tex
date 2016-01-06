@@ -342,7 +342,7 @@ headers, response content). A header may also be a collection of
 data or may be null. Contents are textual, \emph{e.g.}, HTML.
 Since we wish to translate such traces into IOSTSs, we turn these
 textual items into a structured \emph{valued action}
-$(a(p),\theta)$ with $a$ the HTTP verb and $\theta$ a valuation
+$(a(p),\alpha)$ with $a$ the HTTP verb and $\alpha$ a valuation
 over the variable set $p=\{URI,request,response\}$. This is
 captured by the following definition:
 
@@ -351,7 +351,7 @@ req_1,resp_1$, \dots, $req_n,$ $resp_n$ be a raw HTTP trace
 composed of an alternate finite sequence of HTTP request $req_i$
 and HTTP response $resp_i$. The structured HTTP trace $\sigma$ of
 $t$ is the sequence of valued actions $\sigma(t) =
-(a_1(p),\theta_1) \dots (a_n(p),\theta_n)$ where:
+(a_1(p),\alpha_1) \dots (a_n(p),\alpha_n)$ where:
 
 \begin{itemize}
     \item $a_i$ is a HTTP verb used to make the request in
@@ -359,8 +359,8 @@ $t$ is the sequence of valued actions $\sigma(t) =
 
     \item $p$ is a parameter set $\{URI, request, response\}$;
 
-    \item $\theta_i$ is a valuation $p \rightarrow D_p$ that
-        assigns a value to each variables of $p$.  $\theta$ is
+    \item $\alpha_i$ is a valuation $p \rightarrow D_p$ that
+        assigns a value to each variables of $p$.  $\alpha$ is
         deduced from the values extracted from $req_i$ and
         $resp_i$.
 \end{itemize}
@@ -374,10 +374,10 @@ traces is denoted by $ST$.
 \begin{example}
 If we take back the HTTP messages given in Figure
 \ref{fig:httpexample}, we obtain the structured HTTP trace
-$\sigma = (Get(p), \theta)$ with $\theta = \{URI:="/hello",
-request=\{headers=[ Host := "example.org", Connection :=
+$\sigma = (Get(p), \alpha)$ with $\alpha = \{URI:="/hello",
+request := \{headers=[ Host := "example.org", Connection :=
 "keep-alive", Accept :=\\"text/html" ]\},
-response = \{status\_code := 200, headers=[ Content-Type :=
+response := \{status\_code := 200, headers=[ Content-Type :=
 "text/html",
 Content-Length := 13], content := "Hello, World!"\}\}$.
 \end{example}
@@ -414,13 +414,13 @@ filtering rules, could be expressed as follows:
 \begin{center}
 $\frac{
     \begin{matrix}
-        valued\_event = (Get(p), \theta) \in \sigma,\\\theta
+        valued\_action = (Get(p), \alpha) \in \sigma,\\\alpha
         \models [ (request.mime\_type == 'png') \vee
         (request.file\_extension == 'png') ]
     \end{matrix}
 }{
     \begin{matrix}
-        \sigma = \sigma \setminus \{ valued\_event \}
+        \sigma = \sigma \setminus \{ valued\_action \}
     \end{matrix}
 }$
 \end{center}
@@ -491,12 +491,12 @@ where:
 \end{itemize}
 
 Given an IOSTS transition $l_1 \xrightarrow{a(p),G,A}l_2$, we
-obtain an IOLTS transition $(l_1,v)$ $\xrightarrow{a(p),\theta}
+obtain an IOLTS transition $(l_1,v)$ $\xrightarrow{a(p),\alpha}
 (l_2,v')$ with $v$ a set of valuations over the internal variable
-set if there exists a parameter valuation set $\theta$ such that
-the guard $G$ evaluates to true with $v \cup \theta$. Once the
+set if there exists a parameter valuation set $\alpha$ such that
+the guard $G$ evaluates to true with $v \cup \alpha$. Once the
 transition is executed, the internal variables are assigned with
-$v'$ derived from the assignment $A(v \cup \theta)$.
+$v'$ derived from the assignment $A(v \cup \alpha)$.
 Our IOSTS transformation relies upon this IOLTS semantics
 transformation that we have reversed.  In order to generate the
 first IOSTS denoted by $\EuScript{S}_1$, the associated runs are
@@ -505,10 +505,10 @@ between valued actions. These steps are detailed below.
 
 \subsubsection{Traces to runs}
 
-Given a structured HTTP trace $\sigma = (a_1(p),\theta_1) \dots
-(a_n(p),\theta_n)$, a run $r$ is first derived by constructing
+Given a structured HTTP trace $\sigma = (a_1(p),\alpha_1) \dots
+(a_n(p),\alpha_n)$, a run $r$ is first derived by constructing
 and injecting states on the right and left sides of
-each valued action $(a_i(p),\theta_i)$ of $\sigma$. Keeping in
+each valued action $(a_i(p),\alpha_i)$ of $\sigma$. Keeping in
 mind the IOLTS semantics definition, a state shall be modeled by
 the couple $((URI,k),v_\emptyset)$ with $v_\emptyset$ the empty
 valuation.  $(URI,k)$ is a couple composed of a URI and an
@@ -516,10 +516,10 @@ integer $(k \geq 0)$, which shall be a
 location of the future IOSTS. All the runs $r$ of the run set
 $SR$ start with the same state $(l0,v_\emptyset)$. Then, a run is
 constructed by incrementally covering one trace: for an action
-$(a_i,\theta_i)$ found in a trace, we extract the valuation
-$URI:=val$ from $\theta_i$ giving the URI value of the next
+$(a_i(p),\alpha_i)$ found in a trace, we extract the valuation
+$URI:=val$ from $\alpha_i$ giving the URI value of the next
 resource reached after the action $a_i$, and we complete the
-current run $r$ with $(a_i,\theta_i)$ followed by the state
+current run $r$ with $(a_i(p),\alpha_i)$ followed by the state
 $((val,k),v_\emptyset)$.  Since we wish to preserve the
 sequential order of the actions found in the traces, when a URI
 previously encountered is once more detected, the resulting state
@@ -532,15 +532,15 @@ trace set $ST$ as input, and returns a run set $SR$. It owns a
 set $States$ storing the constructed states. All the runs $r$ of
 $SR$ start with the same \emph{initial state} $(l0,v_\emptyset)$.
 Algorithm \ref{algo:traces_to_runs} iterates over the valued actions
-$(a_i,\theta_i)$ of a trace $\sigma$ in order to construct the
+$(a_i(p),\alpha_i)$ of a trace $\sigma$ in order to construct the
 next states $s$. It extracts the valuation $URI:=val$ (line
 \ref{algo:traces_to_runs:line:extract}) from
-$\theta_i$ giving the URI value of the next resource reached
+$\alpha_i$ giving the URI value of the next resource reached
 after the action $a_i$. The state $s=((val,k+1),v_\emptyset)$ is
 constructed with $k$ such that there exists
 $((URI,k),v_\emptyset) \in States$ composed of the greatest
 integer $k \geq 0$. The current run $r$ is completed with the
-valued action $(a_i,\theta_i)$ followed by the state $s$ (line
+valued action $(a_i(p),\alpha_i)$ followed by the state $s$ (line
 \ref{algo:traces_to_runs:line:run}). The operator $\cdot$ denotes
 this completion. Finally, $SR$ gathers all the constructed runs
 (line \ref{algo:traces_to_runs:line:sr}).
@@ -561,13 +561,13 @@ $States = \emptyset$ is the set of the constructed states\;
 \Else{
     $SR = \emptyset$\;
 
-    \ForEach{trace $\sigma=(a_0,\theta_0)...(a_n,\theta_n) \in ST$}{
+    \ForEach{trace $\sigma=(a_0(p),\alpha_0)...(a_n(p),\alpha_n) \in ST$}{
         $r = (l0,v_\emptyset)$\;
 
         \For{ $0 \leq i \leq n$}{
 
             extract the valuation $URI:=val$ from
-            $\theta_i$\;\label{algo:traces_to_runs:line:extract}
+            $\alpha_i$\;\label{algo:traces_to_runs:line:extract}
 
             \If{($(val,0),v_\emptyset) \notin States$}{
             $ s= ((val,0),v_\emptyset)$\; }
@@ -577,7 +577,7 @@ $States = \emptyset$ is the set of the constructed states\;
 
             $States = States \cup \{s\}$\;
 
-            $r = r \cdot (a_i,\theta_i) \cdot
+            $r = r \cdot (a_i(p),\alpha_i) \cdot
             s$\;\label{algo:traces_to_runs:line:run}
 
         }%endfor_i
@@ -592,10 +592,10 @@ END\;
 
 \begin{proposition}
     For each trace $\sigma \in ST$, Algorithm \ref{algo:traces_to_runs}
-    constructs a run $r=s_0 \cdot (a_0,\theta_0) \cdot s_1 \cdot
-    \dots \cdot s_n \cdot (a_n,\theta_n) \cdot s_{n+1} \in SR$ such that
-    $\forall (a_i,\theta_i)_{(0 < i\leq n)} \in \sigma, \exists ~!~ s_i
-    \cdot (a_i,\theta_i) \cdot s_{i+1}$ in $r$.
+    constructs a run $r=s_0 \cdot (a_0(p),\alpha_0) \cdot s_1 \cdot
+    \dots \cdot s_n \cdot (a_n(p),\alpha_n) \cdot s_{n+1} \in SR$ such that
+    $\forall (a_i(p),\alpha_i)_{(0 < i\leq n)} \in \sigma, \exists ~!~ s_i
+    \cdot (a_i(p),\alpha_i) \cdot s_{i+1}$ in $r$.
 \end{proposition}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -635,17 +635,17 @@ starting from the same initial location.
         disjoint from $V_{\EuScript{S}_1}$;
 
     \item $\Lambda_{\EuScript{S}_1}= \{a_i(p) \mid \exists ~r \in SR,
-        (a_i(p),\theta_i)$ is a valued action in $r\}$;
+        (a_i(p),\alpha_i)$ is a valued action in $r\}$;
 
     \item $\rightarrow_{\EuScript{S}_1}$ is defined by the
         inference rule given below, applied to every run
-        $r = s_0 \cdot (a_0,\theta_0) \cdot s_1 \cdot \dots \cdot
-        s_i \cdot (a_i,\theta_i) \cdot s_{i+1} \in SR$:
+        $r = s_0 \cdot (a_0(p),\alpha_0) \cdot s_1 \cdot \dots \cdot
+        s_i \cdot (a_i(p),\alpha_i) \cdot s_{i+1} \in SR$:
 
         \begin{center}
             {\Large
             $\frac{G_i=\displaystyle \bigwedge_{(x_i:=v_i) \in
-            \theta_i} (x_i==v_i)}
+            \alpha_i} (x_i==v_i)}
             {l0 \xrightarrow{a_i(p),G_i,(x:=x)_{x\in
             V}}_{\EuScript{S}_1} l_{i+1}}$
         }
@@ -667,7 +667,7 @@ variables found in the corresponding trace.
 \subsubsection{IOSTS minimization}
 
 Methods such as gkTail and KLFA could be applied to reduce the
-previous inferred IOSTS tree,however due to the way these
+previous inferred IOSTS tree, however due to the way these
 methods work, it would likely lead to an over-generalized model
 (cf. \crossref{sec:related}{sec:passive-fsa}).
 Similarly, locations could be merged to reduce the IOSTS size
