@@ -839,7 +839,7 @@ definition of the \emph{STS operator} $Mat$:
         V0_{Mat(\EuScript{S}_i)}:=V0_{Mat(\EuScript{S}_i)} \wedge
         M_i=\begin{bmatrix}G_1\\ \vdots\\ G_n\end{bmatrix}\\
         l0_{Mat(\EuScript{S}_i)}
-        \xRightarrow{(a_1(p_1),M_i[1],id_V) \dots (a_n(p_n),M_i[n],id_V) }_{\rightarrow_{Mat(\EuScript{S}_i)}} l_n\\
+        \xRightarrow{(a_1(p_1),M_i[1],id_V) \dots (a_n(p_n),M_i[n],id_V) }_{Mat(\EuScript{S}_i)} l_n\\
       \end{matrix}
     }$
     }
@@ -894,14 +894,13 @@ follows:
   $\frac{\begin{matrix}
       [b]=\{b_1, \dots ,b_m\},
       b=l0_{\EuScript{S}_i} \xRightarrow{(a_1(p_1),G_{1},A_{1})
-      \dots (a_n(p_n),G_{n},A_{n})} l_{n}\\
-      % TODO: I removed: _{Mat(\EuScript{S}_i)} from \xRightarrow{}
+      \dots (a_n(p_n),G_{n},A_{n})}_{Mat(\EuScript{S}_i)} l_{n}\\
     \end{matrix}
   }
   {\begin{matrix}
       V0_R:=V0_R \wedge M_{[b]}=[Mat(b_1), \dots ,Mat(b_m)] \wedge (1 \leq c_{[b]} \leq m),\\
       l0_R \xRightarrow{(a_1(p_1),M_{[b]}[1,c_{[b]}],id_V) \dots
-      (a_n(p_n),M_{[b]}[n,c_{[b]}],id_V)}_{\rightarrow_R} (l_{n1}
+          (a_n(p_n),M_{[b]}[n,c_{[b]}],id_V)}_{R} (l_{n1}
       \cdots l_{nm})
     \end{matrix}
   }$
