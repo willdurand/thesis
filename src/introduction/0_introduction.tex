@@ -128,22 +128,24 @@ intended after a certain event, for instance, the deployment of a
 new version of a software. Regressions have to be revealed as
 soon as possible in order to avoid production downtimes.
 
+% TODO: introduce passive testing here
 The goal of this thesis is to propose technical solutions to
 Michelin's engineers to prevent such regressions with testing,
 \emph{i.e.} performing \emph{regression testing} on Michelin's
 production systems based on behavioral models of such systems.
-We determine, by means of testing, whether a change in
-one part of a software affects other parts of it. The main
-assumption in this work is that we choose to consider a running
-production system in a production environment (that is, a
-factory) as a fully operational system, \emph{i.e.} a system that
-behaves correctly.  Such a hypothesis has been expressed by our
-partner. The inferred models can be employed for different
-purposes, \emph{e.g.}, documentation and testing, but it is
-manifest that they should not be used for conformance testing in
-general. Last but not least, we propose scalable techniques
-because production systems exchange thousands \emph{production
-events} a day.
+Such models have to be up to date, hence we cannot rely on
+existing documentation.  We determine, by means of Model-based
+Testing, whether a change in one part of a software affects other
+parts of it. The main assumption in this work is that we choose
+to consider a running production system in a production
+environment (that is, a factory) as a fully operational system,
+\emph{i.e.} a system that behaves correctly.  Such a hypothesis
+has been expressed by our partner. The inferred models can be
+employed for different purposes, \emph{e.g.}, documentation and
+testing, but it is manifest that they should not be used for
+conformance testing in general. Last but not least, we propose
+scalable techniques because production systems exchange thousands
+\emph{production events} a day.
 
 In this thesis, we provide solutions for making Michelin's
 production systems more reliable by means of testing, to ease
@@ -156,10 +158,10 @@ software engineers' work, thanks to two main lines:
         extract knowledge from data available in a production
         environment has to be defined before inferring models;
 
-    \item The generation of the test cases based on these models
-        in order to perform conformance testing of production
-        systems. It is worth mentioning that it is possible to
-        perform conformance testing here thanks to the assumption
+    \item The design of a conformance testing technique based on
+        the inferred models, targeting production systems. It is
+        worth mentioning that it is possible to perform
+        conformance testing here thanks to the assumption
         introduced previously. Finally, due to the nature of
         these systems, the testing method should scale.
 \end{itemize}
@@ -172,52 +174,57 @@ software engineers' work, thanks to two main lines:
 The contributions of this thesis are:
 
 \begin{enumerate}
-    \item \textit{Autofunk}, a framework, combining several
-        techniques originating from different fields such as
-        expert systems, machine learning and model inference, for
-        inferring formal models of legacy software systems. Our
-        main goal is to infer models of Michelin's production
-        systems with a \emph{black-box} approach. We choose to
-        leverage the data exchanged among the devices and
-        software in order to target most of the existing Michelin
-        applications without having to consider the programming
-        languages or frameworks used to develop any of these
-        applications. \textit{Autofunk}'s modular architecture
-        allows multiple extensions so that we can take different
-        data sources as input, and perform various tasks based on
-        the inferred models, \emph{e.g.}, testing;
+    \item A preliminary study introducing our model inference
+        framework, called \emph{Autofunk (v1)}, on web
+        applications. This framework is framed upon a rule-based
+        expert system capturing knowledge of human business
+        experts. \textit{Autofunk} is also combined with an
+        automatic testing technique to interact with web
+        applications in order to improve the completeness of the
+        inferred models.  Several models can be built at
+        different levels of abstraction, allowing to create, for
+        instance, human-readable documentation. This preliminary
+        work targeting web applications validates our ideas and
+        concepts to infer models from data recorded in a
+        (production) environment;
 
-    \item An empirical study that evaluates \textit{Autofunk} on
-        web applications for inferring models. Here,
-        \textit{Autofunk} is combined with an automatic testing
-        technique to interact with web applications in order to
-        improve the completeness of the inferred models. Several
-        models can be built at different levels of abstraction,
-        allowing to create, for instance, human-readable
-        documentation. This preliminary work targeting web
-        applications validates our ideas and concepts to infer
-        models from data recorded in a (production) environment;
+    \item \textit{Autofunk (v2)}, the enhanced version of our
+        framework, now combining several techniques originating
+        from different fields such as expert systems, machine
+        learning and model inference, for inferring formal models
+        of legacy software systems. Our main goal is to infer
+        models of Michelin's production systems with a
+        \emph{black-box} approach. We choose to leverage the data
+        exchanged among the devices and software in order to
+        target most of the existing Michelin applications without
+        having to consider the programming languages or
+        frameworks used to develop any of these applications.
+        \textit{Autofunk}'s modular architecture allows multiple
+        extensions so that we can take different data sources as
+        input, and perform various tasks based on the inferred
+        models, \emph{e.g.}, testing.
 
-    \item An empirical study that evaluates \textit{Autofunk} on
-        Michelin's production systems, proving that it is able to
-        build exact models in an efficient manner, based on large
-        sets of traces. For now, we define a set of traces as
-        information collected from a production system, and
-        describing its behaviors. A more formal definition is
-        given in the sequel of this thesis. Exactness of our
-        inferred models is defined by the trace-equivalence and
-        trace-inclusion relations proposed in \cite{petrenko06}.
-        This study shows that our model inference technique
-        scales well;
+    \item An evaluation of the model inference of Michelin's
+        production systems with \textit{Autofunk}, proving that
+        it is able to build exact models in an efficient manner,
+        based on large sets of traces. For now, we define a set
+        of traces as information collected from a production
+        system, and describing its behaviors. A more formal
+        definition is given in the sequel of this thesis.
+        Exactness of our inferred models is defined by the
+        trace-equivalence and trace-inclusion relations proposed
+        in \cite{petrenko06}. Results show that our model
+        inference technique scales well;
 
     \item A reduction technique for symbolic transition systems
         that is both fast and efficient, keeping the exactness of
         the models, and targeting large models. This technique
-        has successfully been applied to large Michelin
-        production systems. This is a context-specific reduction
-        technique that improves the usability of the inferred
-        models, favoring the adoption of \emph{Autofunk} at
-        Michelin;
+        has successfully been applied to large Michelin's
+        production systems. This context-specific reduction
+        technique is a key element to enable testing of
+        Michelin's production systems because it improves the
+        usability of the inferred models, which also favors the
+        adoption of \emph{Autofunk} at Michelin;
 
     \item An offline passive testing technique leveraging the
         inferred models for testing production systems, along
@@ -272,11 +279,17 @@ published in the following international conference proceedings:
 The work presented in this thesis deals with two main research
 realms: (i) (software) model inference, and (ii) software
 testing. Hence, Chapter \ref{sec:related} is split into two main
-sections. Chapters \ref{sec:modelinf:webapps} and
-\ref{sec:modelinf:prodsystems} are dedicated to the model
+sections: Section \ref{sec:related:testing} introduces important
+notions of software testing, and Section
+\ref{sec:related:modelinf} reviews the literature on software
+model inference techniques. Chapters \ref{sec:modelinf:webapps}
+and \ref{sec:modelinf:prodsystems} are dedicated to the model
 inference of software systems (web applications first, and
 production systems then). Chapter \ref{sec:testing} is dedicated
-to the testing of production systems.
+to the testing of production systems. Chapter
+\ref{sec:conclusion} ends this thesis with conclusions and
+perspectives for future work. We give more details about each
+chapter below.
 
 \textbf{Chapter \ref{sec:related}} surveys the literature in
 software testing first, and then in model inference applied to
@@ -287,24 +300,29 @@ Testing (MbT) is, along with a few definitions and common terms
 employed in MbT. The software testing part ends with a review on
 some passive testing techniques, and why they are interesting in
 our case. The second part of this chapter presents what model
-inference is, from active learning to passive learning
-techniques.
+inference is, from active inference, \emph{i.e.} methods
+interacting with a software system to extract knowledge about it,
+to passive inference, \emph{i.e.} techniques that infer models
+from a fixed set of knowledge, such as a set of execution traces,
+source code, or even documentation.
 
 \textbf{Chapter \ref{sec:modelinf:webapps}} presents our work on
-model inference applied to web applications, a preliminary work
-that gave birth to \textit{Autofunk}, our modular framework for
-inferring models (and later, performing testing). This chapter
-gives an overview of \textit{Autofunk}'s very first architecture,
-called \emph{Autofunk v1}.  It then presents how
-\textit{Autofunk} relies on an automatic testing technique to
-improve the completeness of the inferred models. A note on its
-implementation is then given, following by an experimentation.
-This work has been published in \emph{Actes de la 13eme
-{\'e}dition d’AFADL, atelier francophone sur les Approches
-Formelles dans l’Assistance au D{\'e}veloppement de Logiciels}
-(AFADL'14) \cite{durand2014inference}, and in the Proceedings of
-the Fifth Symposium on Information and Communication Technology
-(SoICT'14)
+model inference based on the remarks made in Chapter
+\ref{sec:related}. This chapter introduces a preliminary work on
+model inference of web applications that gave birth to
+\textit{Autofunk}, our modular framework for inferring models
+(and later, performing testing). This chapter gives an overview
+of \textit{Autofunk}'s very first architecture, called
+\emph{Autofunk v1}. It then presents how \emph{Autofunk} relies
+on an automatic testing technique to extract more knowledge about
+the targeted web applications. This is important to infer more
+complete models.  A note on its implementation is
+given, following by an experimentation. This work has been
+published in \emph{Actes de la 13eme {\'e}dition d’AFADL, atelier
+francophone sur les Approches Formelles dans l’Assistance au
+D{\'e}veloppement de Logiciels} (AFADL'14)
+\cite{durand2014inference}, and in the Proceedings of the Fifth
+Symposium on Information and Communication Technology (SoICT'14)
 \cite{DBLP:conf/soict/DurandS14}.
 
 \textbf{Chapter \ref{sec:modelinf:prodsystems}} introduces our
@@ -312,28 +330,30 @@ framework \textit{Autofunk} revisited to target production
 systems. This chapter gives the context that led to our choices
 regarding the design of \textit{Autofunk v2}. Our \emph{reduction
 technique} that heavily reduces models is then presented, along
-with the results of a case study on Michelin's production
-systems. A whole section is dedicated to the implementation of
+with the results of experiments on Michelin's production systems.
+A whole section is dedicated to the implementation of
 \textit{Autofunk} for Michelin. Last significant part of this
 chapter is the use of a machine learning technique to maximize
-one part of our model inference technique, which led to the
+one step of our model inference technique, which led to the
 creation of \emph{Autofunk v3}. This work has been published in
 the Proceedings of Formal Methods 2015 (FM'15)
 \cite{DBLP:conf/fm/DurandS15}, and in the Proceedings of the 9th
 International Conference on Distributed Event-Based Systems
 (DEBS'15) \cite{DBLP:conf/debs/SalvaD15}.
 
-\textbf{Chapter \ref{sec:testing}} tackles the problem of testing
-production systems, without disturbing them, and without having
-any specification. It presents our work on both offline and
-online passive testing, by extending \textit{Autofunk v3}'s model
-inference framework. After having presented the overall idea, two
-algorithms are given and explained. The results of a case study
-on Michelin's production systems is given. Such results are
-related to the offline passive testing technique. Part of this
-work has been published in the Proceedings of the 13th
-International Conference on Formal Methods and Models for
-Co-Design (MEMOCODE'15) \cite{7340480}.
+\textbf{Chapter \ref{sec:testing}} tackles the problem of
+passively testing production systems, without disturbing them,
+and without having any specification. It presents our work on
+both offline and online passive testing, by extending
+\textit{Autofunk v3}'s model inference framework. After having
+presented the overall idea, two algorithms are given and
+explained. The results of experiments on Michelin's production
+systems are also given. Such results are related to the offline
+passive testing technique only, the online algorithm being not
+fully implemented at the time of writing. Part of this work has
+been published in the Proceedings of the 13th International
+Conference on Formal Methods and Models for Co-Design
+(MEMOCODE'15) \cite{7340480}.
 
 \textbf{Chapter \ref{sec:conclusion}} closes the main body of the
 thesis with concluding comments and proposals for future work.
