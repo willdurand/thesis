@@ -36,7 +36,7 @@ production systems. The design of web applications is
 well-established: we have a web server that runs the application,
 no matter its underlying programming language, and a client (a
 web browser most of the time) that connects to the web server so
-that it can talk to the application. \textit{Hypertext Transfer
+that it can communicate with the application. \textit{Hypertext Transfer
 Protocol} (HTTP)  is the protocol that allows such a discussion by
 means of HTTP requests and HTTP responses \cite{RFC7230}.
 Usually, the client initiates a request, and the server responds
@@ -1399,7 +1399,7 @@ reused and have to be rewritten.
 
 In this chapter, we presented an original approach combining
 model inference, expert systems, and automatic testing to derive
-IOSTSs models by means of a model transformation using inference
+IOSTSs (Input/Output Symbolic Transition Systems) models by means of a model transformation using inference
 rules.  We chose a minimization technique over existing
 algorithms such as gkTail and KLFA to keep exactness of the
 inferred models. Our proposal yields several models, reflecting
@@ -1408,7 +1408,7 @@ use of inference rules that capture the knowledge of an expert.
 The first contribution lies in the flexibility and scalability
 brought by the inference rules since they can be applied to
 several applications or on a single application only when the
-rules are specific. The whole framework has not to be
+rules are specific. The whole framework does not have to be
 re-implemented for each application, but inference rules have to.
 Our approach can be applied to event-driven applications since
 our framework supports their exploration. Furthermore, it can
@@ -1417,14 +1417,14 @@ produce traces.
 
 Combining expert systems (gathering knowledge) and formal models
 is really interesting but this is not a silver bullet. Indeed,
-writing rules is still an heavy task, and thus not suitable as
+writing rules is still a heavy task, and thus not suitable as
 is. It can be as difficult as writing a formal model, hence the
 need for an automated way to write the rules of Layers 3 to N.
 Ideally, the framework itself should generate a set of rules,
 \emph{e.g.}, using a machine learning technique.
 
 We chose to model behaviors of web applications using
-Input/Output Symbolic Transition Systems. Yet, we did not
+IOSTSs. Yet, we did not
 leverage is main characteristic, \emph{i.e.} the distinction
 between input and output actions. At first, we thought that
 distinguishing HTTP requests from HTTP responses would have made
