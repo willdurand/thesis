@@ -1,11 +1,12 @@
 \section{Software testing}
 \label{sec:related:testing}
 
-Software testing is the process of executing a program or system
-with the intent of finding errors \cite{Myers:1979:AST:539883}.
-Indeed, testing shows the presence, not the absence of
-\emph{bugs}, \emph{i.e.} faults or errors, as Edsger Wybe
-Dijkstra used to say \cite{Buxton:1970:SET:1102021}.
+\enquote{Software testing is the process of executing a program
+or system with the intent of finding errors}
+\cite{Myers:1979:AST:539883}.  Indeed, \enquote{testing shows the
+presence, not the absence of \emph{bugs}}, \emph{i.e.} faults or
+errors, as Edsger Wybe Dijkstra used to say
+\cite{Buxton:1970:SET:1102021}.
 
 Testing is achieved by analyzing a software to detect the
 differences between existing and required conditions (that is,
@@ -21,39 +22,57 @@ its intended use. Testing is a \emph{verification and validation}
 \cite{Boehm1979}:
 
 \begin{itemize}
-    \item \textbf{Validation:} are we building the right software?
-    \item \textbf{Verification:} are we building the software right?
+    \item \textbf{Validation:} \enquote{are we building the right
+        software?}
+    \item \textbf{Verification:} \enquote{are we building the
+        software right?}
 \end{itemize}
 
 In other words, formal verification is the act of proving or
 disproving the correctness of intended algorithms underlying a
 system with respect to a certain formal specification or
-property, using formal methods of mathematics. Model checking,
-runtime verification, theorem proving, static analysis and
-simulation are all verification methods.
+property, using formal methods of mathematics. Model checking
+\cite{clarke1999model}, runtime verification
+\cite{Leucker2009293}, theorem proving\ \cite{fitting2012first},
+static analysis \cite{lev2000putting}, and simulation are all
+verification methods.
 
 Validation is testing as the act of revealing bugs. That is what
 most people think testing is, and also the meaning we give to the
 word "testing" in the sequel of this thesis. Testing involves a
-(software) \textit{system Under Test} (SUT). The prevailing
+(software) \textit{System Under Test} (SUT). The prevailing
 intuition of testing is reflected in its operational
 characterization as an activity in which a \textit{tester} first
-generates and sends stimuli, \emph{i.e.} \textit{test input} data, to a
-system under test in order to observe phenomena (mainly
-behaviors). Such phenomena can be represented by the existence of
-\textit{test outputs} for instance. We then have to decide on a
-suitable \textit{verdict}, which expresses the assessment made.
-The two most well-known verdicts are $Pass$ and $Fail$.
-We call \textit{test case} (TC), a structure that is compound of
-\textit{test data}, \emph{i.e.}  inputs which have been devised
-to test the system, an expected behavior, and an expected output
-\cite{5733835}. A set of test cases is called a \textit{test
-suite} (TS).
+generates and sends stimuli, \emph{i.e.} \textit{test input}
+data, to a system under test in order to observe phenomena
+(mainly behaviors). Such phenomena can be represented by the
+existence of \textit{test outputs} for instance. We then have to
+decide on a suitable \textit{verdict}, which expresses the
+assessment made. The two most well-known verdicts are $Pass$ and
+$Fail$. We call \textit{test case} (TC), a structure that is
+compound of \textit{test data}, \emph{i.e.}  inputs which have
+been devised to test the system, an expected behavior, and an
+expected output \cite{5733835}. A set of test cases is called a
+\textit{test suite} (TS).
+
+Such an intuition refers to the \textbf{\emph{active testing}}
+methodology, \emph{i.e.} when the system under test is
+stimulated. Most of the classical testing techniques and tools
+found in the Industry tend to perform active testing,
+\emph{e.g.}, the \textit{xUnit} frameworks
+\footnote{\url{http://www.martinfowler.com/bliki/Xunit.html}}.
+On the contrary, in \textbf{\emph{passive testing}}, the tester
+does not interact with the system under test, it only observes.
+For instance, a \textit{monitor} can be used to collect the
+execution traces of a (running) system under test. We define the
+term \emph{trace} (or \emph{execution trace}) as a finite
+sequence of observations made on a software system.
 
 In the following section, we introduce the software testing
 realm. In Section \ref{sec:related:testing:mbt}, we focus on
-Model-based Testing along with some definitions used in the rest
-of this thesis.
+(active) Model-based Testing along with some definitions used in
+the rest of this thesis. We present what passive testing is in
+Section \ref{sec:related:testing:active-passive}.
 
 \subsection{Types of testing}
 
@@ -164,7 +183,8 @@ phase as shown in Figure \ref{fig:sorts-of-testing}):
     \caption{Sorts of testing. We can sort testing techniques by
     aspect (characteristics of quality), by phase (related to the
     target of the test), and by accessibility (related to the
-    information available to construct the test cases).}
+    information available, \emph{e.g.}, to construct the test
+    cases).}
     \label{fig:sorts-of-testing}
 \end{figure}
 
@@ -172,8 +192,8 @@ These requirements are sometimes seen as \textit{objectives} of
 testing, leading to even more different testing types as listed
 before. There are also different test approaches \cite{5733835}
 (or perspectives) to perform testing, depending on the
-information available to construct the test cases, \emph{i.e.}
-accessibility:
+information available, for instance, to construct the test cases,
+\emph{i.e.} accessibility:
 
 \begin{itemize}
     \item \textbf{White-box testing:} (also known as \emph{glass box}
@@ -198,13 +218,13 @@ accessibility:
         technique is sometimes called \emph{translucent testing}.
 \end{itemize}
 
-Independently of the sort of testing one choose, a common problem
-in software testing is to determine a relevant and efficient set
-of test cases. Because testing cannot guarantee the absence of
-faults, a challenge is to select subset of test cases from all
-possible test cases with a high chance of detecting most faults.
-It is especially the case for regression testing since it is
-usually an expensive process
+In active testing, independently of the sort of testing one
+chooses, a common problem is to determine a relevant and
+efficient set of test cases. Because testing cannot guarantee the
+absence of faults, a challenge is to select subset of test cases
+from all possible test cases with a high chance of detecting most
+faults.  It is especially the case for regression testing since
+it is usually an expensive process
 \cite{Rothermel:1997:SER:248233.248262,graves2001empirical}. We
 refer to this choice as the \emph{test selection}, which we
 present below.
@@ -212,59 +232,47 @@ present below.
 \subsubsection{Test selection}
 
 A lot of research on \textit{test selection} (or strategies) has
-been done, and there are numerous existing methods for both
-black-box and white-box approaches. Here are some of them:
+been done, and there are numerous existing methods. For
+instance, \emph{Combinatorial Testing} (also known as
+\emph{Pairwise}) \cite{Tai98atest} is based on the observation
+that most faults are caused by interactions of at most two
+factors. Here we test all the possible discrete combinations of
+the parameters involved. Even though \emph{Pairwise Testing} is
+often used with black-box approaches, it has been adapted for
+white-box, \emph{e.g.}, in \cite{4385509}.
 
-\begin{itemize}
-    \item \textbf{Black-box strategies:} \emph{Combinatorial
-        Testing}
-        (also known as \emph{Pairwise}) \cite{Tai98atest} is based on
-        the observation that most faults are caused by
-        interactions of at most two factors. Here we test all the
-        possible discrete combinations of the parameters
-        involved.  Because we cannot test all the possible input
-        domain values for practical reasons, \emph{Equivalence
-        Partitioning} \cite{Huang13} is a technique that divides
-        the test input data into a range of values, and selects
-        one input value from each range. Similarly, \emph{Boundary
-        Value Analysis} \cite{Ramachandran:2003:TSC:942796.943301}
-        is used to find the errors at boundaries of input domain
-        rather than finding those errors in the center of input.
-        We can also mention \emph{Functional Coverage} (also known as
-        \emph{Inductive Testing})
-        \cite{Walkinshaw:2010:IFC:1928028.1928038} where a test
-        set is good enough when it achieves a given level of
-        coverage;
+In addition, and because we cannot test all the possible input
+domain values for practical reasons, \emph{Equivalence
+Partitioning} \cite{Huang13} is a technique that divides the test
+input data into a range of values, and selects one input value
+from each range. Similarly, \emph{Boundary Value Analysis}
+\cite{Ramachandran:2003:TSC:942796.943301} is used to find the
+errors at boundaries of input domain rather than finding those
+errors in the center of input. On the contrary, \emph{Fuzz
+Testing} also known as \emph{Random Testing}
+\cite{Duran:1981:RRT:800078.802530,Godefroid08automatedwhitebox}
+is a method that applies random mutations to well-formed inputs
+of a program, and test the resulting values. Even if it is often
+used in a white-box context, Random Testing can also be applied
+using a black-box approach, \emph{e.g.}, \cite{5387827}. On the
+other hand, \emph{Statistical Testing}
+\cite{Walton:1995:STS:210453.210458} is a technique where test
+data is generated by sampling from a probability distribution
+chosen so that each element of the software's structure is
+exercised with a high probability.
 
-    \item \textbf{White-box strategies:} \emph{Fuzz Testing} also known
-        as \emph{Random Testing}
-        \cite{Duran:1981:RRT:800078.802530,Godefroid08automatedwhitebox}
-        is a method that applies random mutations to well-formed
-        inputs of a program, and test the resulting values. Such
-        a technique can also be applied using a black-box
-        approach though, \emph{e.g.}, \cite{5387827}.
-        \emph{Statistical Testing} \cite{Walton:1995:STS:210453.210458}
-        is a technique where test data is generated by sampling
-        from a probability distribution chosen so that each
-        element of the software's structure is exercised with a
-        high probability. We can also mention all techniques
-        related to the code structure, such as \emph{Statement
-        Testing}, \emph{Path Testing}, \emph{Branch Testing},
-        \emph{Condition Testing}, \emph{Multiple Condition (MC)
-        Testing}, and \emph{Loop Testing}. Another technique acts
-        on the source code by mutating it, \emph{i.e.} seeding
-        the implementation with a fault by applying a mutation
-        operator, and then determining whether testing identifies
-        this fault. This is known as \emph{Mutation Testing}
-        \cite{1702444}. Finally, even if \emph{Pairwise Testing}
-        is black-box, it has been adapted for white-box,
-        \emph{e.g.}, in \cite{4385509}.
-\end{itemize}
-
-The \textbf{grey-box} approach remains vague, and does not own
-any proper strategy \emph{per se}. Nonetheless, the main
-advantage of grey-box is to be able to combine the existing
-white- and black-box strategies.
+We can also mention \emph{Functional Coverage} (also known as
+\emph{Inductive Testing})
+\cite{Walkinshaw:2010:IFC:1928028.1928038} where a test set is
+good enough when it achieves a given level of code coverage, but
+also all techniques related to the code structure, such as
+\emph{Statement Testing}, \emph{Path Testing}, \emph{Branch
+Testing}, \emph{Condition Testing}, \emph{Multiple Condition (MC)
+Testing}, and \emph{Loop Testing}. Another strategy acts on the
+source code by mutating it, \emph{i.e.} seeding the
+implementation with a fault by applying a mutation operator, and
+then determining whether testing identifies this fault. This is
+known as \emph{Mutation Testing} \cite{1702444}.
 
 While the Industry created many different testing tools (often
 originating from Academia), they mostly perform testing by hand.
@@ -273,9 +281,9 @@ automatic test generation. \emph{Automatic testing}  is, for
 instance, one way to automate white-box approaches \cite{pex},
 but there are many other techniques. On the contrary,
 \emph{Model-based Testing} (MbT) \cite{Jorgensen:1995:STC:526521}
-is one research area that tries to automate black-box approaches.
-In this thesis, we are interested in making production systems
-more reliable by means of Model-based Testing.
+is one research area that tries to automate the testing phase
+from models. In this thesis, we are interested in making
+production systems more reliable by means of Model-based Testing.
 
 \subsection{Model-based Testing}
 \label{sec:related:testing:mbt}
@@ -297,14 +305,15 @@ which is extended in Figure \ref{fig:mbt}:
     \item Generating the test cases from the model (\#3 in Figure
         \ref{fig:mbt});
 
-    \item Running these test cases against an actual SUT, and
+    \item Running these test cases against the SUT, and
         evaluating the results. The test cases provide the
         information to control (\#4 in Figure \ref{fig:mbt}) the
         implementation. The latter yields outputs that are
-        observed by the test cases (\#5).  The results allow to
-        issue a verdict (\#6), which provides feedback about the
-        implementation (\#7). Verdicts can also provide feedback
-        to either refine the model or the requirements (\#8).
+        observed by the tester (\#5).  The results allow to issue
+        a verdict (\#6), which provides feedback about the
+        implementation (\#7). Verdicts may also indicate that a
+        mistake was made when creating the model or that the
+        requirements were wrong in the first place (\#8).
 \end{enumerate}
 
 \begin{figure}[ht]
@@ -338,19 +347,21 @@ understand and predict its behavior. In the Industry, we often
 encounter a "specifications phase", as in the V-model
 \cite{rook1986controlling,mathur2010advancements}, that is done
 before the "coding phase". Yet, the term "specification" refers
-to "a detailed formulation [...], which provides a definitive
-description of a system for the purpose of developing or
-validating the system" \cite{5733835}, which is a less
-restrictive definition.  There are numerous models for modeling
-software systems, and each describes different aspects of
-software behavior. For example, control flow, data flow, and
-program dependency graphs express how the implementation behaves
-by representing its source code structure. It is worth mentioning
-that a model does not have to completely describe it to be
-effective.
+to \enquote{a detailed formulation [...], which provides a
+definitive description of a system for the purpose of developing
+or validating the system} \cite{5733835}.  There are numerous
+models for expressing software systems, and each describes
+different aspects of software. For example, control flow, data
+flow, and program dependency graphs express how the
+implementation behaves by representing its source code structure.
+It is worth mentioning that a \emph{partial} model can be
+effective, \emph{i.e.} a model does not have to describe all
+behaviors of a software system to be usable, which also means
+that an implementation can have more features than those
+expressed in its specification.
 
-We can classify models that can be employed for testing into two
-categories (these lists are not exhaustive):
+We classify formal models that can be employed for testing into
+two categories (these lists are not exhaustive):
 
 \begin{itemize}
     \item \textbf{Behavior/Control oriented:} \emph{Finite
@@ -363,8 +374,8 @@ categories (these lists are not exhaustive):
         synchronous languages such as \emph{Lustre}
         \cite{lustre:ieee} and \emph{SCADE}
         \cite{LeSergent:2011:SCF:2188575.2188578}. We can also
-        mention \emph{Petri Nets}, \emph{Finite State Machines},
-        and \emph{Timed Automata} \cite{Alur94atheory};
+        mention \emph{Petri Nets}, and \emph{Timed Automata}
+        \cite{Alur94atheory};
 
     \item \textbf{Data oriented (pre/post):} often using annotation
         languages originating from the \textit{Design-By-Contract}
@@ -376,18 +387,19 @@ categories (these lists are not exhaustive):
         as the \emph{Java Modeling Language} (JML) \cite{jml},
         \emph{Spec\#} \cite{117852}, the \emph{Object Constraint
         Language} (OCL) \cite{Warmer:1998:OCL:291202}, the
-        \emph{B-Method} \cite{Lano:1996:BLM:525749}, and
-        \emph{Praspel} \cite{Enderlin:2011:PSL:2075545.2075551}.
+        \emph{B Language and Method} \cite{Lano:1996:BLM:525749},
+        and \emph{Praspel}
+        \cite{Enderlin:2011:PSL:2075545.2075551}.
 \end{itemize}
 
 In \cite{Sommerville:1997:REG:549198}, Sommerville and Sawyer
 give some guidelines for choosing a model for software
 requirements. The choice of a model depends on many factors, such
-as aspects of the system under test or the testing goal.
+as aspects of the system under test or the testing goals.
 
-Below we introduce a few definitions of formal models that we use
-in this thesis. We mainly work with behavior-oriented models that
-are finite automata since they are particularly suitable for
+Below, we introduce a few definitions of formal models that we
+use in this thesis. We mainly work with behavior-oriented models
+based on finite automata since they are particularly suitable for
 modeling both web applications and production systems behaviors.
 
 \subsubsection{Model definitions}
@@ -397,11 +409,11 @@ modeling both web applications and production systems behaviors.
 
 A \textit{Labeled Transition System} (LTS)
 \cite{milner1980calculus} is a model compound of \emph{states}
-with \emph{transitions}, labeled with actions, between them.  The
-states model the system states and the labeled transitions model
-the actions that a system can perform.  We give the definition of
-the LTS model below, but we refer to \cite{Tre96,ltsTretmans} for
-a more detailed description.
+and \emph{transitions} labeled with actions.  The states model
+the system states and the labeled transitions model the actions
+that a system performs to change its state.  We give the
+definition of the LTS model below, but we refer to
+\cite{Tre96,ltsTretmans} for a more detailed description.
 
 \begin{definition}[Labeled Transition System]
     A Labeled Transition System (LTS) is a 4-tuple $<Q,L,T,q_0>$
@@ -445,12 +457,12 @@ a more detailed description.
     We have $lts_{machine} = <\{ S1, S2, S3, S4 \}, \{ button, coffee, tea
     \}, \{ <S1, button, S2>, <S2, coffee, S3>, <S2, tea, S4> \},
     S1>$, and we can write $S1 \xrightarrow[]{button} S2$, and
-    also $S1 \xrightarrow[]{button \cdot coffee} S3$, however $S1
+    also $S1 \xrightarrow[]{button \cdot coffee} S3$, but $S1
     \not\xrightarrow[]{button \cdot tea} S3$.
 
     \begin{figure}[ht]
         \begin{center}
-            \includegraphics[width=0.7\linewidth]{figures/lts.png}
+            \includegraphics[width=0.6\linewidth]{figures/lts.png}
         \end{center}
 
         \caption{An example of a Labeled Transition System
@@ -473,17 +485,36 @@ Based on this definition, we give the formal definition of a
 \paragraph{Symbolic Transition Systems.}
 \label{sec:definitions:sts}
 
-The \textit{Symbolic Transition System} (STS)
-\cite{hennessy1995symbolic} is known as a very general and
-powerful model for describing several aspects of event-based
-systems. Symbolic Transition Systems (STSs) extend on LTSs by
-incorporating the notion of data and data-dependent control flow.
-The use of symbolic variables helps describe infinite state
-machines in a finite manner. This potentially infinite behavior
-is represented by the semantics of a STS, given in terms of LTS.
-STS operations and transformations are often given with inference
-rules. We give some definitions related to the STS model below,
-but we refer to \cite{FTW05} for a more detailed description.
+\textit{Symbolic Transition Systems} (STSs)
+\cite{hennessy1995symbolic} extend on LTSs by incorporating the
+notion of data and data-dependent control flow.  The use of
+symbolic variables helps describe infinite state machines in a
+finite manner. This potentially infinite behavior is represented
+by the semantics of a Symbolic Transition System (STS), given in
+terms of LTS. We give some definitions related to the STS model
+below, but we refer to \cite{FTW05} for a more detailed
+description.
+
+\begin{definition}[Variable assignment]
+    We assume that there exists a domain of values denoted by
+    $D$, and a variable set $X$ taking values in $D$. The
+    \emph{variable assignment} (also called \emph{valuation} of
+    variables in $Y \subseteq X$ to elements of $D$ is denoted by
+    the function $\alpha: Y \rightarrow D$.  $\alpha(x)$ denotes
+    the assignment of the variable $x$ to a value in $D$.
+    The \emph{empty variable assignment} is denoted by $v_\emptyset$.
+
+    We denote by $D_Y$ the set of all variable assignments over
+    $Y$: $D_Y = \{ \alpha : Y \rightarrow D \mid v \text{ is a
+    variable assignment of } Y \}$. We also denote by $id_Y$ the
+    identity assignment over $Y$: $\forall x \in Y, id_Y(x)
+    = x$.
+
+    Finally, the \emph{satisfaction} of a first order formula
+    \cite{huth2004logic} (\emph{i.e.} a guard) $\phi$ with
+    respect to a given variable assignment $\alpha$ is denoted by
+    $\alpha \models \phi$.
+\end{definition}
 
 \begin{definition}[Symbolic Transition System]
     A Symbolic Transition System (STS) consists of
@@ -498,18 +529,19 @@ but we refer to \cite{FTW05} for a more detailed description.
         \item $l0 \in L$ is the initial location;
 
         \item $V$ is a finite set of location (or internal)
-            variables;
+            variables. $D_v$ denotes the domain in which a
+            variable $v$ takes its values;
 
-        \item $V0$ is a condition on the initialization of the
-            location variables $V$;
+        \item $V0$ is \emph{an} initialization of the location
+            variables $V$;
 
         \item $I$ is a finite set of parameters (also known as
             interaction variables), disjoint from $V$;
 
         \item $\Lambda$ is a finite set of symbolic actions
-            $a(p)$ with $a$ a symbol, and $p=(p_1,\dots ,p_k)$ a
-            finite set of parameters in $I^{k} (k \in
-            \mathbb{N})$;
+            $a(p)$ with $a$ a symbol (or action), and
+            $p=(p_1,\dots ,p_k)$ a finite set of parameters in
+            $I^{k} (k \in \mathbb{N})$;
 
         \item $\rightarrow$ is a finite set of symbolic
             transitions. A symbolic transition $t =
@@ -517,37 +549,30 @@ but we refer to \cite{FTW05} for a more detailed description.
             location $l_i \in L$ to $l_j \in L$, also denoted by
             $l_i \xrightarrow{a(p),G,A} l_j$, is labeled by:
 
-		\begin{itemize}
-            \item An action $a(p) \in \Lambda$;
+        \begin{itemize}
+            \item A symbolic action $a(p) \in \Lambda$;
 
-            \item A guard $G$ over $(p \cup V)$, which
-            restricts the firing of the transition. Throughout
-            this thesis, we often consider guards written as
-            \textbf{conjunctions} of equalities: $\displaystyle
-            \bigwedge_{x \in I \cup V} (x == val)$;
+            \item A guard $G \subseteq D_V \times D_p$ that
+            restricts the firing of the transition;
 
-            \item An assignment $A$ that defines the evolution
-            of the variables, $A_x$ being the function in
-            $A$ defining the evolution of the variable $x \in V$.
+            \item An assignment $A : D_V \times D_p \rightarrow
+            D_V$ that defines the evolution of the variables,
+            $A_x$ being the function in $A$ defining the
+            evolution of the variable $x \in V$.
 		\end{itemize}
 	\end{itemize}
 
 	\label{def:sts}
 \end{definition}
 
-We also denote by $proj_{x}(G)$ the projection of the guard $G$
-over the variable $x \in I \cup V$, which extracts the equality
-$(x==val)$ from $G$. For example, given the guard $G_1 =
-[(nsys==1) \wedge (nsec==8) \wedge (point==1) \wedge (pid==1)]$,
-$proj_{nsys}(G_1) = (nsys==1)$.
-
 For readability purpose, if $A$ is the identity function $id_V$,
-we denote a transition by $l_i \xrightarrow{a(p),G} l_j$. We
-also use the generalized transition relation $\Rightarrow$ to
-represent STS paths: $l \xRightarrow{(a_1,G_1,A_1)\dots
-(a_n,G_n,A_n)} l' =_{def} \exists l0\dots l_n, l=l0
-\xrightarrow{a_1,G_1,A_1} l_1\dots
-l_{n-1}\xrightarrow{a_n,G_n,A_n}l_n=l'$.
+we denote a transition by $l_i \xrightarrow{a(p),G} l_j$.
+
+We also use the generalized transition relation $\Rightarrow$ to
+represent STS \emph{paths}:\\ $l \xRightarrow{(a_1,G_1,A_1) \dots
+(a_n,G_n,A_n)} l' =_{def} \exists ~l0 \dots l_n, l=l0
+\xrightarrow{(a_1,G_1,A_1)} l_1 \dots
+l_{n-1} \xrightarrow{(a_n,G_n,A_n)} l_n = l'$.
 
 \begin{example}
     Figure \ref{fig:sts-example} presents the Symbolic Transition
@@ -564,8 +589,7 @@ l_{n-1}\xrightarrow{a_n,G_n,A_n}l_n=l'$.
     v \mapsto 0 \}, \{ i \}, \{ coin, tray \}, \rightarrow >$
     where $\rightarrow$ is given by the directed edges between
     the locations in Figure \ref{fig:sts-example}.  We can write
-    $L2 \xrightarrow{tray(i), G_{1} = [(i == 0)]} L0$, and
-    $proj_{i}(G_{1}) = (i == 0)$.
+    $L2 \xrightarrow{tray(i), G = [(i == 0)]} L0$.
 
     \begin{figure}[ht]
         \begin{center}
@@ -580,34 +604,13 @@ l_{n-1}\xrightarrow{a_n,G_n,A_n}l_n=l'$.
     \label{example:sts}
 \end{example}
 
-\begin{definition}[Variable assignment]
-    We assume that there exists a domain of values denoted by
-    $D$, and a variable set $X$ taking values in $D$. The
-    \emph{variable assignment} (also called \emph{valuation} of
-    variables in $Y \subseteq X$ to elements of $D$ is denoted by
-    the function $\alpha: Y \rightarrow D$.  $\alpha(x)$ denotes
-    the assignment of the variable $x$ to a value in $D$.
-    The \emph{empty variable assignment} is denoted by $v_\emptyset$.
-
-    We denote by $D_Y$ the set of all variable assignments over
-    $Y$: $D_Y = \{ \alpha : Y \rightarrow D | v \text{ is a
-    variable assignment of } Y \}$. We also denote by $id_Y$ the
-    identity assignment over $Y$: $\forall x \in Y, id_Y(x)
-    = x$.
-
-    Finally, the \emph{satisfaction} of a first order formula
-    \cite{huth2004logic} (\emph{i.e.} a guard) $\phi$ with
-    respect to a given variable assignment $\alpha$ is denoted by
-    $\alpha \models \phi$.
-\end{definition}
-
 \paragraph{Labeled Transition System semantics.}
 \label{sec:definitions:lts-semantics}
 
 A STS is associated with a Labeled Transition System to formulate
 its \emph{semantics} \cite{FTW05}. A LTS semantics corresponds to
-a valued state machine, without symbolic variables, which is
-often infinite: the LTS states are labeled by internal variable
+a valued automaton without symbolic variables, which is often
+infinite: the LTS states are labeled by internal variable
 assignments while transitions are labeled by actions combined
 with parameter assignments.
 
@@ -630,9 +633,9 @@ with parameter assignments.
 	\end{itemize}
     \begin{center}
     {\Large
-    $\frac{l_1 \xrightarrow{a(p),G,A}l_2,\alpha \in D_p, v \in D_V, v'
-        \in D_V, v \cup \alpha \models G, v'=A(v \cup \alpha)}{(l_1,v)
-            \xrightarrow{a(p),\alpha} (l_2,v') }$
+    $\frac{l_1 \xrightarrow{a(p),G,A}l_2, ~\alpha \in D_p, ~v \in
+        D_V, ~v' \in D_V, ~v \cup \alpha \models G, ~v' = A(v
+        \cup \alpha)}{(l_1,v) \xrightarrow{a(p),\alpha} (l_2,v') }$
     }
 	\end{center}
 
@@ -677,9 +680,7 @@ An Input/Output Symbolic Transition System (IOSTS)
 is divided into two subsets: one containing the inputs, beginning
 with $?$, to express actions expected by the system, and another
 containing outputs, beginning with $!$, to express actions
-produced by the system. When no output action is possible, the
-only observation that can be made is \emph{quiescence}
-\cite{Tre96}.
+produced by the system.
 
 \begin{definition}[Input/Output Symbolic Transition System]
     As defined in \cite{Rusu:2000:AST:647982.743536}, an
@@ -695,8 +696,8 @@ only observation that can be made is \emph{quiescence}
     \item $V$ is a finite set of location (or internal)
         variables;
 
-    \item $V0$ is a condition on the initialization of the
-        location variables $V$;
+    \item $V0$ is \emph{an} initialization of the location
+        variables $V$;
 
     \item $I$ is a finite set of parameters, disjoint from $V$;
 
@@ -706,8 +707,7 @@ only observation that can be made is \emph{quiescence}
         unique. $\Lambda$ is partitioned into a set of input
         actions $\Lambda^I$ and a set of output actions
         $\Lambda^O$, and we write $\Lambda = \Lambda^I \cup
-        \Lambda^O \cup \{!\delta \}$: $\Lambda^I$, with $\delta$
-        the quiescence;
+        \Lambda^O$: $\Lambda^I$;
 
     \item $\rightarrow$ is a finite set of symbolic transitions.
         A symbolic transition $(l_i,l_j,a(p),G,A)$, from the
@@ -754,10 +754,11 @@ behaviors of web applications and production systems in order to
 perform Model-based Testing, \emph{i.e.} relying on models to
 perform testing, mainly to prevent regressions. \emph{Conformance
 Testing} is a black-box testing method leveraging formal methods
-\cite{tretmans1992formal}. We give a few definitions related to
-Conformance Testing below.
+\cite{tretmans1992formal}, which is both efficient and
+well-established. We give a few definitions related to
+conformance testing below.
 
-\subsubsection{Conformance Testing}
+\subsubsection{Conformance testing}
 
 In this section, we introduce a few common terms defining what
 \emph{Conformance Testing}
@@ -772,10 +773,11 @@ the complete implementation model of the system. The \emph{test
 hypothesis} \cite{Bernot:1991:TAF:112287.112303} is that, for
 every system, there is a corresponding observational equivalent
 implementation model: $\forall \text{ } iut \in IMPS, \exists
-\text{ } I_{iut} \in MODS$, where $iut$ is a concrete
+\text{ } i_{iut} \in MODS$, where $iut$ is a concrete
 \emph{implementation under test}, $IMPS$ is the universe of
-implementations, $I_{iut}$ is a model of $iut$, and $MODS$ is the
-universe of the models of all \emph{implementations under test}.
+implementations, $i_{iut}$ is an implementation model of $iut$,
+and $MODS$ is the universe of the models of all
+\emph{implementations under test}.
 
 \paragraph{Conformance.} To check whether an implementation under
 test $iut$ conforms to a specification $spec$, we need to know
@@ -794,43 +796,33 @@ implementations and specifications, \emph{i.e.} an
 conformance between an implementation under test $iut$ and a
 specification $spec$, we use the notion of an
 \emph{implementation relation}: $imp \subseteq MODS \times
-SPECS$, with $SPECS$ the set of specifications. We can find
-different implementation relations, \emph{e.g.},
-\cite{Bri88,phalippou94}.
+SPECS$, with $SPECS$ the set of specifications.  An
+implementation $iut$ \textbf{conforms to} a specification $spec$
+if the existing model $i_{iut} \in MODS$ of $iut$ is
+\textit{imp-related} to $spec$: $i_{iut} ~imp~ spec$.
 
-An implementation $iut$ \textbf{conforms to} a specification
-$spec$ if the existing model $I_{iut}$ of $iut$ is
-\textit{imp-related} to $spec$: $I_{iut} ~imp~ spec$.
-There are many conformance relations in the literature, which we
-can organize in three categories:
+There are many implementation (or conformance) relations in the
+literature, \emph{e.g.}, \emph{Isomorphism}, \emph{Bisimulation
+Equivalence}
+\cite{milner1989communication,Fernandez89animplementation},
+\emph{Trace Equivalence} \cite{tan_testing_1995}, \emph{Testing
+Equivalence} \cite{Abramsky1987225}, \emph{Refusal Equivalence}
+\cite{Phillips86}, \emph{Observation Preorder}
+\cite{milner1980calculus,hennessy1980observing}, \emph{Trace
+Preorder} \cite{DNH84,vaandrager1991relationship}, \emph{Testing
+Preorder} \cite{DNH84,Beohar2015}, \emph{Refusal Preorder}
+\cite{phillips1987refusal}, \emph{Input-Output Testing}
+\cite{Tre96}, \emph{Input-Output Refusal}
+\cite{heerink1997refusal}, \emph{ioconf}
+\cite{tretmans1996conformance}, and \emph{ioco} \cite{Tre96}.
 
-\begin{itemize}
-    \item \textbf{Equivalence relations:} \emph{Isomorphism},
-        \emph{Bisimulation Equivalence}
-        \cite{milner1989communication,Fernandez89animplementation},
-        \emph{Trace Equivalence} \cite{tan_testing_1995},
-        \emph{Testing Equivalence} \cite{Abramsky1987225},
-        \emph{Refusal Equivalence} \cite{Phillips86};
-
-    \item \textbf{Preorder relations:} \emph{Observation
-        Preorder} \cite{milner1980calculus,hennessy1980observing},
-        \emph{Trace Preorder}
-        \cite{DNH84,vaandrager1991relationship},
-        \emph{Testing Preorder} \cite{DNH84,Beohar2015},
-        \emph{Refusal Preorder} \cite{phillips1987refusal};
-
-    \item \textbf{Input-Output relations:} \emph{Input-Output
-        Testing} \cite{Tre96}, \emph{Input-Output Refusal}
-        \cite{heerink1997refusal}, \emph{ioconf}
-        \cite{tretmans1996conformance}, \emph{ioco} \cite{Tre96}.
-\end{itemize}
-
-In this thesis, we use the trace preorder relation $\leq_{tr}$.
-The intuition behind this relation is that an implementation $i$
-may show only behavior, in terms of traces of observable
-actions, which is specified in the specification $s$, \emph{i.e.}
-let $i, s \in \EuScript{LTS}(L)$, then $i \leq_{tr} s =_{def}
-Traces(i) \subseteq Traces(s)$ \cite{Tre96}.
+A simple and easy to understand relation is the \emph{trace
+preorder} relation $\leq_{tr}$.  The intuition behind this
+relation is that an implementation $i$ may show only behavior, in
+terms of traces of observable actions, which is specified in the
+specification $s$, \emph{i.e.} let $i, s \in \EuScript{LTS}(L)$,
+then $i \leq_{tr} s =_{def} Traces(i) \subseteq Traces(s)$
+\cite{Tre96}.
 
 \begin{example}
     Figure \ref{fig:trace_preorder} illustrates the trace
@@ -855,97 +847,61 @@ Traces(i) \subseteq Traces(s)$ \cite{Tre96}.
     \label{example:trace_preorder}
 \end{example}
 
-Now we can define what \emph{Conformance Testing} is.
-
-\paragraph{Conformance testing.} Conformance Testing
-assesses conformance to an unknown implementation under test
-$iut$ to its specification $spec$ by means of test experiments.
-Experiments consist of stimulating $iut$ in certain ways and
-observing its reactions. This process is called \textit{test
-execution}, which is defined below.
-
-\paragraph{Test execution.} The successful execution of a test
-case $TC$ can be written as follows: $I_{iut} \text{ }
-\mathbf{passes} \text{ } TC$. We extend it to a test
-suite $TS$: $I_{iut} \text{ } \mathbf{passes} \text{ } TS
-\Leftrightarrow \forall \text{ } TC \in TS : I_{iut} \text{ }
-\mathbf{passes} \text{ } TC$. On the contrary, $I_{iut} \text{ }
-\mathbf{fails} \text{ } TC \Leftrightarrow I_{iut} \text{ } \neg
-\mathbf{passes} \text{ } TC$.
+\paragraph{Testing.} Conformance testing assesses conformance to
+an unknown implementation under test $iut$ to its specification
+$spec$ by means of test experiments. In active testing,
+experiments consist of stimulating $iut$ in certain ways and
+observing its reactions with a \emph{tester}. This process is
+called \textit{test execution}. Test execution may be successful,
+\emph{i.e.} the observed behaviors correspond to the expected
+ones, or it may be unsuccessful. The successful execution of a
+test case $TC$ can be written as follows: $i_{iut} \text{ }
+\mathbf{passes} \text{ } TC$. We extend it to a test suite $TS$:
+$i_{iut} \text{ } \mathbf{passes} \text{ } TS \Leftrightarrow
+\forall \text{ } TC \in TS : i_{iut} \text{ } \mathbf{passes}
+\text{ } TC$. On the contrary, $i_{iut} \text{ } \mathbf{fails}
+\text{ } TC \Leftrightarrow i_{iut} \text{ } \neg \mathbf{passes}
+\text{ } TC$.
 
 This leads to three properties on the test suite $TS$
-\cite{ltsTretmans}:
+\cite{tretmans1996conformance}:
 
 \begin{itemize}
-\item \textbf{Soundness:} $\forall \text{ } iut \in IMPS, iut$
-conforms to $spec \implies iut \text{ } \mathbf{passes} \text{ }
+\item \textbf{Soundness:} $\forall \text{ } i_{iut} \in MODS, i_{iut}
+~imp~ spec \implies i_{iut} \text{ } \mathbf{passes} \text{ }
 TS$;
 
-\item \textbf{Exhaustiveness:} $\forall \text{ } iut \in IMPS,
-iut \text{ } \mathbf{passes} \text{ } TS \implies iut$ conforms
-to $spec$;
+\item \textbf{Exhaustiveness:} $\forall \text{ } i_{iut} \in MODS,
+i_{iut} \text{ } \mathbf{passes} \text{ } TS \implies i_{iut} ~imp~
+spec$;
 
-\item \textbf{Completeness:} $\forall \text{ } iut \in IMPS, iut$
-conforms to $spec \Leftrightarrow iut \text{ } \mathbf{passes}
+\item \textbf{Completeness:} $\forall \text{ } i_{iut} \in MODS, i_{iut}
+~imp~ spec \Leftrightarrow i_{iut} \text{ } \mathbf{passes}
 \text{ } TS$.
 \end{itemize}
 
-We rely on a \textit{test architecture}, \emph{i.e.} an abstract
-description of the \textit{environment} in which an
-implementation under test $iut$ is embedded, and where it
-communicates with a \textit{tester}.
+Until now, we mostly introduced active testing notions. For the
+record, active testing works by stimulating the system under
+test, \emph{i.e.} observing outputs of an implementation for
+predefined inputs. In the next section, we introduce a different
+approach that does not actively interact with a system, known as
+passive testing.
 
-\paragraph{Tester and verdicts.} A tester executes the test
-cases. To be able to decide about the success of each, a
-\textit{verdict} (most of the time, $pass$ or $fail$) is attached
-to each state of each test case.
-
-Neither Model-based Testing nor Conformance Testing state that
-"executing the test cases" implies to interact with the system
-under test. Indeed, there is a last perspective related to
-whether the testing method stimulates the system or not.
-
-\subsection{(Active and) passive testing}
+\subsection{Passive testing}
 \label{sec:related:testing:active-passive}
 
-In this section, we introduce two different approaches based on
-how we apply the test cases to the system under test:
-
-\begin{itemize}
-    \item \textbf{Active testing}, which is the classical process
-        in which a tester examines the functionality of a unit
-        under test before that unit is being deployed, \emph{i.e.}
-        during its development;
-
-    \item \textbf{Passive testing}, which takes place after the
-        deployment of that unit, and requires, for instance, the
-        presence of a \textit{monitor}. Passive testing is also
-        useful when one wants to test a system during a long
-        period of time.
-\end{itemize}
-
-While active testing can take place as black-, grey-, or white-box
-testing, passive testing is often a special form of black-box
-testing. Active testing works by stimulating the system under
-test, \emph{i.e.} observing outputs of an implementation for predefined
-inputs. Most of the classical testing techniques and tools found
-in the Industry perform active testing, \emph{e.g.}, \textit{xUnit}
-frameworks
-\footnote{\url{http://www.martinfowler.com/bliki/Xunit.html}}.
-
-Passive testing rather examines the input/output behavior of an
+Passive testing examines the input/output behavior of an
 implementation without preordaining the input. One advantage of
-passive testing is that it does not disturb the system, and it
-can be applied to large (distributed) systems. While most of the
-works on passive testing are related to networks, protocols, and
-web services, such a technique can be particularly suitable for
-production systems such as Michelin's systems.
+passive testing is that it does not disturb the system. While
+most of the works on passive testing are related to networks,
+protocols, and web services, such a technique is particularly
+suitable for production systems such as Michelin's systems.
 
 Several works, dealing with passive testing of protocols or
 components, have been proposed over the last decade. For all of
-these, the tester is made up of a module, located in the
-implementation environment, which collects trace sets. These
-works can be grouped in three different categories:
+these, the tester is made up of a module, called \emph{monitor},
+located in the implementation environment, which collects trace
+sets. These works can be grouped in three different categories:
 
 \begin{itemize}
 
@@ -994,8 +950,8 @@ works can be grouped in three different categories:
         given on-the-fly to an algorithm that detects incorrect
         behaviors by covering the specification transitions with
         these reactions. Lee \emph{et al.} proposed a passive
-        testing method dedicated to wired protocols
-        \cite{1621118}.  Protocols are modeled with
+        testing method dedicated to wired protocols, \emph{e.g.},
+        \cite{1621118}. Protocols are modeled with
         \textit{Event-driven Extended Finite State Machines}
         (EEFSM), compound of variables.  Several algorithms on
         the EEFSM model and their applications to the Open
@@ -1007,7 +963,7 @@ works can be grouped in three different categories:
         specification is performed by means of configuration. A
         configuration represents a tuple gathering the current
         state label, and a set of assignments and guards modeling
-        the variable state;
+        the variable state;\TODO{add another ref}
 
     \item \textbf{Backward checking:} Alcalde \emph{et al.}
         proposed an approach that processes a partial trace
@@ -1036,13 +992,15 @@ closer control of the implementation under test, passive testing
 still presents interesting advantages:
 
 \begin{itemize}
-    \item Passive testing is less costly than active testing in
-        general since it does not have to control the
-        implementation under test;
+    \item Passive testing does not disturb the system or its
+        environment, \emph{i.e.} \enquote{passive testing only
+        observes and does not intervene} \cite{cavalli2003new};
 
     \item Passive testing can be applied to large systems where
         active testing is not even feasible, such as systems with
         many different components, \emph{e.g.}, software oriented
         architectures, distributed systems, but also production
         systems such as the ones we target in this thesis.
+
+    \TODO{covers less?}
 \end{itemize}
