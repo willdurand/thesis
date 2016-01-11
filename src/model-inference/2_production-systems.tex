@@ -194,14 +194,15 @@ to design our framework:
         under analysis});
 
     \item \textbf{Production events:} an event of the form
-        $a(\alpha)$ must include a distinctive label $a$ along with a
-        parameter assignment $\alpha$. Two events $a(\alpha_1)$ and
-        $a(\alpha_2)$ having the same label $a$ must own assignments
-        over the same parameter set. The events are ordered and
+        $(a(p), \alpha)$ must include a distinctive label $a$
+        along with an assignment $\alpha$ over the parameter set
+        $p$. Two events $(a(p), \alpha_1)$ and $(a(p), \alpha_2)$
+        having the same label $a$ must own assignments over the
+        same parameter set $p$. The events are ordered and
         processed with respect to this order;
 
     \item \textbf{Traces identification:} traces are sequences of
-        events $a_1(\alpha_1) \dots  a_n(\alpha_n)$. A
+        events $(a_1(p), \alpha_1) \dots  (a_n(p), \alpha_n)$. A
         trace is identified by a specific parameter that is
         included in all event assignments of the same trace. This
         identifier is denoted by $pid$ and identifies products,
@@ -272,7 +273,7 @@ define a STS as follows:
             $l_i \xrightarrow{a(p),G,A} l_j$, is labeled by:
 
 		\begin{itemize}
-            \item An action $a(p) \in \Lambda$;
+            \item A symbolic action $a(p) \in \Lambda$;
 
             \item A guard $G$ over $(p \cup V)$, which
             restricts the firing of the transition. Throughout
@@ -362,14 +363,11 @@ system under analysis $\mathit{Sua}$. To avoid disrupting the
 industrial equipment composing the whole system. Everything is
 done offline with a logging system or with monitoring. We start
 by formatting these events to obtain a set of events of the form
-$a(\alpha)$ with $a$ a label, and $\alpha$ a parameter
-assignment. We call these formatted events, \textit{valued
-events}.\TODO{update valued events} Valued events are similar to valued actions (as in
-Chapter \ref{sec:modelinf:webapps}) except that this term is more
-accurate in our industrial context. It is also worth mentioning
-here that this is a shortened notation because we omit the
-parameter set $p$ of a classical valued event: $a(\alpha) =
-(a(p), \alpha)$ with $\alpha$ the valuation over $p$.  Performing
+$(a(p), \alpha)$ with $a$ a label, and $\alpha$ an assignment
+over the parameter set $p$. We call these formatted events,
+\textit{valued events}. Valued events are similar to valued
+actions (as in Chapter \ref{sec:modelinf:webapps}) except that
+this term is more accurate in our industrial context. Performing
 such a step allows to collect productions events from various
 sources, and still be able to perform the next steps in a unique
 manner.
@@ -385,8 +383,8 @@ offer a natural way to express his knowledge. On top of that,
 expert systems also offer fast processing in this situation. We
 use inference rules of the form:
 
-\textit{When $a(\alpha)$, condition on $a(\alpha)$, then
-retract $a(\alpha)$}.
+\textit{When $(a(p), \alpha)$, condition on $(a(p), \alpha)$,
+then retract $(a(p), \alpha)$}.
 
 \begin{example}
 The remaining valued events are time-ordered to produce an
@@ -396,11 +394,14 @@ Figure \ref{fig:rawdatum}.
 
 \begin{figure}[ht]
 \begin{framed}
-    $Traces(Sua) =
-    17011(nsys:=1, nsec:=8, point:=1, pid:=1)\text{ }
-    17021(nsys:=1, nsec:=8, point:=3, tpoint:=8, pid:=1)\text{ }
-    17011(nsys:=1, nsec:=8, point:=2, pid:=2)\text{ }
-    17021(nsys:=1, nsec:=8, point:=4, tpoint:=9, pid:=2)$
+    $Traces(Sua) = (17011(\{ nsys, nsec, point, pid \}), \{
+    nsys:=1, nsec:=8, point\\:=1, pid:=1 \})\text{ }
+    17021(\{ nsys, nsec, point, tpoint, pid \}, \{ nsys:=1,
+    nsec:=8,\\ point:=3, tpoint:=8, pid:=1 \})\text{ }
+    17011(\{ nsys, nsec, point, pid \}, \{ nsys:=1,\\nsec:=8,
+    point:=2, pid:=2 \})\text{ }
+    17021(\{ nsys, nsec, point, tpoint, pid \}, \{ nsys\\:=1,
+    nsec:=8, point:=4, tpoint:=9, pid:=2 \})$
 \end{framed}
 
 \caption{Initial trace set $Traces(Sua)$ based on the events
@@ -471,10 +472,10 @@ set $Traces(Sua)$:
 \begin{definition}[$Traces(Sua)$]
     Given a system under analysis $\mathit{Sua}$, $Traces(Sua)$
     denotes its \emph{formatted trace set}. $Traces(Sua)$
-    includes traces of the form $a_1(\alpha_1) \dots
-    a_n(\alpha_n)$ such that $a_i(\alpha_i)_{(1 \leq i \leq
-    n)}$ are ordered valued events having the same identifier
-    assignment.
+    includes traces of the form $(a_1(p), \alpha_1) \dots\\
+    (a_n(p), \alpha_n)$ such that $(a_i(p), \alpha_i)_{(1 \leq i
+    \leq n)}$ are ordered valued events having the same
+    identifier assignment.
 
 	\label{def:structuredtrace}
 \end{definition}
@@ -511,8 +512,8 @@ of the manufacturing process using one of the known exit points.
 
 \begin{definition}[Complete trace]
     Let $\mathit{Sua}$ be a system under analysis and
-    $Traces({Sua})$ be its trace set. A trace $t=a_1(\alpha_1)
-    \dots a_n(\alpha_n) \in Traces({Sua})$ is said
+    $Traces({Sua})$ be its trace set. A trace $t=(a_1(p), \alpha_1)
+    \dots (a_n(p), \alpha_n) \in Traces({Sua})$ is said
     \emph{complete} if and only if $\alpha_1$ includes an
     assignment $(point:=val1)$, which denotes an entry point of
     $\mathit{Sua}$, and $\alpha_n$ includes an assignment
@@ -569,11 +570,11 @@ $ST_1 = Traces(Sua) \in ST$.
 Thereafter, \textit{Autofunk} scans the traces in $ST$ and tries
 to detect repetitive patterns $p \dots p$. A \emph{pattern} is a
 sequence of valued events that should contain at least one valued
-event. For example, $p_x = a_x(\alpha_x)$ is a pattern, and
-$p_{y} = a_y(\alpha_y) a_y(\alpha_y)$ is another pattern, which
-is not equivalent to $p_x$. This notion of pattern is specific to
-our industrial context where physical devices may send
-information multiple times until they get an acknowledgment.
+event. For example, $p_x = (a_x(p), \alpha_x)$ is a pattern, and
+$p_{y} = (a_y(p), \alpha_y) (a_y(p), \alpha_y)$ is another
+pattern, which is not equivalent to $p_x$. This notion of pattern
+is specific to our industrial context where physical devices may
+send information multiple times until they get an acknowledgment.
 
 If \emph{Autofunk} finds a trace $t$ having a repetitive pattern
 $p$, and another \emph{equivalent trace} $t'$ including this
@@ -596,11 +597,13 @@ equivalence between two traces:
 In Algorithm \ref{algo_traces}, two traces $t=\sigma_i ~p \dots
 p~ \sigma_j$ and $t'=\sigma_i' ~p'~ \sigma_j'$ are said
 \emph{equivalent} if the patterns $p$, $p'$, and the sub-traces
-$\sigma_i = a_1(\alpha_1) \dots a_i(\alpha_i)$, $\sigma_j =
-a_j(\alpha_j) \dots a_n(\alpha_n)$, $\sigma_i'$, $\sigma_j'$ are
+$\sigma_i = (a_1(p), \alpha_1) \dots (a_i(p), \alpha_i)$, $\sigma_j =
+(a_j(p), \alpha_j) \dots (a_n(p), \alpha_n)$, $\sigma_i'$, $\sigma_j'$ are
 equivalent, \emph{i.e.} $p \sim_{(pid)} p'$, $\sigma_i
 \sim_{(pid)} \sigma_i'$, and $\sigma_j \sim_{(pid)} \sigma_j'$,
 and we can remove $t$ from $ST$.
+
+\TODO{continue a(alpha) => (a(p), alpha)}
 
 At the end of Algorithm \ref{algo_traces} we obtain the complete
 trace set $CTraces(Sua)$.
