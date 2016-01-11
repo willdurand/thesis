@@ -1,7 +1,7 @@
 \chapter{Model inference for production systems}
 \label{sec:modelinf:prodsystems}
 
-In this chapter, we introduce \emph{Autofunk v2} and 
+In this chapter, we introduce \emph{Autofunk v2} and
 \emph{Autofunk v3}. This is our passive model inference
 framework, improving \emph{Autofunk v1}'s capabilities, and
 focused on inferring models of production systems. It combines
@@ -234,12 +234,67 @@ derive more abstract and readable models.
 \end{figure}
 
 Here, we consider \textit{Symbolic Transition Systems} (STSs) as
-models for representing production system behaviors. As reminder,
+models for representing production system behaviors (cf.
+\crossref{sec:related}{sec:definitions:sts}).  As a reminder,
 STSs are state machines incorporating actions (\emph{i.e.} events
 in this context), labeled on transitions, that show what can be
 given to and observed on the system. In addition, actions are
-tied to an explicit notion of data. A formal definition can
-be found in \crossref{sec:related}{sec:definitions:sts}.
+tied to an explicit notion of data. Throughout this thesis, we
+define a STS as follows:
+
+\begin{definition}[Symbolic Transition System]
+    A STS is defined as a tuple $<L,l0,V,$
+    $V0,I,\Lambda,\rightarrow>$ where:
+
+    \begin{itemize}
+        \item $L$ is a countable set of locations;
+
+        \item $l0 \in L$ is the initial location;
+
+        \item $V$ is a finite set of location (or internal)
+            variables;
+
+        \item $V0$ is \emph{a condition} on the initialization of
+            the location variables $V$;
+
+        \item $I$ is a finite set of parameters (also known as
+            interaction variables), disjoint from $V$;
+
+        \item $\Lambda$ is a finite set of symbolic actions
+            $a(p)$ with $a$ a symbol, and $p=(p_1,\dots ,p_k)$ a
+            finite set of parameters in $I^{k} (k \in
+            \mathbb{N})$;
+
+        \item $\rightarrow$ is a finite set of symbolic
+            transitions. A symbolic transition $t =
+            (l_i,l_j,a(p),G,\\A) \in \rightarrow$, from the
+            location $l_i \in L$ to $l_j \in L$, also denoted by
+            $l_i \xrightarrow{a(p),G,A} l_j$, is labeled by:
+
+		\begin{itemize}
+            \item An action $a(p) \in \Lambda$;
+
+            \item A guard $G$ over $(p \cup V)$, which
+            restricts the firing of the transition. Throughout
+            this thesis, we often consider guards written as
+            \emph{conjunctions} of equalities: $\displaystyle
+            \bigwedge_{x \in I \cup V} (x == val)$;
+
+            \item An assignment $A$ that defines the evolution
+            of the variables, $A_x$ being the function in
+            $A$ defining the evolution of the variable $x \in V$.
+		\end{itemize}
+	\end{itemize}
+
+	\label{def:sts}
+\end{definition}
+
+We also denote by $proj_{x}(G)$ the projection of the guard $G$
+over the variable $x \in I \cup V$, which extracts the equality
+$(x==val)$ from $G$. For example, given the guard $G_1 =
+[(nsys==1) \wedge (nsec==8) \wedge (point==1) \wedge (pid==1)]$,
+$proj_{nsys}(G_1) = (nsys==1)$.
+
 The innovation of this framework lies in the combination of the
 notion of expert systems with the STS formalism: the STS
 representation, operators and transformations, are expressed
@@ -309,7 +364,7 @@ done offline with a logging system or with monitoring. We start
 by formatting these events to obtain a set of events of the form
 $a(\alpha)$ with $a$ a label, and $\alpha$ a parameter
 assignment. We call these formatted events, \textit{valued
-events}. Valued events are similar to valued actions (as in
+events}.\TODO{update valued events} Valued events are similar to valued actions (as in
 Chapter \ref{sec:modelinf:webapps}) except that this term is more
 accurate in our industrial context. It is also worth mentioning
 here that this is a shortened notation because we omit the
