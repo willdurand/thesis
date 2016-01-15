@@ -13,7 +13,7 @@ satisfied.
 
 Algorithm \ref{algo:check} relies upon the function ${check(Trace
 ~trace, STS ~\EuScript{S})}$ to check whether the trace $trace =
-a_1(\alpha_1) \dots a_m(\alpha_m)$ is a trace of the STS
+(a_1(p), \alpha_1) \dots (a_m(p), \alpha_m)$ is a trace of the STS
 $\EuScript{S}$. If a STS path $b$ is composed of the same
 sequence of symbols than $trace$ (line
 \ref{algo:check:line:exists}), the function tries to find a
@@ -109,7 +109,7 @@ returned.
         \If{$\exists ~b=l0_{\EuScript{S}}
             \xRightarrow{(a_1(p_1),G_{1},A_{1}) \dots
             (a_n(p_n),G_{n},A_{n})} l_n \mid trace =
-            a_1(\alpha_1)\dots a_n(\alpha_n)$ and $l_n \in
+            (a_1(p), \alpha_1)\dots (a_n(p), \alpha_n)$ and $l_n \in
             Pass$}{\label{algo:check:line:exists}
 
                 $M_{[b]} = Mat(b)$ is the matrix $n \times k$ of $b$\;
@@ -126,7 +126,7 @@ returned.
                     \If{$j == n$}{
                         return $True$\;
                     }
-                    $c_{[b]} = c_{[b]} + 1$\;
+                    $c_{[b]}++$\;
                 }
         }
         return $False$\;

@@ -34,10 +34,10 @@ $pid$ first (lines
 
     \While{production event $event$}{
         transform $event$ into a valued event
-        $a(\alpha)$\;\label{algo:oep:line:filter}
+        $(a(p), \alpha)$\;\label{algo:oep:line:filter}
 
         extract the product identifier $pid'$ from
-        $a(\alpha)$\;\label{algo:oep:line:extract}
+        $(a(p), \alpha)$\;\label{algo:oep:line:extract}
 
         \If{$\not\exists ~instance_{pid} \in Instances \mid pid
         == pid'$}{\label{algo:oep:line:new}
@@ -45,7 +45,7 @@ $pid$ first (lines
             $Instances = Instances \cup \{ instance_{pid} \}$\;
         }\label{algo:oep:line:endnew}
 
-        forward $a(\alpha)$ to $instance_{pid}$\;\label{algo:oep:line:fw}
+        forward $(a(p), \alpha)$ to $instance_{pid}$\;\label{algo:oep:line:fw}
     }
 
     END\;
@@ -68,20 +68,20 @@ the models $R(\EuScript{S}^{N})$ and $D(\EuScript{S}^{N})$.
     \SetKwFunction{check}{check}
 
     \Input{A STS $\EuScript{M} \in \{ R(\EuScript{S}^{N}), D(\EuScript{S}^{N}) \}$,
-        valued events $a(\alpha)$ sent by the entry point}
+    valued events $(a(p), \alpha)$ sent by the entry point}
     \Output{Verdicts and/or possibly fail trace sets $T_1, T_2$ }
 
     BEGIN\;
     $trace = \emptyset$\;
     $RUNS = \{ (q_0, 0) \mid q_0 = (l0_\EuScript{M}, V0_\EuScript{M}) \}$\;
 
-    \While{valued event $a(\alpha)$}{
-        $trace = trace \cdot a(\alpha)$\;
+    \While{valued event $(a(p), \alpha)$}{
+        $trace = trace \cdot (a(p), \alpha)$\;
 
         \ForEach{$(r, col) \in RUNS \mid
-            r = q_0 a_1(\alpha_1) \dots q_{i - 1}$
+            r = q_0 (a_1(p), \alpha_1) \dots q_{i - 1}$
             with $q_{i-1} = (l, v) \in L_\EuScript{M}$
-            and $l \xRightarrow{a(\alpha)}$
+            and $l \xRightarrow{(a(p), \alpha)}$
         }{
             \If{$\EuScript{M} == D(\EuScript{S}^{N})$}{
 
@@ -91,7 +91,7 @@ the models $R(\EuScript{S}^{N})$ and $D(\EuScript{S}^{N})$.
                     \If{$\alpha \cup v \models G$}{
 
                         $q_{next} = (l2, v' = A(v \cup \alpha))$\;
-                        $(r', 0) = (r \cdot a(\alpha) \cdot q_{next}, 0)$\;
+                        $(r', 0) = (r \cdot (a(p), \alpha) \cdot q_{next}, 0)$\;
                         $RUNS' = RUNS' \cup \{ (r', 0) \}$\;
                     }
                 }
@@ -105,7 +105,7 @@ the models $R(\EuScript{S}^{N})$ and $D(\EuScript{S}^{N})$.
                         \If{$\alpha \cup v \models M_{[b]}[i, c_{[b]}]$}{
 
                             $q_{next} = (l2, v' = A(v \cup \alpha))$\;
-                            $(r', c_{[b]}) = (q_0 \cdot a(\alpha) \cdot q_{next}, c_{[b]})$\;
+                            $(r', c_{[b]}) = (q_0 \cdot (a(p), \alpha) \cdot q_{next}, c_{[b]})$\;
                             $RUNS' = RUNS' \cup \{ (r', c_{[b]}) \}$\;
                         }
                     }
@@ -115,7 +115,7 @@ the models $R(\EuScript{S}^{N})$ and $D(\EuScript{S}^{N})$.
                     \If{$\alpha \cup v \models M_{[b]}[i, col] $}{
 
                         $q_{next} = (l2, v' = A(v \cup \alpha))$\;
-                        $(r', col) = (r \cdot a(\alpha) \cdot q_{next}, col)$\;
+                        $(r', col) = (r \cdot (a(p), \alpha) \cdot q_{next}, col)$\;
                         $RUNS' = RUNS' \cup \{ (r', col) \}$\;
                     }
                 }

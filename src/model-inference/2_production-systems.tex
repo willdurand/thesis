@@ -603,8 +603,6 @@ equivalent, \emph{i.e.} $p \sim_{(pid)} p'$, $\sigma_i
 \sim_{(pid)} \sigma_i'$, and $\sigma_j \sim_{(pid)} \sigma_j'$,
 and we can remove $t$ from $ST$.
 
-\TODO{continue a(alpha) => (a(p), alpha)}
-
 At the end of Algorithm \ref{algo_traces} we obtain the complete
 trace set $CTraces(Sua)$.
 
@@ -614,13 +612,13 @@ trace set $CTraces(Sua)$.
 
   \Input{$Traces(Sua)$, optionally the number of entry points
   $N$ and/or the number of exit points $M$}
-  \Output{$CTraces(Sua)=\{ST_1,...,ST_n\}$}
+  \Output{$CTraces(Sua)=\{ST_1, \dots, ST_n\}$}
 
 \BlankLine
 BEGIN\;
 \emph{Step 1. $Traces(Sua)$ segmentation}
 
-\ForEach{$t=a_1(\alpha_1) \dots a_n(\alpha_n) \in Traces(Sua)$} {
+\ForEach{$t=(a_1(p), \alpha_1) \dots (a_n(p), \alpha_n) \in Traces(Sua)$} {
 $Rinit((point:=val1)\subset \alpha_1)++$\;
 $Rfinal((point:=val2)\subset \alpha_n)++$\;
 }
@@ -630,7 +628,7 @@ $POINT_{final}=\{(point:=val) \mid Rfinal((point:=val))>10$\% or belongs to the 
 
 $ST := \emptyset$\;
 \ForEach{$\alpha_i=(point:=val) \in POINT_{init}$} {
-	$ST_i := \{a_1(\alpha_1) \dots a_n(\alpha_n)\in Traces(Sua) \mid
+    $ST_i := \{(a_1(p), \alpha_1) \dots (a_n(p), \alpha_n)\in Traces(Sua) \mid
 	\alpha_i\subset \alpha_1, \exists ~(point:=val2) \subset
 \alpha_n \wedge (point:=val2) \in POINT_{final}    \}$\;
 
@@ -689,11 +687,12 @@ $Runs_i$ is formally given by the following definition:
     \begin{center}
     {\Large
     $\frac{
-        \sigma_{k(1\leq k \leq n)}=a_1(\alpha_1) \dots a_n(\alpha_n)~ \in ~ST_i
+        \sigma_{k(1\leq k \leq n)}=(a_1(p), \alpha_1) \dots
+        (a_n(p), \alpha_n)~ \in ~ST_i
     }{
-        (l0,v_\emptyset) \cdot a_1(\alpha_1) \cdot
+        (l0,v_\emptyset) \cdot (a_1(p), \alpha_1) \cdot
         (l_{k1},v_\emptyset) \cdot \dots \cdot (l_{kn-1},v_\emptyset)
-        \cdot a_n(\alpha_n) \cdot (l_{kn},v_\emptyset)~ \in ~Runs_i}$
+        \cdot (a_n(p), \alpha_n) \cdot (l_{kn},v_\emptyset)~ \in ~Runs_i}$
     }
     \end{center}
 \end{definition}
@@ -748,7 +747,7 @@ Given a run set $Runs_i$, The STS $\EuScript{S}_i=<L_{\EuScript{S}_i},
 
   \begin{center}
     {\Large
-        $\frac{(l_i,v_\emptyset) \cdot a_i(\alpha_i) \cdot (l_{i+1},v_\emptyset)
+        $\frac{(l_i,v_\emptyset) \cdot (a_i(p), \alpha_i) \cdot (l_{i+1},v_\emptyset)
         \in ~r, ~p = \{x \mid (x:=v)\in \alpha_i \}, G_i=\displaystyle
         \bigwedge_{(x:=v)\in \alpha_i}(x == v)}
         {l_i \xrightarrow{a_i(p),G_i,id_{V_{\EuScript{S}_i}}}_{\EuScript{S}_i} l_{i+1}}$

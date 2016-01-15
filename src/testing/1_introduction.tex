@@ -216,8 +216,8 @@ behaviors that should happen on $\mathit{Sut}$. Consequently,
 our partner wants a \emph{weaker implementation relation} that is
 less restrictive on the traces that should be observed from
 $\mathit{Sut}$.  In other words, this second relation aims to
-check that, for every complete trace $t=a_1(\alpha_1) \dots
-a_m(\alpha_m)$ of $\mathit{Sut}$, we also have a set of traces of
+check that, for every complete trace $t=(a_1(p), \alpha_1) \dots
+(a_m(p), \alpha_m)$ of $\mathit{Sut}$, we also have a set of traces of
 $Traces_{Pass}(\EuScript{S}^{N})$ having the same sequence of
 symbols such that every variable assignment $\alpha_j(x)_{(1 \leq
 j \leq m)}$ of $t$ is found in one of the traces of
@@ -226,8 +226,10 @@ $Traces_{Pass}(\EuScript{S}^{N})$ with the same symbol $a_j$.
 \begin{example}
     Figure \ref{fig:sts-ch4} recalls the example considered in
     Chapter \ref{sec:modelinf:prodsystems}. The trace $t =
-    17011(nsys:=1, nsec:=8, point:=1, pid:=1)\text{ }
-    17021(nsys:=1, nsec:=8, point:=4, tpoint:=9, pid:=1)$ is not
+    (17011(\{ nsys, nsec, point, pid \}), \{
+    nsys:=1, nsec:=8, point:=1, pid:=1 \})\text{ }
+    17021(\{ nsys, nsec, point, tpoint, pid \}, \{
+    nsys:=1, nsec:=8, point:=4, tpoint\\:=9, pid:=1 \})$ is not
     a \emph{pass trace} of $\EuScript{S}^{N}$ because this trace
     cannot be extracted from one of the paths of the STS depicted
     in Figure \ref{fig:sts-ch4}, on account of the variables
@@ -257,11 +259,11 @@ defined as follows:
      Let $\EuScript{S}^{N}$ be an inferred model of
      $\mathit{Sua}$, and $\mathit{Sut}$ be a system under test.
      We write: ${Sut} \leq_{mct} \EuScript{S}^{N}$ if and only if
-     $\forall ~t= a_1(\alpha_1) \dots a_m(\alpha_m) \in
+     $\forall ~t= (a_1(p), \alpha_1) \dots (a_m(p), \alpha_m) \in
      CTraces({Sut})$, $\forall ~\alpha_j(x)_{(1 \leq j \leq m)},
      \exists ~\EuScript{S}_i^{N} \in \EuScript{S}^{N}$ and $t'
      \in Traces_{Pass}(\EuScript{S}_i^{N})$ such that
-     $t'=a_1(\alpha_1') \dots a_m(\alpha_m')$ and
+     $t'=(a_1(p), \alpha_1') \dots (a_m(p), \alpha_m')$ and
      $\alpha_j'(x)=\alpha_j(x)$.
 
      \label{impl21}
@@ -281,15 +283,17 @@ $b$ in $R(\EuScript{S}_i^{N})$ whose transition guards are stored
 into a matrix $M_{[b]}$.
 
 \begin{example}
-    Given our trace example $t = 17011(nsys:=1, nsec:=8,
-    point:=1, pid:=1)\text{ }17021(nsys:=1, nsec:=8, point:=4,
-    tpoint:=9, pid:=1)$, and the reduced model depicted in Figure
-    \ref{fig:sts-reduced-ch4}, $t$ is a pass trace with respect
-    to $\leq_{mct}$ because each assignment $\alpha_j(x)$
-    satisfies at least one guard of the matrix line $j$. For
-    instance, the assignment $(point := 4)$, which is given with
-    the second valued action of $t$, satisfies one of the guards
-    of the second line of the matrix $M_{[b]}$.
+    Given our trace example $t = (17011(\{ nsys, nsec, point, pid
+    \}), \{ nsys\\:=1, nsec:=8, point:=1, pid:=1 \})\text{ }
+    17021(\{ nsys, nsec, point, tpoint, pid \}, \{ nsys\\:=1,
+    nsec:=8, point:=4, tpoint:=9, pid:=1 \})$, and the reduced
+    model depicted in Figure \ref{fig:sts-reduced-ch4}, $t$ is a
+    pass trace with respect to $\leq_{mct}$ because each
+    assignment $\alpha_j(x)$ satisfies at least one guard of the
+    matrix line $j$. For instance, the assignment $(point := 4)$,
+    which is given with the second valued event of $t$,
+    satisfies one of the guards of the second line of the matrix
+    $M_{[b]}$.
 
     \begin{figure}[h]
         \begin{center}
@@ -303,11 +307,11 @@ into a matrix $M_{[b]}$.
     \end{figure}
 \end{example}
 
-Given a trace $a_1(\alpha_1) \dots a_m(\alpha_m) \in
+Given a trace $(a_1(p), \alpha_1) \dots (a_m(p), \alpha_m) \in
 CTraces({Sut})$ and a STS path $b$ of $R(\EuScript{S}_i^{N})$
 having the same sequence of symbols $a_1 \dots a_m$, the relation
-can now be formulated as follows: for every valued action
-$a_j(\alpha_j)$, each variable assignment $\alpha_j(x)$ must
+can now be formulated as follows: for every valued event
+$(a_j(p), \alpha_j)$, each variable assignment $\alpha_j(x)$ must
 satisfies at least one of the guards of the matrix line $j$ in
 $M_{[b]}[j,*]$.
 
@@ -316,7 +320,7 @@ $\leq_{mct}$ below:
 
 \begin{proposition}
     ${Sut} \leq_{mct} \EuScript{S}^{N}$ if and only if
-    $\forall ~t = a_1(\alpha_1) \dots a_m(\alpha_m) \in
+    $\forall ~t = (a_1(p), \alpha_1) \dots (a_m(p), \alpha_m) \in
     CTraces({Sut})$, $\exists ~R(\EuScript{S}_i^{N}) \in
     R(\EuScript{S}^{N)}$ and
     $b = l0_{R(\EuScript{S}_i^{N})}
@@ -394,7 +398,7 @@ expressed by:
 
 \begin{proposition}
     ${Sut} \leq_{mct} \EuScript{S}^{N}$ if and only if $\forall
-    ~t= a_1(\alpha_1) \dots a_m(\alpha_m) \in CTraces({Sut})$,
+    ~t= (a_1(p), \alpha_1) \dots (a_m(p), \alpha_m) \in CTraces({Sut})$,
     $\exists ~D(\EuScript{S}_i^{N}) \in D(\EuScript{S}^{N})$ and
     $l0_{D(\EuScript{S}_i^{N})} \xRightarrow{(a_1(p_1),G_{1})
     \dots (a_m(p_m),G_{m})} l_m$ such that $\forall

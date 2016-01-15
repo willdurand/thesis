@@ -478,8 +478,11 @@ Based on this definition, we give the formal definition of a
     A \emph{trace} is a finite sequence of observable actions.
     The set of all traces over $L$ is denoted by $L^*$, with
     $\epsilon$ denoting the empty sequence.
+    We have $q \xRightarrow{\sigma} ~=_{def} \exists ~q' : q
+    \xRightarrow{\sigma} q'$ with $q, q' \in Q$ and $\sigma \in
+    L^*$.
     We also have $Traces(p) =_{def} \{ \sigma \in L^* \mid p
-    \xRightarrow{\sigma} \}$ with $p$ being a state.\TODO{explain arrow}
+    \xRightarrow{\sigma} \}$ with $p$ being a state.
 \end{definition}
 
 \paragraph{Symbolic Transition Systems.}
@@ -1001,6 +1004,4 @@ still presents interesting advantages:
         many different components, \emph{e.g.}, software oriented
         architectures, distributed systems, but also production
         systems such as the ones we target in this thesis.
-
-    \TODO{covers less?}
 \end{itemize}
