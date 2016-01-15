@@ -56,11 +56,55 @@ $pid$ first (lines
 
 At this point, there should be one instance of tester running the
 same Algorithm \ref{algo:check-online} per $pid$, \emph{i.e.} per
-product being manufactured. We start by constructing a trace with
-the incoming valued events. Then we check its conformance over
-the models $R(\EuScript{S}^{N})$ and $D(\EuScript{S}^{N})$.
+product being manufactured. The set $RUNS$ contains tuples of
+runs ($r$) and column indices ($col$). At the beginning, this set
+contains the tuple $(q_0, 0) \mid r = q_0, col = 0$ (line
+\ref{algo:check-online:line:runs}). The algorithm starts by
+constructing a trace with the incoming valued events $(a(p),
+\alpha)$ (line \ref{algo:check-online:line:trace}). It then tries
+to find a tuple in $RUNS$ so that the location $l$ associated
+with its run's state $q_{i-1}$ has a transition with the symbolic
+action $a(p)$. Then the algorithm checks its conformance over the
+models $D(\EuScript{S}^{N})$ (lines
+\ref{algo:check-online:line:d}-\ref{algo:check-online:line:d-end})
+or $R(\EuScript{S}^{N})$ (lines
+\ref{algo:check-online:line:r}-\ref{algo:check-online:line:r-end}).
 
-\TODO{explain algo}
+With model $\EuScript{M} = D(\EuScript{S}^{N})$, the algorithm
+tries to find a transition $t$ so that its guard $G = M_{[b]}[i]$
+satisfies $\alpha \cup v$, \emph{i.e.} whether the valued event
+$(a(p), \alpha)$ fits into the model (line
+\ref{algo:check-online:line:d-sat}). In this case, a new state
+$q_{next}$ is computed, then a new tuple ($(r', 0)$) is
+constructed and added to the set $RUNS'$.
+
+With model $\EuScript{M} = R(\EuScript{S}^{N})$, if the tuple is
+the initial one (line \ref{algo:check-online:line:unknown-col}),
+the algorithms has to find the column index
+$c_{[b]}$ in $M_{[b]}$ associated with the current valued event
+(line \ref{algo:check-online:line:find-col}).  Then, it computes
+a new state $q_{next}$ and creates a new run $r'$, which is
+associated to the right column index $c_{[b]}$ in a tuple $(r',
+c_{[b]})$.  Otherwise, the column index $col$ is already known
+(line \ref{algo:check-online:line:known-col}), and the algorithm
+tries to determine whether the assignment of the valued event
+satisfies the guard $M_{[b]}[i, col]$. In this case, it repeats
+the same steps as already mentioned before, \emph{i.e.} computing
+a new state $q_{next}$, constructing a new run $r'$, and creating
+a new tuple $(r', col)$.
+
+Each time, the algorithm adds the new tuple in another set
+$RUNS'$. Thereafter, if it cannot find the tuple $(r, col)$ in
+this set, which means that the last valued event did not satisfy the
+guards in $R(\EuScript{S}^{N})$, the trace $trace$ is added to
+the possibly fail trace set $T_1$. The algorithm performs the
+same check with $(r, 0)$, which represent a tuple associated with
+$D(\EuScript{S}^{N})$. If it cannot find this tuple in $RUNS'$,
+it adds the trace $trace$ to the possibly fail trace set $T_2$.
+If the set $RUNS'$ is empty, the algorithm did not find any new
+guard in the models, \emph{i.e.} this is the end. Otherwise, the
+initial set $RUNS$ is replaced by $RUNS'$, and the algorithm
+waits for a new incoming valued event.
 
 \begin{algorithm}[h]
     \SetKwInOut{Input}{Input}
@@ -73,20 +117,22 @@ the models $R(\EuScript{S}^{N})$ and $D(\EuScript{S}^{N})$.
 
     BEGIN\;
     $trace = \emptyset$\;
-    $RUNS = \{ (q_0, 0) \mid q_0 = (l0_\EuScript{M}, V0_\EuScript{M}) \}$\;
+    $RUNS = \{ (q_0, 0) \mid q_0 = (l0_\EuScript{M},
+    V0_\EuScript{M}) \}$\;\label{algo:check-online:line:runs}
 
     \While{valued event $(a(p), \alpha)$}{
-        $trace = trace \cdot (a(p), \alpha)$\;
+        $trace = trace \cdot (a(p), \alpha)$\;\label{algo:check-online:line:trace}
 
         \ForEach{$(r, col) \in RUNS \mid
             r = q_0 (a_1(p), \alpha_1) \dots q_{i - 1}$
             with $q_{i-1} = (l, v) \in L_\EuScript{M}$
-            and $l \xRightarrow{(a(p), \alpha)}$
+            and $l \xRightarrow{a(p)}$
         }{
-            \If{$\EuScript{M} == D(\EuScript{S}^{N})$}{
+            \If{$\EuScript{M} == D(\EuScript{S}^{N})$}{\label{algo:check-online:line:d}
 
-                \ForEach{$t = l \xrightarrow{a(p), G, A} l2 \in \rightarrow_{\EuScript{M}}$
-                with $G = M_{[b]}[i]$}{
+                \ForEach{$t = l \xrightarrow{a(p), G, A} l2 \in
+                \rightarrow_{\EuScript{M}}$
+                with $G = M_{[b]}[i]$}{\label{algo:check-online:line:d-sat}
 
                     \If{$\alpha \cup v \models G$}{
 
@@ -95,12 +141,12 @@ the models $R(\EuScript{S}^{N})$ and $D(\EuScript{S}^{N})$.
                         $RUNS' = RUNS' \cup \{ (r', 0) \}$\;
                     }
                 }
-            }
-            \ElseIf{$\EuScript{M} == R(\EuScript{S}^{N})$}{
+            }\label{algo:check-online:line:d-end}
+            \ElseIf{$\EuScript{M} == R(\EuScript{S}^{N})$}{\label{algo:check-online:line:r}
 
-                \If{$(r, col) == (q_0, 0)$}{
+                \If{$(r, col) == (q_0, 0)$}{\label{algo:check-online:line:unknown-col}
 
-                    \For{$c_{[b]} = 1, \dots, k$}{
+                    \For{$c_{[b]} = 1, \dots, k$}{\label{algo:check-online:line:find-col}
 
                         \If{$\alpha \cup v \models M_{[b]}[i, c_{[b]}]$}{
 
@@ -110,7 +156,7 @@ the models $R(\EuScript{S}^{N})$ and $D(\EuScript{S}^{N})$.
                         }
                     }
                 }
-                \Else{
+                \Else{\label{algo:check-online:line:known-col}
 
                     \If{$\alpha \cup v \models M_{[b]}[i, col] $}{
 
@@ -119,7 +165,7 @@ the models $R(\EuScript{S}^{N})$ and $D(\EuScript{S}^{N})$.
                         $RUNS' = RUNS' \cup \{ (r', col) \}$\;
                     }
                 }
-            }
+            }\label{algo:check-online:line:r-end}
         }% endforeach (r, col)
 
         \BlankLine
