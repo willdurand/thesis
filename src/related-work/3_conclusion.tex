@@ -1,0 +1,27 @@
+\section{Conclusion}
+\label{sec:related:conclusion}
+
+Given the constraints formulated in
+\crossref{sec:intro}{sec:intro:problems}, we are not able to
+leverage white-box or documentation-based works. For the record,
+we cannot safely reuse existing documentation. Due to the
+heterogeneous set of software we target, we cannot rely on
+white-box approaches either.
+
+In the sequel, we present two approaches combining passive model
+inference, machine learning, and expert systems to infer models
+from traces for web applications (Chapter
+\ref{sec:modelinf:webapps}) and industrial systems (Chapter
+\ref{sec:modelinf:prodsystems}).  Our work is similar to those
+using event sequence abstraction (page
+\pageref{sec:passive-fsa}), except that state merging is replaced
+with a context-specific state reduction based on an event
+sequence abstraction. This state reduction can be seen as the
+kTail algorithm introduced previously where $k$ is as high as
+possible. Furthermore, our work focus on both speed and
+scalability to be able to construct models of Michelin's
+production systems in an efficient manner. Among all potential
+use cases, we need such models to perform passive testing on
+these production systems.
+
+\TODO{more here}
