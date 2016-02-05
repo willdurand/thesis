@@ -1056,11 +1056,12 @@ application has a dedicated URL grammar (a.k.a. routing system).
 GitHub users own a profile page that is available at:
 \textit{https://github.com/\{username\}} where \textit{\{username\}}
 is the nickname of the user. However, some items are reserved,
-\emph{e.g.}, \textit{edu} and \textit{explore}. The rule given in Figure
-\ref{fig:rule:gh-profile} is based upon this structure and
-produces a new action $ShowProfile$ offering more sense.
-Similarly, a GitHub page describing a project has a URL that
-always matches the pattern:
+\emph{e.g.}, \textit{edu} and \textit{explore}. This is typically
+the piece of information a human expert would give us, and that
+has been transliterated in the rule given in Figure
+\ref{fig:rule:gh-profile}, whose aim is to produce a new action
+$ShowProfile$ offering more sense.  Similarly, a GitHub page
+describing a project has a URL that always matches the pattern:
 \textit{https://github.com/\{username\}/\{project\_name\}}. The
 rule given in Figure \ref{fig:rule:gh-project} captures this
 pattern and derives a new action named $ShowProject$.
@@ -1075,7 +1076,9 @@ when
     Assign contains "isLogout := true"
   )
 then
-  modify ($t) { setAction("Deauthentication") }
+  modify ($t) {
+    setAction("Deauthentication")
+  }
 end
 \end{BVerbatim}
 \end{framed}
@@ -1084,7 +1087,6 @@ end
     "deauthentication", \emph{i.e.} when a user logs out.}
     \label{fig:rule:deauth}
 \end{figure}
-\clearpage
 
 \begin{figure}
 \begin{framed}
@@ -1136,7 +1138,9 @@ when
      Guard.uri not in [ "/edu", "/explore" ])
   )
 then
-  modify ($t) { setAction("ShowProfile") }
+  modify ($t) {
+    setAction("ShowProfile")
+  }
 end
 \end{BVerbatim}
 \end{framed}
@@ -1146,8 +1150,6 @@ end
     anything but \textit{/edu} and \textit{/explore}.}
     \label{fig:rule:gh-profile}
 \end{figure}
-
-\clearpage
 
 \begin{figure}
 \begin{framed}
@@ -1196,10 +1198,10 @@ a precise meaning, and describe the application's behaviors.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\section{Getting more complete models with strategies}
+\section{Getting more samples by automatic exploration guided with strategies}
 \label{sec:modelinf:webapps:strategy}
 
-Since the inference of our models depends on both the amount and
+Because the inference of our models depends on both the amount and
 the quality of the collected traces, these models are said
 partial. In order to improve the completeness of our inferred
 models, we rely on an automatic testing technique (that is,
@@ -1210,13 +1212,16 @@ Rather than using a static traversal strategy as in
 \cite{Memon:2003,concolicandroid12,crawljax:tweb12,
 Amalfitano:2012:UGR:2351676.2351717, WPX13}, we propose the
 addition of an orthogonal layer in the Models generator to
-describe any kind of exploration strategy by means of rules.
+describe any kind of exploration strategy. This layer is compound
+of an algorithm that chooses the next states to explore with
+respect to a given exploration strategy, modeled with inference
+rules.
 
 The simplified algorithm of the Strategy layer is given in
 Algorithm \ref{algo:exploration-strategy}. The latter applies the
-rules on any stored IOSTS $\EuScript{S}_i$. It emerges a location
-list $Loc$ that are marked with "explored" by the rules to avoid
-re-using them twice (line
+rules on any stored IOSTS $\EuScript{S}_i$ chosen by the user. It
+emerges a location list $Loc$ that are marked with "explored" by
+the rules to avoid re-using them twice (line
 \ref{algo:exploration-strategy:line:rules}). Then, the algorithm
 goes back to the first generated IOSTS $\EuScript{S}_1$ in order
 to extract one complete and executable path $p$ ended by a
@@ -1231,7 +1236,7 @@ list of paths $List$, which is sent to the Robot explorer. The
 exploration ends once all the locations of $\EuScript{S}_i$ or of
 $\EuScript{S}_1$ are visited (line
 \ref{algo:exploration-strategy:line:end}). The algorithm returns
-unexplored locations only even if, while executing the algorithm,
+unexplored locations even if, while executing the algorithm,
 the IOSTS $\EuScript{S}_i$ is regenerated several times because
 the marked locations are also stored in the set $L$. Hence, if a
 location of $\EuScript{S}_i$ is chosen a second time by the
@@ -1281,7 +1286,7 @@ We propose two examples below:
         Depth-First Search and Breadth-First Search) can still be
         performed.  For example, Figure \ref{fig:rule:bfs}
         depicts two rules expressing the choice the next location
-        to explore in a breadth-wise order first. First, the
+        to explore in a breadth-wise order first. The
         initial location $l0$ is chosen and marked as explored
         (rule BFS).  Then, the transitions having an initial
         location marked as explored and a final location not yet
@@ -1413,7 +1418,17 @@ intelligible meaning. Layers 4 and 5 include inference rules that
 are specific to GitHub. For other websites, these rules cannot be
 reused and have to be rewritten.
 
-\begin{figure}[ht]
+Based on the IOSTS tree $\EuScript{S}_4$, we also built an
+over-generalized model $\EuScript{S}_5$ by merging similar states
+(\emph{i.e.} those having the same URI). Figure
+\ref{fig:git:iosts-over} depicts this model, which is now close
+to a UML state diagram. Such a model $\EuScript{S}_5$ cannot be
+used for testing, yet it becomes interesting for documentation
+purpose because its representation reflects what a user uses to
+work with when it comes to write documentation (\emph{i.e.} UML
+diagrams).
+
+\begin{figure}
     \begin{center}
         \includegraphics[width=.45\textwidth]{figures/gh-2-4-bis.png}
     \end{center}
@@ -1424,6 +1439,18 @@ reused and have to be rewritten.
     \label{fig:git:iosts}
 \end{figure}
 
+\clearpage
+
+\begin{figure}
+    \begin{center}
+        \includegraphics[width=1.0\linewidth]{figures/gh-2-4-without-k.png}
+    \end{center}
+
+    \caption{This model $\EuScript{S}_5$ is the
+    over-generalization of the model $\EuScript{S}_4$.}
+    \label{fig:git:iosts-over}
+\end{figure}
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \section{Conclusion}
@@ -1431,29 +1458,31 @@ reused and have to be rewritten.
 
 In this chapter, we presented an original approach combining
 model inference, expert systems, and automatic testing to derive
-IOSTSs (Input/Output Symbolic Transition Systems) models by means of a model transformation using inference
-rules.  We chose a minimization technique over existing
-algorithms such as gkTail and KLFA to keep exactness of the
-inferred models. Our proposal yields several models, reflecting
-different levels of abstraction of the same application with the
-use of inference rules that capture the knowledge of an expert.
-The first contribution lies in the flexibility and scalability
-brought by the inference rules since they can be applied to
-several applications or on a single application only when the
-rules are specific. The whole framework does not have to be
-re-implemented for each application, but inference rules have to.
-Our approach can be applied to event-driven applications since
-our framework supports their exploration. Furthermore, it can
-also be applied to other kinds of application as far as they
-produce traces.
+IOSTSs (Input/Output Symbolic Transition Systems) models by means
+of a model transformation using inference rules.  We chose a
+minimization technique over existing algorithms such as gkTail
+and KLFA to keep exactness of the inferred models. Our proposal
+yields several models, reflecting different levels of abstraction
+of the same application with the use of inference rules that
+capture the knowledge of a human expert.  The first contribution
+lies in the flexibility and scalability brought by the inference
+rules since they can be applied to several applications or on a
+single application only when the rules are specific. The whole
+framework does not have to be re-implemented for each
+application, but inference rules have to.  Our approach can be
+applied to event-driven applications since our framework supports
+their exploration. Furthermore, it can also be applied to other
+kinds of application as far as they produce traces.
 
 Combining expert systems (gathering knowledge) and formal models
 is really interesting but this is not a silver bullet. Indeed,
 writing rules is still a heavy task, and thus not suitable as
-is. It can be as difficult as writing a formal model, hence the
+is. It is almost as difficult as writing a formal model, hence the
 need for an automated way to write the rules of Layers 3 to N.
 Ideally, the framework itself should generate a set of rules,
-\emph{e.g.}, using a machine learning technique.
+\emph{e.g.}, using a machine learning technique, but we did not
+pursue this path.
+% TODO: is it in perspectives?
 
 We chose to model behaviors of web applications using
 IOSTSs. Yet, we did not
@@ -1470,3 +1499,5 @@ The first results on model inference were very encouraging, so we
 decided to rework our architecture to build a better framework on
 top of this one in order to construct models of production
 systems. That is the purpose of the next chapter.
+
+% TODO: IOSTS or not IOSTS (STS instead)
