@@ -3,27 +3,25 @@
 
 Our target has always been to construct models of (legacy)
 production systems in an automated fashion. But, before tackling
-the model inference of production systems, we chose to validate
-our initial ideas and concepts by applying them on web
-applications. Given a black-box approach, web applications are
-often smaller and less complex than production systems: no
-physical devices involved, a well-known client-server
-architecture, and a well-defined protocol to exchange
-information. The purpose of this chapter is to present the
-premises of our work on model inference (of production systems)
-applied to web applications.
+the model inference of production systems, we chose to formulate
+our ideas and concepts by applying them on web applications.
+Given a black-box approach, web applications are often smaller
+and less complex than production systems: no physical devices
+involved, a well-known client-server architecture, and a
+well-defined protocol to exchange information.
 
 In this chapter, we introduce the first version of
 \textit{Autofunk} (v1), our modular framework for inferring
 models, \emph{i.e.} Input/Output Symbolic Transition Systems
 here, by using a rule-based expert system. A bisimulation
 minimization technique \cite{Park:1981:CAI:647210.720030} is
-applied to reduce the model size. We generate several models of a
-same application at different levels of abstraction.
-\textit{Autofunk} relies on an \emph{automatic testing} technique
-to improve the completeness of the inferred models. We evaluate
-our tool on the GitHub\footnote{\url{https://github.com/}}
-website, showing encouraging results.\\
+applied to reduce the model size. This framework generates
+several models of a same application at different levels of
+abstraction.  \textit{Autofunk} relies on an \emph{automatic
+testing} technique to improve the completeness of the inferred
+models. We evaluate our tool on the
+GitHub\footnote{\url{https://github.com/}} website, showing
+encouraging results.\\
 
 \minitoc
 
@@ -59,20 +57,22 @@ involved, \emph{i.e.} the communication channel should not be encrypted.
 
 The information collected by reading HTTP requests and HTTP
 responses are known as (HTTP) \textit{traces}. We use such traces
-(and the underlying knowledge) to infer raw models of the
-behaviors of a web application. We then construct more abstract
-models that can be used for different purposes, \emph{e.g.},
-documentation or test case generation. We chose to work on this
-to explore different options for production systems in the
-future. We present an active technique that uses automatic
-testing to stimulate the web application in order to enhance the
-completeness of the inferred models.
+to infer raw models of the behaviors of a web application. We
+then construct more abstract models that can be used for
+different purposes, \emph{e.g.}, documentation or test case
+generation. We chose to work on this to explore different options
+for production systems in the future. We present an active
+technique that uses automatic testing to stimulate the web
+application in order to enhance the completeness of the inferred
+models.
 
 We start by giving an overview of this framework called
-\emph{Autofunk} in the next section, which we describe in Section
-\ref{sec:modelinf:webapps:contrib}.  We present our results in
-Section \ref{sec:modelinf:webapps:exp}, and we conclude on this
-chapter in Section \ref{sec:modelinf:webapps:conclusion}.
+\emph{Autofunk} in the next section, which we detail in Section
+\ref{sec:modelinf:webapps:contrib} and Section
+\ref{sec:modelinf:webapps:strategy}, which covers the notion of
+strategies to infer more complete models. We present our results
+in Section \ref{sec:modelinf:webapps:exp}, and we conclude on
+this chapter in Section \ref{sec:modelinf:webapps:conclusion}.
 
 \textbf{Publications.} This work has been published in
 \emph{Actes de la 13eme {\'e}dition d'AFADL, atelier francophone
@@ -204,8 +204,11 @@ human expert behavior. These layers are depicted in Figure
 \end{figure}
 
 Usually, when a human expert has to read traces of an
-application, he often filters them out to only keep those that
-make sense against the current application. This step is done by
+application, she often filters them out to only keep those that
+make sense against the current application. She has a general
+understanding of the application, and she is able to "infer" more
+abstract behaviors of the traces read with a focus on relevant
+information only. This step is done by
 the first layer whose role is to format the received HTTP traces
 into sequences of valued actions and to delete those considered
 as unnecessary. The rules of this layer depend on the nature of
@@ -238,8 +241,10 @@ one specific application.
 For readability purpose, we chose to represent inference rules
 with the
 \emph{Drools}\footnote{\url{http://www.jboss.org/drools/}} rule
-inference language. A \emph{Drools rule} has the following rough
-structure:
+inference language. Drools is a rule-based expert system adopting
+a forward chaining, \emph{i.e.} it starts with the available
+information and uses inference rules to extract more information.
+A \emph{Drools rule} has the following rough structure:
 
 \begin{BVerbatim}
 rule "name"
@@ -282,8 +287,10 @@ formulate the following hypotheses on the inference rules:
     \item \textbf{No implicit knowledge elimination:} after the
         application of a rule $r$ expressed by the relation $r:
         T_i \rightarrow T_{i+1} (i\geq 2)$, with $T_i$ a
-        transition base, for $t=(l_n,l_m,a(p),G,A)$ extracted
-        from $T_{i+1}$, $l_n$ is reachable from $l0$.
+        transition base, for a transition $t =
+        (l_n,l_m,a(p),G,A)$ extracted from $T_{i+1}$, $l_n$ is
+        still reachable from $l0$, \emph{i.e.} rules should not
+        break the existing IOSTS paths.
 \end{enumerate}
 
 In the following, we illustrate each layer with examples.
@@ -395,28 +402,19 @@ this layer includes a set of rules, constituted of conditions on
 the HTTP content found in an action, that remove valued actions
 when the condition is met.
 
-A straightforward rule example that removes the actions relative
+A straightforward rule example that removes the actions related
 to the retrieval of PNG\footnote{Portable Network Graphics}
-images, and written with the Drools formalism, is given in Figure
-\ref{fig:layer1:filter}.  $\$valued\_action$ is a variable
-representing a $Get$ valued action.  Actions own $request$ and
-$response$ attributes, respectively representing the HTTP request
-and HTTP response for that given valued action. Such attributes
-can be accessed into the action's parentheses:
-$Action(request.attr)$, where $attr$ is a request's attribute
-(such as $mime\_type$ and $file\_extension$), along with logical
-symbols such as $or$, $and$, and $not$. Actions can be
-manipulated in the $then$ part of the rule, as shown in Figure
-\ref{fig:layer1:filter}. The $retract$ keyword is used to remove
-a fact from the knowledge base. This rule, which is an example of
-filtering rules, could be expressed as follows:
+images is formally given below (with $\sigma$ being a trace). A
+human expert knows that the retrieval of a PNG image implies a
+$GET$ HTTP request of a file whose extension is $png$ or whose
+content type is $image/png$ (defined in a header of the response):
 
 \begin{center}
 $\frac{
     \begin{matrix}
-        valued\_action = (Get(p), \alpha) \in \sigma,\\\alpha
-        \models [ (request.mime\_type == 'png') \vee
-        (request.file\_extension == 'png') ]
+        valued\_action = (Get(p), \alpha) \in \sigma, ~\alpha
+        \models [ (request.file\_extension == {'png'})\\ \vee
+        (response.headers.content\_type == {'image/png'} ]
     \end{matrix}
 }{
     \begin{matrix}
@@ -425,11 +423,26 @@ $\frac{
 }$
 \end{center}
 
-Yet, the Drools rule language is simple and more convenient,
+Yet, the Drools rule language is much simple and more convenient,
 especially for the domain experts who have to write such rules.
 That is why we chose to write inference rules with this language.
 In the sequel, inference rules for \emph{Autofunk} are given as
 Drools rules.
+
+For example, the inference rule above can be written with the
+Drools formalism as depicted in Figure \ref{fig:layer1:filter}.
+$\$valued\_action$ is a variable representing a $Get$ valued
+action.  Actions own $request$ and $response$ attributes,
+respectively representing the HTTP request and HTTP response for
+that given valued action. Such attributes can be accessed into
+the action's parentheses: $Action(request.attr1, response.attr2)$
+where $attr1$ is a request's attribute (such as
+$file\_extension$) and $attr2$ a response's attribute (such as
+$headers$, which is also a set), along with logical symbols such
+as $or$, $and$, and $not$. Actions can be manipulated in the
+$then$ part of the rule, as shown in Figure
+\ref{fig:layer1:filter}. The $retract$ keyword is used to remove
+a fact from the knowledge base.
 
 \begin{figure}[ht]
 \begin{framed}
@@ -437,7 +450,8 @@ Drools rules.
 rule "Filter PNG images"
 when
   $valued_action: Get(
-    request.mime_type = 'png' or request.file_extension = 'png'
+    request.file_extension = 'png' or
+    response.headers.content_type = 'image/png'
   )
 then
   retract($valued_action)
@@ -446,8 +460,7 @@ end
 \end{framed}
 
     \caption{Filtering rule example that retracts the valued actions
-    related to PNG images based on the request's mime type or
-    file extension.}
+    related to PNG images based on the request's file extension.}
     \label{fig:layer1:filter}
 \end{figure}
 
@@ -524,7 +537,8 @@ $((val,k),v_\emptyset)$.  Since we wish to preserve the
 sequential order of the actions found in the traces, when a URI
 previously encountered is once more detected, the resulting state
 is composed of the URI accompanied with an integer $k$, which is
-incremented to yield a new and unique state.
+incremented to yield a new and unique state (Proposition
+\ref{prop:unique-algo1}).
 
 The translation of the structured traces into a run set is
 performed by Algorithm \ref{algo:traces_to_runs}, which takes a
@@ -591,6 +605,8 @@ END\;
 \end{algorithm}
 
 \begin{proposition}
+    \label{prop:unique-algo1}
+
     For each trace $\sigma \in ST$, Algorithm \ref{algo:traces_to_runs}
     constructs a run $r=s_0 \cdot (a_0(p),\alpha_0) \cdot s_1 \cdot
     \dots \cdot s_n \cdot (a_n(p),\alpha_n) \cdot s_{n+1} \in SR$ such that
@@ -605,7 +621,7 @@ END\;
 
 The first IOSTS $\EuScript{S}_1$ is now derived from the run set
 $SR$ in which runs are disjoint except for the initial state
-$(l0,v_\emptyset)$. Traces are translated into IOSTS paths that
+$(l0,v_\emptyset)$. Runs are translated into IOSTS paths that
 are assembled together by means of a disjoint union. The IOSTS
 forms a tree compound of paths, each expressing one trace, and
 starting from the same initial location.
@@ -642,17 +658,17 @@ starting from the same initial location.
         $r = s_0 \cdot (a_0(p),\alpha_0) \cdot s_1 \cdot \dots \cdot
         s_i \cdot (a_i(p),\alpha_i) \cdot s_{i+1} \in SR$:
 
+
         \begin{center}
-            {\Large
-            $\frac{G_i=\displaystyle \bigwedge_{(x_i:=v_i) \in
-            \alpha_i} (x_i==v_i)}
-            {l0 \xrightarrow{a_i(p),G_i,(x:=x)_{x\in
-            V}}_{\EuScript{S}_1} l_{i+1}}$
+        {\Large
+            $\frac{s_0 = (l0_{\EuScript{S}_1}, v_{\emptyset}),
+            ~s_i = (l_i, v_{\emptyset}),
+            ~s_{i+1} = (l_{i+1}, v_{\emptyset}),
+            ~G_i=\displaystyle \bigwedge_{(x_i:=v_i) \in \alpha_i} (x_i==v_i)}
+            {l0 \xrightarrow{a_i(p),G_i,(x:=x)_{x \in V}}_{\EuScript{S}_1} l_{i+1}}$
         }
         \end{center}
 
-        We have $s_0 = (l0_{\EuScript{S}_1}, v_{\emptyset})$, $s_i = (l_i,
-        v_{\emptyset})$, and $s_{i+1} = (l_{i+1}, v_{\emptyset})$.
     \end{itemize}
 
     \label{IOSTS_tree}
@@ -667,17 +683,14 @@ variables found in the corresponding trace.
 \subsubsection{IOSTS minimization}
 
 Methods such as gkTail and KLFA could be applied to reduce the
-previous inferred IOSTS tree, however due to the way these
+previous inferred IOSTS tree, but due to the way these
 methods work, it would likely lead to an over-generalized model
-(cf. \crossref{sec:related}{sec:passive-fsa}).
-Similarly, locations could be merged to reduce the IOSTS size
-with the classical learning algorithms based upon
-$\EuScript{L}^*$ \cite{Angluin198787,lambeau08}. Nonetheless,
-these methods would create an extrapolation of this IOSTS. We
-prefer rejecting such solutions to preserve the trace equivalence
+(cf. \crossref{sec:related}{sec:passive-fsa}).  We prefer
+rejecting such solutions to preserve the trace equivalence
 \cite{petrenko06} of the IOSTS $\EuScript{S}_1$ against the
 structured trace set $ST$ before applying inference rules.
-Instead, we propose to use a minimization technique.
+Instead, we propose the use of a minimization technique that does
+not create over-generalization.
 
 This IOSTS tree can be reduced in term of location size by
 applying a bisimulation minimization technique that still
@@ -686,7 +699,7 @@ model. This minimization constructs the state sets (blocks) that
 are bisimilar equivalent \cite{Park:1981:CAI:647210.720030}. Two
 states are said bisimilar equivalent, denoted by $q \sim q'$ if
 and only if they simulate each other and go to states from where
-they can simulate each other again.  Two great bisimulation
+they can simulate each other again.  Two bisimulation
 minimization algorithms are given in
 \cite{Fernandez89animplementation,Abdulla06}.
 
@@ -696,7 +709,7 @@ fully regenerated, but rather completed on-the-fly. New traces
 are translated into IOSTS paths that are disjoint from
 $\EuScript{S}_1$ except from the initial location. We perform a
 union between $\EuScript{S}_1$ and IOSTS paths. Then, the
-resulting IOSTS is minimized.
+resulting IOSTS is minimized again.
 
 \paragraph{Completeness, soundness, complexity.}
 
@@ -748,7 +761,18 @@ enriched with the variables URI, request, and response. This
 IOSTS exactly reflects the trace behavior but it is still
 difficult to interpret. More abstract actions shall be deduced by
 the next layers.
+
+\begin{figure}[h]
+    \begin{center}
+    \includegraphics[width=0.5\linewidth]{figures/gh-iosts-1.png}
+
+    \caption{IOSTS $\EuScript{S}_1$ obtained after the
+    application of Layer 2.}
+    \label{fig:github:iosts:1}
+    \end{center}
+\end{figure}
 \end{example}
+\clearpage
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
@@ -762,12 +786,12 @@ $\EuScript{S}_1$, every next layer carries out the following
 steps:
 
 \begin{enumerate}
-\item Apply the rules of the layer and infer a new knowledge base
-(new IOSTS $\EuScript{S}_i$, $i\geq 2$);
+    \item Apply the rules of the layer and infer a new knowledge
+        base;
 
-\item Apply a bisimulation minimization;
+    \item Apply a bisimulation minimization;
 
-\item Store the resulting IOSTS.
+    \item Store the resulting IOSTS.
 \end{enumerate}
 
 Without loss of generality, we now restrict the rule structure to
@@ -775,18 +799,18 @@ keep a link between the generated IOSTSs. Thereby, every rule of
 Layer $i$ ($i \geq 3$) either enriches the sense of the actions
 (transition per transition) or aggregates transition sequences
 into one unique new transition to make the resulting IOSTS more
-abstract. It results in an IOSTS $\EuScript{S}_i$ exclusively
+abstract. It results in an IOSTS $\EuScript{S}_{i-1}$ exclusively
 composed of some locations of the first IOSTS $\EuScript{S}_1$.
-Consequently, for a transition or path of $\EuScript{S}_i$, we
+Consequently, for a transition or path of $\EuScript{S}_{i-1}$, we
 can still retrieve the concrete path of $\EuScript{S}_1$. This is
 captured by the following proposition:
 
 \begin{proposition}
 \label{prop:loc:inclu}
 Let $\EuScript{S}_1$ be the first IOSTS generated from the
-structured trace set $ST$. The IOSTS $\EuScript{S}_i (i>1)$
-produced by Layer $i$ has a location set $L_{\EuScript{S}_i}$
-such that $L_{\EuScript{S}_i} \subseteq L_{\EuScript{S}_1}$.
+structured trace set $ST$. The IOSTS $\EuScript{S}_{i-1} (i>1)$
+produced by Layer $i$ has a location set $L_{\EuScript{S}_{i-1}}$
+such that $L_{\EuScript{S}_{i-1}} \subseteq L_{\EuScript{S}_1}$.
 \end{proposition}
 
 \paragraph{Completeness, soundness, complexity.}
@@ -796,10 +820,11 @@ transition facts that have a Horn form. The rules of these layers
 are Modus Ponens (soundness hypothesis). Therefore, these
 inference rules are sound and complete. With regards to the (no
 implicit knowledge elimination) hypothesis and to Proposition
-\ref{prop:loc:inclu}, the transitions of $\EuScript{S}_i$ are
+\ref{prop:loc:inclu}, the transitions of $\EuScript{S}_{i-1}$ are
 either unchanged, enriched or combined together into a new
 transition. The application of these layers ends in a finite time
 (finite complexity hypothesis).
+% TODO: more details maybe
 
 \subsubsection{Layer 3}
 
@@ -893,6 +918,9 @@ when
     conditions on action, Guard, ..., $lfinal := Lfinal
   )
   $t2: Transition(Linit == $lfinal, conditions)
+  not exists Transition(
+    Linit == $lfinal and Lfinal != $t2.Lfinal
+  )
 then
   insert(new Transition(
     new Action(),
@@ -913,14 +941,16 @@ two consecutive transitions, we have to add a condition on the
 initial location of the second transition ($Linit == \$lfinal$),
 \emph{i.e.} the final location of the first transition must be the
 initial location of the second transition, otherwise these two
-transitions are not consecutive. The $insert$ keyword in the
-$then$ part is used to add a new fact to the knowledge base.
-Here, we add a new transition with a more meaningful action (that
-reflects the aggregation), the unions of the guards and
-assignments of both transitions $\$t1$ and $\$t2$, and we set the
-initial location of this new transition to the initial location
-of the first transition and we set the final location of this new
-transition to the final location of the section transition.
+transitions are not consecutive. The third line in the $LHS$ part
+ensures the absence of any other transition following $t1$ that
+is not $t2$.  The $insert$ keyword in the $then$ part is used to
+add a new fact to the knowledge base.  Here, we add a new
+transition with a more meaningful action (that reflects the
+aggregation), the unions of the guards and assignments of both
+transitions $\$t1$ and $\$t2$, and we set the initial location of
+this new transition to the initial location of the first
+transition and we set the final location of this new transition
+to the final location of the section transition.
 
 The rule given in Figure \ref{fig:rule:redirect} corresponds to a
 simple transition aggregation. It aims at recognizing the
@@ -943,10 +973,13 @@ when
   $t1: Transition(
     Action == "POST",
     (Guard.response.status = 301 or Guard.response.status = 302),
-    $l1final := Lfinal
+    $t1final := Lfinal
   )
   $t2: Transition(
-    Action == "GET", Linit == $l1final
+    Action == "GET", Linit == $t1final
+  )
+  not exists Transition(
+    Linit == $t1final and Lfinal != $t2.Lfinal
   )
 then
   insert(new Transition(
@@ -968,31 +1001,24 @@ creation of a new $PostRedirection$ transition.}
 \label{fig:rule:redirect}
 \end{figure}
 
-
 \begin{example}
 When we apply these rules on the IOSTS example given in Figure
 \ref{fig:github:iosts:1}, we obtain a new IOSTS illustrated in
 Figure \ref{fig:github:iosts:2}. Its size is reduced since it has
 6 transitions instead of 8 previously. Nonetheless, this new
-IOSTS does not precisely reflect the initial scenario yet. Rules
-deducing more abstract actions are required. These are found in
-the next layer.
+IOSTS does not precisely reflect the initial scenario yet (it is
+not as straightforward and understandable as what a project
+manager or a customer would express for instance). Rules deducing
+more abstract actions are required. These are found in the next
+layer.
 
-\begin{figure}[h]
-\begin{minipage}{.5\textwidth}
-    \includegraphics[width=0.8\linewidth]{figures/gh-iosts-1.png}
-
-    \caption{IOSTS $\EuScript{S}_1$ obtained after the
-    application of Layer 2.}
-    \label{fig:github:iosts:1}
-\end{minipage}
-\begin{minipage}{.5\textwidth}
-    \includegraphics[width=1.0\linewidth]{figures/gh-iosts-2.png}
+\begin{figure}
+    \centering
+    \includegraphics[width=0.6\linewidth]{figures/gh-iosts-2.png}
 
     \caption{IOSTS $\EuScript{S}_2$ obtained after the
     application of Layer 3.}
     \label{fig:github:iosts:2}
-\end{minipage}
 \end{figure}
 \end{example}
 
@@ -1024,6 +1050,21 @@ step, and the two transitions are reduced into a single one
 composed of the action $Authentication$.
 \end{itemize}
 
+Other rules can also be application-specific, so that these bring
+specific new knowledge to the model. For instance, the GitHub web
+application has a dedicated URL grammar (a.k.a. routing system).
+GitHub users own a profile page that is available at:
+\textit{https://github.com/\{username\}} where \textit{\{username\}}
+is the nickname of the user. However, some items are reserved,
+\emph{e.g.}, \textit{edu} and \textit{explore}. The rule given in Figure
+\ref{fig:rule:gh-profile} is based upon this structure and
+produces a new action $ShowProfile$ offering more sense.
+Similarly, a GitHub page describing a project has a URL that
+always matches the pattern:
+\textit{https://github.com/\{username\}/\{project\_name\}}. The
+rule given in Figure \ref{fig:rule:gh-project} captures this
+pattern and derives a new action named $ShowProject$.
+
 \begin{figure}[h]
 \begin{framed}
 \begin{BVerbatim}
@@ -1034,9 +1075,7 @@ when
     Assign contains "isLogout := true"
   )
 then
-  modify ($t) {
-    $t.setAction("Deauthentication")
-  }
+  modify ($t) { setAction("Deauthentication") }
 end
 \end{BVerbatim}
 \end{framed}
@@ -1045,8 +1084,9 @@ end
     "deauthentication", \emph{i.e.} when a user logs out.}
     \label{fig:rule:deauth}
 \end{figure}
+\clearpage
 
-\begin{figure}[h]
+\begin{figure}
 \begin{framed}
 \begin{BVerbatim}
 rule "Identify Authentication"
@@ -1059,6 +1099,9 @@ when
   $t2: Transition(
     Action == "PostRedirection",
     Linit == $t1final
+  )
+  not exists Transition(
+    Linit == $t1final and Lfinal != $t2.Lfinal
   )
 then
   insert(new Transition(
@@ -1082,22 +1125,7 @@ end
     \label{fig:rule:auth}
 \end{figure}
 
-Other rules can also be application-specific, so that these bring
-specific new knowledge to the model. For instance, the GitHub web
-application has a dedicated URL grammar (a.k.a. routing system).
-GitHub users own a profile page that is available at:
-\textit{https://github.com/\{username\}} where \textit{\{username\}}
-is the nickname of the user. However, some items are reserved,
-\emph{e.g.}, \textit{edu} and \textit{explore}. The rule given in Figure
-\ref{fig:rule:gh-profile} is based upon this structure and
-produces a new action $ShowProfile$ offering more sense.
-Similarly, a GitHub page describing a project has a URL that
-always matches the pattern:
-\textit{https://github.com/\{username\}/\{project\_name\}}. The
-rule given in Figure \ref{fig:rule:gh-project} captures this
-pattern and derives a new action named $ShowProject$.
-
-\begin{figure}[h]
+\begin{figure}
 \begin{framed}
 \begin{BVerbatim}
 rule "GitHub profile pages"
@@ -1108,7 +1136,7 @@ when
      Guard.uri not in [ "/edu", "/explore" ])
   )
 then
-  modify ($t) { $t.setAction("ShowProfile") }
+  modify ($t) { setAction("ShowProfile") }
 end
 \end{BVerbatim}
 \end{framed}
@@ -1118,6 +1146,8 @@ end
     anything but \textit{/edu} and \textit{/explore}.}
     \label{fig:rule:gh-profile}
 \end{figure}
+
+\clearpage
 
 \begin{figure}
 \begin{framed}
@@ -1132,7 +1162,7 @@ when
 then
   String s = ParseProjectName($uri)
   modify ($t) {
-    $t.setAction("ShowProject")
+    setAction("ShowProject")
     Assign.add("ProjectName := " + s)
   }
 end
@@ -1151,16 +1181,18 @@ The application of the four previous rules leads to the final
 IOSTS depicted in Figure \ref{fig:github:iosts:4}. Now, it can be
 used for application comprehension since most of its actions have
 a precise meaning, and describe the application's behaviors.
-\end{example}
 
 \begin{figure}[h]
-    \begin{center}
+    \centering
     \includegraphics[width=0.6\linewidth]{figures/gh-iosts-41.png}
+
     \caption{The final IOSTS $\EuScript{S}_3$ obtained after the
     application of Layer 4.}
     \label{fig:github:iosts:4}
-    \end{center}
 \end{figure}
+\end{example}
+
+\clearpage
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
