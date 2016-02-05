@@ -1,27 +1,57 @@
 \section{Conclusion}
 \label{sec:related:conclusion}
 
+As stated previously, the use of active inference techniques is
+not possible in our industrial context. Production systems are
+both distributed and heterogeneous event-driven systems, compound
+of software and several physical devices (\emph{e.g.}, points,
+switches, stores, and production machines). Applying active
+inference on them without disturbing them is therefore not
+feasible in practice. We are not supposed to cause damages on
+these systems while studying them, that is why we investigated
+the existing passive inference techniques.
+
 Given the constraints formulated in
 \crossref{sec:intro}{sec:intro:problems}, we are not able to
 leverage white-box or documentation-based works. For the record,
-we cannot safely reuse existing documentation. Due to the
+we cannot safely reuse existing documentation, and due to the
 heterogeneous set of software we target, we cannot rely on
-white-box approaches either.
+white-box approaches either. At first glance, and because
+production systems are event-driven, techniques using event
+sequence abstraction seemed the most relevant to us.
 
-In the sequel, we present two approaches combining passive model
-inference, machine learning, and expert systems to infer models
-from traces for web applications (Chapter
-\ref{sec:modelinf:webapps}) and industrial systems (Chapter
-\ref{sec:modelinf:prodsystems}).  Our work is similar to those
-using event sequence abstraction (page
-\pageref{sec:passive-fsa}), except that state merging is replaced
-with a context-specific state reduction based on an event
-sequence abstraction. This state reduction can be seen as the
-kTail algorithm introduced previously where $k$ is as high as
-possible. Furthermore, our work focus on both speed and
+Yet, our main concern regarding methods such as kTail and
+kBehavior was the over-approximation tied to the inferred models.
+Indeed, while it may not always be an issue, depending on the use
+cases, our context requires exact models for testing. That is why
+we present two new approaches combining passive model inference,
+machine learning, and expert systems to infer models from traces
+for web applications (Chapter \ref{sec:modelinf:webapps}) and
+industrial systems (Chapter \ref{sec:modelinf:prodsystems}) in
+the sequel.  The second technique is an adaptation of the first
+one.
+
+We believe that knowledge of human domain experts is valuable,
+hence the use of expert systems to integrate their knowledge with
+our inference techniques. Expert systems are computer systems
+that emulate the decision-making abilities of humans. We
+"transliterate" knowledge of domain experts into inference rules,
+which our inference techniques leverage thanks to expert systems.
+Our work is still similar to those using event sequence
+abstraction (page \pageref{sec:passive-fsa}), except that state
+merging is replaced with a context-specific state reduction based
+on an event sequence abstraction. This state reduction can be
+seen as the kTail algorithm introduced previously where $k$ would
+be dynamic and as high as possible.
+Furthermore, our two simple yet scalable techniques infer exact
+models for testing purpose. We focus on both speed and
 scalability to be able to construct models of Michelin's
-production systems in an efficient manner. Among all potential
-use cases, we need such models to perform passive testing on
-these production systems.
+production systems in an efficient manner, which is often a
+must-have for adoption in the Industry.
 
-\TODO{more here}
+Among all potential use cases, we need such models to perform
+passive testing on these production systems (Chapter
+\ref{sec:testing}). We chose to perform passive testing for the
+same reasons mentioned before, \emph{i.e.} because passive
+testing does not disturb the system, and because it can be
+applied to large and heterogeneous systems.
