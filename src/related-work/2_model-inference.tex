@@ -124,17 +124,17 @@ learner interacts with the teacher and the oracle by asking them
 two kinds of queries, as depicted in Figure \ref{fig:angluin}:
 
 \begin{itemize}
-    \item A \textbf{membership query}, consisting in asking the
-        teacher whether a string is contained in the regular
-        language.  If the word is accepted, it is considered a
-        \textit{positive} example, otherwise it represents a
-        negative example;
+    \item \enquote{A \textit{membership query}, consisting in
+    asking the teacher whether a string is contained in the
+    regular language} \cite{berg2006regular}. If the string is
+    accepted, it is considered as a \textit{positive} example,
+    otherwise it represents a \textit{negative} example;
 
-    \item An \textbf{equivalence query}, consisting in asking the
-        oracle whether a hypothesized DFA $\EuScript{M}$ is
-        correct, \emph{i.e.} $\EuScript{L}(\EuScript{M}) =
-        \EuScript{L}(\EuScript{A})$. If the oracle answers $no$,
-        it provides a counterexample.
+    \item \enquote{An \textit{equivalence query}, consisting in
+    asking the oracle whether a hypothesized DFA $\EuScript{M}$
+    is correct, \emph{i.e.} $\EuScript{L}(\EuScript{M}) =
+    \EuScript{L}(\EuScript{A})$} \cite{berg2006regular}. When the
+    oracle answers $no$, it provides a counterexample.
 \end{itemize}
 
 \begin{figure}[h]
@@ -327,11 +327,12 @@ has some features in common with the RPNII algorithm mentioned
 previously: both RPNII and CGE perform a recursive depth-first
 search of a lexicographically ordered state set with
 backtracking. Nevertheless, RPNII is designed for Moore machines
-while CGE is designed for Mealy machines. RPNII represents the
-hypothesis automaton state set by computing an equivalence
-relation on input strings whereas CGE relies on finite congruence
-generator sets represented as string rewriting systems that are
-used to compute normal forms of states.
+while CGE is designed for Mealy machines and, according to
+Meinke, \enquote{RPNII represents the hypothesis automaton state
+set by computing an equivalence relation on input strings
+whereas CGE relies on finite generated congruence sets
+represented as string rewriting systems that are used to
+compute normal forms of states} \cite{meinkeCGE}.
 
 Some incremental learning algorithms have been associated with
 testing techniques to detect bugs without having an initial
