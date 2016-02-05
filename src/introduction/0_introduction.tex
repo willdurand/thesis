@@ -67,11 +67,6 @@ somehow related to this idea, although Anti-Model-based Testing
 is more about using testing to reverse-engineer a model, and then
 check such a model to detect whether the software behaves
 correctly.
-% TODO: move somewhere else
-%In this thesis, reverse-engineering of a model is
-%achieved by monitoring the system without disturbing it or even
-%stimulating it, \emph{i.e.} we do not rely on testing during model
-%inference.
 
 Michelin, one of the three largest tire manufacturers in the
 world, has been our industrial partner for the last three years.
@@ -128,7 +123,6 @@ intended after a certain event, for instance, the deployment of a
 new version of a software. Regressions have to be revealed as
 soon as possible in order to avoid production downtimes.
 
-% TODO: introduce passive testing here
 The goal of this thesis is to propose technical solutions to
 Michelin's engineers to prevent such regressions with testing,
 \emph{i.e.} performing \emph{regression testing} on Michelin's
@@ -136,15 +130,18 @@ production systems based on behavioral models of such systems.
 Such models have to be up to date, hence we cannot rely on
 existing documentation.  We determine, by means of Model-based
 Testing, whether a change in one part of a software affects other
-parts of it. The main assumption in this work is that we choose
-to consider a running production system in a production
-environment (that is, a factory) as a fully operational system,
-\emph{i.e.} a system that behaves correctly.  Such a hypothesis
-has been expressed by our partner. The inferred models can be
-employed for different purposes, \emph{e.g.}, documentation and
-testing, but it is manifest that they should not be used for
-conformance testing in general. Last but not least, we propose
-scalable techniques because production systems exchange thousands
+parts of it. To avoid disturbing the system, we use a
+\emph{passive testing} approach, which only observes the
+production system under test and does not interact with it.  The
+main assumption in this work is that we choose to consider a
+running production system in a production environment (that is, a
+factory) as a fully operational system, \emph{i.e.} a system that
+behaves correctly.  Such a hypothesis has been expressed by our
+partner Michelin. The inferred models can be employed for
+different purposes, \emph{e.g.}, documentation and testing, but
+it is manifest that they should not be used for conformance
+testing in general. Last but not least, we propose scalable
+techniques because production systems exchange thousands
 \emph{production events} a day.
 
 In this thesis, we provide solutions for making Michelin's
@@ -235,15 +232,7 @@ The contributions of this thesis are:
         relation is used to overcome a limitation caused by the
         partialness of the inferred models. This testing
         extension detects differences between two production
-        systems, \emph{i.e.} potential regressions;
-
-    \item An online passive testing technique similar to the
-        offline passive testing, but enabling on-the-fly testing
-        of production systems. Even if the offline passive
-        testing technique introduced in the previous point is
-        able to quickly find regressions between two systems,
-        this online passive testing approach allows to detect
-        potential regressions faster.
+        systems, \emph{i.e.} potential regressions.
 \end{enumerate}
 
 \paragraph{Publications.} Most of these contributions have been
@@ -344,16 +333,13 @@ International Conference on Distributed Event-Based Systems
 \textbf{Chapter \ref{sec:testing}} tackles the problem of
 passively testing production systems, without disturbing them,
 and without having any specification. It presents our work on
-both offline and online passive testing, by extending
-\textit{Autofunk v3}'s model inference framework. After having
-presented the overall idea, two algorithms are given and
-explained. The results of experiments on Michelin's production
-systems are also given. Such results are related to the offline
-passive testing technique only, the online algorithm being not
-fully implemented at the time of writing. Part of this work has
-been published in the Proceedings of the 13th International
-Conference on Formal Methods and Models for Co-Design
-(MEMOCODE'15) \cite{7340480}.
+offline passive testing, by extending \textit{Autofunk v3}'s
+model inference framework. After having presented the overall
+idea, our passive algorithm is given and explained. The results
+of experiments on Michelin's production systems are also given.
+This work has been published in the Proceedings of the 13th
+International Conference on Formal Methods and Models for
+Co-Design (MEMOCODE'15) \cite{7340480}.
 
 \textbf{Chapter \ref{sec:conclusion}} closes the main body of the
 thesis with concluding comments and proposals for future work.
