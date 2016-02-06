@@ -8,21 +8,38 @@ usually composed of thousands of states (\emph{i.e.} sets of
 conditions that exist at a given instant in time) and production
 events, which makes testing time consuming.  In this context, we
 propose a \emph{passive testing framework} for production systems
-that is composed of two parts: a model inference engine, already
-presented in Chapter \ref{sec:modelinf:prodsystems}, and a
-passive test engine that is the purpose of this chapter. Both
+that is compound of: (i) a model inference engine, already
+presented in Chapter \ref{sec:modelinf:prodsystems}, and (ii) a
+passive test engine, which is the purpose of this chapter. Both
 parts have to be fast and scalable to be used in practice.
 
 The main idea of our proposal is that, given a running production
-system, we extract knowledge and models by passively monitoring
-it. Such models describe the functional behaviors of the system,
-and may serve for different purposes, \emph{e.g.}, testing
-another production system. The latter can be a new system roughly
-comparable to the first one in terms of features, but it can also
-be an updated version of the first one. Indeed, upgrades might
-inadvertently introduce faults, and it could lead to severe
-damages. Here, testing the updated system means detecting
-potential regressions before deploying changes in production.
+system, for which active testing cannot be applied, we extract
+knowledge and models by passively monitoring it. Such models
+describe the functional behaviors of the system, and may serve
+different purposes, \emph{e.g.}, testing another production
+system. The latter can be a new system roughly comparable to the
+first one in terms of features, but it can also be an updated
+version of the first one. Indeed, upgrades might inadvertently
+introduce faults, and it could lead to severe damages.
+
+In our context, testing the updated system means detecting potential
+regressions before deploying changes in production. This is
+usually performed by engineers at Michelin, yet their "testing"
+phase is actually a manual task performed in a simulation room
+where they check a couple of known scenarios for a long period
+(about 6 months). Most of the time, such a process works well,
+but it takes a lot of time, and there is no guarantee regarding
+the number of covered scenarios. In addition, engineers who write
+or maintain the applications are likely the same who perform
+these manual testing phases, which can be problematic because
+they often know too well the applications. We designed our
+testing framework to help Michelin engineers focus on possible
+failures, automatically highlighted by the framework in a short
+amount of time. At the end, engineers still have to perform a few
+manual tasks, but they are more efficient as they have only a few
+behaviors to check (instead of all possible behaviors), given in
+a reliable and fast manner.
 
 A \textit{passive tester} (also known as observer) aims at
 checking whether a system under test \emph{conforms to} an
@@ -41,45 +58,36 @@ mode, as defined below:
 \end{itemize}
 
 We collect the traces of the system under test by reusing
-\textit{Autofunk v3}'s Models generator. In offline mode, we
-build a set of traces with the same level of abstraction as those
-considered for inferring models. In online mode, we apply the
-same process for each new incoming trace. Then, we use these
-traces to check if the system under test conforms to the inferred
-models. \emph{Conformance} is defined with two implementation
-relations, which express precisely what the system under test
-should do. The first relation corresponds to the \emph{trace
-preorder} \cite{DNH84}, which is a well-known relation based upon
-trace inclusion, and heavily used with passive testing.
-Nevertheless, our inferred models are partials, \emph{i.e.} they
-do not necessarily capture all the possible behaviors that should
+\textit{Autofunk v3}'s Models generator, and we build a set of
+traces whose level of abstraction is the same as those considered
+for inferring models. Then, we use these traces to check whether
+the system under test conforms to the inferred models.  In
+previous works, we used to work with fixed sets of traces. We
+noticed that, by taking large trace sets, we could build more
+complete models. Performing offline passive testing allows to use
+such large trace sets, hence the intuition that we should be able
+to validate more behaviors.
+
+\emph{Conformance} is defined with two implementation relations,
+which express precisely what the system under test should do. The
+first relation is based on the \emph{trace preorder}
+\cite{DNH84}, which is a well-known relation based upon trace
+inclusion, and heavily used with passive testing.  Nevertheless,
+our inferred models are partials, \emph{i.e.} they do not
+necessarily capture all the possible behaviors that should
 happen. That is why we propose a second implementation relation,
 less restrictive on the traces that should be observed from the
 system under test.
 
-Both offline and online modes are not completely unalike, they
-also serve different purposes. In previous works, we used to work
-with fixed sets of traces. We noticed that, by taking large trace
-sets, we could build more complete models. Performing offline
-passive testing allows to use such large trace sets, hence the
-intuition that we should be able to validate more behaviors. Our
-online passive testing approach records traces on a system under
-test on-the-fly, and then check whether those traces satisfy
-specifications, still generated from a system under analysis. It
-enables what we call \emph{just-in-time fault detection}. Faults
-can be revealed in near real-time on a running system so that
-users can be notified as soon as possible.
-
 In Section \ref{sec:testing:normal}, we introduce an extra step
 of the model inference method described in Chapter
 \ref{sec:modelinf:prodsystems} that is required to enable
-testing. In Section \ref{sec:testing:passive}, we present both
-our offline and online passive testing techniques, built on-top of
-this model inference framework, respectively in Section
-\ref{sec:testing:offline} and Section \ref{sec:testing:online}.
-We present key results on offline passive testing in Section
-\ref{sec:testing:offline:impl-exp}. Finally, we conclude on this
-chapter in Section \ref{sec:testing:conclusion}.
+testing. In Section \ref{sec:testing:passive}, we present our
+offline passive testing technique, built on-top of this model
+inference framework. We present key results on offline passive
+testing in Section \ref{sec:testing:offline:impl-exp}. Finally,
+we conclude on this chapter in Section
+\ref{sec:testing:conclusion}.
 
 \textbf{Publication.} This work has been partially published in
 the Proceedings of the 13th International Conference on Formal
@@ -87,30 +95,38 @@ Methods and Models for Co-Design (MEMOCODE'15) \cite{7340480}.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\section{Extending inferred models with normalization}
+\section{Normalization of the inferred models}
 \label{sec:testing:normal}
 
-In order to perform testing, we reuse the reduced model
-$R(\EuScript{S}) = \{R(\EuScript{S}_1),\dots,R(\EuScript{S}_n)\}$
-inferred with \textit{Autofunk} that we \textit{normalize} to get
-rid of some runtime-dependent information.  Indeed, both models
-$\EuScript{S}$ and $R(\EuScript{S})$ include parameters that are
-dependent to the products being manufactured.  That is a
-consequence of generating models that describe behaviors of a
-continuous stream of products that are strictly identified,
-\emph{i.e.} for each action in a given sequence, we have the
-assignment $(pid := val)$ (for the record, $pid$ stands for
-\emph{product identifier}).  Here, we normalize these models
-before using them for testing. The resulting models are denoted
-by $\EuScript{S}^{N} = \{ \EuScript{S}_1^{N}, \dots,
-\EuScript{S}_n^{N} \}$ and $R(\EuScript{S}^{N}) = \{
-R(\EuScript{S}_1^{N}), \dots, R(\EuScript{S}_n^{N}) \}$.
+In order to perform testing, we reuse the reduced model set
+$R(\EuScript{S}) = \{R(\EuScript{S}_1),\dots,R(\EuScript{S}_n)\\
+\}$ inferred with \textit{Autofunk} that we \textit{normalize} to
+get rid of some runtime-dependent information of the system under
+analysis $\mathit{Sua}$. Indeed, both models $\EuScript{S}_i$ and
+$R(\EuScript{S}_i)$ include parameters that are dependent to the
+products being manufactured. That is a consequence of generating
+models that describe behaviors of a continuous stream of products
+that are strictly identified. For instance, each action in a
+given sequence owns the assignment $(pid := val)$ (for the
+record, $pid$ stands for \emph{product identifier}). Collected
+traces are also time-dependent, which would make testing of
+another production system unfeasible. These information are
+typically known by a human domain expert, hence the use of
+inference rules to identify and remove assignments.
 
-We remove the assignments relative to product identifiers and
-time stamps. Furthermore, we label all the final locations with
+Given the model sets $\EuScript{S} =
+\{\EuScript{S}_1,\dots,\EuScript{S}_n\}$ and $R(\EuScript{S}) =
+\{R(\EuScript{S}_1),\dots,R(\EuScript{S}_n)\}$, we remove the
+assignments related to product identifiers and time stamps to
+produce normalized model sets, denoted by $\EuScript{S}^{N} = \{
+\EuScript{S}_1^{N}, \dots, \EuScript{S}_n^{N} \}$ and
+$R(\EuScript{S}^{N}) = \{ R(\EuScript{S}_1^{N}), \dots,
+R(\EuScript{S}_n^{N}) \}$.
+
+Furthermore, we label all the final locations with
 "Pass". We flag these locations as \emph{verdict locations}, and
-gather them in the set $Pass \subseteq L_{\EuScript{S_i}^{N}}$.
-Both $\EuScript{S}^{N}$ and $R(\EuScript{S}^{N})$ represent more
+gather them in the set $Pass \subseteq L_{\EuScript{S}_i^{N}}$.
+Both $\EuScript{S}_i^{N}$ and $R(\EuScript{S}_i^{N})$ represent more
 generic models, \emph{i.e.}  they express \textit{some possible
 behaviors that should happen}. These behaviors are represented by
 the traces $Traces_{Pass} (\EuScript{S}^{N})=\displaystyle
@@ -124,25 +140,22 @@ other traces \textit{possibly fail traces}.
 \section{Passive testing with \textit{Autofunk}}
 \label{sec:testing:passive}
 
-We consider both models $\EuScript{S}^{N}$ and
+We consider both model sets $\EuScript{S}^{N}$ and
 $R(\EuScript{S}^{N})$ of a system under analysis $\mathit{Sua}$,
 generated by our inference-based model generation framework, as
 \emph{reference models}. In this section, we present the second
-part of our framework, dedicated to the passive testing of a
-system under test $\mathit{Sut}$.
+part of our testing framework, dedicated to the passive testing
+of a system under test $\mathit{Sut}$.
 
 Figure \ref{fig:passive-autofunk} depicts the design of our
-passive testing technique. In offline mode, a set of production
-events has been collected beforehand from $\mathit{Sut}$ in the
-same way as for $\mathit{Sua}$. These events are grouped into
-traces to form the trace set $Traces({Sut})$, and then filtered
-to obtain a set of complete traces denoted by $CTraces({Sut})$
-(cf.
+offline passive testing technique. A set of production events has
+been collected beforehand from $\mathit{Sut}$ in the same way as
+for $\mathit{Sua}$. These events are grouped into traces to form
+the trace set $Traces({Sut})$, and then filtered to obtain a set
+of complete traces denoted by $CTraces({Sut})$ (cf.
 \crossref{sec:modelinf:prodsystems}{sec:modelinf:prodsystems:better-segmentation}).
-In online mode (not represented in the figure), we do not have
-traces but rather filtered valued events of $\mathit{Sut}$ coming
-on-the-fly. Finally, we perform passive testing to \emph{check}
-if $\mathit{Sut}$ conforms to $\EuScript{S}^{N}$.
+Finally, we perform passive testing to \emph{check} if
+$\mathit{Sut}$ conforms to $\EuScript{S}^{N}$.
 
 \begin{figure}[h]
     \begin{center}
@@ -169,8 +182,8 @@ with two implementation relations. Such relations between models
 can only be written by assuming the following \emph{test
 assumption}: the black-box system $\mathit{Sut}$ can be described
 by a model, here with a Labeled Transition System as defined in
-\crossref{sec:related:testing}{sec:definitions:lts}. We also
-denote this model by $\mathit{Sut}$.
+\crossref{sec:related:testing}{sec:definitions:lts}. For
+simplicity purpose, we also denote this model by $\mathit{Sut}$.
 
 \subsection{First implementation relation: $\leq_{ct}$}
 
@@ -185,26 +198,26 @@ $\EuScript{S}^{N}=\{\EuScript{S}_1^{N},\dots,\EuScript{S}_n^{N}\}$.
 The first implementation relation can be written with the
 following definition:
 
-\begin{definition}[The $\leq_{ct}$ implementation relation]
+\begin{definition}[Implementation relation $\leq_{ct}$]
 \label{rel:impl1}
 
 Let $\EuScript{S}^{N}$ be an inferred model of $\mathit{Sua}$, and
 $\mathit{Sut}$ be the system under test. When $\mathit{Sut}$
 produces complete traces also captured by $\EuScript{S}^{N}$, we
 write: ${Sut} \leq_{ct} \EuScript{S}^{N} =_{def} CTraces({Sut})
-\subseteq  Traces_{Pass}(\EuScript{S}^{N})$ \cite{Tre96}.
+\subseteq  Traces_{Pass}(\EuScript{S}^{N})$.
 \end{definition}
 
-The reduced model $R(\EuScript{S}^{N})$ sounds more convenient
-for passively testing $\mathit{Sut}$ because it is strongly
-reduced in terms of size compared to $\EuScript{S}^{N}$.  Hence,
-the test relation can also be written as below because both models
-$\EuScript{S}^{N}$ and $R(\EuScript{S}^{N})$ are trace
-equivalent \cite{petrenko06}:
+Pragmatically, the reduced model set $R(\EuScript{S}^{N})$ sounds
+more convenient for passively testing $\mathit{Sut}$ because it
+is strongly reduced in terms of size compared to
+$\EuScript{S}^{N}$. Hence, the test relation can also be written
+as below because both models $\EuScript{S}^{N}$ and
+$R(\EuScript{S}^{N})$ are trace equivalent \cite{petrenko06}:
 
 \begin{proposition}
 \label{rel:impl12}
-${Sut} \leq_{ct} \EuScript{S}^{N} \text{ if and only if } CTraces({Sut})
+${Sut} \leq_{ct} \EuScript{S}^{N} \Leftrightarrow CTraces({Sut})
 \subseteq  Traces_{Pass}(R(\EuScript{S}^{N}))$.
 \end{proposition}
 
@@ -215,7 +228,7 @@ $\mathit{Sua}$ is partial, and it might not capture all the
 behaviors that should happen on $\mathit{Sut}$. Consequently,
 our partner wants a \emph{weaker implementation relation} that is
 less restrictive on the traces that should be observed from
-$\mathit{Sut}$.  In other words, this second relation aims to
+$\mathit{Sut}$. This second relation aims to
 check that, for every complete trace $t=(a_1(p), \alpha_1) \dots
 (a_m(p), \alpha_m)$ of $\mathit{Sut}$, we also have a set of traces of
 $Traces_{Pass}(\EuScript{S}^{N})$ having the same sequence of
@@ -255,7 +268,7 @@ $Traces_{Pass}(\EuScript{S}^{N})$ with the same symbol $a_j$.
 The second implementation relation, denoted by $\leq_{mct}$, is
 defined as follows:
 
-\begin{definition}[The $\leq_{mct}$ implementation relation]
+\begin{definition}[Implementation relation $\leq_{mct}$]
      Let $\EuScript{S}^{N}$ be an inferred model of
      $\mathit{Sua}$, and $\mathit{Sut}$ be a system under test.
      We write: ${Sut} \leq_{mct} \EuScript{S}^{N}$ if and only if
@@ -316,7 +329,7 @@ satisfies at least one of the guards of the matrix line $j$ in
 $M_{[b]}[j,*]$.
 
 Consequently, we propose to rewrite the implementation relation
-$\leq_{mct}$ below:
+$\leq_{mct}$ as:
 
 \begin{proposition}
     ${Sut} \leq_{mct} \EuScript{S}^{N}$ if and only if
@@ -338,14 +351,14 @@ disjunctions for every variable $x$ that belongs to the parameter
 set $p_j$. Such equalities can be extracted with the projection
 operator \textit{proj} (see Definition \ref{def:sts}). We obtain
 one guard of the form $\displaystyle \bigwedge_{x \in p_j} ((x ==
-val_1) \vee \dots \vee (x == val_k))$, which is leveraged to
-construct \emph{derived} STSs.
+val_1) \vee \dots \vee (x == val_k))$. This can be expressed by
+deriving new STSs from $R(\EuScript{S})$.
 
-\subsection{Derived STSs}
+\subsection{STS $D(\EuScript{S})$}
 
-The STS $D(\EuScript{S}_i^{N})$, derived from
-$R(\EuScript{S}_i^{N})$, is constructed with the simplification
-of guards described in the previous section:
+Given a STS $R(\EuScript{S}_i^{N})$, the STS
+$D(\EuScript{S}_i^{N})$ is constructed with the disjunction of
+guards described in the previous section:
 
 \begin{definition}[Derived STS $D(\EuScript{S}_i^{N})$]
     Let
@@ -380,7 +393,7 @@ of guards described in the previous section:
                 \begin{matrix}
                 l0_D
                 \xRightarrow{(a_1(p_1),M_{b}[1])\dots (a_m(p_m),M_{b}[m])}_{D}
-                l_m, V_D=V0_D \wedge M_{b},\\
+                l_m, V0_D=V0_D \wedge M_{b},\\
                 M_{b}[j]_{(1\leq j \leq m)} = \displaystyle
                 \bigwedge_{x \in p_j} ( proj_x(M_{[b]}[j, 1])
                 \vee \dots \vee proj_x(M_{[b]}[j, k]))
@@ -389,7 +402,7 @@ of guards described in the previous section:
             }$
     \end{itemize}
 
-    We also have $D(\EuScript{S}^{N}) =
+    The set of derived models is denoted by $D(\EuScript{S}^{N}) =
     \{D(\EuScript{S}_1^{N}),\dots,D(\EuScript{S}_n^{N}) \}$.
 \end{definition}
 

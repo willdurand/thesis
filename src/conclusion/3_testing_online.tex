@@ -1,6 +1,16 @@
 \section{Online passive testing}
 \label{sec:testing:online}
 
+% TODO: use this paragraph somewhere
+% Both offline and online modes are not completely unalike, they
+% also serve different purposes. Our online passive testing
+% approach records traces on a system under test on-the-fly, and
+% then check whether those traces satisfy specifications, still
+% generated from a system under analysis. It enables what we call
+% \emph{just-in-time fault detection}. Faults can be revealed in
+% near real-time on a running system so that users can be notified
+% as soon as possible.
+
 Our online passive testing technique, which aims to check whether
 the two previous implementation relations hold, is given in
 Algorithms \ref{algo:online-entry-point} and
