@@ -4,7 +4,7 @@
 Our offline passive testing algorithm, which aims to check
 whether the two previous implementation relations hold, is given
 in Algorithm \ref{algo:check}. It takes the complete traces of
-$\mathit{Sut}$, as well as the models $R(\EuScript{S}^{N})$ and
+$\mathit{Sut}$, as well as the model sets $R(\EuScript{S}^{N})$ and
 $D(\EuScript{S}^{N})$, with regards to Proposition
 \ref{rel:impl12} and Proposition \ref{rel:impl2}. It returns the
 verdict "Pass$\leq_{ct}$" if the relation $\leq_{ct}$ is
@@ -13,7 +13,7 @@ satisfied.
 
 Algorithm \ref{algo:check} relies upon the function ${check(Trace
 ~trace, STS ~\EuScript{S})}$ to check whether the trace $trace =
-(a_1(p), \alpha_1) \dots (a_m(p), \alpha_m)$ is a trace of the STS
+(a_1(p), \alpha_1) \dots (a_m(p), \alpha_m)$ is a trace of
 $\EuScript{S}$. If a STS path $b$ is composed of the same
 sequence of symbols than $trace$ (line
 \ref{algo:check:line:exists}), the function tries to find a
@@ -144,7 +144,7 @@ for Michelin engineers because it allows them to only focus on
 what are potentially faulty behaviors, reducing debugging time,
 and making engineers more efficient.
 
-In the same spirit, our online passive testing algorithm is given
-in the next section.
+% TODO: complexity
+% TODO: Proof soudness
 
 \clearpage
