@@ -1,4 +1,54 @@
 Ce manuscrit de thèse aborde le problème du test basé modèle de
-systèmes de production existants tels ceux de notre partenaire
+systèmes de production existants, tels ceux de notre partenaire
 industriel Michelin, l'un des trois plus grands fabricants de
-pneumatiques au monde.
+pneumatiques au monde. Un système de production est composé d'un
+ensemble de machines de production contrôlées par un ou plusieurs
+logiciels au sein d'un atelier d'une usine. Malgré les nombreux
+travaux dans le domaine du test basé modèle, l'écriture de
+modèles permettant de décrire un système sous test ou sa
+spécification reste un problème commun, en partie à cause de la
+complexité d'une telle tâche. De plus, un modèle est utile
+lorsqu'il est à jour par rapport à ce qu'il décrit, ce qui
+implique de le maintenir à jour dans le temps. Pour autant,
+conserver une documentation à jour reste compliqué puisqu'il faut
+souvent le faire manuellement. Dans notre contexte, il est
+important de souligner le fait qu'un système de production
+fonctionne en continu et ne doit pas être arrêté ni perturbé, ce
+qui limite l'usage des techniques de test classiques.
+
+Pour pallier le problème de l'écriture de modèles, nous proposons
+une approche pour construire automatiquement des modèles depuis
+des séquences d'événements observés (des traces) dans un
+environnement de production. Pour se faire, nous utilisons les
+informations fournies par les données échangées entre les
+éléments qui composent un système de production. Nous adoptons
+une approche boîte noire et combinons les notions de système
+expert, inférence de modèles et \emph{machine learning}, afin de
+créer des modèles comportementaux. Ces modèles inférés décrivent
+des comportements enregistrés sur un système sous analyse. Ils
+sont partiels, mais également très grands (en terme de taille),
+ce qui les rend difficilement utilisable par la suite. Nous
+proposons une technique de réduction spécifique à notre contexte
+qui conserve l'équivalence de traces entre les modèles de base et
+les modèles fortement réduits. Grâce à cela, ces modèles inférés
+deviennent intéressant pour la génération de documentation, la
+fouille de données, mais également le test.
+
+Nous proposons une méthode passive de test basé modèle pour
+répondre au problème du test de systèmes de production sans
+interférer sur leur bon fonctionnement. Cette technique permet
+d'identifier des différences entre deux systèmes de production et
+réutilise l'inférence de modèles décrite ci-avant. Nous
+introduisons deux relations d'implantation : une relation basée
+sur l'inclusion de traces, et une seconde relation plus faible
+proposée pour remédier au fait que les modèles inférés soient
+partiels.
+
+De manière générale, ce manuscrit de thèse présente
+\emph{Autofunk}, un \emph{framework} modulaire pour l'inférence
+de modèles et le test de systèmes de production qui aggrège les
+notions mentionnées précédemment. Son implémentation en Java a
+été appliquée sur différentes applications et systèmes de
+production chez Michelin dont les résultats sont donnés dans ce
+manuscrit. Le prototype développé lors de la thèse a pour
+vocation de devenir un outil standard chez Michelin.
