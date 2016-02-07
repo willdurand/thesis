@@ -6,25 +6,36 @@ built on-top of our model inference framework \emph{Autofunk v3},
 which combines different techniques such as model inference,
 expert systems, and machine learning.
 
+In this work, we focus on complete traces exclusively because
+production systems run continuously, and a few irrelevant
+behaviors are likely to happen, \emph{e.g.}, collecting traces
+can be turned either on or off at any time, but also human
+operators in a factory can act on the products. Tracking such
+irrelevant behaviors would be inefficient as it would mean more
+processing time for results of no interest.
+
 Given a large set of production events, our framework infers
-exact models whose traces are included \cite{petrenko06} in the
-initial trace set of a system under analysis. Such models are
-then reused as specifications to perform: (i) offline passive
-testing using a second set of traces recorded on a system under
-test, and (ii) online passive testing by taking new traces of a
-system under test on-the-fly. Using two implementation relations,
+exact models whose traces are included in the initial trace set
+of a system under analysis. Such models are then reused as
+specifications to perform offline passive testing using a second
+set of traces recorded on a system under test. Using two
+implementation relations based on complete trace inclusion,
 \textit{Autofunk} is able to determine what has changed between
 the two systems. This is particularly useful for our industrial
 partner Michelin because potential regressions can be detected
-while deploying changes in production. Initial results on the
+while deploying changes in production. Initial results on this
 offline method are encouraging, and Michelin engineers see a real
 potential in this framework.
 
-We know that 2\% of a large trace set (as mentioned in the
-previous section) still represents many traces, which may be
-difficult to analyze. Nonetheless in a manufacturing context,
-this is still valuable although we would like to reduce such
-false negatives.
+Given the preliminary results, We know that 2\% of a large trace
+set (as mentioned in the previous section) still represents many
+traces, which may be difficult to analyze. Nonetheless in our
+manufacturing context, this is still valuable because, before
+\emph{Autofunk}, engineers had to manually test everything by
+hand. Now, \emph{Autofunk} performs most of the work
+automatically, and engineers only have to manually check a small
+subset of traces compared to the initial trace set, which saves a
+lot of time.
 
 In the next chapter, we give our thoughts on how to improve
 \textit{Autofunk} as well as perspectives for future work.

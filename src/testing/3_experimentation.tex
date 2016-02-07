@@ -1,41 +1,110 @@
 \section{Implementation and experimentation}
 \label{sec:testing:offline:impl-exp}
 
-% TODO: more on implementation
+In this section, we summarize the work done on the different
+\emph{Autofunk} implementations for Michelin. Then, we give a few
+results on our offline passive testing technique.
+
+\subsection{Implementation}
+
+By adding a testing module to \emph{Autofunk v3}, we have
+developed a complete tool for testing production systems at
+Michelin.
+
+According to the \emph{cloc}
+tool\footnote{\url{https://github.com/AlDanial/cloc}}, the latest
+version of \emph{Autofunk} has 2831 lines of code written in Java
+8, along with 4 Drools rules used in Layer 1 of the model
+inference module.  According to
+\emph{JaCoCo}\footnote{\url{https://github.com/jacoco/jacoco}}
+(which stands for Java Code Coverage) tool, the test suite
+(compound of 120 test cases) covers 85\% of the code, with both
+unit and functional tests. Our algorithms are extensively tested.
+
+Users of \emph{Autofunk v3} interact with it using the command
+line. We designed parallelizable algorithms that we have used in
+combination with Java 8 streams and parallel processing
+abilities. This gives interesting performance results on
+multi-core processors, without affecting code readability.
+\emph{Autofunk v3} still embeds Drools, and can either run a
+local Spark instance or connect to a Spark cluster, which is
+better for performance.  Models are persisted on disk using the
+\emph{Kryo}\footnote{\url{https://github.com/EsotericSoftware/kryo}}
+serialization library. Finally, this tool is highly configurable
+thanks to the (Typesafe)
+\emph{Config}\footnote{\url{https://github.com/typesafehub/config}}
+library.
+
+Table \ref{fig:autofunk-versions} presents the differences
+across all \emph{Autofunk} versions. All versions use Drools to
+perform model inference, but only \emph{Autofunk v3} can perform
+testing as explained in this chapter. \emph{Autofunk v1} does not
+segment the trace set because it is primarily used for web
+applications, for which this task does not apply. \emph{Autofunk
+v3} is heavily based on \emph{Autofunk v2}, hence both use a
+context-specific reduction technique by means of branch
+equivalence classes. Yet, \emph{Autofunk v3} uses MLlib for its
+k-means implementation, and is more extensively tested.
+
+\begin{sidewaystable}
+\begin{center}
+    \begin{tabular}{| c | c | c | c | c | c | c |}
+        \hline
+        \emph{Autofunk} & Use Drools? & Perform inference? & Perform testing? & Segmentation algorithm & Reduction algorithm & Code coverage\\
+        \hline
+        \hline
+        v1 & $\checkmark$ & $\checkmark$ & $\times$ & None & Bisimulation minimization & <50\%\\
+        \hline
+        v2 & $\checkmark$ & $\checkmark$ & $\times$ & Statistical analysis & Branch equivalence classes & 70\%\\
+        \hline
+        v3 & $\checkmark$ & $\checkmark$ & $\checkmark$ & K-means (Spark / MLlib) & Branch equivalence classes & 85\%\\
+        \hline
+    \end{tabular}
+\end{center}
+
+    \caption{Summary of the different \emph{Autofunk} versions.
+    \emph{Autofunk v3} is based on \emph{Autofunk v2}, which
+    has been developed from scratch (even though inspired by
+    \emph{Autofunk v1}).}
+
+    \label{fig:autofunk-versions}
+\end{sidewaystable}
+
+\subsection{Experimentation}
 
 We conducted several experiments with real sets of production
 events, recorded in one of Michelin's factories at different
 periods of time. The results given in this section are focused on
-our \textbf{offline} passive testing technique, built on-top of
+our offline passive testing technique, built on-top of
 \emph{Autofunk v3}. We executed our implementation on a Linux
 (Debian) machine with 12 Intel(R) Xeon(R) CPU X5660 @ 2.8GHz and
 64GB RAM.
 
-We present, in Table \ref{fig:testing:offline:results}, the
-results of three experiments on the same production system with
-different trace sets, recorded at different periods of time. The
-first column shows the experiment number (\#), columns 2 and 3
-respectively give the sizes of the trace sets of the system under
-analysis $\mathit{Sua}$ and of the system under test
-$\mathit{Sut}$. The two next columns show the percentage of pass
-traces with respect to the relations $\leq_{ct}$ and
-$\leq_{mct}$. The last column indicates the execution time (in
-minutes) for the testing phase.
+Table \ref{fig:testing:offline:results} shows the results of
+three experiments on the same production system with different
+trace sets, recorded at different periods of time, with the
+latest \emph{Autofunk} version. The first column shows the
+experiment number (\#), columns 2 and 3 respectively give the
+sizes of the trace sets of the system under analysis
+$\mathit{Sua}$ and of the system under test $\mathit{Sut}$. The
+two next columns show the percentage of pass traces with respect
+to the relations $\leq_{ct}$ and $\leq_{mct}$. The last column
+indicates the execution time (in minutes) for the testing phase.
 
 \begin{table}[h]
 \begin{center}
-\begin{tabular}{| c | c | c | c | c | c |}
-\hline
-\# & $Card(CTraces({Sua}))$ & $Card(CTraces({Sut}))$ & Pass$\leq_{ct}$ & Pass$\leq_{mct}$ & Time\\
-\hline
-\hline
-$1$ & 2,075 & 2,075 & 100\% & 100\% & 1 \\
-\hline
-$2$ & 53,996 & 2,075 & 3\% & 30\% & 4\\
-\hline
-$3$ & 53,996 & 25,047 & 98\% & 98\% & 10\\
-\hline
-\end{tabular}
+    \begin{tabular}{| c | c | c | c | c | c |}
+        \hline
+        \# & $Card(CTraces({Sua}))$ & $Card(CTraces({Sut}))$ & Pass$\leq_{ct}$ & Pass$\leq_{mct}$ & Time\\
+        \hline
+        \hline
+        $1$ & 2,075 & 2,075 & 100\% & 100\% & 1 \\
+        \hline
+        $2$ & 53,996 & 2,075 & 3\% & 30\% & 4\\
+        \hline
+        $3$ & 53,996 & 25,047 & 98\% & 98\% & 10\\
+        \hline
+    \end{tabular}
 \end{center}
 
     \caption{This table shows the results of our offline passive
@@ -70,11 +139,15 @@ traces (10 days) than the one collected on $\mathit{Sut}$. Such
 an experiment is a typical usage of our framework at Michelin.
 The traces of $\mathit{Sut}$ have been collected for 5 days, and
 it took only 10 minutes to check conformance. While 98\% of the
-traces are pass traces, the remaining 2\% are new behaviors that
-never occurred before. Such a piece of information is essential
-for Michelin engineers to determine the root causes. Even though
-2\% may represent a large set to analyze, \textit{Autofunk}
-improves their work by highlighting the traces to focus on. Yet,
-such a subset may contain false negatives depending on the
+traces are pass traces, the remaining 2\% (about 500 traces) are
+new behaviors that never occurred before. Such a piece of
+information is essential for Michelin engineers to detect
+potential regressions. Even though 2\% may represent a large set
+to analyze (about 500 traces in this experiment),
+\textit{Autofunk} eases the work of Michelin engineers by
+highlighting the traces to focus on. Instead of having to check
+25,000 traces manually, they only have to check 500 traces, which
+is a significant improvement on a daily basis.
+Yet, such a subset may contain false positives depending on the
 richness of the models, but using large sets of traces to infer
-the models reduces the number of false negatives.
+the models usually reduces the number of false positives.
