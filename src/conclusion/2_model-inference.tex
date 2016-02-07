@@ -1,4 +1,4 @@
-\section{New challenges for model inference}
+\section{New challenges in model inference}
 \label{sec:conclusion:modelinf}
 
 Model inference is a research field that has received a lot of
@@ -8,35 +8,34 @@ recent works consider model inference to later perform analyses
 of the models or automatic testing in order to check different
 aspects of the software system such as robustness, security, and
 even regression testing, as presented in this thesis.
-Nonetheless, model inference has a few drawbacks, which require
-further investigation, and we believe that three major directions
-could be very beneficial.
+Nonetheless, model inference still has a few drawbacks, which
+require further investigation, and we believe that the next three
+major directions could be very beneficial.
 
 \subsection{Building exact, or rather, more precise models}
 \label{sec:conclusion:modelinf:exact}
 
-When the inferred models are used for analysis purpose, they must be as
-precise as possible. Nonetheless, we observed that the main
-feature leading to over-approximation is the state merging
-process. A trivial solution would be to use minimization
-techniques instead, \emph{e.g.}, a bisimulation minimization as
-described in Chapter \ref{sec:modelinf:webapps} of this thesis.
-As a reminder, the bisimulation relation associated with a
-minimization technique merges the state sets that are bisimilar
-equivalent. This relation is stronger than a classical trace
-equivalence relation, but it may be considered too strong since the
-bisimulation minimization usually does not merge enough states,
-and thus may still produce large models. If another more suitable
-relation can be used, and if verification or testing techniques
-can work well with larger yet more precise models, which results
-can we expect? In this thesis, we provided a preliminary answer
-to this question, but there is still a lot of work that could be
-done.
+When the inferred models are used for analysis purpose
+(verification or testing), they must be as precise as possible.
+From the literature, we observed that the main feature leading to
+over-approximation is the state merging process. A trivial
+solution would be to use minimization techniques instead,
+\emph{e.g.}, a bisimulation minimization as described in Chapter
+\ref{sec:modelinf:webapps} of this thesis.  As a reminder, the
+bisimulation relation associated with a minimization technique
+merges the state sets that are bisimilar equivalent. This
+relation is stronger than a classical trace equivalence relation,
+but it may be considered too strong since the bisimulation
+minimization usually does not merge enough states, and thus may
+still produce large models. If another more suitable relation can
+be used, and if verification or testing techniques can work well
+with larger yet more precise models, which results can we expect?
+In this thesis, we provided a preliminary answer to this question
+(which is context-specific), but there is still a lot of work
+that could be done.
 
-Many model inference techniques rely on the notion of abstraction
-level to reduce the size of the inferred models. Nevertheless,
-this process implies over-approximation. A solution to limit it
-is to define and estimate \emph{quality metrics}
+Another solution to limit non-approximation is to define and
+estimate \emph{quality metrics}
 \cite{tonella2012finding,Lo20122063} to guide the model
 construction. In \cite{tonella2012finding}, three metrics,
 related to over- and under-approximation rates and model size,
@@ -49,33 +48,18 @@ only be applied to small systems because the complete models,
 \emph{i.e.} the models compound of all the observations, are
 incrementally re-generated from scratch to improve the metrics.
 An iterative process performed by adding the observations one
-after another in the model could also be considered. For
-instance, with crawling techniques, every time a new state is
-explored, these metrics could refine the state merging
-on-the-fly. Other metrics could also be chosen depending on the
-context of the software system. In \textit{Autofunk}, a similar
-improvement would be to build submodels of a production system.
-By now, we consider a whole workshop as a production system to
-infer models, \emph{i.e.} we do not make any distinction among
-the different parts of the workshop. Nonetheless, there are parts
-that are more critical than the others, at least in Michelin's
-workshops. Being able to focus on specific locations of a
-workshop would be interesting to build smaller models. This
-should bring significant improvements to the end users of
-\textit{Autofunk}.
-
-In addition, negative observations strongly help in the inference
-of more precise models. Yet negative observations are usually not
-taken into account in passive inference.  When the system is
-available, a solution to collect negative observations would be
-to exercise the system with \emph{Fuzz Testing}.  An execution
-ended by a crash or the raise of an exception could then be
-qualified as a negative observation.  Another solution, sometimes
-considered with crawling techniques, would be to (re) incorporate
-users in the model inference process to guide the generation of
-observations. At the time of writing, it is often assumed that
-the user either gives all the system paths to explore or does
-nothing.
+after another in the model could also be considered. Other
+metrics could also be chosen depending on the context of the
+software system. In \textit{Autofunk}, a similar improvement
+would be to build submodels of a production system. By now, we
+consider a whole workshop as a production system to infer models.
+We distinguish the production lines, but apart from that, we do
+not make any distinction among the different parts of the
+workshop.  Nonetheless, there are parts that are more critical
+than the others, at least in Michelin's workshops. Being able to
+focus on specific locations of a workshop would be interesting to
+build smaller models, and this should bring significant
+improvements to the end users of \textit{Autofunk}.
 
 \subsection{Scalability as a first-class citizen}
 
