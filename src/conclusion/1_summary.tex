@@ -1,6 +1,6 @@
 \section{Summary of achievements}
 
-This thesis has proposed a novel approach to infer small models
+This thesis has proposed a novel approach to infer models
 of software systems in order to perform Model-based Testing of
 production systems. In addition, it has provided a conformance
 testing technique that leverages such models. The original aims
@@ -11,11 +11,11 @@ and objectives of the thesis were as follows:
         in a fast and efficient manner, based on the data
         exchanged in a (production) environment;
 
-    \item To generate test cases based on these models in order
-        to perform conformance testing of production systems. The
-        main idea was to detect regressions across similar
-        production systems (\emph{e.g.}, a software update or a
-        hardware upgrade).
+    \item To design a conformance testing technique based on the
+        inferred models, targeting production systems. The main
+        idea was to detect regressions across similar production
+        systems (\emph{e.g.}, a software update or a hardware
+        upgrade).
 \end{itemize}
 
 Chapters \ref{sec:modelinf:webapps} and
@@ -24,19 +24,21 @@ objectives by proposing two approaches combining model inference,
 machine learning, and expert systems to infer exact models for
 web applications and production systems, wrapped into the
 \textit{Autofunk} framework.  The expert system is composed of
-rules used either to filter the trace set to remove the undesired
-ones, to infer Input/Output Symbolic Transition Systems (IOSTSs),
-or to build more abstract IOSTSs. In Chapter
-\ref{sec:modelinf:prodsystems}, the state merging is replaced
-with a context-specific state reduction based on an event
-sequence abstraction. This state reduction can be seen as the
-kTail algorithm \cite{5009015} where $k$ is as high as possible.
-This state reduction first ensures that the resulting models do
-not over-approximate the system under analysis, but it is also
-very context-specific, and cannot be generalized. We also showed
-that our approach is scalable: it can take thousands and
-thousands of traces and can still build models quickly thanks to
-our specific state merging process.
+rules, capturing the knowledge of human experts, and used either
+to filter the trace set to remove the undesired ones, to infer
+Input/Output Symbolic Transition Systems (IOSTSs), or to build
+more abstract IOSTSs. In Chapter \ref{sec:modelinf:prodsystems},
+the state merging is replaced with a context-specific state
+reduction based on an event sequence abstraction. This state
+reduction can be seen as the kTail algorithm \cite{5009015} where
+$k$ is as high as possible for every initial branch (or path) of
+the original Symbolic Transition System (STS). This state
+reduction ensures that the resulting models do not
+over-approximate the system under analysis, but it is also very
+context-specific, and cannot be generalized. We also showed that
+our approach is scalable: it can take thousands and thousands of
+traces and can still build models quickly thanks to our specific
+state merging process.
 
 The second objective was achieved by enhancing \textit{Autofunk}
 with a passive testing technique presented in Chapter
