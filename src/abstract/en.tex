@@ -1,17 +1,17 @@
-This thesis tackles the problem of preventing
-regressions in (legacy) production systems such as those of our
-industrial partner Michelin, one of the three largest tire
-manufacturers in the world, by means of Model-based Testing. A
-production system is defined as a set of production machines
-controlled by a software, in a factory.  Despite the large body
-of work within the field of Model-based Testing, a common issue
-remains the writing of models describing either the system under
-test or its specification. It is a tedious task that is even more
-complicated when the systems are referenced as "legacy",
-\emph{i.e.} out of date, and often not (or poorly) documented. A
-second point to take into account is that production systems
-often run continuously and should not be disrupted, which makes
-most of the existing classical testing techniques unusable.
+This thesis tackles the problem of testing (legacy) production
+systems such as those of our industrial partner Michelin, one of
+the three largest tire manufacturers in the world, by means of
+Model-based Testing. A production system is defined as a set of
+production machines controlled by a software, in a factory.
+Despite the large body of work within the field of Model-based
+Testing, a common issue remains the writing of models describing
+either the system under test or its specification. It is a
+tedious task that should be performed regularly in order to keep
+the models up to date (which is often also true for any
+documentation in the Industry). A second point to take into
+account is that production systems often run continuously and
+should not be disrupted, which limits the use of most of the
+existing classical testing techniques.
 
 We present an approach to infer exact models from traces,
 \emph{i.e.} sequences of events observed in a production
@@ -28,17 +28,16 @@ models can serve different purposes, \emph{e.g.}, generating
 documentation, data mining, but also testing.
 
 To address the problem of testing production systems without
-disturbing them, this thesis introduces two passive Model-based
-Testing techniques. The offline passive testing technique allows
-to detect differences between two production systems, and the
-online technique enables on-the-fly testing of production
-systems. Both techniques leverage the inferred models, and rely
-on two implementation relations: the existing trace preorder
+disturbing them, this thesis introduces an offline passive
+Model-based Testing technique, allowing to detect differences
+between two production systems. This technique leverages the
+inferred models, and rely on two implementation relations: a
+slightly modified version of the existing trace preorder
 relation, and a weaker implementation proposed to overcome the
 partialness of the inferred models.
 
 Overall, the thesis presents \emph{Autofunk}, a modular framework
 for model inference and testing of production systems, gathering
 the previous notions. Its Java implementation has been applied to
-different applications and production systems, and this thesis
-gives results from different case studies.
+different applications and production systems at Michelin, and
+this thesis gives results from different case studies.

@@ -25,9 +25,9 @@
 % Information and Commands for Reuse
 % **************************************************
 \newcommand{\thesisTitle}{Automated Test Generation for
-production systems with a Model-based Testing approach.}
+production systems with a Model-based Testing approach}
 \newcommand{\thesisName}{William Durand}
-\newcommand{\thesisSubject}{Documentation}
+\newcommand{\thesisSubject}{PhD Thesis}
 \newcommand{\thesisDate}{\today}
 
 \IfFileExists{revision.tex}{
@@ -37,31 +37,11 @@ production systems with a Model-based Testing approach.}
     \newcommand{\thesisVersion}{draft}
 }
 
-%\newcommand{\thesisFirstReviewer}{Jane Doe}
-%\newcommand{\thesisFirstReviewerUniversity}{\protect{Clean Thesis Style University}}
-%\newcommand{\thesisFirstReviewerDepartment}{Department of Clean Thesis Style}
-%
-%\newcommand{\thesisSecondReviewer}{John Doe}
-%\newcommand{\thesisSecondReviewerUniversity}{\protect{Clean Thesis Style University}}
-%\newcommand{\thesisSecondReviewerDepartment}{Department of Clean Thesis Style}
-%
-\newcommand{\thesisFirstSupervisor}{S\'ebastien Salva}
-\newcommand{\thesisSecondSupervisor}{Patrice Lauren\c{c}ot}
-
-\newcommand{\thesisUniversity}{\protect{Universit\'e Blaise Pascal}}
-\newcommand{\thesisUniversityDepartment}{LIMOS - UMR 6158}
-\newcommand{\thesisUniversityInstitute}{}
-\newcommand{\thesisUniversityGroup}{}
-\newcommand{\thesisUniversityCity}{Aubi\`ere, France}
-\newcommand{\thesisUniversityStreetAddress}{Campus Universitaire
-des C\'ezeaux - 1 rue de la Chebarde}
-\newcommand{\thesisUniversityPostalCode}{63178}
-
 % **************************************************
 % Load and Configure Packages
 % **************************************************
 \usepackage[utf8]{inputenc}		% defines file's character encoding
-\usepackage[english]{babel} % babel system, adjust the language of the content
+\usepackage[english]{babel}     % babel system, adjust the language of the content
 \usepackage[					% clean thesis style
 	figuresep=colon,
 	sansserif=false,
@@ -164,6 +144,8 @@ des C\'ezeaux - 1 rue de la Chebarde}
 \pagestyle{empty}				% no header or footers
 \input{src/titlepages}		    % INCLUDE: all titlepages
 \cleardoublepage
+
+\blankpage
 
 \pagestyle{plain}				% display just page numbers
 \input{src/abstract}		    % INCLUDE: the abstracts

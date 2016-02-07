@@ -3,13 +3,52 @@
 % ------------------------------------  --> cover title page
 \begin{titlepage}
 	\pdfbookmark[0]{Cover}{Cover}
-	\flushright
-	\hfill
-	\vfill
-	{\LARGE\thesisTitle \par}
-	\rule[5pt]{\textwidth}{.4pt} \par
-	{\Large\thesisName}
-	\vfill
-	\textit{\large\thesisDate} \\
-	Version: \thesisVersion
+
+    \begin{minipage}{0.3\textwidth}
+        N° d'ordre : D.U.\\
+        EDSPIC : xxx
+    \end{minipage}
+    \hfill
+    \begin{minipage}{0.3\textwidth}
+        \includegraphics[width=1.0\linewidth]{figures/michelin.jpg}
+    \end{minipage}
+
+	\center
+    {\Large\uppercase{Universit\'e Blaise Pascal - Clermont-Ferrand II\\Ecole Doctorale\\Sciences pour l'Ing\'enieur de Clermont-Ferrand}\par}
+
+    \hfill
+
+    {\huge Thèse}\\
+    Présentée par\\
+    {\huge\thesisName\par}
+
+    pour obtenir le grade de
+
+    {\LARGE Docteur d'Université}\\
+    Spécialité : Informatique\par
+
+    \rule[5pt]{\textwidth}{.4pt}
+    {\LARGE\thesisTitle \par}
+    \rule[5pt]{\textwidth}{.4pt}\par
+
+    \flushleft
+    Soutenue publiquement le xxx\\
+    Devant le jury :
+
+    \begin{tabular}{l l}
+        \multicolumn{2}{l}{\uppercase{Président}}\\
+        ... & ... \\
+        \multicolumn{2}{l}{\uppercase{Rapporteurs}}\\
+        ... & ... \\
+        ... & ... \\
+        \multicolumn{2}{l}{\uppercase{Examinateurs}}\\
+        ... & ... \\
+        ... & ... \\
+        \multicolumn{2}{l}{\uppercase{Directeur de thèse}}\\
+        S\'ebastien Salva & Professeur des Universités, LIMOS - Clermont-Ferrand\\
+    \end{tabular}
+
+%   \flushright
+%	\textit{\large\thesisDate} \\
+    %	Version: \thesisVersion
 \end{titlepage}
