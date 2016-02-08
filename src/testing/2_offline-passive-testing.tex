@@ -30,14 +30,12 @@ $check(trace, R(\EuScript{S}_i^{N}))$ (line
 $R(\EuScript{S}_i^{N})$ is found, $trace$ is added to the set
 $T_1$ (line \ref{algo:check:line:t1}), which gathers the possibly
 fail traces with respect to $\leq_{ct}$.
-
 Thereafter, this algorithm performs the same step but using the
 STS $D(\EuScript{S}^{N})$ (line \ref{algo:check:line:check2}).
 One more time, if no model $D(\EuScript{S}_i^{N})$ is found, the
 trace $trace$ is added to the set $T_2$ (line
 \ref{algo:check:line:t2}), which gathers the possibly fail
 traces with respect to the relation $\leq_{mct}$.
-
 Finally, if $T_1$ is empty, the verdict "Pass$\leq_{ct}$" is
 returned, which means that the first implementation relation
 holds. Otherwise, $T_1$ is provided. If $T_2$ is empty, the
