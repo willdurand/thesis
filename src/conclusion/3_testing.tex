@@ -29,15 +29,20 @@ covering 90\% of the code.
 
 Nevertheless, it is clear that this tool is still a prototype,
 and not a production-ready tool. As pointed out in this thesis,
-memory consumption remains an issue for example. With the rise of
-big data technologies and tools, it should be relatively simple
-to solve this issue. For instance, \emph{Autofunk v3} includes
-\emph{Apache Spark}\footnote{\url{https://spark.apache.org/}}, a
-framework for large-scale data processing, which, among all,
-provides an implementation of the k-means clustering algorithm.
-Such a framework is designed to handle large data sets. It should
-be possible to make \emph{Autofunk} more efficient by adapting
-our algorithms on-top of Apache Spark or any similar big data
+memory consumption remains an issue for example, because we load
+all objects in memory in order to act on them. At the time of
+writing, we partially fixed this problem by reducing
+\emph{Autofunk}'s memory footprint with better object
+representations in memory, but it is not future-proof.
+With the rise of big data technologies and tools, it should be
+possible to find a better solution to this issue. For instance,
+\emph{Autofunk v3} includes \emph{Apache
+Spark}\footnote{\url{https://spark.apache.org/}}, a framework for
+large-scale data processing, which, among all, provides an
+implementation of the k-means clustering algorithm.  Such a
+framework is designed to handle large data sets. It should be
+possible to make \emph{Autofunk} more efficient by adapting our
+algorithms on-top of Apache Spark or any similar big data
 framework, \emph{e.g.}, with a \emph{Map-Reduce} approach
 \cite{dean2008mapreduce}. This is a programming model that allows
 to process large data sets with distributed parallel algorithms.
@@ -64,11 +69,10 @@ of the inference rules. For instance, because the events in a
 production system are text-based and readable, the inference
 rules needed during the filtering step might be replaced by a
 method inspired by the works on automated text categorization
-\cite{Sebastiani:2002:MLA:505282.505283} and spam filtering
-\cite{Guzella200910206}. Yet, it is manifest that the inference
-rules used to lift abstraction of the models still have to be
-written, and cannot be easily replaced, because they strongly
-depend on the business.
+\cite{Sebastiani:2002:MLA:505282.505283}. Yet, it is manifest
+that the inference rules used to lift abstraction of the models
+still have to be written, and cannot be easily replaced, because
+they strongly depend on the business.
 
 Another point that would be worth working on is the
 \emph{visualization} of the inferred models and test results. At
@@ -86,14 +90,14 @@ this idea to the research field on \emph{fault localization}
 \cite{jones2002visualization,wong2010software}, except that we
 would locate faults in a physical manner in a factory.
 
-Finally, we would like to reduce the number of false negatives
+Finally, we would like to reduce the number of false positives
 yield by our test engine as presented in
 \crossref{sec:testing}{sec:testing:offline:impl-exp}. For the
-record, false negatives are behaviors that are considered
+record, false positives are behaviors that are considered
 possibly faulty, even though they are correct, because such
 behaviors are not part of the reference models. We already know
 that inferring reference models from large sets of traces reduces
-the number of false negatives, but there might be other methods
+the number of false positives, but there might be other methods
 to overcome this issue. For instance, we proposed a weaker
 implementation relation that works well to avoid false positives
 with similar behaviors that are (partially) known. Unfortunately,
@@ -178,6 +182,7 @@ interesting to apply data mining techniques on them.\\
     system.}
     \label{fig:autofunk_active}
 \end{figure}
+\clearpage
 
 \subsection{Data mining}
 \label{sec:conclusion:testing:data}
@@ -191,17 +196,27 @@ have a lot of information available for data mining.
 
 As an example, a side project we quickly set up with Michelin
 engineers was to visualize the data collected by
-\textit{Autofunk}. We relied on a
-tool\footnote{\url{https://www.elastic.co/products/kibana}} that
-allowed to show different business metrics, such as the usage
-rates of some stores in a workshop, the number of manufactured
-products per day, but also the usage rates of the production
-machines themselves. Such information could be used to create
-models that might predict maintenance operations for instance.
-The main objective of \emph{predictive maintenance}
-\cite{mobley2002introduction} is to decide when to maintain a
-system according to its state, which we could deduce by mining
-the data contained in the inferred models.
+\textit{Autofunk}. We relied on a tool called
+\emph{Kibana}\footnote{\url{https://www.elastic.co/products/kibana}}
+to show different business metrics, such as the usage rates of
+some stores in a workshop, the number of manufactured products
+per day, but also the usage rates of the production machines
+themselves as depicted in Figure \ref{fig:kibana}. Such
+information could be used to create models that might predict
+maintenance operations for instance.  The main objective of
+\emph{predictive maintenance} \cite{mobley2002introduction} is to
+decide when to maintain a system according to its state, which we
+could deduce by mining the data contained in the inferred models.
+
+\begin{figure}[h]
+    \begin{center}
+        \includegraphics[width=1.0\linewidth]{figures/kibana.png}
+    \end{center}
+
+    \caption{Dashboard displaying various business metrics
+    created with Kibana, a visualization tool.}
+    \label{fig:kibana}
+\end{figure}
 
 We could also extract time data from the models. A potential use
 case would be to detect slowness in the production lines. That
@@ -242,7 +257,7 @@ robustness testing, but it should not be used for conformance
 testing. We were able to perform conformance testing only because
 of Michelin's conditions, which we could extend to most of the
 existing industrial and manufacturing contexts. Nevertheless, it
-cannot be applied generally.
+cannot be applied in all cases.
 
 Based on this state, we would like to reject such a hypothesis to
 perform conformance testing based on our inferred models, but
