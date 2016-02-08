@@ -63,22 +63,22 @@ improvements to the end users of \textit{Autofunk}.
 
 \subsection{Scalability as a first-class citizen}
 
-Building models from large sets of observations in a reasonable
-amount of time is a goal that is not yet met by most of the
-existing model inference methods. To our knowledge, too few
-studies \cite{Yang:2006:PMT:1134285.1134325,Pradel:2009} take
-scalability into account. That is also why we have proposed
-techniques that scale well in this thesis. We believe that the
-use of specific parallel programming paradigms and heuristics
-would be an interesting research direction, \emph{e.g.}, to
-quickly build models or to find state equivalence classes. In
-this thesis, we tackled the problem of inferring models from
-production systems.  Such systems are distributed over several
+In this thesis, we tackled the problem of inferring models from
+production systems. Such systems are distributed over several
 devices, and generate thousands of events a day. Collecting,
 storing, and analyzing such amount of data becomes more and more
 complicated, and model inference algorithms have to take these
-points into account. Such challenges are close to those of what
-we now call "big data" \cite{bigdata14}. This term not only
+points into account. To our knowledge, too few studies
+\cite{Yang:2006:PMT:1134285.1134325,Pradel:2009} take scalability
+into account. That is also why we have proposed techniques that
+scale well in this thesis. We shew that adopting contextual
+algorithms was interesting for performance (\emph{e.g.}, our
+context-specific reduction).  We also believe that the use of
+specific parallel programming paradigms and heuristics would be
+an interesting addition to quickly build models or to find state
+equivalence classes. That is what we did in our Java
+implementation. Besides, such challenges are close to those of
+what we now call "big data" \cite{bigdata14}. This term not only
 defines the large volume of data but also new processing
 algorithms and applications since the traditional ones are
 inadequate.
@@ -94,12 +94,10 @@ applications, each developed and deployed on its own. This
 package of services form the complete software system. Inferring
 models of such systems is not doable with most of the existing
 model inference techniques. On the other hand, \textit{Autofunk}
-can use many data sources to infer models, because of our use
-case with Michelin's production systems. Indeed, we chose such an
-approach to gather heterogeneous events between different devices
-and software, but this could be a path to follow if one would
-want to infer models of microservices as each service owns its
-data.
+can use many data sources to infer models. We chose to gather
+heterogeneous events between different devices and software,
+which could be a path to follow if one would want to infer models
+of microservices as each service owns its data.
 
 \subsection{Bringing together different methods and research
 fields}
