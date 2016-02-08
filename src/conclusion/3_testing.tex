@@ -5,9 +5,10 @@ Despite the promising results obtained by \textit{Autofunk} in
 Chapter \ref{sec:testing}, there is room for improvement. The
 next section is focused on \textit{Autofunk}'s usability, \emph{i.e.}
 how, we think, \textit{Autofunk} could be enhanced to be more
-widely used. Furthermore, in this thesis, we only covered passive
-testing of production systems, but it would be interesting to see
-how active testing could be integrated with \textit{Autofunk}.
+widely used. Furthermore, in this thesis, we only covered offline
+passive testing of production systems, but it would be
+interesting to see how active testing could be integrated with
+\textit{Autofunk}.
 This is discussed in Section \ref{sec:conclusion:testing:active}.
 Section \ref{sec:conclusion:testing:data} introduces our thoughts
 on data mining, which are semi-related to the previous section on
@@ -79,16 +80,17 @@ Another point that would be worth working on is the
 the time of writing, \emph{Autofunk} is able to generate graphs
 representing the generated models, but they are not really usable
 in practice because of the size of the models. In most cases, the
-models represent behaviors of a production system. The models fit a system's
-physical layout in a factory. When a possibly fail trace is
-raised, it would be nice to highlight the possibly faulty
-behavior directly using the layout of the production system under
-test. That way, an engineer would have all the information
-required to quickly determine what caused such a behavior, and
-state whether it is a bug or a false positive. We could relate
-this idea to the research field on \emph{fault localization}
-\cite{jones2002visualization,wong2010software}, except that we
-would locate faults in a physical manner in a factory.
+models represent behaviors of a production system. The models fit
+a system's physical layout in a factory. When a possibly fail
+trace is raised, it would be nice to highlight the possibly
+faulty behavior directly using the layout of the production
+system under test. That way, an engineer would have all the
+information required to quickly determine what caused such a
+behavior, and state whether it is a bug or a false positive. We
+could relate this idea to the research field on \emph{fault
+localization} \cite{jones2002visualization,wong2010software},
+except that we would locate faults in a physical manner in a
+factory.
 
 Finally, we would like to reduce the number of false positives
 yield by our test engine as presented in
@@ -106,12 +108,108 @@ selection \cite{orso2004scaling} because we cannot plainly reject
 all new behaviors (as we could do in some more traditional
 testing scenarios). A naive approach would be to teach the test
 engine to recognize the new yet correct behaviors, but it seems
-cumbersome. Instead, we believe that enabling active testing may
-be more effective.
+cumbersome. Instead, we believe that improving \emph{Autofunk}'s
+testing module with an online mode and some active testing
+concepts may be more effective.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\subsection{Performing active testing}
+\subsection{Online passive testing}
+\label{sec:conclusion:testing:online}
+
+In Chapter \ref{sec:testing}, we presented an offline passive
+testing technique, which we started to adapt in order to propose
+an online passive testing technique as well. Both offline and
+online modes are not completely unalike, they also serve
+different purposes.
+
+Our online passive testing approach records traces on a system
+under test on-the-fly, and then check whether those traces
+satisfy specifications, still generated from a system under
+analysis. It enables what we call \emph{just-in-time fault
+detection}. Faults can be revealed in near real-time on a running
+system so that users can be notified as soon as possible.
+
+In online mode, we do not have complete traces (such as
+$CTraces({Sut})$), but traces that are constructed on-the-fly by
+an \emph{instance} of tester, every time an event is received.
+Each new production event passes through an \emph{entry point}
+whose role is to distribute the incoming events across the
+different instances. The entry point functioning is given in
+Algorithm \ref{algo:online-entry-point}. Each event is filtered
+and transformed into a filtered valued event (line
+\ref{algo:oep:line:filter}), from which we extract its product
+identifier $pid$ (line \ref{algo:oep:line:extract}).  The valued
+event is then forwarded to the right tester (line
+\ref{algo:oep:line:fw}), \emph{i.e.} the instance for this $pid$.
+If there is no instance yet, we create a new tester for this
+$pid$ first (lines
+\ref{algo:oep:line:new}-\ref{algo:oep:line:endnew}).
+
+\begin{algorithm}[h]
+    BEGIN\;
+
+    $Instances = \emptyset$\;
+
+    \While{production event $event$}{
+        transform $event$ into a valued event
+        $(a(p), \alpha)$\;\label{algo:oep:line:filter}
+
+        extract the product identifier $pid'$ from
+        $(a(p), \alpha)$\;\label{algo:oep:line:extract}
+
+        \If{$\not\exists ~instance_{pid} \in Instances \mid pid
+        == pid'$}{\label{algo:oep:line:new}
+            create new tester $instance_{pid}$ with $pid = pid'$\;
+            $Instances = Instances \cup \{ instance_{pid} \}$\;
+        }\label{algo:oep:line:endnew}
+
+        forward $(a(p), \alpha)$ to $instance_{pid}$\;\label{algo:oep:line:fw}
+    }
+
+    END\;
+
+    \caption{Online passive testing entry point}
+    \label{algo:online-entry-point}
+\end{algorithm}
+
+At this point, there should be one instance of tester running the
+same algorithm per $pid$, \emph{i.e.} per product being
+manufactured. The intuition of such an algorithm is to wait for
+incoming valued events, sent by the entry point, and to construct
+a trace until it reaches:
+
+\begin{itemize}
+    \item a verdict location, which means the trace conforms to
+        the specification, according to the reference model set
+        chosen (either $R(\EuScript{S}^N$ or
+        $D(\EuScript{S}^N)$);
+
+    \item a guard that is not satisfied, which leads to a
+        possibly fail verdict;
+
+    \item a \emph{deadlock}, which happens when no event is
+        received after a certain delay. This situation may occur
+        when a product is removed from the production line (by a
+        human operator for instance).
+\end{itemize}
+
+At the time of writing, there are still open-ended questions
+regarding this online method. First of all, we need to find a way
+to identify deadlocks. We know that products can stay for days in
+a production system, hence it is complicated to set a timed
+limit.
+
+On the other hand, running one tester per product will result in
+many instances executed in parallel as there are thousands of
+products in a factory at any given time. Such a situation may not
+scale well, especially with the notion of deadlocks mentioned
+previously. Indeed, we might have too many instances executed in
+parallel, which would freeze the testing process.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\subsection{Integrating active testing with \emph{Autofunk}}
 \label{sec:conclusion:testing:active}
 
 Active testing, as defined in
@@ -120,23 +218,25 @@ works by stimulating a system under test. We chose not to take
 this direction because stimulating a production system might
 break it if one sends incorrect data. Indeed, as there are
 physical devices behind software, it could lead to severe
-damages.  Nonetheless, and according to our partner Michelin, it
+damages.
+
+Nonetheless, and according to our partner Michelin, it
 should be possible to reproduce a production environment in a
 simulation room, and thus to simulate a whole production system
 without the physical devices (only the logical controllers). We
 could then leverage our inferred models, which contain the data
-collected from a real environment, to construct the test cases,
-and execute them in an active testing approach.
+collected from a real environment, to construct a set of inputs,
+which we would reuse on the system under test in simulation room.
+It is worth mentioning that this principle is not strictly active
+testing because we do not generate the test cases that lead to
+verdicts.  Yet, we believe that adding such an active approach to
+\textit{Autofunk} would speed up the testing process
+significantly by avoiding to collect traces of a system under
+test for a long period, and it would also make its adoption
+easier.
 
-The main benefit of active testing would be to avoid collecting
-traces of the system under test for a long period, and directly
-test this system instead. We believe that adding active testing
-to \textit{Autofunk} would speed up the testing process
-significantly, and it would also make its adoption easier as
-active testing is more often known than passive testing in the
-Industry.
-
-A simplistic way to perform active testing would be to "replay"
+A simplistic way to integrate active testing with \emph{Autofunk}
+would be to "replay"
 \cite{thane2000using,Orso:2005:SCR:1082983.1083251} the data
 previously "recorded", \emph{i.e.} the data available in the
 inferred models. This is a path Michelin would like to explore.
@@ -157,13 +257,14 @@ This is yet another strong assumption we would prefer not to
 make.
 
 Instead, we would like to leverage our inferred models to extract
-test data, for instance, by mining \emph{realistic domains} as
-defined in \cite{Enderlin:2011:PSL:2075545.2075551}. Realistic
+input test data, for instance, by mining \emph{realistic domains}
+as defined in \cite{Enderlin:2011:PSL:2075545.2075551}. Realistic
 domains are data domains found in concrete implementations. A
 data domain should come with a practical way to generate values
-in it. This would be particularly useful to actively test a
-system as it would ease the process of generating test data by
-means of a sampler for instance, \emph{i.e.} a value generator.
+in it. This would be particularly useful to actively interact
+with a system as it would ease the process of generating test
+data by means of a sampler for instance, \emph{i.e.} a value
+generator.
 
 Mining realistic domains for testing purpose is not the only use
 case in which we believe. Indeed, our inferred models own a lot
