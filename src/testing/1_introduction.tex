@@ -404,6 +404,8 @@ guards described in the previous section:
 
     The set of derived models is denoted by $D(\EuScript{S}^{N}) =
     \{D(\EuScript{S}_1^{N}),\dots,D(\EuScript{S}_n^{N}) \}$.
+
+    \label{def:sts-d}
 \end{definition}
 
 The second implementation relation $\leq_{mct}$ can now be
@@ -419,12 +421,11 @@ expressed by:
     $l_m \in Pass$.
 \end{proposition}
 
-
 The implementation relation $\leq_{mct}$ now means that a trace
 of $\mathit{Sut}$ must also be a pass trace of the model set
 $D(\EuScript{S}^{N})=\{D(\EuScript{S}_1^{N}),\dots,D(\EuScript{S}_n^{N})\}$.
-Furthermore, this notion of trace inclusion can be formulated
-with the first implementation relation $\leq_{ct}$ as follows:
+This notion of trace inclusion can also be formulated with the
+first implementation relation $\leq_{ct}$ as follows:
 
 \begin{proposition}
     ${Sut} \leq_{mct} \EuScript{S}^{N} \text{ if and only if }
@@ -436,9 +437,27 @@ with the first implementation relation $\leq_{ct}$ as follows:
     \label{rel:impl2}
 \end{proposition}
 
-The implementation relation $\leq_{mct}$ is now expressed with
+Now, the implementation relation $\leq_{mct}$ is expressed with
 the first relation $\leq_{ct}$, which implies that our passive
 testing algorithms shall be the same for both relations except
-that they shall take different reference models. In the next
-section, we introduce an offline passive testing algorithm that
-uses these two implementation relations.
+that they shall take different reference models.
+
+Furthermore, because $D(\EuScript{S}^{N})$ is derived from
+$R(\EuScript{S}^{N})$, \emph{i.e.} the guards of the model
+$D(\EuScript{S}_i^{N})$ are the disjunctions of the guards of the
+model $R(\EuScript{S}_i^{N})$ (cf. Definition \ref{def:sts-d}),
+we have $Traces_{Pass}(R(\EuScript{S}^{N})) \subseteq
+Traces_{Pass}(D(\EuScript{S}^{N}))$. Therefore, if $\mathit{Sut}$
+conforms to $\EuScript{S}^{N}$ with respect to $\leq_{ct}$,
+therefore $\mathit{Sut}$ conforms to $\EuScript{S}^{N}$ with
+respect to $\leq_{mct}$:
+
+\begin{proposition}
+    $\mathit{Sut} \leq_{ct} \EuScript{S}^N \implies
+    \mathit{Sut} \leq_{mct} \EuScript{S}^N$.
+
+    \label{rel:impl-ct-implies-mct}
+\end{proposition}
+
+In the next section, we introduce the offline passive testing
+algorithm that uses these two implementation relations.

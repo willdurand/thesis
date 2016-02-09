@@ -5,7 +5,7 @@ Our offline passive testing algorithm, which aims to check
 whether the two previous implementation relations hold, is given
 in Algorithm \ref{algo:check}. It takes the complete traces of
 $\mathit{Sut}$, as well as the model sets $R(\EuScript{S}^{N})$ and
-$D(\EuScript{S}^{N})$, with regards to Proposition
+$D(\EuScript{S}^{N})$, with regard to Proposition
 \ref{rel:impl12} and Proposition \ref{rel:impl2}. It returns the
 verdict "Pass$\leq_{ct}$" if the relation $\leq_{ct}$ is
 satisfied, and the verdict "Pass$\leq_{mct}$" if $\leq_{mct}$ is
@@ -20,7 +20,8 @@ sequence of symbols than $trace$ (line
 matrix column (\emph{i.e.} a vector) $M = M_{[b]}[*,c_{[b]}]$ ($1
 \leq c_{[b]} \leq k$) such that every variable assignment
 $\alpha_j$ satisfies the guard $M[j]$. If such a column of guards
-exists, the function returns $True$, and $False$ otherwise.
+exists, the function returns $True$, and $False$ otherwise (cf.
+Proposition \ref{prop:check}).
 
 First, this algorithm covers every trace $trace$ of
 $CTraces({Sut})$, and tries to find a STS $R(\EuScript{S}_i^{N})$
@@ -61,23 +62,21 @@ returned.
 
     \ForEach{$trace \in CTraces({Sut})$}{
 
-        \For{$i = 1, \dots, n$}{
-            \If{\check($trace$,
-            $R(\EuScript{S}_i^{N})$)}{\label{algo:check:line:check1}
+        \For{$i = 1, \dots, n$}{\label{algo:check:line:proof1-start}
+            \If{\check($trace$, $R(\EuScript{S}_i^{N})$)}{\label{algo:check:line:check1}
                 break\;
             }
-        }
+        }\label{algo:check:line:proof1-end}
 
         \If{$i == n$} {
             $T_1=T_1 \cup \{trace\}$\;\label{algo:check:line:t1}
 
-            \For{$i = 1, \dots, n$}{
+            \For{$i = 1, \dots, n$}{\label{algo:check:line:proof2-start}
 
-                \If{\check($trace$,
-                $D(\EuScript{S}_i^{N})$)}{\label{algo:check:line:check2}
+                \If{\check($trace$, $D(\EuScript{S}_i^{N})$)}{\label{algo:check:line:check2}
                     break\;
                 }
-            }
+            }\label{algo:check:line:proof2-end}
 
             \If{$i==n$} {
                 $T_2=T_2 \cup \{trace\}$\;\label{algo:check:line:t2}
@@ -87,12 +86,14 @@ returned.
 
     \BlankLine
 
-    \If{$T_1==\emptyset$}{
-        return "Pass$\leq_{ct}$"\;}
+    \If{$T_1==\emptyset$}{\label{algo:check:line:empty-t1}
+        return "Pass$\leq_{ct}$"\;\label{algo:check:line:pass_ct}
+    }
     \Else{
-        \If{$T_2==\emptyset$}{
-            return "Pass$\leq_{mct}$" and $T_1$\;
-        }\Else{
+        \If{$T_2==\emptyset$}{\label{algo:check:line:empty-t2}
+            return "Pass$\leq_{mct}$" and $T_1$\;\label{algo:check:line:pass_mct}
+        }
+        \Else{
             return $T_1$ and $T_2$\;
         }
     }
@@ -142,7 +143,132 @@ for Michelin engineers because it allows them to only focus on
 what are potentially faulty behaviors, reducing debugging time,
 and making engineers more efficient.
 
-% TODO: complexity
-% TODO: Proof soudness
+\begin{proposition}
+    Let $t \in CTraces(Sut)$ be a trace, and $\EuScript{S}^{N}$ a
+    STS set such that $\mathit{Sut} \leq_{ct} \EuScript{S}^{N}$.
+    $\leq_{ct}$ means that there exists a model
+    $\EuScript{S}_i^{N}$ such that $t \in
+    Traces_{Pass}(\EuScript{S}_i^{N})$, \emph{i.e.} $t$
+    \emph{conforms to} $\EuScript{S}_i^{N}$.
+
+    The $check(Trace ~trace, STS ~\EuScript{S})$ function in
+    Algorithm \ref{algo:check} implements this relation, and we
+    have: $t \in Traces_{Pass}(\EuScript{S}_i^{N}) \implies$ the
+    function $check(t, \EuScript{S}_i^{N})$ returns $True$.
+
+    \begin{proof}
+        \textbf{Sketch of proof:} Let $t = (a_1(p), \alpha_1)
+        \dots (a_n(p), \alpha_n)$ be a trace of $\mathit{Sut}$.
+        Let $b$ be a STS path such that
+        $\exists ~b=l0_{\EuScript{S}_i^{N}} \xRightarrow{(a_1(p_1),G_{1},A_{1}) \dots
+        (a_n(p_n),G_{n},A_{n})} l_n, ~l_n \in Pass \mid ~t \in Traces_{Pass}(b)$.
+        Let $M_{[b]}$ be the matrix $n \times k$ of $b$ such that
+        $G_j = M_{[b]}[j, c_{[b]}] ~(1 \leq c_{[b]} \leq k)$.
+
+        $Traces_{Pass}(b) = (a_1(p), \beta_1) \dots (a_n(p), \beta_n)$
+        with $\beta_1 \dots \beta_n$ such that $\exists ~1 \leq
+        c_{[b]} \leq k \mid \beta_j \models G_j ~(1 \leq j \leq n)$.
+
+        Given the trace $t = (a_1(p), \alpha_1) \dots (a_n(p),
+        \alpha_n)$, the function $check$:
+
+        \begin{itemize}
+            \item finds a path $b = l0_{\EuScript{S}_i^{N}}
+                \xRightarrow{(a_1(p_1),G_{1},A_{1}) \dots
+                (a_n(p_n),G_{n},A_{n})} l_n, ~l_n \in Pass$ (line
+                \ref{algo:check:line:exists});
+
+            \item ensures that $\exists ~1 \leq c_{[b]} \leq k
+                \mid \alpha_j \models M_{[b]}[j, c_{[b]}] ~(1
+                \leq j \leq n)$ (lines 28-31). %TODO: fixme
+        \end{itemize}
+
+        If both a path $b$ and a column $c_{[b]}$ of $M_{[b]}$
+        are found, $True$ is returned (line 33).
+    \end{proof}
+
+    \label{prop:check}
+\end{proposition}
+
+\paragraph{Soundness.} The soundness of Algorithm
+\ref{algo:check} can be split into three points (sketch of proof):
+
+\begin{enumerate}
+    \item $\mathit{Sut} \leq_{ct} \EuScript{S}^N$ $\implies$
+        Algorithm \ref{algo:check} returns "Pass$\leq_{ct}$":
+
+        \begin{proof}
+            $\mathit{Sut} \leq_{ct} \EuScript{S}^{N}
+            \Leftrightarrow CTraces(Sut) \subseteq Traces_{Pass}(R(\EuScript{S}^N))$
+            (Proposition \ref{rel:impl12}) can be written as
+            follows: $\forall ~t \in CTraces(Sut), \exists ~1
+            \leq i \leq n \mid ~t \in Traces_{Pass}(R(\EuScript{S}_i^{N}))$.
+
+            Given that, and according to Proposition
+            \ref{prop:check}, function $check$ returns $True$ for
+            every trace $t \in CTraces(Sut)$ (lines
+            \ref{algo:check:line:proof1-start}-\ref{algo:check:line:proof1-end}).
+
+            Therefore the set $T_1$ is empty (line
+            \ref{algo:check:line:empty-t1}), and Algorithm
+            \ref{algo:check} returns "Pass$\leq_{ct}$" (line
+            \ref{algo:check:line:pass_ct}).
+        \end{proof}
+
+    \item $\mathit{Sut} \leq_{mct} \EuScript{S}^N$ $\implies$
+        Algorithm \ref{algo:check} returns "Pass$\leq_{mct}$":
+
+        \begin{proof}
+            $\mathit{Sut} \leq_{mct} \EuScript{S}^{N}
+            \Leftrightarrow CTraces(Sut) \subseteq Traces_{Pass}(D(\EuScript{S}^N))$
+            (Proposition \ref{rel:impl2}) can be written as
+            follows: $\forall ~t \in CTraces(Sut), \exists ~1
+            \leq i \leq n \mid ~t \in Traces_{Pass}(D(\EuScript{S}_i^{N}))$.
+
+            Given that, and according to Proposition
+            \ref{prop:check}, function $check$ returns $True$ for
+            every trace $t \in CTraces(Sut)$ (lines
+            \ref{algo:check:line:proof2-start}-\ref{algo:check:line:proof2-end}).
+
+            Therefore the set $T_2$ is empty
+            (line \ref{algo:check:line:empty-t2}), and Algorithm
+            \ref{algo:check} returns "Pass$\leq_{mct}$" (line
+            \ref{algo:check:line:pass_mct}).
+        \end{proof}
+
+    \item $\mathit{Sut} \leq_{ct} \EuScript{S}^N$ $\implies$
+        Algorithm \ref{algo:check} returns "Pass$\leq_{ct}$",
+        "Pass$\leq_{mct}$":
+
+        \begin{proof}
+            $\mathit{Sut} \leq_{ct} \EuScript{S}^{N} \implies
+            \mathit{Sut} \leq_{mct} \EuScript{S}^{N}$
+            (Proposition \ref{rel:impl-ct-implies-mct}), therefore
+            Algorithm \ref{algo:check} returns "Pass$\leq{ct}$",
+            "Pass$\leq_{mct}$".
+        \end{proof}
+\end{enumerate}
+
+\paragraph{Complexity.}
+The complexity of the function $check(t, \EuScript{S})$ is
+$\mathcal{O}(m \times k)$ with $m$ the number of valued events in
+the trace $t$ (\emph{i.e.} its length), and $k$ the number of
+columns in $M_{[b]}$, which is likely large as reduced models
+still express all complete behaviors found in the traces of a
+system under analysis. Finding a branch in a model is negligible
+thanks to the hash mechanism, hence we only take the matrix
+traversal into account. Because $m << k$, the complexity of the
+function $check(t, \EuScript{S})$ can be simplified to
+$\mathcal{O}(k)$.
+
+The complexity of Algorithm \ref{algo:check} is $\mathcal{O}(t
+\times n \times k)$ with $t$ the number of complete traces of
+$\mathit{Sut}$, $n$ the number of models, and $k$ the complexity
+of the $check$ function, which corresponds to the number of
+columns of the matrix associated with the branch (as described
+above). Compared to the number of traces and columns, the number
+of models $n$ is negligible (\emph{i.e.} $n << t$, $n << k$, and
+$t \approx k$), which means that the overall complexity is
+$\mathcal{O}(t^2)$.
 
 \clearpage

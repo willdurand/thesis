@@ -475,7 +475,7 @@ inference rules are Modus Ponens (soundness hypothesis introduced
 previously).  Consequently, Layer 1 is sound and complete
 \cite{logicreasoning}.  Keeping in mind the finite complexity
 hypothesis, its complexity is proportional to
-$\EuScript{O}(m(k+1))$ with $m$ the number of valued actions, and
+$\mathcal{O}(m(k+1))$ with $m$ the number of valued actions, and
 $k$ the number of rules (worst case scenario is when every valued
 action is covered $k+1$ times in the expert system engine).
 
@@ -721,7 +721,7 @@ action of a trace is covered once to construct states, then every
 run is lifted to the level of one IOSTS path starting from the
 initial location. Afterwards, the IOSTS is minimized with the
 algorithm presented in \cite{Fernandez89animplementation}. Its
-complexity is proportional to $\EuScript{O}(mlog (m+1))$ with $m$
+complexity is proportional to $\mathcal{O}(mlog (m+1))$ with $m$
 the number of valued actions. The soundness of Layer 2 is based
 upon the notion of traces: an IOSTS $\EuScript{S}_1$ is composed
 of transition sequences derived from runs in $SR$, itself
@@ -818,7 +818,7 @@ such that $L_{\EuScript{S}_{i-1}} \subseteq L_{\EuScript{S}_1}$.
 The knowledge base is exclusively composed of (positive)
 transition facts that have a Horn form. The rules of these layers
 are Modus Ponens (soundness hypothesis). Therefore, these
-inference rules are sound and complete. With regards to the (no
+inference rules are sound and complete. With regard to the (no
 implicit knowledge elimination) hypothesis and to Proposition
 \ref{prop:loc:inclu}, the transitions of $\EuScript{S}_{i-1}$ are
 either unchanged, enriched, or combined together into a new
