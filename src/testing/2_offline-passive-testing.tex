@@ -162,12 +162,6 @@ and making engineers more efficient.
         Let $b$ be a STS path such that
         $\exists ~b=l0_{\EuScript{S}_i^{N}} \xRightarrow{(a_1(p_1),G_{1},A_{1}) \dots
         (a_n(p_n),G_{n},A_{n})} l_n, ~l_n \in Pass \mid ~t \in Traces_{Pass}(b)$.
-        Let $M_{[b]}$ be the matrix $n \times k$ of $b$ such that
-        $G_j = M_{[b]}[j, c_{[b]}] ~(1 \leq c_{[b]} \leq k)$.
-
-        $Traces_{Pass}(b) = (a_1(p), \beta_1) \dots (a_n(p), \beta_n)$
-        with $\beta_1 \dots \beta_n$ such that $\exists ~1 \leq
-        c_{[b]} \leq k \mid \beta_j \models G_j ~(1 \leq j \leq n)$.
 
         Given the trace $t = (a_1(p), \alpha_1) \dots (a_n(p),
         \alpha_n)$, the function $check$:
@@ -176,7 +170,10 @@ and making engineers more efficient.
             \item finds a path $b = l0_{\EuScript{S}_i^{N}}
                 \xRightarrow{(a_1(p_1),G_{1},A_{1}) \dots
                 (a_n(p_n),G_{n},A_{n})} l_n, ~l_n \in Pass$ (line
-                \ref{algo:check:line:exists});
+                \ref{algo:check:line:exists}), with $M_{[b]}$ be
+                the matrix $n \times k$ of $b$ such that $G_j =
+                M_{[b]}[j, c_{[b]}] ~(1 \leq c_{[b]} \leq k$ and
+                $1 \leq j \leq n)$;
 
             \item ensures that $\exists ~1 \leq c_{[b]} \leq k
                 \mid \alpha_j \models M_{[b]}[j, c_{[b]}] ~(1
