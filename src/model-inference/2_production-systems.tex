@@ -1000,6 +1000,8 @@ proposition:
   set. $R(\EuScript{S}_i)$ is a STS derived from $Traces(Sua)$.
   We have $Traces(R(\EuScript{S}_i)) = Traces(\EuScript{S}_i)
   \subseteq CTraces(Sua) \subseteq Traces(Sua)$.
+
+  \label{prop:trace-eq-r}
 \end{proposition}
 
 \begin{definition}[STS set $R(\EuScript{S})$]
@@ -1324,7 +1326,7 @@ First, these results show that our framework can take millions of
 production events and still builds models quickly.
 With sets collected during one day up to one week (experiments
 $A$, $B$, $C$, and $D$), models are inferred in less than 10
-minutes. Hence, \textit{Autofunk} can be used to quickly infer
+minutes. Therefore, \textit{Autofunk} can be used to quickly infer
 models for analysis purpose or to help diagnose faults in a
 system. Experiment $F$ handled almost 10 million events in less
 than half an hour to build two models including around 1,600

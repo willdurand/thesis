@@ -15,13 +15,13 @@ parts have to be fast and scalable to be used in practice.
 
 The main idea of our proposal is that, given a running production
 system, for which active testing cannot be applied, we extract
-knowledge and models by passively monitoring it. Such models
-describe the functional behaviors of the system, and may serve
-different purposes, \emph{e.g.}, testing another production
-system. The latter can be a new system roughly comparable to the
-first one in terms of features, but it can also be an updated
-version of the first one. Indeed, upgrades might inadvertently
-introduce faults, and it could lead to severe damages.
+knowledge and models. Such models describe the functional
+behaviors of the system, and may serve different purposes,
+\emph{e.g.}, testing another production system. The latter can be
+a new system roughly comparable to the first one in terms of
+features, but it can also be an updated version of the first one.
+Indeed, upgrades might inadvertently introduce faults, and it
+could lead to severe damages.
 
 In our context, testing the updated system means detecting potential
 regressions before deploying changes in production. This is
@@ -41,22 +41,22 @@ manual tasks, but they are more efficient as they have only a few
 behaviors to check (instead of all possible behaviors), given in
 a reliable and fast manner.
 
-A \textit{passive tester} (also known as observer) aims at
-checking whether a system under test \emph{conforms to} an
-inferred model. It can be performed in either online or offline
-mode, as defined below:
+Generally speaking, a \textit{passive tester} (also known as
+observer) aims at checking whether a system under test
+\emph{conforms to} a model. It can be performed in either online
+or offline mode, as defined below:
 
 \begin{itemize}
-    \item \textbf{Online testing:} sometimes called on-the-fly
-        testing, it is a technique in which test case generation
-        and test execution are combined into a single algorithm.
-        The tester gives a verdict every time a trace incomes;
+    \item \textbf{Online testing:} it means that traces are
+        computed and analyzed on-the-fly to provide verdicts, and
+        no trace set is studied \emph{a posteriori};
 
     \item \textbf{Offline testing:} it means that a set of traces
         has been collected while the system is running. Then, the
-        tester gives verdicts.
+        tester gives verdicts afterwards.
 \end{itemize}
 
+In this Chapter, we present an offline passive testing technique.
 We collect the traces of the system under test by reusing
 \textit{Autofunk v3}'s Models generator, and we build a set of
 traces whose level of abstraction is the same as those considered
@@ -64,9 +64,8 @@ for inferring models. Then, we use these traces to check whether
 the system under test conforms to the inferred models.  In
 previous works, we used to work with fixed sets of traces. We
 noticed that, by taking large trace sets, we could build more
-complete models. Performing offline passive testing allows to use
-such large trace sets, hence the intuition that we should be able
-to validate more behaviors.
+complete models, and performing offline passive testing allows to
+use such large trace sets.
 
 \emph{Conformance} is defined with two implementation relations,
 which express precisely what the system under test should do. The
@@ -111,8 +110,8 @@ given sequence owns the assignment $(pid := val)$ (for the
 record, $pid$ stands for \emph{product identifier}). Collected
 traces are also time-dependent, which would make testing of
 another production system unfeasible. These information are
-typically known by a human domain expert, hence the use of
-inference rules to identify and remove assignments.
+typically known by a human domain expert, and we can use
+inference rules to identify and remove assignments one more time.
 
 Given the model sets $\EuScript{S} =
 \{\EuScript{S}_1,\dots,\EuScript{S}_n\}$ and $R(\EuScript{S}) =
@@ -128,12 +127,13 @@ Furthermore, we label all the final locations with
 gather them in the set $Pass \subseteq L_{\EuScript{S}_i^{N}}$.
 Both $\EuScript{S}_i^{N}$ and $R(\EuScript{S}_i^{N})$ represent more
 generic models, \emph{i.e.}  they express \textit{some possible
-behaviors that should happen}. These behaviors are represented by
-the traces $Traces_{Pass} (\EuScript{S}^{N})=\displaystyle
-\bigcup_{1 \leq i \leq n} Traces_{Pass}
-(\EuScript{S}_i^{N})=Traces_{Pass} (R(\EuScript{S}^{N}))$. We
-refer to these traces as \textit{pass traces}, and we call the
-other traces \textit{possibly fail traces}.
+complete behaviors that should happen}. These behaviors are
+represented by the traces $Traces_{Pass}
+(\EuScript{S}^{N})=\displaystyle \bigcup_{1 \leq i \leq n}
+Traces_{Pass} (\EuScript{S}_i^{N})=Traces_{Pass}
+(R(\EuScript{S}^{N}))$. We refer to these traces as \textit{pass
+traces}, and we call the other traces \textit{possibly fail
+traces}.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
@@ -185,6 +185,12 @@ by a model, here with a Labeled Transition System as defined in
 \crossref{sec:related:testing}{sec:definitions:lts}. For
 simplicity purpose, we also denote this model by $\mathit{Sut}$.
 
+It is manifest that both the models and $\mathit{Sut}$ must be
+similar, \emph{i.e.} the production events captured on
+$\mathit{Sua}$ and $\mathit{Sut}$ must lead to the same valued
+events. Otherwise, all traces of $\mathit{Sut}$ will likely be
+rejected, and the testing process will become wasteful.
+
 \subsection{First implementation relation: $\leq_{ct}$}
 
 The first implementation relation, denoted by $\leq_{ct}$, refers
@@ -211,9 +217,10 @@ write: ${Sut} \leq_{ct} \EuScript{S}^{N} =_{def} CTraces({Sut})
 Pragmatically, the reduced model set $R(\EuScript{S}^{N})$ sounds
 more convenient for passively testing $\mathit{Sut}$ because it
 is strongly reduced in terms of size compared to
-$\EuScript{S}^{N}$. Hence, the test relation can also be written
+$\EuScript{S}^{N}$. The test relation can also be written
 as below because both models $\EuScript{S}^{N}$ and
-$R(\EuScript{S}^{N})$ are trace equivalent \cite{petrenko06}:
+$R(\EuScript{S}^{N})$ are trace equivalent (cf. Proposition
+\ref{prop:trace-eq-r} in Chapter \ref{sec:modelinf:prodsystems}):
 
 \begin{proposition}
 \label{rel:impl12}
@@ -283,7 +290,7 @@ defined as follows:
 \end{definition}
 
 According to the above definition, the successive symbols and
-variable assignments of a trace $t \in CTraces({Sut})$ must be
+variable assignments of a trace $t \in CTraces({Sut})$ can be
 found into several traces of $Traces_{Pass}(\EuScript{S}_i^{N})$,
 which have the same sequence of symbols $a_1 \dots a_m$ as the
 trace $t$. The reduced model $R(\EuScript{S}_i^{N})$ was
@@ -348,11 +355,12 @@ The disjunction of guards $M_{[b]}[j,1] \vee \dots \vee
 M_{[b]}[j,k]$, found in the matrix $M_{[b]}$, could be simplified
 by gathering all the equalities $(x == val)$ together with
 disjunctions for every variable $x$ that belongs to the parameter
-set $p_j$. Such equalities can be extracted with the projection
-operator \textit{proj} (see Definition \ref{def:sts}). We obtain
-one guard of the form $\displaystyle \bigwedge_{x \in p_j} ((x ==
-val_1) \vee \dots \vee (x == val_k))$. This can be expressed by
-deriving new STSs from $R(\EuScript{S})$.
+set $p_j$ of $a_j(p_j)$. Such equalities can be extracted with
+the projection operator \textit{proj} (see Definition
+\ref{def:sts}). We obtain one guard of the form $\displaystyle
+\bigwedge_{x \in p_j} ((x == val_1) \vee \dots \vee (x ==
+val_k))$. This can be expressed by deriving new STSs from
+$R(\EuScript{S})$.
 
 \subsection{STS $D(\EuScript{S})$}
 
@@ -447,10 +455,9 @@ $R(\EuScript{S}^{N})$, \emph{i.e.} the guards of the model
 $D(\EuScript{S}_i^{N})$ are the disjunctions of the guards of the
 model $R(\EuScript{S}_i^{N})$ (cf. Definition \ref{def:sts-d}),
 we have $Traces_{Pass}(R(\EuScript{S}^{N})) \subseteq
-Traces_{Pass}(D(\EuScript{S}^{N}))$. Therefore, if $\mathit{Sut}$
-conforms to $\EuScript{S}^{N}$ with respect to $\leq_{ct}$,
-therefore $\mathit{Sut}$ conforms to $\EuScript{S}^{N}$ with
-respect to $\leq_{mct}$:
+Traces_{Pass}(D(\EuScript{S}^{N}))$. Therefore, if $\mathit{Sut}
+\leq_{ct} \EuScript{S}^N$, we have $\mathit{Sut} \leq_{mct}
+\EuScript{S}^N$:
 
 \begin{proposition}
     $\mathit{Sut} \leq_{ct} \EuScript{S}^N \implies

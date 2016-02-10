@@ -7,23 +7,23 @@ In this chapter, we tackle the problem of testing production
 systems (as defined in the previous chapter), without disturbing
 them, and without having any specification \emph{a priori}. Those
 two constraints sounds familiar as they have already been taken
-into consideration in the previous chapter. We present a passive
-testing technique built on-top of \emph{Autofunk v3}. First, we
-infer reference models of a system under analysis $\mathit{Sua}$
-using the technique presented in the previous chapter.
-Then, we check whether a system under test $\mathit{Sut}$
-conforms to these inferred models by means of two implementation
-relations. We use a slightly modified version of the trace
-preorder relation to strictly check conformance between the two
-systems. Because the inferred models are partial (as explained in
-the previous chapter), they likely lack information, which
-implies that a strict relation may be too strong. That is why we
-propose our own (weaker) implementation relation to comply with
-Michelin's needs.  Such a relation is less strict than the first
-one in order to accept non-standard behaviors down to a certain
-point. These two relations are leveraged in a scalable algorithm
-for performing offline passive conformance testing.  We end this
-chapter with a few results on this testing technique.\\
+into consideration in Chapter \ref{sec:modelinf:prodsystems}. We
+present a passive testing technique built on-top of
+\emph{Autofunk v3}. First, we infer reference models of a system
+under analysis $\mathit{Sua}$ using the technique presented
+previously.  Then, we check whether a system under test
+$\mathit{Sut}$ conforms to these inferred models by means of two
+implementation relations. We use a slightly modified version of
+the trace preorder relation to strictly check conformance between
+the two systems. Because the inferred models are partial (as
+explained in the previous chapter), they likely lack information,
+which implies that our first strict relation may be too "strong".
+That is why we propose a second (weaker) implementation relation
+to comply with Michelin's needs.  Such a relation is less strict
+than the first one in order to accept non-standard behaviors down
+to a certain point. These two relations are leveraged in an
+algorithm for performing offline passive conformance testing.  We
+end this chapter with a few results on this testing technique.\\
 
 \minitoc
 
