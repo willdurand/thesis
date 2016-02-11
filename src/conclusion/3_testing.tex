@@ -136,20 +136,24 @@ system so that users can be notified as soon as possible.
 In online mode, we do not have complete traces (such as
 $CTraces({Sut})$), but traces that are constructed on-the-fly by
 an \emph{instance} of tester, every time an event is received.
+Yet, we still consider a set of filtered traces, and not
+$Traces(Sut)$ directly, because it is possible to reuse the set
+of rules of Layer 1 in the model inference process, so that
+irrelevant events are filtered out.
+
 Each new production event passes through an \emph{entry point}
 whose role is to distribute the incoming events across the
 different instances. The entry point functioning is given in
 Algorithm \ref{algo:online-entry-point}. Each event is filtered
+(line \ref{algo:oep:line:filter})
 and transformed into a filtered valued event (line
-\ref{algo:oep:line:filter}), from which we extract its product
+\ref{algo:oep:line:transform}), from which we extract its product
 identifier $pid$ (line \ref{algo:oep:line:extract}).  The valued
 event is then forwarded to the right tester (line
 \ref{algo:oep:line:fw}), \emph{i.e.} the instance for this $pid$.
 If there is no instance yet, we create a new tester for this
 $pid$ first (lines
 \ref{algo:oep:line:new}-\ref{algo:oep:line:endnew}).
-
-\TODO{update algo}
 
 \begin{algorithm}[h]
 	\SetKwInOut{Input}{Input}
@@ -165,8 +169,11 @@ $pid$ first (lines
     $Instances = \emptyset$\;
 
     \While{production event $event$}{
-        transform $event$ into a valued event
-        $(a(p), \alpha)$\;\label{algo:oep:line:filter}
+        \If{$event$ is filtered by Layer 1 rules}{\label{algo:oep:line:filter}
+            continue\;
+        }
+
+        transform $event$ into a valued event $(a(p), \alpha)$\;\label{algo:oep:line:transform}
 
         extract the product identifier $pid'$ from
         $(a(p), \alpha)$\;\label{algo:oep:line:extract}
@@ -189,31 +196,131 @@ $pid$ first (lines
 At this point, there should be one instance of tester running the
 same algorithm per $pid$, \emph{i.e.} per product being
 manufactured. The intuition of such an algorithm is to wait for
-incoming valued events, sent by the entry point, and to construct
+incoming valued events sent by the entry point, and to construct
 a trace until it reaches:
-
-\TODO{add algo}
 
 \begin{itemize}
     \item a verdict location, which means the trace conforms to
         the specification, according to the reference model set
-        chosen (either $R(\EuScript{S}^N$ or
-        $D(\EuScript{S}^N)$);
+        chosen (either $R(\EuScript{S}^N)$ or
+        $D(\EuScript{S}^N)$). The verdict is $Pass$;
 
     \item a guard that is not satisfied, which leads to a
-        possibly fail verdict;
+        $Fail$ verdict;
 
     \item a \emph{deadlock}, which happens when no event is
-        received after a certain delay. This situation may occur
-        when a product is removed from the production line (by a
-        human operator for instance).
+        received after a certain delay, which leads to a $Fail$
+        verdict too. This situation may occur when a product is
+        removed from the production line by a human operator for
+        instance.
 \end{itemize}
+
+\begin{algorithm}[h]
+    \SetKwInOut{Input}{Input}
+    \SetKwInOut{Output}{Output}
+    \SetKwFunction{check}{check}
+
+    \Input{A STS set $\EuScript{S}^N = \{ \EuScript{S}_1^N, \dots,
+    \EuScript{S}_n^N \}$, valued events $(a(p), \alpha)$}
+    %\Output{}
+
+    BEGIN\;
+    $trace  = \emptyset$\;
+    $RUNS_i = \{ (q_0, 0) \mid q_0 = (l0_{\EuScript{S}_i^N}, V0_{\EuScript{S}_i^N}) \}, ~(1 \leq i \leq n)$\;\label{algo:check-online:line:runs}
+
+    \BlankLine
+    \While{valued event $(a(p), \alpha)$}{
+        $trace = trace \cdot (a(p), \alpha)$\;\label{algo:check-online:line:trace}
+
+        \BlankLine
+        \For{$i = 1, \dots, n$}{
+
+            \BlankLine
+            $RUNS' = \emptyset$\;
+
+            \ForEach{$(r, col) \in RUNS_i \mid r = q_0 (a_1(p), \alpha_1) \dots q_{j - 1}$
+                with $q_{j - 1} = (l, v) \in L_{\EuScript{S}_i^N}$
+                and $l \xRightarrow{a(p)}$
+            }{
+
+                \If{$(r, col) == (q_0, 0)$}{
+
+                    \ForEach{$t = l \xrightarrow{a(p), G, A} l_{next} \in \rightarrow_{\EuScript{S}_i^N}$
+                    with $G = M_{[b]}[j, *]$}{
+
+                        \For{$c_{[b]} = 1, \dots, k$}{
+
+                            \If{$\alpha \cup v \models M_{[b]}[j, c_{[b]}]$}{
+
+                                $q_{next} = (l_{next}, v_{next} = A(v \cup \alpha))$\;
+                                $RUNS' = RUNS' \cup \{ (r \cdot (a(p), \alpha) \cdot q_{next}, c_{[b]}) \}$\;
+                            }% endif sat M
+
+                        }% endif find column in M
+
+                    }% endforeach transitions
+
+                }% endif r = q0
+                \Else{
+                    \ForEach{$t = l \xrightarrow{a(p), G, A} l_{next} \in \rightarrow_{\EuScript{S}_i^N}$
+                    with $G = M_{[b]}[j, col]$}{
+
+                        \If{$\alpha \cup v \models M_{[b]}[j, col]$}{
+
+                            $q_{next} = (l_{next}, v_{next} = A(v \cup \alpha))$\;
+                            $RUNS' = RUNS' \cup \{ (r \cdot (a(p), \alpha) \cdot q_{next}, col) \}$\;
+                        }% endif sat M
+
+                    }% endforeach transitions
+
+                }% endelse
+
+            }% endforeach runs
+
+            %
+            % TODO: Attention, ne fonctionne pas avec un modèle
+            % qui ne gère pas la première transition, exemple :
+            % l0 -- b --> l1 et on envoie `a`
+            %
+
+%            \If{$RUNS' == \emptyset$}{
+%                return $\{ trace \}$\;
+%            }
+
+            $RUNS_i = RUNS'$\;
+        }% endfor models
+
+        \If{$\forall ~i \in \{ 1, \dots, n \}, ~RUNS_i == \emptyset$}{
+            return $\{ trace \}$\;
+        }
+
+    }% end receive
+
+    \BlankLine
+    // No more valued event received (deadlock)
+    \BlankLine
+
+    $T = \emptyset$\;
+    \If{$\forall ~i \in \{ 1, \dots, n \}, \exists (r, col) \in RUNS_i \mid r \text{ ends with } q = (l, v)$ and $l \not\in Pass$}{
+        $T = T \cup \{ trace \}$\;
+    }
+
+    return $T$\;
+
+    \BlankLine
+    END\;
+
+    \caption{Online passive testing algorithm}
+    \label{algo:check-online}
+\end{algorithm}
 
 At the time of writing, there are still open-ended questions
 regarding this online method. First of all, we need to find a way
 to identify deadlocks. We know that products can stay for days in
 a production system, hence it is complicated to set a timed
-limit.
+limit. Another approach would be to compute average delays
+between the events in the models $R(\EuScript{S}_i)$ thanks to
+the event's time stamps.
 
 On the other hand, running one tester per product will result in
 many instances executed in parallel as there are thousands of

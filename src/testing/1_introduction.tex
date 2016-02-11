@@ -186,10 +186,23 @@ by a model, here with a Labeled Transition System as defined in
 simplicity purpose, we also denote this model by $\mathit{Sut}$.
 
 It is manifest that both the models and $\mathit{Sut}$ must be
-similar, \emph{i.e.} the production events captured on
-$\mathit{Sua}$ and $\mathit{Sut}$ must lead to the same valued
+\emph{similar}, \emph{i.e.} the production events captured on
+$\mathit{Sua}$ and $\mathit{Sut}$ must lead to similar valued
 events. Otherwise, all traces of $\mathit{Sut}$ will likely be
-rejected, and the testing process will become wasteful.
+rejected, and the testing process will become wasteful:
+
+\begin{definition}
+    Let $\EuScript{S}^N = \{ \EuScript{S}_1^N, \dots,
+    \EuScript{S}_n^N \}$ be a STS set, and $\mathit{Sut}$ a LTS
+    (semantics), which is assumed to behave as the production
+    system.
+
+    $\EuScript{S}^N$ and $\mathit{Sut}$ are said \emph{similar}
+    if and only if: $\displaystyle\Sigma_{Sut} \subseteq \bigcup_{1 \leq i \leq n}
+    \bigcup_{a(p) \in \Lambda_{\EuScript{S}_i^N}} a \times D_p$.
+
+    \label{def:similar-sut-sua}
+\end{definition}
 
 \subsection{First implementation relation: $\leq_{ct}$}
 
