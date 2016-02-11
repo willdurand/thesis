@@ -125,7 +125,6 @@ testing technique, which we started to adapt in order to propose
 an online passive testing technique as well. Both offline and
 online modes are not completely unalike, they also serve
 different purposes.
-
 Our online passive testing approach records traces on a system
 under test on-the-fly, and then check whether those traces
 satisfy specifications, still generated from a system under
@@ -139,23 +138,23 @@ $CTraces({Sut})$), but traces that are constructed on-the-fly by
 an \emph{instance} of tester, every time an event is received.
 Yet, we still consider a set of filtered traces, and not
 $Traces(Sut)$ directly, because it is possible to reuse the set
-of rules of Layer 1 in the model inference process, so that
+of rules of Layer 1 in the model inference process (cf.
+\crossref{sec:modelinf:prodsystems}{part3:collecting}), so that
 irrelevant events are filtered out.
 
 Each new production event passes through an \emph{entry point}
 whose role is to distribute the incoming events across the
-different instances. The entry point functioning is given in
-Algorithm \ref{algo:online-entry-point}. Each event is filtered
-(line \ref{algo:oep:line:filter})
-and transformed into a filtered valued event (line
-\ref{algo:oep:line:transform}), from which we extract its product
-identifier $pid$ (line \ref{algo:oep:line:extract}).  The valued
-event is then forwarded to the right testers (lines
-\ref{algo:oep:line:fw1} and \ref{algo:oep:line:fw2}), \emph{i.e.}
-the two instances for this $pid$ and the STS sets
-$R(\EuScript{S}^N)$ and $D(\EuScript{S}^N)$.  If there is no
-instance yet for a given model, we create a new tester for this
-$pid$ first (lines
+different instances of a tester. The entry point functioning is
+given in Algorithm \ref{algo:online-entry-point}. Each event is
+filtered (line \ref{algo:oep:line:filter}) and transformed into a
+filtered valued event (line \ref{algo:oep:line:transform}), from
+which we extract its product identifier $pid$ (line
+\ref{algo:oep:line:extract}).  The valued event is then forwarded
+to the two right testers (lines \ref{algo:oep:line:fw1} and
+\ref{algo:oep:line:fw2}), \emph{i.e.} the two instances for this
+$pid$, one for each STS set ($R(\EuScript{S}^N)$ and
+$D(\EuScript{S}^N)$).  If there is no instance for a given
+model set yet, we create a new tester for this $pid$ first (lines
 \ref{algo:oep:line:new}-\ref{algo:oep:line:endnew}).
 
 \begin{algorithm}[h]
@@ -217,20 +216,21 @@ $pid$ first (lines
     \label{algo:online-entry-point}
 \end{algorithm}
 
-At this point, there should be two instances of tester running
+At this point, there should be two instances of a tester running
 the same algorithm per $pid$, \emph{i.e.} per product being
-manufactured, and one for each model set ($R(\EuScript{S}^N)$ and
-$D(\EuScript{S}^N)$). The intuition of such an algorithm is to
-wait for incoming valued events sent by the entry point, and to
-construct a trace until it reaches:
+manufactured. The intuition of such an algorithm is that it
+listens to incoming valued events sent by the entry point, and it
+constructs a trace until it reaches:
 
 \begin{itemize}
-    \item a verdict location, which means that the trace complies
-        with the reference model set chosen (either
-        $R(\EuScript{S}^N)$ or $D(\EuScript{S}^N)$);
+    \item a verdict location (cf.
+        \crossref{sec:testing}{sec:testing:normal}), which means
+        that the trace complies with the reference model set
+        chosen (either $R(\EuScript{S}^N)$ or
+        $D(\EuScript{S}^N)$);
 
-    \item a guard that is not satisfied, which leads to a $Fail$
-        verdict;
+    \item a guard that has not been satisfied, which leads to a
+        $Fail$ verdict;
 
     \item a \emph{deadlock}, which happens when no event is
         received after a certain delay, which leads to a $Fail$
@@ -247,12 +247,12 @@ verdicts are returned by the entry point given in Algorithm
 execution of the testers (lines
 \ref{algo:oep:line:result}-\ref{algo:oep:line:result-end}).
 
-Algorithm \ref{algo:check-online} is executed by each tester. Its
-aim is to construct a trace $trace$ on-the-fly, and to returns a
-trace set $T$, which is empty if the current trace complies with
-the model set $\EuScript{S}^N$, or not empty when there is either
-a deadlock or a guard that has not been satisfied, \emph{i.e.}
-when a fault has been detected.
+Algorithm \ref{algo:check-online} is executed by each tester
+instance. Its aim is to construct a trace $trace$ on-the-fly, and
+to returns a trace set $T$, which is empty if the current trace
+complies with the model set $\EuScript{S}^N$, or not empty when
+there is either a deadlock or a guard that has not been
+satisfied, \emph{i.e.} when a fault has been detected.
 
 Each model $\EuScript{S}_i^N$ has its own set of runs $RUNS_i$,
 which contains tuples of runs ($r$) and column indices ($col$).
@@ -276,23 +276,23 @@ which $\alpha \cup v$ satisfies the guard $M_{[b]}[j, c_{[b]}]$
 When it finds a column that is satisfied, the algorithm computes
 a new state $q_{next}$, and constructs a new run by completing
 $r$ with the current valued event and the new state: $r \cdot
-(a(p), \alpha) \cdot q_{next}$ (line 13). This new run is added
-to the run set $RUNS'$ (line 14), which contains all runs found
+(a(p), \alpha) \cdot q_{next}$ (line \ref{on:l13}). This new run is added
+to the run set $RUNS'$ (line \ref{on:l14}), which contains all runs found
 for a current valued event.
 
 When the current tuple is not $(q_0, 0)$, the algorithm is
 already aware of the column ($col$) $M_{[b]}$, hence it does not
 need to retrieve it. For each transition $t$ with $G = M_{[b]}[j,
 col]$, the algorithm determines whether $\alpha \cup v$ satisfies
-$G$ (lines 16-17). % TODO: fixme
+$M_{[b]}[j, col]$ (lines \ref{on:l16}-\ref{on:l17}).
 In this case, it also computes a new state $q_{next}$, and
 completes the current run $r$ as before, which leads to a new
-run added to $RUNS'$ (line 19). % TODO: fixme
+run added to $RUNS'$ (line \ref{on:l19}).
 
 Once all runs have been covered, we replace the runs in  $RUNS_i$
 with those in $RUNS'$ (line
 \ref{algo:check-online:line:runs-i-up}). Once all models
-$\EuScript{S}_i^N$ have been covered, we check from the presence
+$\EuScript{S}_i^N$ have been covered, we check the presence
 of, at least, one run in any of $RUNS_i$ (line
 \ref{algo:check-online:line:runs-i-empty}). If there is no run
 anymore, the algorithm has not been able to find a transition
@@ -302,19 +302,18 @@ been satisfied. That is why it has not been able to create any
 run, and all run sets $RUNS_i$ are therefore empty. Such a
 situation means that the trace does not comply with
 $\EuScript{S}^N$, and we return a non-empty trace set $T = \{
-trace \}$ (line 22), which is handled by the entry point to
+trace \}$ (line \ref{on:l22}), which is handled by the entry point to
 return the right verdict (cf. Algorithm
-\ref{algo:online-entry-point}). % TODO: fixme
+\ref{algo:online-entry-point}).
 
 When we do not receive any valued event anymore, the algorithm
 has reached a \emph{deadlock} situation. There are two cases
 depending on the location $l$ of the last state $q$ of the run
-$r$, for all $(r, col) \in RUNS_i$ (line 25). % TODO: fixme
-If $l$ is not a \emph{verdict location} (cf.
-\crossref{sec:testing}{sec:testing:normal}), the trace does not
+$r$, for all $(r, col) \in RUNS_i$ (line \ref{on:l25}).
+If $l$ is not a verdict location, the trace does not
 comply with  $\EuScript{S}^N$, and we return a non-empty trace
 set $T = \{ trace \}$.  Otherwise, we return an empty set $T$
-(line 27). % TODO: fixme
+(line \ref{on:l27}).
 
 \begin{algorithm}[h]
     \SetKwInOut{Input}{Input}
@@ -353,8 +352,11 @@ set $T = \{ trace \}$.  Otherwise, we return an empty set $T$
 
                             \If{$\alpha \cup v \models M_{[b]}[j, c_{[b]}]$}{\label{algo:check-online:line:sat}
 
-                                $q_{next} = (l_{next}, v_{next} = A(v \cup \alpha))$\;
-                                $RUNS' = RUNS' \cup \{ (r \cdot (a(p), \alpha) \cdot q_{next}, c_{[b]}) \}$\;
+                                $q_{next} = (l_{next}, v_{next} =
+                                A(v \cup \alpha))$\;\label{on:l13}
+                                $RUNS' = RUNS' \cup \{ (r \cdot
+                                (a(p), \alpha) \cdot q_{next},
+                            c_{[b]}) \}$\;\label{on:l14}
                             }% endif sat M
 
                         }% endif find column in M
@@ -364,12 +366,14 @@ set $T = \{ trace \}$.  Otherwise, we return an empty set $T$
                 }% endif r = q0
                 \Else{
                     \ForEach{$t = l \xrightarrow{a(p), G, A} l_{next} \in \rightarrow_{\EuScript{S}_i^N}$
-                    with $G = M_{[b]}[j, col]$}{
+                    with $G = M_{[b]}[j, col]$}{\label{on:l16}
 
-                        \If{$\alpha \cup v \models M_{[b]}[j, col]$}{
+                        \If{$\alpha \cup v \models M_{[b]}[j, col]$}{\label{on:l17}
 
                             $q_{next} = (l_{next}, v_{next} = A(v \cup \alpha))$\;
-                            $RUNS' = RUNS' \cup \{ (r \cdot (a(p), \alpha) \cdot q_{next}, col) \}$\;
+                            $RUNS' = RUNS' \cup \{ (r \cdot
+                            (a(p), \alpha) \cdot q_{next}, col)
+                        \}$\;\label{on:l19}
                         }% endif sat M
 
                     }% endforeach transitions
@@ -382,7 +386,7 @@ set $T = \{ trace \}$.  Otherwise, we return an empty set $T$
         }% endfor models
 
         \If{$\forall ~i \in \{ 1, \dots, n \}, ~RUNS_i == \emptyset$}{\label{algo:check-online:line:runs-i-empty}
-            return $\{ trace \}$\;
+            return $\{ trace \}$\;\label{on:l22}
         }
 
     }% end receive
@@ -392,11 +396,11 @@ set $T = \{ trace \}$.  Otherwise, we return an empty set $T$
     \BlankLine
 
     $T = \emptyset$\;
-    \If{$\forall ~i \in \{ 1, \dots, n \}, \exists (r, col) \in RUNS_i \mid r \text{ ends with } q = (l, v)$ and $l \not\in Pass$}{
+    \If{$\forall ~i \in \{ 1, \dots, n \}, \exists (r, col) \in RUNS_i \mid r \text{ ends with } q = (l, v)$ and $l \not\in Pass$}{\label{on:l25}
         $T = T \cup \{ trace \}$\;
     }
 
-    return $T$\;
+    return $T$\;\label{on:l27}
 
     \BlankLine
     END\;
@@ -436,23 +440,23 @@ production events from $\mathit{Sut}$, which we filter to remove
 irrelevant events only. Yet, we are not able to remove the events
 that belong to incomplete traces. This is worth noting because it
 will likely lead to more false positives in online mode than in
-offline mode (for which we considered complete traces of
-$\mathit{Sut}$).
+offline mode (for which we consider complete traces of
+$\mathit{Sut}$ exclusively).
 
-Last but not least, running two testers per product will result
-in many instances executed in parallel as there are thousands of
-products in a factory at any given time. Such a situation may not
-scale well, especially with the notion of deadlocks mentioned
-previously. Indeed, we might have too many instances executed in
-parallel, which would freeze the testing process. One option to
-avoid too many instances at the same time would be to maintain
-two fixed pools of instances for both the model sets
-$R(\EuScript{S}^N)$ and $D(\EuScript{S}^N)$, and to store the
-runs $RUNS_i$ out of these instances (\emph{e.g.}, in a in-memory
-database). That way, the instances could be reused. Nonetheless,
-there are many events exchanged at the same time in a production
-system, and we need to find a non-blocking solution to accept and
-handle these events.
+Last but not least, running two testers per product ($pid$) will
+result in many instances executed in parallel as there are
+thousands of products in a factory at any given time. Such a
+situation may not scale well, especially with the notion of
+deadlocks mentioned previously. Indeed, we might have too many
+instances executed in parallel, which would freeze the testing
+process. One option to avoid too many instances at the same time
+would be to maintain two fixed pools of instances for both the
+model sets $R(\EuScript{S}^N)$ and $D(\EuScript{S}^N)$, and to
+store the runs $RUNS_i$ out of these instances (\emph{e.g.}, in a
+in-memory database). That way, the instances could be reused.
+Nonetheless, there are many events exchanged at the same time in
+a production system, and we need to find a non-blocking solution
+to accept and handle these events.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
