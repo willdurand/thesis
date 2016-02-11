@@ -120,18 +120,18 @@ returned.
                 $M_{[b]} = Mat(b)$ is the matrix $n \times k$ of $b$\;
                 $c_{[b]} = 1$\;
                 \While{$c_{[b]} \leq k$}{
-                    $M = M_{[b]}[*,c_{[b]}]$\;
+                    $M = M_{[b]}[*,c_{[b]}]$\;\label{line-31}
 
                     $sat = True$\;
                     \For{$j = 1, \dots, n$}{
                         \If{$\alpha_j \not\models M[j]$}{
                             $sat = False$\;
-                            break\;
+                            break\;\label{line-36}
                         }
                     }
 
                     \If{$sat == True$}{
-                        return $True$\;
+                        return $True$\;\label{line-38}
                     }
                     $c_{[b]}++$\;
                 }
@@ -156,7 +156,8 @@ more efficient.
 \subsubsection{Soundness of Algorithm \ref{algo:check}}
 
 \begin{proposition}
-    Let $\EuScript{S}^{N}$ be a STS set, and $\mathit{Sut}$ be a LTS.
+    Let $\EuScript{S}^{N}$ be a STS set, and $\mathit{Sut}$ be a
+    LTS similar to $\EuScript{S}^{N}$.
 
     $\mathit{Sut} \leq_{ct} \EuScript{S}^N$ $\implies$
     Algorithm \ref{algo:check} returns "Pass$\leq_{ct}$",
@@ -222,17 +223,17 @@ function $check$:
 
         \item ensures that $\exists ~1 \leq c_{[b]} \leq k
             \mid \alpha_j \models M_{[b]}[j, c_{[b]}] ~(1
-            \leq j \leq n)$ (lines 31-36). %TODO: fixme
+            \leq j \leq n)$ (lines \ref{line-31}-\ref{line-36}).
     \end{itemize}
 
-    The function $check$ seeks $b$ such that $t \in
+    The function $check(t, \EuScript{S}_i^N)$ seeks $b$ such that $t \in
     Traces_{Pass}(b)$, and returns $True$ if $b$ exists (line
-    38). %TODO: fixme
+    \ref{line-38}).
     Therefore, $\exists ~p = l0_{R\EuScript{S}_i^{N})}
     \xRightarrow{(a_1(p_1),G_{1},A_{1}) \dots
     (a_n(p_n),G_{n},A_{n})} l_n, ~l_n \in Pass \mid ~t \in
-    Traces_{Pass}(p)$ implies the function $check$ returns
-    $True$.
+    Traces_{Pass}(p)$ implies the function $check(t,
+    \EuScript{S}_i^N)$ returns $True$.
 \end{proof}
 
 
@@ -244,7 +245,7 @@ function $check$:
     \leq i \leq n \mid ~t \in Traces_{Pass}(R(\EuScript{S}_i^{N}))$.
 
     Given that, and according to Proposition
-    \ref{prop:check}, function $check$ returns $True$ for
+    \ref{prop:check}, the function $check(t, \EuScript{S}_i^N)$ returns $True$ for
     every trace $t \in CTraces(Sut)$ (lines
     \ref{algo:check:line:proof1-start}-\ref{algo:check:line:proof1-end}).
     Therefore the set $T_1$ is empty (line
@@ -261,7 +262,7 @@ function $check$:
     \leq i \leq n \mid ~t \in Traces_{Pass}(D(\EuScript{S}_i^{N}))$.
 
     Given that, and according to Proposition
-    \ref{prop:check}, function $check$ returns $True$ for
+    \ref{prop:check}, the function $check(t, \EuScript{S}_i^N)$ returns $True$ for
     every trace $t \in CTraces(Sut)$ (lines
     \ref{algo:check:line:proof2-start}-\ref{algo:check:line:proof2-end}).
     Therefore the set $T_2$ is empty
@@ -282,7 +283,7 @@ function $check$:
 
 \subsubsection{Complexity of Algorithm \ref{algo:check}}
 
-The complexity of the function $check(t, \EuScript{S})$ is
+The complexity of the function $check(t, \EuScript{S}_i^{N})$ is
 $\mathcal{O}(m \times k)$ with $m$ the number of valued events in
 the trace $t$ (\emph{i.e.} its length), and $k$ the number of
 columns in $M_{[b]}$, which is likely large as reduced models
