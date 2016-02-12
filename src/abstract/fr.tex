@@ -1,19 +1,19 @@
-Ce manuscrit de thèse aborde le problème du test basé modèle de
+Ce manuscrit de thèse porte sur le problème du test basé modèle de
 systèmes de production existants, tels ceux de notre partenaire
 industriel Michelin, l'un des trois plus grands fabricants de
 pneumatiques au monde. Un système de production est composé d'un
 ensemble de machines de production contrôlées par un ou plusieurs
-logiciels au sein d'un atelier d'une usine. Malgré les nombreux
+logiciels au sein d'un atelier dans une usine. Malgré les nombreux
 travaux dans le domaine du test basé modèle, l'écriture de
 modèles permettant de décrire un système sous test ou sa
 spécification reste un problème commun, en partie à cause de la
 complexité d'une telle tâche. De plus, un modèle est utile
 lorsqu'il est à jour par rapport à ce qu'il décrit, ce qui
-implique de le maintenir à jour dans le temps. Pour autant,
+implique de le maintenir dans le temps. Pour autant,
 conserver une documentation à jour reste compliqué puisqu'il faut
 souvent le faire manuellement. Dans notre contexte, il est
 important de souligner le fait qu'un système de production
-fonctionne en continu et ne doit pas être arrêté ni perturbé, ce
+fonctionne en continu et ne doit être ni arrêté ni perturbé, ce
 qui limite l'usage des techniques de test classiques.
 
 Pour pallier le problème de l'écriture de modèles, nous proposons
@@ -25,7 +25,8 @@ informations fournies par les données échangées entre les
 une approche boîte noire et combinons les notions de système
 expert, inférence de modèles et \emph{machine learning}, afin de
 créer des modèles comportementaux. Ces modèles inférés décrivent
-des comportements enregistrés sur un système sous analyse. Ils
+des comportements complets, enregistrés sur un système sous
+analyse. Ces modèles
 sont partiels, mais également très grands (en terme de taille),
 ce qui les rend difficilement utilisable par la suite. Nous
 proposons une technique de réduction spécifique à notre contexte
@@ -41,7 +42,7 @@ d'identifier des différences entre deux systèmes de production et
 réutilise l'inférence de modèles décrite ci-avant. Nous
 introduisons deux relations d'implantation : une relation basée
 sur l'inclusion de traces, et une seconde relation plus faible
-proposée pour remédier au fait que les modèles inférés soient
+proposée, pour remédier au fait que les modèles inférés soient
 partiels.
 
 De manière générale, ce manuscrit de thèse présente
