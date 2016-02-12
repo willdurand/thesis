@@ -295,13 +295,14 @@ traversal into account.
 The complexity of Algorithm \ref{algo:check} is $\mathcal{O}(t
 \times n \times (m \times k))$ with $t$ the number of complete
 traces of $\mathit{Sut}$, $n$ the number of models, and $(m
-\times k)$ the complexity of the $check$ function.  Compared to
-the number of traces and columns, the number of models $n$ is
-negligible (\emph{i.e.} $n << t$ and $n << k$), which means that
-the overall complexity is $\mathcal{O}(t \times m \times k)$.
+\times k)$ the complexity of the $check(t, \EuScript{S}_i^N$
+function.  Compared to the number of traces and columns, the
+number of models $n$ is negligible (\emph{i.e.} $n << t$ and $n
+<< k$), which means that the overall complexity is $\mathcal{O}(t
+\times m \times k)$.
 
 In our first experiments, we found that $m << k$, hence the
-complexity of the function $check(t, \EuScript{S})$ can be
+complexity of the function $check(t, \EuScript{S}_i^N)$ can be
 updated to $\mathcal{O}(k)$, and the overall complexity
 becomes: $\mathcal{O}(t \times k)$ (with $t \approx k$).
 
