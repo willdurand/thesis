@@ -266,7 +266,7 @@ run's state $q_{j - 1}$ has, at least, one transition with the
 symbolic action $a(p)$ (line
 \ref{algo:check-online:line:while-tuple}).
 
-If the current tuple is the initial one (\emph{i.e.} $(q_0, 0)$),
+If the current tuple is the initial one $(q_0, 0)$,
 the algorithm loops over all transitions $t$ (in all branches
 $b$) having the symbolic action $a(p)$ with $G = M_{[b]}[j, *]$.
 Here, the goal is to find the columns $c_{[b]}$ in $M_{[b]}$ for
@@ -281,7 +281,7 @@ to the run set $RUNS'$ (line \ref{on:l14}), which contains all runs found
 for a current valued event.
 
 When the current tuple is not $(q_0, 0)$, the algorithm is
-already aware of the column ($col$) $M_{[b]}$, hence it does not
+already aware of the column ($col$) in $M_{[b]}$, hence it does not
 need to retrieve it. For each transition $t$ with $G = M_{[b]}[j,
 col]$, the algorithm determines whether $\alpha \cup v$ satisfies
 $M_{[b]}[j, col]$ (lines \ref{on:l16}-\ref{on:l17}).
