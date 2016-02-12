@@ -294,17 +294,16 @@ with those in $RUNS'$ (line
 \ref{algo:check-online:line:runs-i-up}). Once all models
 $\EuScript{S}_i^N$ have been covered, we check the presence
 of, at least, one run in any of $RUNS_i$ (line
-\ref{algo:check-online:line:runs-i-empty}). If there is no run
-anymore, the algorithm has not been able to find a transition
-that can be fired with the last received valued event,
-\emph{i.e.} there is no more transition or the guards have not
-been satisfied. That is why it has not been able to create any
-run, and all run sets $RUNS_i$ are therefore empty. Such a
-situation means that the trace does not comply with
-$\EuScript{S}^N$, and we return a non-empty trace set $T = \{
-trace \}$ (line \ref{on:l22}), which is handled by the entry point to
-return the right verdict (cf. Algorithm
-\ref{algo:online-entry-point}).
+\ref{algo:check-online:line:runs-i-empty}). If there is no run,
+the algorithm has not been able to find a transition that can be
+fired with the last received valued event, \emph{i.e.} there is
+no more transition or the guards have not been satisfied. That is
+why it has not been able to create any run, and all run sets
+$RUNS_i$ are therefore empty. Such a situation means that the
+trace does not comply with $\EuScript{S}^N$, and we return a
+non-empty trace set $T = \{ trace \}$ (line \ref{on:l22}), which
+is handled by the entry point to return the right verdict (cf.
+Algorithm \ref{algo:online-entry-point}).
 
 When we do not receive any valued event anymore, the algorithm
 has reached a \emph{deadlock} situation. There are two cases
