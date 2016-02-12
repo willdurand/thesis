@@ -144,7 +144,7 @@ irrelevant events are filtered out.
 
 Each new production event passes through an \emph{entry point}
 whose role is to distribute the incoming events across the
-different instances of a tester. The entry point functioning is
+different instances of tester. The entry point functioning is
 given in Algorithm \ref{algo:online-entry-point}. Each event is
 filtered (line \ref{algo:oep:line:filter}) and transformed into a
 filtered valued event (line \ref{algo:oep:line:transform}), from
@@ -216,7 +216,7 @@ model set yet, we create a new tester for this $pid$ first (lines
     \label{algo:online-entry-point}
 \end{algorithm}
 
-At this point, there should be two instances of a tester running
+At this point, there should be two instances of tester running
 the same algorithm per $pid$, \emph{i.e.} per product being
 manufactured. The intuition of such an algorithm is that it
 listens to incoming valued events sent by the entry point, and it
