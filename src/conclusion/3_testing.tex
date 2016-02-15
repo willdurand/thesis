@@ -221,9 +221,9 @@ model set yet, we create a new tester for this $pid$ first (lines
 
 At this point, there should be two instances of tester running
 the same algorithm per $pid$, \emph{i.e.} per product being
-manufactured. The intuition of such an algorithm is that it
-listens to incoming valued events sent by the proxy, and it
-constructs a trace until it reaches:
+manufactured. The intuition of such a \emph{check-state}
+algorithm is that it listens to incoming valued events sent by
+the proxy, and it constructs a trace until it reaches:
 
 \begin{itemize}
     \item a verdict location (cf.
@@ -242,6 +242,12 @@ constructs a trace until it reaches:
         instance.
 \end{itemize}
 
+To be more precise, for each valued event received by this
+algorithm, it constructs runs based on the models in either
+$R(\EuScript{S}^N)$ or $D(\EuScript{S}^N)$. When it cannot
+construct any run (or when a deadlock is detected), it means that
+the observed trace does not lead to a $Pass$ location, hence this
+trace is considered a possibly fail trace.
 We introduce two new verdicts $Fail_{\leq_{ct}}$ and
 $Fail_{\leq_{mct}}$ that indicate whether a trace does not comply
 with either $R(\EuScript{S}^N)$ or $D(\EuScript{S}^N)$. Such
