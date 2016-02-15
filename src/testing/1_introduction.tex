@@ -173,7 +173,7 @@ $\mathit{Sut}$ conforms to $\EuScript{S}^{N}$.
 Our industrial partner wishes to check whether every complete
 execution trace of $\mathit{Sut}$ matches a behavior captured by
 $\EuScript{S}^{N}$. In this case, the test verdict must reflect a
-successful result. On the contrary, if an execution of
+successful result. On the contrary, if a complete execution of
 $\mathit{Sut}$ is not captured by $\EuScript{S}^{N}$, one cannot
 conclude that $\mathit{Sut}$ is faulty because $\EuScript{S}^{N}$
 is a partial model, and it does not necessarily includes all the
@@ -186,18 +186,18 @@ by a model, here with a Labeled Transition System as defined in
 simplicity purpose, we also denote this model by $\mathit{Sut}$.
 
 It is manifest that both the models and $\mathit{Sut}$ must be
-\emph{similar}, \emph{i.e.} the production events captured on
+\emph{compatible}, \emph{i.e.} the production events captured on
 $\mathit{Sua}$ and $\mathit{Sut}$ must lead to similar valued
 events. Otherwise, all traces of $\mathit{Sut}$ will likely be
 rejected, and the testing process will become wasteful:
 
-\begin{definition}[Similarity of $\EuScript{S}^N$ and $\mathit{Sut}$]
+\begin{definition}[Compatibility of $\EuScript{S}^N$ and $\mathit{Sut}$]
     Let $\EuScript{S}^N = \{ \EuScript{S}_1^N, \dots,
     \EuScript{S}_n^N \}$ be a STS set, and $\mathit{Sut}$ be a LTS
     (semantics), which is assumed to behave as the production
     system.
 
-    $\EuScript{S}^N$ and $\mathit{Sut}$ are said \emph{similar}
+    $\EuScript{S}^N$ and $\mathit{Sut}$ are said \emph{compatible}
     if and only if: $\displaystyle\Sigma_{Sut} \subseteq \bigcup_{1 \leq i \leq n}
     \bigcup_{a(p) \in \Lambda_{\EuScript{S}_i^N}} a \times D_p$.
 
@@ -375,7 +375,7 @@ the projection operator \textit{proj} (see Definition
 val_k))$. This can be expressed by deriving new STSs from
 $R(\EuScript{S})$.
 
-\subsection{STS $D(\EuScript{S})$}
+\subsubsection{STS $D(\EuScript{S})$}
 
 Given a STS $R(\EuScript{S}_i^{N})$, the STS
 $D(\EuScript{S}_i^{N})$ is constructed with the disjunction of

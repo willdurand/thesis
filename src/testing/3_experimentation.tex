@@ -27,8 +27,9 @@ combination with Java 8 streams and parallel processing
 abilities. This gives interesting performance results on
 multi-core processors, without affecting code readability.
 \emph{Autofunk v3} still embeds Drools, and can either run a
-local Spark instance or connect to a Spark cluster, which is
-better for performance.  Models are persisted on disk using the
+local Spark instance or connect to a Spark cluster (for the
+k-means clustering), which is better for performance.  Models are
+persisted on disk using the
 \emph{Kryo}\footnote{\url{https://github.com/EsotericSoftware/kryo}}
 serialization library. Finally, this tool is highly configurable
 thanks to the (Typesafe)
@@ -126,6 +127,7 @@ system as $\mathit{Sut}$.  Here, only 30\% of the traces of
 $\mathit{Sut}$ are pass traces with respect to the second
 implementation relation (same sequence of symbols with different
 values). There are two explanations: (i) the system has been
+strongly
 updated between the two periods of record (4 months), and (ii)
 production campaigns, \emph{i.e.} grouping of planned orders and
 process orders to produce a certain amount of products over a

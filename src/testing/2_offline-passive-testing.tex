@@ -18,7 +18,7 @@ Algorithm \ref{algo:check} relies upon the function ${check(Trace
 ~trace, STS ~\EuScript{S})}$ to check whether the trace $trace =
 (a_1(p), \alpha_1) \dots (a_m(p), \alpha_m)$ is a trace of
 $\EuScript{S}$. If a STS path $b$ is composed of the same
-sequence of symbols than $trace$ (line
+sequence of symbols as $trace$ (line
 \ref{algo:check:line:exists}), the function tries to find a
 matrix column (\emph{i.e.} a vector) $M = M_{[b]}[*,c_{[b]}]$ ($1
 \leq c_{[b]} \leq k$) such that every variable assignment
@@ -26,7 +26,7 @@ $\alpha_j$ satisfies the guard $M[j]$. If such a column of guards
 exists, the function returns $True$, and $False$ otherwise (cf.
 Proposition \ref{prop:check}).
 
-First, this algorithm covers every trace $trace$ of
+Algorithm \ref{algo:check} covers every trace $trace$ of
 $CTraces({Sut})$, and tries to find a STS $R(\EuScript{S}_i^{N})$
 such that $trace$ is also a trace of $R(\EuScript{S}_i^{N})$ with
 $check(trace, R(\EuScript{S}_i^{N}))$ (line
@@ -113,17 +113,17 @@ returned.
     \Fn{check(Trace $trace$, STS $\EuScript{S}$) : boolean}{
         \If{$\exists ~b=l0_{\EuScript{S}}
             \xRightarrow{(a_1(p_1),G_{1},A_{1}) \dots
-            (a_n(p_n),G_{n},A_{n})} l_n \mid trace =
-            (a_1(p), \alpha_1)\dots (a_n(p), \alpha_n)$ and $l_n \in
+            (a_m(p_m),G_{m},A_{m})} l_m \mid trace =
+            (a_1(p), \alpha_1)\dots (a_n(p), \alpha_m)$ and $l_m \in
             Pass$}{\label{algo:check:line:exists}
 
-                $M_{[b]} = Mat(b)$ is the matrix $n \times k$ of $b$\;
+                $M_{[b]} = Mat(b)$ is the matrix $m \times k$ of $b$\;
                 $c_{[b]} = 1$\;
                 \While{$c_{[b]} \leq k$}{
                     $M = M_{[b]}[*,c_{[b]}]$\;\label{line-31}
 
                     $sat = True$\;
-                    \For{$j = 1, \dots, n$}{
+                    \For{$j = 1, \dots, m$}{
                         \If{$\alpha_j \not\models M[j]$}{
                             $sat = False$\;
                             break\;\label{line-36}
@@ -157,7 +157,7 @@ more efficient.
 
 \begin{proposition}
     Let $\EuScript{S}^{N}$ be a STS set, and $\mathit{Sut}$ be a
-    LTS similar to $\EuScript{S}^{N}$.
+    LTS compatible to $\EuScript{S}^{N}$.
 
     $\mathit{Sut} \leq_{ct} \EuScript{S}^N$ $\implies$
     Algorithm \ref{algo:check} returns "Pass$\leq_{ct}$",
@@ -193,7 +193,7 @@ function $check$:
     $\EuScript{S}_i^{N}$ such that $t \in
     Traces_{Pass}(\EuScript{S}_i^{N})$.
 
-    $(\exists ~(1 \leq i \leq n) \mid t \in
+    $(\exists ~(1 \leq i \leq n) : ~t \in
     Traces_{Pass}(\EuScript{S}_i^{N}))$ $\implies$ the function
     $check(t, \EuScript{S}_i^{N})$ returns $True$.
 
@@ -205,8 +205,8 @@ function $check$:
     Traces_{Pass}(\EuScript{S}_i^{N})$ implies $\exists ~(1 \leq i
     \leq n), ~t \in Traces_{Pass}(R(\EuScript{S}_i^{N}))$.
     The $Traces$ and LTS semantics definitions imply: $\exists
-    ~p = l0_{R\EuScript{S}_i^{N})} \xRightarrow{(a_1(p_1),G_{1},A_{1}) \dots
-    (a_n(p_n),G_{n},A_{n})} l_n, ~l_n \in Pass \mid ~t \in
+    ~p = l0_{R(\EuScript{S}_i^{N})} \xRightarrow{(a_1(p_1),G_{1},A_{1}) \dots
+    (a_n(p_n),G_{n},A_{n})} l_n, ~l_n \in Pass$, and $t \in
     Traces_{Pass}(p)$.
 
     Given the trace $t = (a_1(p), \alpha_1) \dots (a_n(p),
@@ -221,15 +221,15 @@ function $check$:
             M_{[b]}[j, c_{[b]}] ~(1 \leq c_{[b]} \leq k$ and
             $1 \leq j \leq n)$;
 
-        \item ensures that $\exists ~1 \leq c_{[b]} \leq k
-            \mid \alpha_j \models M_{[b]}[j, c_{[b]}] ~(1
+        \item ensures that $\exists ~(1 \leq c_{[b]} \leq k) :
+            \alpha_j \models M_{[b]}[j, c_{[b]}] ~(1
             \leq j \leq n)$ (lines \ref{line-31}-\ref{line-36}).
     \end{itemize}
 
     The function $check(t, \EuScript{S}_i^N)$ seeks $b$ such that $t \in
     Traces_{Pass}(b)$, and returns $True$ if $b$ exists (line
     \ref{line-38}).
-    Therefore, $\exists ~p = l0_{R\EuScript{S}_i^{N})}
+    Therefore, $\exists ~p = l0_{R(\EuScript{S}_i^{N})}
     \xRightarrow{(a_1(p_1),G_{1},A_{1}) \dots
     (a_n(p_n),G_{n},A_{n})} l_n, ~l_n \in Pass \mid ~t \in
     Traces_{Pass}(p)$ implies the function $check(t,
@@ -241,8 +241,8 @@ function $check$:
     \textbf{Sketch of proof for (1):} $\mathit{Sut} \leq_{ct} \EuScript{S}^{N}
     \Leftrightarrow CTraces(Sut) \subseteq Traces_{Pass}(R(\EuScript{S}^N))$
     (Proposition \ref{rel:impl12}) can be written as
-    follows: $\forall ~t \in CTraces(Sut), \exists ~1
-    \leq i \leq n \mid ~t \in Traces_{Pass}(R(\EuScript{S}_i^{N}))$.
+    follows: $\forall ~t \in CTraces(Sut), \exists ~(1
+    \leq i \leq n) : ~t \in Traces_{Pass}(R(\EuScript{S}_i^{N}))$.
 
     Given that, and according to Proposition
     \ref{prop:check}, the function $check(t, \EuScript{S}_i^N)$ returns $True$ for
@@ -258,8 +258,8 @@ function $check$:
     \textbf{Sketch of proof for (2):} $\mathit{Sut} \leq_{mct} \EuScript{S}^{N}
     \Leftrightarrow CTraces(Sut) \subseteq Traces_{Pass}(D(\EuScript{S}^N))$
     (Proposition \ref{rel:impl2}) can be written as
-    follows: $\forall ~t \in CTraces(Sut), \exists ~1
-    \leq i \leq n \mid ~t \in Traces_{Pass}(D(\EuScript{S}_i^{N}))$.
+    follows: $\forall ~t \in CTraces(Sut), \exists ~(1
+    \leq i \leq n) : ~t \in Traces_{Pass}(D(\EuScript{S}_i^{N}))$.
 
     Given that, and according to Proposition
     \ref{prop:check}, the function $check(t, \EuScript{S}_i^N)$ returns $True$ for
