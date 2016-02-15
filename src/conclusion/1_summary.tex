@@ -1,10 +1,9 @@
 \section{Summary of achievements}
 
-This thesis has proposed a novel approach to infer models
-of software systems in order to perform Model-based Testing of
-production systems. In addition, it has provided a conformance
-testing technique that leverages such models. The original aims
-and objectives of the thesis were as follows:
+This thesis has proposed a novel approach to infer models of
+software systems in order to perform conformance testing of
+production systems, with a technique that leverages such models.
+The original aims and objectives of the thesis were as follows:
 
 \begin{itemize}
     \item To infer partial yet exact models of production systems
@@ -26,10 +25,10 @@ web applications and production systems, wrapped into the
 \textit{Autofunk} framework.  The expert system is composed of
 rules, capturing the knowledge of human experts, and used either
 to filter the trace set to remove the undesired ones, to infer
-Input/Output Symbolic Transition Systems (IOSTSs), or to build
-more abstract IOSTSs. In Chapter \ref{sec:modelinf:prodsystems},
+Symbolic Transition Systems (STSs), or to build
+more abstract STSs. In Chapter \ref{sec:modelinf:prodsystems},
 the state merging is replaced with a context-specific state
-reduction based on an event sequence abstraction. This state
+reduction based on an event sequence-based abstraction. This state
 reduction can be seen as the kTail algorithm \cite{5009015} where
 $k$ is as high as possible for every initial branch (or path) of
 the original Symbolic Transition System (STS). This state
@@ -41,7 +40,7 @@ traces and can still build models quickly thanks to our specific
 state merging process.
 
 The second objective was achieved by enhancing \textit{Autofunk}
-with a passive testing technique presented in Chapter
+with a passive testing technique, presented in Chapter
 \ref{sec:testing}. Given a large set of production events,
 \textit{Autofunk} reuses the inferred models as specifications to
 perform offline passive testing, using a second set of traces

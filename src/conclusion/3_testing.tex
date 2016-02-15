@@ -74,9 +74,11 @@ production system are text-based and readable, the inference
 rules needed during the filtering step might be replaced by a
 method inspired by the works on automated text categorization
 \cite{Sebastiani:2002:MLA:505282.505283}. Yet, it is manifest
-that the inference rules used to lift abstraction of the models
-still have to be written, and cannot be easily replaced, because
-they strongly depend on the business.
+that the inference rules used to lift abstraction of the models,
+as presented in
+\crossref{sec:modelinf:webapps}{sec:modelinf:webapps:L4}, still
+have to be written, and cannot be easily replaced, because they
+strongly depend on the business.
 
 Another point that would be worth working on is the
 \emph{visualization} of the inferred models and test results. At
@@ -126,7 +128,7 @@ an online passive testing technique as well. Both offline and
 online modes are not completely unalike, they also serve
 different purposes.
 Our online passive testing approach records traces on a system
-under test on-the-fly, and then check whether those traces
+under test on-the-fly, and then checks whether those traces
 satisfy specifications, still generated from a system under
 analysis. It enables what we call \emph{just-in-time fault
 detection}. Faults can be revealed in near real-time on a running
@@ -142,9 +144,9 @@ of rules of Layer 1 in the model inference process (cf.
 \crossref{sec:modelinf:prodsystems}{part3:collecting}), so that
 irrelevant events are filtered out.
 
-Each new production event passes through an \emph{entry point}
+Each new production event passes through a \emph{proxy}
 whose role is to distribute the incoming events across the
-different instances of tester. The entry point functioning is
+different instances of tester. The proxy functioning is
 given in Algorithm \ref{algo:online-entry-point}. Each event is
 filtered (line \ref{algo:oep:line:filter}) and transformed into a
 filtered valued event (line \ref{algo:oep:line:transform}), from
@@ -161,7 +163,8 @@ model set yet, we create a new tester for this $pid$ first (lines
 	\SetKwInOut{Input}{Input}
     \SetKwInOut{Output}{Output}
 
-    \Input{Production events}
+    \Input{Production events, model sets $R(\EuScript{S}^N)$ and
+    $D(\EuScript{S}^N)$}
     \Output{Verdicts: $Fail_{\leq_{ct}}$ or $Fail_{\leq_{mct}}$}
 
     \BlankLine
@@ -212,14 +215,14 @@ model set yet, we create a new tester for this $pid$ first (lines
 
     END\;
 
-    \caption{Online passive testing entry point}
+    \caption{Online passive testing proxy}
     \label{algo:online-entry-point}
 \end{algorithm}
 
 At this point, there should be two instances of tester running
 the same algorithm per $pid$, \emph{i.e.} per product being
 manufactured. The intuition of such an algorithm is that it
-listens to incoming valued events sent by the entry point, and it
+listens to incoming valued events sent by the proxy, and it
 constructs a trace until it reaches:
 
 \begin{itemize}
@@ -233,7 +236,7 @@ constructs a trace until it reaches:
         $Fail$ verdict;
 
     \item a \emph{deadlock}, which happens when no event is
-        received after a certain delay, which leads to a $Fail$
+        received after a certain delay, which may lead to a $Fail$
         verdict too. This situation may occur when a product is
         removed from the production line by a human operator for
         instance.
@@ -242,7 +245,7 @@ constructs a trace until it reaches:
 We introduce two new verdicts $Fail_{\leq_{ct}}$ and
 $Fail_{\leq_{mct}}$ that indicate whether a trace does not comply
 with either $R(\EuScript{S}^N)$ or $D(\EuScript{S}^N)$. Such
-verdicts are returned by the entry point given in Algorithm
+verdicts are returned by the proxy given in Algorithm
 \ref{algo:online-entry-point}, depending on the result of the
 execution of the testers (lines
 \ref{algo:oep:line:result}-\ref{algo:oep:line:result-end}).
@@ -302,7 +305,7 @@ why it has not been able to create any run, and all run sets
 $RUNS_i$ are therefore empty. Such a situation means that the
 trace does not comply with $\EuScript{S}^N$, and we return a
 non-empty trace set $T = \{ trace \}$ (line \ref{on:l22}), which
-is handled by the entry point to return the right verdict (cf.
+is handled by the proxy to return the right verdict (cf.
 Algorithm \ref{algo:online-entry-point}).
 
 When we do not receive any valued event anymore, the algorithm
@@ -436,11 +439,11 @@ express the detected pattern.
 
 The issue above is linked to the fact that we get a stream of
 production events from $\mathit{Sut}$, which we filter to remove
-irrelevant events only. Yet, we are not able to remove the events
-that belong to incomplete traces. This is worth noting because it
-will likely lead to more false positives in online mode than in
-offline mode (for which we consider complete traces of
-$\mathit{Sut}$ exclusively).
+irrelevant events only (\emph{i.e.} is incomplete traces). Yet,
+we are not able to remove incomplete traces on-the-fly. This is
+worth noting because it will likely lead to more false positives
+in online mode than in offline mode (for which we consider
+complete traces of $\mathit{Sut}$ exclusively).
 
 Last but not least, running two testers per product ($pid$) will
 result in many instances executed in parallel as there are
