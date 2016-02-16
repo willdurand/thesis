@@ -420,13 +420,13 @@ set $T = \{ trace \}$.  Otherwise, we return an empty set $T$
 \clearpage
 
 At the time of writing, there are still open-ended questions
-regarding this online method. First of all, we need to find a way
-to properly identify deadlocks. We know that products can stay
-for days in a production system, hence it is complicated to set a
-timed limit. Another approach would be to compute average delays
-between the events in the models $R(\EuScript{S}_i)$ thanks to
-the event's time stamps, which can be retrieved in the valued
-events.
+regarding this online method to devise a complete online passive
+algorithm. First of all, we need to find a way to properly
+identify deadlocks. We know that products can stay for days in a
+production system, hence it is complicated to set a timed limit.
+Another approach would be to compute average delays between the
+events in the models $R(\EuScript{S}_i)$ thanks to the event's
+time stamps, which can be retrieved in the valued events.
 
 The current algorithm also does not support the presence of
 repetitive patterns. For the record, a repetitive pattern is
