@@ -96,14 +96,15 @@ indicates the execution time (in minutes) for the testing phase.
 \begin{center}
     \begin{tabular}{| c | c | c | c | c | c |}
         \hline
-        \# & $Card(CTraces({Sua}))$ & $Card(CTraces({Sut}))$ & Pass$\leq_{ct}$ & Pass$\leq_{mct}$ & Time\\
+        \# & $Card(CTraces({Sua}))$ & $Card(CTraces({Sut}))$ &
+        $Card(T_1)$ & $Card(T_2)$ & Time\\
         \hline
         \hline
-        $1$ & 2,075 & 2,075 & 100\% & 100\% & 1 \\
+        $1$ & 2,075 & 2,075 & 0 & 0 & 1 \\
         \hline
-        $2$ & 53,996 & 2,075 & 3\% & 30\% & 4\\
+        $2$ & 53,996 & 2,075 & 62 & 1452 & 4\\
         \hline
-        $3$ & 53,996 & 25,047 & 98\% & 98\% & 10\\
+        $3$ & 53,996 & 25,047 & 500 & 500 & 10\\
         \hline
     \end{tabular}
 \end{center}
@@ -117,23 +118,23 @@ In Experiment $1$, we decided to use the same production events
 for both inferring models, \emph{i.e.} specifications, and
 testing. This experiment shows that our implementation behaves
 correctly when trace sets are similar, \emph{i.e.} when behaviors
-of both $\mathit{Sua}$ and $\mathit{Sut}$ are equivalent.
+of both $\mathit{Sua}$ and $\mathit{Sut}$ are equivalent. That is
+why there are no possibly fail traces.
 
 Experiment $2$ has been run with traces of $\mathit{Sut}$ that
 are older than those of $\mathit{Sua}$, which is unusual as the
-\emph{de facto} usage of our framework is to build specifications from a
-production system $\mathit{Sua}$, and to take a newer or updated
-system as $\mathit{Sut}$.  Here, only 30\% of the traces of
-$\mathit{Sut}$ are pass traces with respect to the second
-implementation relation (same sequence of symbols with different
-values). There are two explanations: (i) the system has been
-strongly
-updated between the two periods of record (4 months), and (ii)
-production campaigns, \emph{i.e.} grouping of planned orders and
-process orders to produce a certain amount of products over a
-certain period of time, were different (revealed by
-\textit{Autofunk}, indicating that values for some key parameters
-were unknown).
+\emph{de facto} usage of our framework is to build specifications
+from a production system $\mathit{Sua}$, and to take a newer or
+updated system as $\mathit{Sut}$.  Here, only 30\% (1452 traces
+in $T_2$) of the traces of $\mathit{Sut}$ are pass traces with
+respect to the second implementation relation (same sequence of
+symbols with different values). There are two explanations: (i)
+the system has been strongly updated between the two periods of
+record (4 months), and (ii) production campaigns, \emph{i.e.}
+grouping of planned orders and process orders to produce a
+certain amount of products over a certain period of time, were
+different (revealed by \textit{Autofunk}, indicating that values
+for some key parameters were unknown).
 
 Finally, experiment $3$ shows good results as the specification
 models are rich enough, \emph{i.e.}  built from a larger set of
@@ -141,11 +142,11 @@ traces (10 days) than the one collected on $\mathit{Sut}$. Such
 an experiment is a typical usage of our framework at Michelin.
 The traces of $\mathit{Sut}$ have been collected for 5 days, and
 it took only 10 minutes to check conformance. While 98\% of the
-traces are pass traces, the remaining 2\% (about 500 traces) are
+traces are pass traces, the remaining 2\% (500 traces) are
 new behaviors that never occurred before. Such a piece of
 information is essential for Michelin engineers to detect
 potential regressions. Even though 2\% may represent a large set
-to analyze (about 500 traces in this experiment),
+to analyze (500 traces in this experiment),
 \textit{Autofunk} eases the work of Michelin engineers by
 highlighting the traces to focus on. Instead of having to check
 25,000 traces manually, they only have to check 500 traces, which

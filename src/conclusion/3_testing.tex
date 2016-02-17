@@ -186,15 +186,15 @@ model set yet, we create a new tester for this $pid$ first (lines
         \BlankLine
 
         \If{$\not\exists ~i1_{pid} \in Instances \mid pid == pid'$}{\label{algo:oep:line:new}
-            create new tester $i1_{pid}$ with $pid = pid'$
-            and $\EuScript{S}^N = R(\EuScript{S}^N)$\;
+            create new tester $i1_{pid}(R(\EuScript{S}^N))$ with
+            $pid = pid'$\;
 
             $Instances = Instances \cup \{ i1_{pid} \}$\;
         }
 
         \If{$\not\exists ~i2_{pid} \in Instances \mid pid == pid'$}{
-            create new tester $i2_{pid}$ with $pid = pid'$
-            and $\EuScript{S}^N = D(\EuScript{S}^N)$\;
+            create new tester $i2_{pid}(D(\EuScript{S}^N))$ with
+            $pid = pid'$\;
 
             $Instances = Instances \cup \{ i2_{pid} \}$\;
         }\label{algo:oep:line:endnew}
@@ -221,9 +221,10 @@ model set yet, we create a new tester for this $pid$ first (lines
 
 At this point, there should be two instances of tester running
 the same algorithm per $pid$, \emph{i.e.} per product being
-manufactured. The intuition of such a \emph{check-state}
-algorithm is that it listens to incoming valued events sent by
-the proxy, and it constructs a trace until it reaches:
+manufactured. Such an algorithm is of type \emph{checker-state},
+which, for each valued event received (sent by the proxy),
+constructs runs based on the models in either $R(\EuScript{S}^N)$
+or $D(\EuScript{S}^N)$, until it reaches:
 
 \begin{itemize}
     \item a verdict location (cf.
@@ -232,8 +233,9 @@ the proxy, and it constructs a trace until it reaches:
         chosen (either $R(\EuScript{S}^N)$ or
         $D(\EuScript{S}^N)$);
 
-    \item a guard that has not been satisfied, which leads to a
-        $Fail$ verdict;
+    \item an unexpected event that has been received or a guard
+        that has not been satisfied, which leads to a $Fail$
+        verdict;
 
     \item a \emph{deadlock}, which happens when no event is
         received after a certain delay, which may lead to a $Fail$
@@ -242,13 +244,10 @@ the proxy, and it constructs a trace until it reaches:
         instance.
 \end{itemize}
 
-To be more precise, for each valued event received by this
-algorithm, it constructs runs based on the models in either
-$R(\EuScript{S}^N)$ or $D(\EuScript{S}^N)$. When it cannot
-construct any run (or when a deadlock is detected), it means that
-the observed trace does not lead to a $Pass$ location, hence this
-trace is considered a possibly fail trace.
-We introduce two new verdicts $Fail_{\leq_{ct}}$ and
+When it cannot construct any run (or when a deadlock is
+detected), it means that the observed trace does not lead to a
+$Pass$ location, hence this trace is considered a possibly fail
+trace.  We introduce two new verdicts $Fail_{\leq_{ct}}$ and
 $Fail_{\leq_{mct}}$ that indicate whether a trace does not comply
 with either $R(\EuScript{S}^N)$ or $D(\EuScript{S}^N)$. Such
 verdicts are returned by the proxy given in Algorithm
