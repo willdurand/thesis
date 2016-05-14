@@ -193,7 +193,7 @@ human expert behavior. These layers are depicted in Figure
 
 \begin{figure}[ht]
     \begin{center}
-        \includegraphics[width=1.0\linewidth]{figures/soict_se.png}
+        \includegraphics[width=0.9\linewidth]{figures/soict_se.png}
     \end{center}
 
     \caption {The Models generator stack. Each layer yields a
@@ -279,8 +279,8 @@ formulate the following hypotheses on the inference rules:
     \item \textbf{Finite complexity:} a rule can only be applied
         a limited number of times to the same knowledge base;
 
-    \item \textbf{Soundness:} the inference rules are Modus
-        Ponens, \emph{i.e.} simple implications that lead to
+    \item \textbf{Soundness:} the inference rules are \emph{Modus
+        Ponens}, \emph{i.e.} simple implications that lead to
         sound facts if the original facts are true (P implies Q;
         P is asserted to be true, so therefore Q must be true.);
 
@@ -351,7 +351,7 @@ Since we wish to translate such traces into IOSTSs, we turn these
 textual items into a structured \emph{valued action}
 $(a(p),\alpha)$ with $a$ the HTTP verb and $\alpha$ a valuation
 over the variable set $p=\{URI,request,response\}$. This is
-captured by the following definition:
+captured by the next definition.
 
 \begin{definition}[Structured HTTP trace] Let $t=
 req_1,resp_1$, \dots, $req_n,$ $resp_n$ be a raw HTTP trace
@@ -827,7 +827,7 @@ transition. The application of these layers ends in a finite time
 
 \subsubsection{Layer 3}
 
-This layers includes a (potentially empty) set of generic rules
+This layer includes a (potentially empty) set of generic rules
 that can be applied to a large set of applications sharing
 similarities, \emph{e.g.}, applications written with the same framework
 or same programming language.  This layer has two roles:
@@ -1030,7 +1030,7 @@ rules may have different forms:
 \begin{itemize}
 \item They can be applied to a single transition only. In this
 case, the rule replaces the transition action to add more sense
-to the action. The rule given in Figure \ref{fig:rule:deauth} is
+to the action. The rule given in Figure~\ref{fig:rule:deauth} is
 an example, which recognizes a user "deauthentication",
 \emph{i.e.} when a user logs out, and adds a new action
 $Deauthentication$. This rule means that if a $PostRedirection$

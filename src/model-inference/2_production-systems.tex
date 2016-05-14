@@ -525,8 +525,8 @@ This analysis is performed on the assignments $(point:=val)$
 found in the first and last valued events of the traces of
 $Traces(Sua)$ since $point$ captures the product physical
 location and especially the entry and exit points of $\mathit{Sua}$.
-We obtain two ratios $Rinit(point:=val1)$ and
-$Rfinal(point:=val2)$.  Based on these ratios, one can deduce the
+We obtain two ratios $Rinit((point := val1))$ and
+$Rfinal((point := val2))$.  Based on these ratios, one can deduce the
 entry point set $POINT_{init}$ and the exit point set
 $POINT_{final}$ if $Traces(Sua)$ is large enough. Pragmatically,
 we observed that the traces collected during one or two days are
@@ -602,21 +602,21 @@ BEGIN\;
 \emph{Step 1. $Traces(Sua)$ segmentation}
 
 \ForEach{$t=(a_1(p), \alpha_1) \dots (a_n(p), \alpha_n) \in Traces(Sua)$} {
-$Rinit((point:=val1)\subset \alpha_1)++$\;
-$Rfinal((point:=val2)\subset \alpha_n)++$\;
+$Rinit((point:=val1) \in \alpha_1)++$\;
+$Rfinal((point:=val2) \in \alpha_n)++$\;
 }
 $POINT_{init}=\{(point:=val) \mid Rinit((point:=val))>10$\% or belongs to the N highest ratios$\}$\;
 $POINT_{final}=\{(point:=val) \mid Rfinal((point:=val))>10$\% or belongs to the M highest ratios$\}$\;
 \BlankLine
 
-$ST := \emptyset$\;
+$ST = \emptyset$\;
 \For{$i = 1, \dots, n$}{
     \ForEach{$\alpha_i=(point:=val) \in POINT_{init}$} {
-        $ST_i := \{(a_1(p), \alpha_1) \dots (a_n(p), \alpha_n)\in Traces(Sua) \mid
-        \alpha_i\subset \alpha_1, \exists ~(point:=val2) \subset
+        $ST_i = \{(a_1(p), \alpha_1) \dots (a_n(p), \alpha_n)\in Traces(Sua) \mid
+        \alpha_i \in \alpha_1, \exists ~(point:=val2) \in
     \alpha_n \wedge (point:=val2) \in POINT_{final}    \}$\;
 
-        $ST := ST \cup \{ ST_i \}$\;
+        $ST = ST \cup \{ ST_i \}$\;
     }
 }
 
@@ -629,12 +629,12 @@ $ST := \emptyset$\;
         \mid
         p \sim_{(pid)} p' \wedge \sigma_i \sim_{(pid)} \sigma_i' \wedge
         \sigma_j \sim_{(pid)} \sigma_j'$}{
-            $ST_i := ST_i \setminus \{  t \}$\;
+            $ST_i = ST_i \setminus \{  t \}$\;
         }
     }
 }
 
-$CTraces(Sua) := \displaystyle\bigcup_{1 \leq i \leq n} ST_i$\;
+$CTraces(Sua) = \displaystyle\bigcup_{1 \leq i \leq n} ST_i$\;
 END\;
 
 \caption{Trace segmentation algorithm}
