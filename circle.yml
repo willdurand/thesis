@@ -14,10 +14,10 @@ dependencies:
     - if [[ -e ~/docker/image.tar ]]; then docker load -i ~/docker/image.tar; fi
     - docker build -t willdurand/latex .
     - mkdir -p ~/docker; docker save willdurand/latex > ~/docker/image.tar
-    - git rev-parse origin/master > .git/refs/heads/master
 
 test:
   override:
+    - echo "$CIRCLE_SHA1" > .git/refs/heads/master
     - docker run -v $(pwd):/data willdurand/latex make clean pdf
     - cat thesis.log | grep "$CHECK_BUILD_SUCCESS"
     - docker run -v $(pwd):/data willdurand/latex checkcites --all thesis.aux | grep "$CHECK_NO_UNDEFINED_REFS"
