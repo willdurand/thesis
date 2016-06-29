@@ -3,7 +3,7 @@
 % **************************************************
 \documentclass[%
 	paper=A4,					% paper size --> A4 is default in Germany
-	twoside=false,				% onesite or twoside printing
+	twoside=true,				% onesite or twoside printing
 	openright,					% doublepage cleaning ends up right side
 	parskip=full,				% spacing value / method for paragraphs
 	chapterprefix=true,			% prefix for chapter marks
@@ -150,26 +150,17 @@ production systems with a Model-based Testing approach}
 \input{src/titlepages}		    % INCLUDE: all titlepages
 \cleardoublepage
 
-\blankpage
-
 \pagestyle{plain}				% display just page numbers
 \input{src/abstract}		    % INCLUDE: the abstracts
 \cleardoublepage
 
-\blankpage
-\blankpage
-
 \input{src/acknowledgement}     % INCLUDE: acknowledgement
 \cleardoublepage
-
-\blankpage
 
 \setcounter{tocdepth}{3}		% define depth of toc
 \dominitoc
 \tableofcontents				% display table of contents
 \cleardoublepage
-
-\blankpage
 
 % --------------------------
 % List of ...
@@ -183,22 +174,15 @@ production systems with a Model-based Testing approach}
 \listoftheorems[ignoreall,show={definition}]
 \cleardoublepage
 
-\blankpage
-
 \phantomsection
 \addstarredchapter{\listfigurename}
 \listoffigures
 \cleardoublepage
 
-\blankpage
-\blankpage
-
 \phantomsection
 \addstarredchapter{\listtablename}
 \listoftables
 \cleardoublepage
-
-\blankpage
 
 % --------------------------
 % Body matter
@@ -215,9 +199,6 @@ production systems with a Model-based Testing approach}
 
 \cleardoublepage
 
-\blankpage
-\blankpage
-
 % --------------------------
 % Back matter
 % --------------------------
@@ -231,11 +212,7 @@ production systems with a Model-based Testing approach}
 }
 \cleardoublepage
 
-\blankpage
-\blankpage
-
 \input{src/colophon}
-\cleardoublepage
 
 % **************************************************
 % End of Document CONTENT

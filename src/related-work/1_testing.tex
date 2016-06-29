@@ -456,7 +456,7 @@ definition of the LTS model below, but we refer to
     represent states, and labeled edges represent transitions.
 
     We have $lts_{machine} = <\{ S1, S2, S3, S4 \}, \{ button, coffee, tea
-    \}, \{ <S1, button, S2>, <S2, coffee, S3>, <S2, tea, S4> \},
+    \}, \{ <S1, button, S2>,\\<S2, coffee, S3>, <S2, tea, S4> \},
     S1>$, and we can write $S1 \xrightarrow[]{button} S2$, and
     also $S1 \xrightarrow[]{button \cdot coffee} S3$, but $S1
     \not\xrightarrow[]{button \cdot tea} S3$.
